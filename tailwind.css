@@ -1,0 +1,205 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@zayne-labs/ui-react/css/preset.css";
+
+/* ------------------*/
+/* App Theme         */
+/*-------------------*/
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+@theme {
+}
+
+/* ------------------*/
+/* Custom Properties */
+/*-------------------*/
+@layer base {
+}
+
+/* ------------------*/
+/* Fonts */
+/*-------------------*/
+@theme inline {
+}
+
+/* ------------------*/
+/* Main Theme        */
+/*-------------------*/
+@theme {
+	--breakpoint-*: initial;
+	--breakpoint-sm: 480px;
+	--breakpoint-md: 780px;
+	--breakpoint-lg: 1000px;
+	--breakpoint-xl: 1280px;
+}
+
+/* ------------------*/
+/* Shadcn Theme      */
+/*-------------------*/
+@theme {
+	--color-shadcn-background: hsl(0, 0%, 100%);
+	--color-shadcn-foreground: hsl(222.2, 47.4%, 11.2%);
+
+	--color-shadcn-primary: hsl(222.2, 47.4%, 11.2%);
+	--color-shadcn-primary-foreground: hsl(210, 40%, 98%);
+
+	--color-shadcn-secondary: hsl(210, 40%, 96.1%);
+	--color-shadcn-secondary-foreground: hsl(222.2, 47.4%, 11.2%);
+
+	--color-shadcn-popover: hsl(0, 0%, 100%);
+	--color-shadcn-popover-foreground: hsl(222.2, 47.4%, 11.2%);
+
+	--color-shadcn-accent: hsl(210, 40%, 96.1%);
+	--color-shadcn-accent-foreground: hsl(222.2, 47.4%, 11.2%);
+
+	--color-shadcn-muted: hsl(210, 40%, 96.1%);
+	--color-shadcn-muted-foreground: hsl(215.4, 16.3%, 46.9%);
+
+	--color-shadcn-input: hsl(214.3, 31.8%, 91.4%);
+	--color-shadcn-border: hsl(214.3, 31.8%, 91.4%);
+	--color-shadcn-ring: hsl(215, 20.2%, 65.1%);
+
+	--color-shadcn-destructive: hsl(0 100% 50%);
+	--color-shadcn-destructive-foreground: hsl(210 40% 98%);
+
+	--color-sonner-success-bg: hsl(150, 100%, 6%);
+	--color-sonner-success-text: hsl(150, 100%, 90%);
+	--color-sonner-success-border: hsl(147, 100%, 12%);
+
+	--color-sonner-error-bg: hsl(358, 76%, 10%);
+	--color-sonner-error-text: hsl(358, 100%, 81%);
+	--color-sonner-error-border: hsl(357, 89%, 16%);
+
+	--animate-accordion-down: accordion-down 0.2s ease-out;
+	--animate-accordion-up: accordion-up 0.2s ease-out;
+
+	@keyframes accordion-down {
+		from {
+			height: 0;
+		}
+		to {
+			height: var(--radix-accordion-content-height);
+		}
+	}
+	@keyframes accordion-up {
+		from {
+			height: var(--radix-accordion-content-height);
+		}
+		to {
+			height: 0;
+		}
+	}
+}
+
+/* ------------------*/
+/* General CSS Reset */
+/*-------------------*/
+@layer base {
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+
+	html {
+		height: 100%;
+	}
+
+	body {
+		min-height: 100%;
+	}
+
+	html {
+		scroll-behavior: smooth;
+		-webkit-tap-highlight-color: transparent;
+		font-synthesis: none;
+		text-rendering: optimizeLegibility;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	input:focus-visible {
+		outline: 2px solid transparent;
+		outline-offset: 2px;
+	}
+
+	img {
+		width: 100%;
+		max-inline-size: 100%;
+		max-width: unset;
+	}
+
+	button {
+		outline: transparent;
+	}
+
+	button:not(:disabled) {
+		cursor: pointer;
+	}
+
+	body {
+		line-height: 1.5;
+		/* font-family: var(--font-work-sans); */
+		/* color: var(--color-ceddarise-body-color); */
+	}
+}
+
+@utility custom-scrollbar {
+	&::-webkit-scrollbar {
+		width: 6px;
+	}
+
+	&::-webkit-scrollbar-track {
+		background-color: hsl(0, 0%, 76%);
+		border-radius: 10px 10px 0 0;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background-color: var(--color-ceddarise-primary-main);
+		border: 1px solid hsl(0, 0%, 76%);
+		border-radius: 10px;
+	}
+}
+
+@utility scrollbar-hidden {
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}
+
+@utility nav-link-transition {
+	position: relative;
+
+	&::before {
+		content: "";
+		position: absolute;
+		bottom: 20px;
+		left: 50%;
+		background-color: var(--color-medinfo-primary-darker);
+		opacity: 0;
+		transform: translateX(-50%);
+		height: 2px;
+		width: 2px;
+		border-radius: 50%;
+		transition:
+			opacity 0.4s ease 0s,
+			bottom 0.3s ease 0.1s,
+			height 0.5s ease 0.3s,
+			border-radius 0.2s ease 0.4s,
+			width 0.5s ease 0.4s;
+	}
+
+	@media (width < 800px) {
+		&.nav-mobile::before {
+			background-color: white;
+		}
+	}
+
+	&:hover::before {
+		bottom: -0.7px;
+		height: 2px;
+		width: calc(100% + 2px);
+		border-radius: 20px;
+		opacity: 1;
+	}
+}
