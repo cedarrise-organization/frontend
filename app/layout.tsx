@@ -1,31 +1,32 @@
 import type { Metadata } from "next";
-import { Roboto, Work_Sans } from "next/font/google";
+import { Poppins } from "next/font/google";
+import localFont from "next/font/local";
 import { SonnerToaster } from "@/components/common/Toaster";
 import { cnJoin } from "@/lib/utils/cn";
 import { Providers } from "./Providers";
 import "../tailwind.css";
 
-const workSans = Work_Sans({
-	subsets: ["latin"],
-	variable: "--font-work-sans",
-	weight: ["500", "600", "700"],
+const coolvetica = localFont({
+	src: "../assets/fonts/coolvetica-regular.woff2",
+	variable: "--font-coolvetica",
+	weight: "400",
 });
 
-const roboto = Roboto({
+const poppins = Poppins({
 	subsets: ["latin"],
-	variable: "--font-roboto",
+	variable: "--font-poppins",
 	weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
-	// description: "Free access to knowledge and an easy chit-chat with the best doctors",
-	// title: "MedInfo",
+	description: "Empowering Lives, Building Futures.",
+	title: "CedarRise",
 };
 
 function RootLayout({ children }: LayoutProps<"/">) {
 	return (
 		<html lang="en">
-			<body className={cnJoin(roboto.variable, workSans.variable)}>
+			<body className={cnJoin(coolvetica.variable, poppins.variable)}>
 				<Providers>{children}</Providers>
 
 				<SonnerToaster />

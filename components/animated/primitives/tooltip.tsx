@@ -1,3 +1,4 @@
+/* eslint-disable react-you-might-not-need-an-effect/no-event-handler */
 /* eslint-disable react/set-state-in-effect */
 "use client";
 
@@ -257,7 +258,6 @@ function TooltipOverlay() {
 			}),
 			flip(),
 			shift({ padding: 8 }),
-			// eslint-disable-next-line react-hooks/refs
 			floatingArrow({ element: arrowRef }),
 		],
 		placement: align === "center" ? side : `${side}-${align}`,

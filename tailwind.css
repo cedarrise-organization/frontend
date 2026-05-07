@@ -8,6 +8,10 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 @theme {
+	--color-cedar-yellow: hsl(39, 96%, 53%);
+	--color-cedar-red: hsl(351, 96%, 30%);
+	--color-cedar-black: hsl(240, 5%, 11%);
+	--color-cedar-white: hsl(165, 100%, 99%);
 }
 
 /* ------------------*/
@@ -20,6 +24,8 @@
 /* Fonts */
 /*-------------------*/
 @theme inline {
+	--font-coolvetica: var(--font-coolvetica);
+	--font-poppins: var(--font-poppins);
 }
 
 /* ------------------*/
@@ -138,26 +144,18 @@
 	}
 
 	body {
+		font-family: var(--font-poppins);
 		line-height: 1.5;
-		/* font-family: var(--font-work-sans); */
 		/* color: var(--color-ceddarise-body-color); */
 	}
-}
 
-@utility custom-scrollbar {
-	&::-webkit-scrollbar {
-		width: 6px;
-	}
-
-	&::-webkit-scrollbar-track {
-		background-color: hsl(0, 0%, 76%);
-		border-radius: 10px 10px 0 0;
-	}
-
-	&::-webkit-scrollbar-thumb {
-		background-color: var(--color-ceddarise-primary-main);
-		border: 1px solid hsl(0, 0%, 76%);
-		border-radius: 10px;
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		font-family: var(--font-coolvetica);
 	}
 }
 
@@ -175,7 +173,7 @@
 		position: absolute;
 		bottom: 20px;
 		left: 50%;
-		background-color: var(--color-medinfo-primary-darker);
+		background-color: var(--color-cedar-red);
 		opacity: 0;
 		transform: translateX(-50%);
 		height: 2px;

@@ -7,6 +7,8 @@ const config: NextConfig = {
 
 	reactStrictMode: true,
 
+	typedRoutes: true,
+
 	typescript: {
 		ignoreBuildErrors: true,
 	},

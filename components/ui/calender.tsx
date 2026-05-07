@@ -1,3 +1,4 @@
+/* eslint-disable react-you-might-not-need-an-effect/no-event-handler */
 /* eslint-disable react/no-nested-component-definitions */
 "use client";
 
@@ -163,7 +164,6 @@ export function Calendar(
 				weekdays: cnMerge("flex", defaultClassNames.weekdays, classNames?.weekdays),
 			}}
 			components={{
-				// eslint-disable-next-line react/component-hook-factories
 				Chevron: ({ className: innerClassName, orientation, ...innerRestOfProps }) => {
 					if (orientation === "left") {
 						return (
@@ -196,7 +196,6 @@ export function Calendar(
 
 				DayButton: CalendarDayButton,
 
-				// eslint-disable-next-line react/component-hook-factories
 				Root: ({ className: innerClassName, rootRef, ...innerRestOfProps }) => {
 					return (
 						<div
@@ -208,7 +207,6 @@ export function Calendar(
 					);
 				},
 
-				// eslint-disable-next-line react/component-hook-factories
 				WeekNumber: ({ children, ...innerRestOfProps }) => {
 					return (
 						<td {...innerRestOfProps}>
