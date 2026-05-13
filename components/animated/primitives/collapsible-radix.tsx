@@ -1,5 +1,5 @@
+/* eslint-disable react/no-unstable-default-props */
 import { createCustomContext, useCallbackRef, useToggle } from "@zayne-labs/toolkit-react";
-import type { InferProps } from "@zayne-labs/toolkit-react/utils";
 import { isFunction } from "@zayne-labs/toolkit-type-helpers";
 import { AnimatePresence, motion, type HTMLMotionProps, type Transition } from "motion/react";
 import { Collapsible as CollapsiblePrimitive } from "radix-ui";
@@ -15,7 +15,7 @@ type ContextValue = {
 
 const [CollapsibleContextProvider, useCollapsibleContext] = createCustomContext<ContextValue>();
 
-function CollapsibleRoot(props: InferProps<typeof CollapsiblePrimitive.Root>) {
+function CollapsibleRoot(props: React.ComponentProps<typeof CollapsiblePrimitive.Root>) {
 	// eslint-disable-next-line ts-eslint/unbound-method
 	const { defaultOpen, onOpenChange: setOpenProp, open: openProp, ...restOfProps } = props;
 
@@ -60,9 +60,7 @@ function CollapsibleRoot(props: InferProps<typeof CollapsiblePrimitive.Root>) {
 	);
 }
 
-type CollapsibleTriggerProps = InferProps<typeof CollapsiblePrimitive.Trigger>;
-
-function CollapsibleTrigger(props: CollapsibleTriggerProps) {
+function CollapsibleTrigger(props: React.ComponentProps<typeof CollapsiblePrimitive.Trigger>) {
 	const { className, ...restOfProps } = props;
 
 	return (
@@ -74,14 +72,19 @@ function CollapsibleTrigger(props: CollapsibleTriggerProps) {
 	);
 }
 
-type CollapsibleContentProps = HTMLMotionProps<"li">
-	& InferProps<typeof CollapsiblePrimitive.Content> & {
-		keepRendered?: boolean;
-		transition?: Transition;
-	};
-
-function CollapsibleContent(props: CollapsibleContentProps) {
-	const { children, className, keepRendered = false, transition, ...restOfProps } = props;
+function CollapsibleContent(
+	props: HTMLMotionProps<"li">
+		& React.ComponentProps<typeof CollapsiblePrimitive.Content> & {
+			keepRendered?: boolean;
+			transition?: Transition;
+		}
+) {
+	const {
+		children,
+		keepRendered = false,
+		transition = { duration: 0.35, ease: "easeInOut" },
+		...restOfProps
+	} = props;
 
 	const { isOpen } = useCollapsibleContext();
 
@@ -93,14 +96,13 @@ function CollapsibleContent(props: CollapsibleContentProps) {
 						key="collapsible-content"
 						data-slot="collapsible-content"
 						layout={true}
-						initial={{ height: 0, opacity: 0, overflow: "hidden" }}
+						initial={{ height: 0, opacity: 0, overflow: "hidden", y: 20 }}
 						animate={
 							isOpen ?
 								{ height: "auto", opacity: 1, overflow: "hidden", y: 0 }
 							:	{ height: 0, opacity: 0, overflow: "hidden", y: 20 }
 						}
-						transition={transition ?? { damping: 22, stiffness: 150, type: "spring" }}
-						className={className}
+						transition={transition}
 						{...restOfProps}
 					>
 						{children}
@@ -112,11 +114,10 @@ function CollapsibleContent(props: CollapsibleContentProps) {
 							key="collapsible-content"
 							data-slot="collapsible-content"
 							layout={true}
-							initial={{ height: 0, opacity: 0, overflow: "hidden" }}
-							animate={{ height: "auto", opacity: 1, overflow: "hidden" }}
-							exit={{ height: 0, opacity: 0, overflow: "hidden" }}
-							transition={transition ?? { damping: 22, stiffness: 150, type: "spring" }}
-							className={className}
+							initial={{ height: 0, opacity: 0, overflow: "hidden", y: 20 }}
+							animate={{ height: "auto", opacity: 1, overflow: "hidden", y: 0 }}
+							exit={{ height: 0, opacity: 0, overflow: "hidden", y: 20 }}
+							transition={transition}
 							{...restOfProps}
 						>
 							{children}
@@ -128,9 +129,10 @@ function CollapsibleContent(props: CollapsibleContentProps) {
 	);
 }
 
-export const Root = CollapsibleRoot;
-export const Trigger = CollapsibleTrigger;
-export const Content = CollapsibleContent;
-
-// eslint-disable-next-line react-refresh/only-export-components
-export { useCollapsibleContext };
+export {
+	CollapsibleRoot as Root,
+	CollapsibleTrigger as Trigger,
+	CollapsibleContent as Content,
+	// eslint-disable-next-line react-refresh/only-export-components
+	useCollapsibleContext,
+};

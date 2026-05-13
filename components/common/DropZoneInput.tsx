@@ -110,4 +110,6 @@ function DropZoneInputImagePreview(props: ImagePreviewProps) {
 	);
 }
 
-export { DropZoneInputRoot as Root, DropZoneInputImagePreview as ImagePreview };
+export const Root = DropZoneInputRoot;
+
+export const ImagePreview = DropZoneInputImagePreview;

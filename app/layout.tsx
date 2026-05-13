@@ -19,7 +19,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-	description: "Empowering Lives, Building Futures.",
+	description: "Nurturing Minds, Transforming Communities",
 	title: "CedarRise",
 };
 
