@@ -1,6 +1,6 @@
 "use client";
 
-import type { InferProps, PolymorphicProps } from "@zayne-labs/toolkit-react/utils";
+import type { InferProps, PolymorphicPropsStrict } from "@zayne-labs/toolkit-react/utils";
 import type { Prettify } from "@zayne-labs/toolkit-type-helpers";
 import Image from "next/image";
 import { tv, type VariantProps } from "tailwind-variants";
@@ -87,7 +87,7 @@ export const buttonVariants = tv({
 		size: {
 			icon: "size-[64px] text-[20px] lg:size-[72px] lg:text-[24px]",
 
-			medium: "h-[64px] px-10 text-base font-medium lg:px-[72px] lg:text-[20px]",
+			medium: "h-[64px] px-9 text-base font-medium lg:h-[72px] lg:px-[64px] lg:text-[20px]",
 		},
 
 		theme: {
@@ -103,7 +103,7 @@ export const buttonVariants = tv({
 	},
 });
 
-function Button<TElement extends React.ElementType>(props: PolymorphicProps<TElement, ButtonProps>) {
+function Button<TElement extends React.ElementType>(props: PolymorphicPropsStrict<TElement, ButtonProps>) {
 	const {
 		as: Element = "button",
 		asChild,

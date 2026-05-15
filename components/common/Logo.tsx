@@ -16,14 +16,14 @@ function Logo(
 	const defaultChild = <h3 className="text-[24px] lg:text-[32px]">CedarRise</h3>;
 
 	return (
-		<Element href="/" className={cnMerge("flex items-center gap-3", classNames?.base)}>
+		<Element href="/" className={cnMerge("flex items-center gap-3 lg:gap-4", classNames?.base)}>
 			<Image
 				src={src ?? logo}
 				alt="Logo"
 				priority={true}
 				width={48}
 				height={52}
-				className={cnMerge("w-[48px] shrink-0 lg:w-[64px]", className, classNames?.image)}
+				className={cnMerge("w-[48px] shrink-0 lg:w-[72px]", className, classNames?.image)}
 				{...restOfProps}
 			/>
 			{children ?? defaultChild}

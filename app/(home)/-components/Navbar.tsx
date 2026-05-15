@@ -29,11 +29,11 @@ export { NavBar };
 const navLinkItems = [
 	{ href: "/", title: "Home" },
 	{ href: "/about", title: "About us" },
-	// { href: "/capacity-building", title: "Capacity Building" },
+	{ href: "/capacity-building", title: "Capacity Building" },
 	// { href: "/social-initiatives", title: "Social Initiatives" },
-	// { href: "/blog", title: "Blog" },
+	{ href: "/blog", title: "Blog" },
 	// { href: "/get-involved", title: "Get Involved" },
-	// { href: "/donate", title: "Donate" },
+	{ href: "/donate", title: "Donate" },
 ] satisfies Array<{ href: MainAppRoutes; title: string }>;
 
 function DesktopNavigation(props: { className?: string }) {
@@ -50,7 +50,7 @@ function DesktopNavigation(props: { className?: string }) {
 						key={linkItem.title}
 						transitionType="no-transition"
 						href={linkItem.href}
-						className="inline-flex h-[56px] shrink-0 items-center justify-center rounded-[12px] px-5
+						className="inline-flex h-[56px] shrink-0 items-center justify-center rounded-[12px] p-5
 							data-[active=true]:bg-cedar-yellow"
 					>
 						{linkItem.title}
