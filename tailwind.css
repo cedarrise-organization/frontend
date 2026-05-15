@@ -12,6 +12,8 @@
 	--color-cedar-red: hsl(351, 96%, 30%);
 	--color-cedar-black: hsl(240, 5%, 11%);
 	--color-cedar-white: hsl(165, 100%, 99%);
+
+	--color-cedar-body-color: hsls(240, 5%, 11%, 0.8);
 }
 
 /* ------------------*/
@@ -21,7 +23,7 @@
 }
 
 /* ------------------*/
-/* Fonts */
+/* Fonts             */
 /*-------------------*/
 @theme inline {
 	--font-coolvetica: var(--font-coolvetica);
@@ -35,7 +37,7 @@
 	--breakpoint-*: initial;
 	--breakpoint-sm: 480px;
 	--breakpoint-md: 780px;
-	--breakpoint-lg: 1000px;
+	--breakpoint-lg: 1024px;
 	--breakpoint-xl: 1280px;
 }
 
@@ -200,7 +202,7 @@
 	body {
 		font-family: var(--font-poppins);
 		line-height: 1.5;
-		/* color: var(--color-ceddarise-body-color); */
+		color: var(--color-cedar-body-color);
 	}
 
 	h1,
@@ -239,12 +241,6 @@
 			height 0.5s ease 0.3s,
 			border-radius 0.2s ease 0.4s,
 			width 0.5s ease 0.4s;
-	}
-
-	@media (width < 800px) {
-		&.nav-mobile::before {
-			background-color: white;
-		}
 	}
 
 	&:hover::before {

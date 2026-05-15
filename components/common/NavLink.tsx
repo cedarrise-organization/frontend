@@ -15,7 +15,7 @@ function NavLink<TRouteType extends string = AppRoutes>(
 		href:
 			| (Omit<UrlObject, "pathname"> & { pathname: MainAppRoutes<TRouteType> })
 			| MainAppRoutes<TRouteType>;
-		transitionType?: "navbar" | "no-transition" | "regular";
+		transitionType?: "no-transition" | "regular";
 	}
 ) {
 	const { children, className, href, transitionType = "no-transition", ...restOfProps } = props;
@@ -28,12 +28,7 @@ function NavLink<TRouteType extends string = AppRoutes>(
 		<Link
 			href={href}
 			data-active={isActive}
-			className={cnMerge(
-				transitionType !== "no-transition" && "nav-link-transition",
-				// eslint-disable-next-line tailwindcss-better/no-unknown-classes
-				transitionType === "navbar" && "nav-mobile",
-				className
-			)}
+			className={cnMerge(transitionType !== "no-transition" && "nav-link-transition", className)}
 			{...restOfProps}
 		>
 			{children}
