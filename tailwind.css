@@ -12,8 +12,6 @@
 	--color-cedar-red: hsl(351, 96%, 30%);
 	--color-cedar-black: hsl(240, 5%, 11%);
 	--color-cedar-white: hsl(165, 100%, 99%);
-
-	--color-cedar-body-color: hsls(240, 5%, 11%, 0.8);
 }
 
 /* ------------------*/
@@ -202,7 +200,7 @@
 	body {
 		font-family: var(--font-poppins);
 		line-height: 1.5;
-		color: var(--color-cedar-body-color);
+		color: var(--color-cedar-black);
 	}
 
 	h1,
