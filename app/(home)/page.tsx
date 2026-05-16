@@ -57,7 +57,11 @@ function HeroSection() {
 					<span className="flex items-center gap-4.5">
 						<p className="font-medium lg:text-[20px]">Get Involved</p>
 
-						<Button theme="secondary" size="icon" className="shrink-0">
+						<Button
+							theme="secondary"
+							size="icon"
+							className="size-[64px] shrink-0 max-lg:text-[20px]"
+						>
 							<IconBox icon="solar:arrow-right-up-outline" />
 						</Button>
 					</span>
@@ -264,11 +268,7 @@ function OurProgrammesSection() {
 							/>
 						</div>
 
-						<Button
-							theme="secondary"
-							size="icon"
-							className="mt-3 mr-3 size-10 self-end max-lg:text-base lg:mt-4 lg:mr-4"
-						>
+						<Button theme="secondary" size="icon" className="mt-3 mr-3 self-end lg:mt-4 lg:mr-4">
 							<IconBox icon="solar:arrow-right-up-outline" />
 						</Button>
 
