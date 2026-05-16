@@ -267,7 +267,7 @@ function OurProgrammesSection() {
 						<Button
 							theme="secondary"
 							size="icon"
-							className="mt-3 mr-3 size-10 self-end lg:mt-4 lg:mr-4"
+							className="mt-3 mr-3 size-10 self-end max-lg:text-base lg:mt-4 lg:mr-4"
 						>
 							<IconBox icon="solar:arrow-right-up-outline" />
 						</Button>
