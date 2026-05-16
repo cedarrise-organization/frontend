@@ -1,3 +1,5 @@
+"use client";
+
 export * as Accordion from "./accordion";
 export * from "./calender";
 export * as Avatar from "./avatar";

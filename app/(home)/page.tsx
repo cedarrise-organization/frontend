@@ -1,6 +1,5 @@
 import { ForWithWrapper } from "@zayne-labs/ui-react/common/for";
 import Image from "next/image";
-import type React from "react";
 import {
 	heroImg,
 	programmeFour,
@@ -18,6 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cnJoin } from "@/lib/utils/cn";
 import { Main } from "./-components/Main";
+import { TestimonialCarousel } from "./-components/TestimonialCarousel";
 
 function HomePage() {
 	return (
@@ -25,6 +25,7 @@ function HomePage() {
 			<HeroSection />
 			<WhatWeDoSection />
 			<OurProgrammesSection />
+			<TestimonialsSection />
 		</Main>
 	);
 }
@@ -231,7 +232,7 @@ const initiatives: Array<{ description: string; image: string; title: string }> 
 
 function OurProgrammesSection() {
 	return (
-		<section>
+		<section className="flex flex-col gap-6 lg:gap-12">
 			<header className="flex flex-col gap-3 lg:flex-row lg:justify-between lg:gap-9.5">
 				<h2 className="shrink-0 text-[24px] leading-none lg:text-[48px]">Our Programmes</h2>
 				<p className="max-w-[825px] text-[12px]/5 text-black lg:text-base/7">
@@ -246,8 +247,8 @@ function OurProgrammesSection() {
 			</header>
 
 			<ForWithWrapper
-				className="mt-6 grid auto-rows-[320px] grid-cols-1 justify-center gap-4 lg:mt-12
-					lg:auto-rows-[416px] lg:grid-cols-[repeat(2,min(100%/2,590px))] lg:gap-5"
+				className="grid auto-rows-[320px] grid-cols-1 justify-center gap-4 lg:auto-rows-[416px]
+					lg:grid-cols-[repeat(2,min(100%/2,590px))] lg:gap-5"
 				each={initiatives}
 				renderItem={(initiative) => (
 					<li
@@ -281,6 +282,17 @@ function OurProgrammesSection() {
 					</li>
 				)}
 			/>
+		</section>
+	);
+}
+
+function TestimonialsSection() {
+	return (
+		<section className="flex flex-col gap-3">
+			<h2 className="text-center leading-none text-cedar-yellow lg:text-[24px]">Testimonials</h2>
+			<h3 className="text-center text-[24px] leading-none lg:text-[40px]">Our Impact So Far</h3>
+
+			<TestimonialCarousel />
 		</section>
 	);
 }
