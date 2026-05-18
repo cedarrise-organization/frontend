@@ -12,8 +12,8 @@ import { cnMerge } from "@/lib/utils/cn";
 function NavBar() {
 	return (
 		<header
-			className="relative isolate z-500 flex w-full items-center justify-between gap-12 px-6 py-4
-				lg:p-11"
+			className="relative isolate z-500 flex w-full items-center justify-between gap-12 px-4
+				lg:px-[120px] lg:py-11"
 		>
 			<Logo />
 
