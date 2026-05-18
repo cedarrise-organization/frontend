@@ -1,4 +1,5 @@
 /* eslint-disable react/no-nested-component-definitions */
+"use client";
 
 import { DayButton, DayPicker, getDefaultClassNames } from "@daypicker/react";
 import type { ExtractUnion } from "@zayne-labs/toolkit-type-helpers";

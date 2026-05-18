@@ -1,3 +1,5 @@
+"use client";
+
 import { tv, type VariantProps } from "tailwind-variants";
 import { Slot } from "@/components/common/slot";
 import { cnMerge } from "@/lib/utils/cn";

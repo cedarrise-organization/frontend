@@ -1,13 +1,15 @@
-import { ForWithWrapper } from "@zayne-labs/ui-react/common/for";
 import Image from "next/image";
 import {
+	ctaOneImg,
 	heroImg,
 	programmeFour,
 	programmeOne,
 	programmeThree,
 	programmeTwo,
 } from "@/assets/images/landing";
+import { ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
+import { NavLink } from "@/components/common/NavLink";
 import {
 	communityOutReachIcon,
 	educationIcon,
@@ -16,6 +18,7 @@ import {
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { cnJoin } from "@/lib/utils/cn";
+import { ContactForm } from "./-components/ContactForm";
 import { Main } from "./-components/Main";
 import { TestimonialCarousel } from "./-components/TestimonialCarousel";
 
@@ -26,6 +29,9 @@ function HomePage() {
 			<WhatWeDoSection />
 			<OurProgrammesSection />
 			<TestimonialsSection />
+			<CtaSectionOne />
+			<FinalCTASection />
+			<ContactSection />
 		</Main>
 	);
 }
@@ -53,9 +59,9 @@ function HeroSection() {
 				</p>
 
 				<div className="mt-12 flex items-center gap-4.5 lg:mt-20 lg:gap-11">
-					<Button className="shrink-0">Donate Now</Button>
+					<Button className="h-[64px] shrink-0 text-base">Donate Now</Button>
 
-					<span className="flex items-center gap-4.5">
+					<NavLink href="#" className="flex items-center gap-4.5">
 						<p className="font-medium lg:text-[20px]">Get Involved</p>
 
 						<Button
@@ -65,7 +71,7 @@ function HeroSection() {
 						>
 							<IconBox icon="solar:arrow-right-up-outline" />
 						</Button>
-					</span>
+					</NavLink>
 				</div>
 			</article>
 
@@ -137,8 +143,9 @@ function WhatWeDoSection() {
 			</h3>
 
 			<ForWithWrapper
-				className="mt-9.5 grid auto-rows-[148px] grid-cols-2 justify-center gap-2 lg:mt-[52px]
-					lg:auto-rows-[minmax(252px,1fr)] lg:grid-cols-[repeat(4,min(100%/4,245px))] lg:gap-5"
+				className="mt-9.5 grid auto-rows-[148px] grid-cols-2 gap-2 lg:mt-[52px]
+					lg:auto-rows-[minmax(252px,1fr)] lg:grid-cols-[repeat(4,min(100%/4,245px))]
+					lg:justify-center lg:gap-5"
 				each={offers}
 				renderItem={(offer, index) => {
 					const offerCount = index + 1;
@@ -157,7 +164,7 @@ function WhatWeDoSection() {
 
 					const isOfferCountEven = offerCount % 2 === 0;
 
-					// NOTE - FIX FOR HOVER SPAZZING:
+					// NOTE - FIX FOR HOVER ISSUES:
 					// We use a static wrapper (li) as the hover "hit box" and apply a `group` class to it.
 					// Since the wrapper never rotates, its physical boundaries never change.
 					// The inner div uses `group-hover` to perform the actual rotation, which prevents the endless loop where rotating an element moves it out from under the cursor, losing the hover state.
@@ -247,8 +254,8 @@ function OurProgrammesSection() {
 			</header>
 
 			<ForWithWrapper
-				className="grid auto-rows-[320px] grid-cols-1 justify-center gap-4 lg:auto-rows-[416px]
-					lg:grid-cols-[repeat(2,min(100%/2,590px))] lg:gap-5"
+				className="grid auto-rows-[320px] grid-cols-1 gap-4 lg:auto-rows-[416px]
+					lg:grid-cols-[repeat(2,min(100%/2,590px))] lg:justify-center lg:gap-5"
 				each={initiatives}
 				renderItem={(initiative) => (
 					<li
@@ -293,6 +300,160 @@ function TestimonialsSection() {
 			<h3 className="text-center text-[24px] leading-none lg:text-[40px]">Our Impact So Far</h3>
 
 			<TestimonialCarousel />
+		</section>
+	);
+}
+
+function CtaSectionOne() {
+	return (
+		<section
+			className="grid grid-cols-1 gap-4 lg:grid-cols-[repeat(2,min(100%/2,590px))]
+				lg:grid-rows-[minmax(380px,auto)_minmax(562px,auto)] lg:justify-center lg:gap-5"
+		>
+			<article
+				className="flex flex-col gap-4 rounded-[24px] bg-cedar-red px-5 py-6 text-cedar-white
+					max-lg:text-center lg:gap-5 lg:rounded-[32px]"
+			>
+				<h3 className="text-[24px] lg:text-[40px]">Sustainable Impact Initiatives</h3>
+
+				<p className="grow text-[10px]/[1.5] text-pretty text-cedar-white/80 lg:text-[14px]">
+					To sustain our programs and expand our impact, CedarRise operates a number of
+					mission-aligned initiatives that generate income while supporting our social work. Proceeds
+					from these activities are reinvested directly into our programs, particularly TACOTS and
+					ASH, helping us reach more children and communities.
+				</p>
+
+				<h4 className="leading-[1.2] lg:text-[24px]">
+					The ASH Online Tutorials and the Gift by CedarRise are the categories under our Social
+					Enterprises
+				</h4>
+			</article>
+
+			<article
+				className="flex flex-col items-center gap-10 rounded-[32px] bg-[hsl(0,0%,94%)] px-6 py-7
+					lg:gap-12 lg:px-10.5 lg:py-10 lg:[grid-area:2/1]"
+			>
+				<h3 className="text-center text-[24px] leading-none lg:text-[40px]">ASH Online Tutorials</h3>
+
+				<p className="max-w-[285px] grow text-[10px]/[1.5] text-pretty lg:max-w-[456px] lg:text-[14px]">
+					Learning support that empowers students and communities. ASH Online Tutorials provides
+					structured academic support for students who need additional guidance outside the classroom.
+					Through experienced tutors and personalized sessions, we help learners strengthen their
+					understanding, confidence, and academic performance. The program also supports the broader
+					ASH initiative, enabling CedarRise to extend after-school academic support and holistic
+					learning opportunities to underserved youth. By enrolling in ASH Online Tutorials, families
+					receive quality learning support while helping expand access to education for children in
+					need.
+				</p>
+
+				<Button>Enroll now</Button>
+			</article>
+
+			<div
+				className="flex flex-col items-center gap-10 rounded-[24px] max-lg:bg-[hsl(0,0%,94%)]
+					max-lg:px-6 max-lg:py-7 lg:contents"
+			>
+				<article
+					className="flex flex-col items-center gap-4 bg-[hsl(0,0%,94%)] lg:gap-5.5 lg:rounded-[32px]
+						lg:px-9 lg:py-8 lg:[grid-area:2/2]"
+				>
+					<h3 className="text-center text-[24px] leading-none lg:text-[40px]">Gifts by CedarRise</h3>
+
+					<p className="grow text-[10px]/[14px] text-pretty lg:max-w-[524px] lg:text-[16px]/[28px]">
+						Gifts by CedarRise curates beautiful and thoughtful gift packages for celebrations,
+						corporate events, milestones, and special occasions. Each gift is carefully assembled to
+						create memorable experiences while supporting a greater cause. Every purchase contributes
+						directly to TACOTS (Take A Child Off The Street), helping provide educational support and
+						mentorship to vulnerable children. By choosing Gifts by CedarRise, you are not only
+						celebrating life’s special moments, you are also helping a child access education and
+						opportunity.
+					</p>
+
+					<div className="flex w-full items-end justify-between gap-3.5 lg:gap-8">
+						<div className="flex flex-col gap-2">
+							<p className="font-medium lg:text-[24px]">Contact us</p>
+
+							<ForWithWrapper
+								className="flex flex-col gap-0.5"
+								each={[
+									{ icon: "ph:phone-fill", info: "09090909090" },
+									{ icon: "ph:instagram-logo", info: "cedarriseinitiative" },
+									{ icon: "ri:mail-fill", info: "ash.cedarrise@gmail.com" },
+								]}
+								renderItem={(item) => (
+									<li key={item.info} className="flex items-center text-[10px] lg:text-base">
+										<span
+											className="grid size-3.5 place-content-center rounded-full bg-cedar-yellow
+												text-cedar-white lg:size-5.5"
+										>
+											<IconBox icon={item.icon} />
+										</span>
+										<span>:</span>
+										<p className="ml-1 font-light">{item.info}</p>
+									</li>
+								)}
+							/>
+						</div>
+
+						<Button className="px-6.5 max-lg:shrink-0 lg:px-5">
+							View Collection <IconBox icon="ph:arrow-right" className="shrink-0 lg:size-7.5" />
+						</Button>
+					</div>
+				</article>
+
+				<article
+					className="relative isolate h-[235px] w-full rounded-[16px] lg:h-full lg:rounded-[32px]"
+				>
+					<Image
+						src={ctaOneImg}
+						alt="CTA"
+						className="absolute inset-0 size-full rounded-[inherit] object-cover"
+					/>
+					<span
+						className="absolute inset-x-0 bottom-0 h-4/5 rounded-b-[inherit]
+							bg-[linear-gradient(180deg,theme(--color-cedar-red/0)_0%,theme(--color-cedar-red)_100%)]"
+					/>
+				</article>
+			</div>
+		</section>
+	);
+}
+
+function FinalCTASection() {
+	return (
+		<section
+			className="flex flex-col items-center rounded-[24px] bg-cedar-black p-6 text-center
+				lg:rounded-[32px] lg:p-[64px]"
+		>
+			<h2 className="text-[32px] leading-none text-cedar-yellow lg:text-[48px]">
+				Be Part of the Change
+			</h2>
+
+			<p className="mt-2 text-[10px] text-cedar-white lg:mt-4 lg:text-base">
+				Join us in shaping a better future for the next generation.
+			</p>
+
+			<NavLink href="#" className="mt-10 flex items-center gap-2 lg:mt-12.5 lg:gap-8.5">
+				<Button className="shrink-0">Donate Now</Button>
+
+				<span className="flex items-center gap-2">
+					<p className="text-[14px] font-medium text-cedar-white lg:text-[20px]">Get Involved</p>
+
+					<Button theme="secondary" size="icon" className="shrink-0">
+						<IconBox icon="solar:arrow-right-up-outline" />
+					</Button>
+				</span>
+			</NavLink>
+		</section>
+	);
+}
+
+function ContactSection() {
+	return (
+		<section className="flex flex-col items-center gap-6 px-4 lg:gap-10">
+			<h2 className="text-center text-[32px] leading-none lg:text-[40px]">We’d Love Your Feedback</h2>
+
+			<ContactForm />
 		</section>
 	);
 }

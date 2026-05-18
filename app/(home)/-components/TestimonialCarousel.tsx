@@ -34,7 +34,17 @@ const testimonials: Array<{ description: string; title: string }> = [
 
 function TestimonialCarousel() {
 	return (
-		<Carousel.Root className="w-full lg:mt-12" plugins={[autoplay({ delay: 3000 })]}>
+		<Carousel.Root
+			className="w-full lg:mt-12"
+			plugins={[
+				autoplay({
+					delay: 2800,
+					stopOnFocusIn: true,
+					stopOnInteraction: false,
+					stopOnMouseEnter: true,
+				}),
+			]}
+		>
 			<Carousel.Content className="gap-3 select-none lg:gap-5">
 				<For
 					each={testimonials}

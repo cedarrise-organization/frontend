@@ -1,3 +1,5 @@
+"use client";
+
 import { Command as CommandPrimitive } from "cmdk";
 import { cnMerge } from "@/lib/utils/cn";
 import { IconBox } from "../common/IconBox";
