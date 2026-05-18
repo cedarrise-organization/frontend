@@ -24,9 +24,9 @@
 			{
 				"autoExecuteCommands": true,
 				"cwd": "../backend",
-				"icon": "server",
+				"icon": "database",
 				"name": "dev:backend",
-				"commands": ["pnpm dev"]
+				"commands": ["pnpm dev:docker-db"]
 			}
 		]
 	}
