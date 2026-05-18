@@ -1,0 +1,8 @@
+{
+	"recommendations": [
+		"dbaeumer.vscode-eslint", // ESLint
+		"esbenp.prettier-vscode", // Prettier - Code formatter
+		"usernamehw.errorlens", // Error Lens
+		"nguyenngoclong.terminal-keeper" // Terminal Keeper
+	]
+}
