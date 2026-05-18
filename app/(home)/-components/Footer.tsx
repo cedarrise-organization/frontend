@@ -107,14 +107,12 @@ function Footer() {
 				</article>
 			</section>
 
-			<section className="flex w-full flex-col gap-4 lg:gap-8">
-				<h4 className="text-center text-[24px] font-medium text-cedar-yellow lg:-ml-12 lg:text-[32px]">
+			<section className="flex w-full flex-col gap-4 text-center lg:gap-8">
+				<h4 className="text-[24px] font-medium text-cedar-yellow lg:-ml-12 lg:text-[32px]">
 					Rooted in purpose. Rising for impact.
 				</h4>
 
-				<p className="text-center text-[12px] text-cedar-black/70 lg:text-[14px]">
-					© 2026 CedarRise Initiative. All rights reserved.
-				</p>
+				<p className="text-[8px] lg:text-[14px]">© 2026 CedarRise Initiative. All rights reserved.</p>
 			</section>
 		</footer>
 	);
