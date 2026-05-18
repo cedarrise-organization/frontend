@@ -48,7 +48,6 @@ function DesktopNavigation(props: { className?: string }) {
 				renderItem={(linkItem) => (
 					<NavLink
 						key={linkItem.title}
-						transitionType="no-transition"
 						href={linkItem.href}
 						className="inline-flex h-[56px] shrink-0 items-center justify-center rounded-[12px] p-5
 							data-[active=true]:bg-cedar-yellow"
@@ -88,7 +87,7 @@ function MobileNavigation(props: { className?: string }) {
 					className="flex flex-col items-center gap-5 text-[14px] text-nowrap"
 					each={navLinkItems}
 					renderItem={(linkItem) => (
-						<NavLink key={linkItem.title} transitionType="no-transition" href={linkItem.href}>
+						<NavLink key={linkItem.title} href={linkItem.href}>
 							{linkItem.title}
 						</NavLink>
 					)}

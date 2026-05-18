@@ -6,7 +6,6 @@ import type { Route } from "next";
 import Link, { type LinkProps } from "next/link";
 import { usePathname } from "next/navigation";
 import type { AppRoutes } from "@/.next/dev/types/routes";
-import { cnMerge } from "@/lib/utils/cn";
 
 export type MainAppRoutes<TRouteType extends string = AppRoutes> = Route<TRouteType>;
 
@@ -15,22 +14,16 @@ function NavLink<TRouteType extends string = AppRoutes>(
 		href:
 			| (Omit<UrlObject, "pathname"> & { pathname: MainAppRoutes<TRouteType> })
 			| MainAppRoutes<TRouteType>;
-		transitionType?: "no-transition" | "regular";
 	}
 ) {
-	const { children, className, href, transitionType = "no-transition", ...restOfProps } = props;
+	const { children, href, ...restOfProps } = props;
 
 	const pathname = usePathname();
 
 	const isActive = isString(href) ? pathname === href : pathname === href.pathname;
 
 	return (
-		<Link
-			href={href}
-			data-active={isActive}
-			className={cnMerge(transitionType !== "no-transition" && "nav-link-transition", className)}
-			{...restOfProps}
-		>
+		<Link href={href} data-active={isActive} {...restOfProps}>
 			{children}
 		</Link>
 	);
