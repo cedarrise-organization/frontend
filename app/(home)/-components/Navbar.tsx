@@ -28,7 +28,7 @@ export { NavBar };
 
 const navLinkItems = [
 	{ href: "/", title: "Home" },
-	{ href: "/about", title: "About us" },
+	{ href: "/about", title: "About" },
 	{ href: "/capacity-building", title: "Capacity Building" },
 	// { href: "/social-initiatives", title: "Social Initiatives" },
 	{ href: "/blog", title: "Blog" },
@@ -49,7 +49,7 @@ function DesktopNavigation(props: { className?: string }) {
 					<NavLink
 						key={linkItem.title}
 						href={linkItem.href}
-						className="inline-flex h-[56px] shrink-0 items-center justify-center rounded-[12px] p-5
+						className="inline-flex h-[56px] shrink-0 items-center justify-center rounded-[20px] p-5
 							data-[active=true]:bg-cedar-yellow data-[active=true]:text-cedar-white"
 					>
 						{linkItem.title}

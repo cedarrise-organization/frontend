@@ -36,7 +36,7 @@ function HeroSection() {
 					className="absolute inset-0 size-full rounded-[inherit] object-cover"
 				/>
 
-				<span className="absolute inset-0 rounded-[inherit] bg-cedar-red/60" />
+				<span className="absolute inset-0 rounded-[inherit] bg-cedar-red/64" />
 			</div>
 
 			<h1 className="text-center text-[40px]/none text-cedar-white lg:text-[80px]">
@@ -244,7 +244,7 @@ function PartnerCtaSection() {
 			className="flex flex-col items-center rounded-[24px] bg-[hsl(0,0%,94%)] p-6 text-center
 				text-cedar-black lg:rounded-[32px] lg:p-[64px]"
 		>
-			<h2 className="text-[32px] leading-none lg:text-[48px]">Partner With Us to Build Capacity</h2>
+			<h2 className="text-[32px]/none lg:text-[48px]">Partner With Us to Build Capacity</h2>
 
 			<p className="mt-2 text-[10px] lg:mt-4 lg:text-base">
 				We collaborate with schools, organizations, and institutions to deliver impactful training

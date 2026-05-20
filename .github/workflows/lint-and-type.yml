@@ -35,4 +35,4 @@ jobs:
          - name: Run linters
            run: |
               pnpm lint:type-check
-              pnpm lint:eslint:root
+              pnpm lint:eslint
