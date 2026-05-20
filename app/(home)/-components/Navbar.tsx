@@ -50,7 +50,7 @@ function DesktopNavigation(props: { className?: string }) {
 						key={linkItem.title}
 						href={linkItem.href}
 						className="inline-flex h-[56px] shrink-0 items-center justify-center rounded-[12px] p-5
-							data-[active=true]:bg-cedar-yellow"
+							data-[active=true]:bg-cedar-yellow data-[active=true]:text-cedar-white"
 					>
 						{linkItem.title}
 					</NavLink>

@@ -134,7 +134,7 @@ const offers: Array<{ description: string; icon: string; title: string }> = [
 function WhatWeDoSection() {
 	return (
 		<section
-			className="rounded-[24px] bg-cedar-black px-5 pt-7.5 pb-9.5 lg:mt-10 lg:rounded-[40px]
+			className="rounded-[24px] bg-cedar-black px-5 pt-7.5 pb-9.5 lg:mt-10 lg:w-fit lg:rounded-[40px]
 				lg:px-[80px] lg:pt-11 lg:pb-[96px]"
 		>
 			<h2 className="text-center leading-none text-cedar-yellow lg:text-[24px]">What we do</h2>
@@ -143,9 +143,8 @@ function WhatWeDoSection() {
 			</h3>
 
 			<ForWithWrapper
-				className="mt-9.5 grid auto-rows-[148px] grid-cols-2 gap-2 lg:mt-[52px]
-					lg:auto-rows-[minmax(252px,1fr)] lg:grid-cols-[repeat(4,min(100%/4,245px))]
-					lg:justify-center lg:gap-5"
+				className="mt-9.5 grid grid-cols-2 gap-2 lg:mt-[52px]
+					lg:grid-cols-[repeat(4,min(100%/4,245px))] lg:justify-center lg:gap-5"
 				each={offers}
 				renderItem={(offer, index) => {
 					const offerCount = index + 1;
@@ -172,7 +171,10 @@ function WhatWeDoSection() {
 						<li
 							data-order={offerCount}
 							key={offer.title}
-							className={cnJoin("group", isEvenRow && "max-lg:[grid-area:var(--grid-area)]")}
+							className={cnJoin(
+								"group min-h-[148px] lg:min-h-[252px]",
+								isEvenRow && "max-lg:[grid-area:var(--grid-area)]"
+							)}
 							style={
 								isEvenRow ?
 									({ "--grid-area": `${rowNumber}/${swappedColNumber}` } as React.CSSProperties)
@@ -241,7 +243,7 @@ function OurProgrammesSection() {
 	return (
 		<section className="flex flex-col gap-6 lg:gap-12">
 			<header className="flex flex-col gap-3 lg:flex-row lg:justify-between lg:gap-9.5">
-				<h2 className="shrink-0 text-[24px] leading-none lg:text-[48px]">Our Programmes</h2>
+				<h2 className="shrink-0 text-[24px]/none lg:text-[48px]">Our Programmes</h2>
 				<p className="max-w-[825px] text-[12px]/5 text-black lg:text-base/7">
 					At CedarRise, our social initiatives focus on expanding opportunity for underserved
 					communities, particularly children and young people who face barriers to education,
@@ -254,13 +256,14 @@ function OurProgrammesSection() {
 			</header>
 
 			<ForWithWrapper
-				className="grid auto-rows-[320px] grid-cols-1 gap-4 lg:auto-rows-[416px]
-					lg:grid-cols-[repeat(2,min(100%/2,590px))] lg:justify-center lg:gap-5"
+				className="grid grid-cols-1 gap-4 lg:grid-cols-[repeat(2,min(100%/2,590px))] lg:justify-center
+					lg:gap-5"
 				each={initiatives}
 				renderItem={(initiative) => (
 					<li
 						key={initiative.title}
-						className="relative isolate flex flex-col justify-between rounded-[24px] pb-9"
+						className="relative isolate flex min-h-[320px] flex-col justify-between rounded-[24px]
+							pb-9 lg:min-h-[416px]"
 					>
 						<div className="absolute inset-0 isolate -z-1 rounded-[inherit]">
 							<Image
@@ -297,7 +300,7 @@ function TestimonialsSection() {
 	return (
 		<section className="flex flex-col gap-3">
 			<h2 className="text-center leading-none text-cedar-yellow lg:text-[24px]">Testimonials</h2>
-			<h3 className="text-center text-[24px] leading-none lg:text-[40px]">Our Impact So Far</h3>
+			<h3 className="text-center text-[24px]/none lg:text-[40px]">Our Impact So Far</h3>
 
 			<TestimonialCarousel />
 		</section>
@@ -333,7 +336,7 @@ function CtaSectionOne() {
 				className="flex flex-col items-center gap-10 rounded-[32px] bg-[hsl(0,0%,94%)] px-6 py-7
 					lg:gap-12 lg:px-10.5 lg:py-10 lg:[grid-area:2/1]"
 			>
-				<h3 className="text-center text-[24px] leading-none lg:text-[40px]">ASH Online Tutorials</h3>
+				<h3 className="text-center text-[24px]/none lg:text-[40px]">ASH Online Tutorials</h3>
 
 				<p className="max-w-[285px] grow text-[10px]/[1.5] text-pretty lg:max-w-[456px] lg:text-[14px]">
 					Learning support that empowers students and communities. ASH Online Tutorials provides
@@ -357,7 +360,7 @@ function CtaSectionOne() {
 					className="flex flex-col items-center gap-4 bg-[hsl(0,0%,94%)] lg:gap-5.5 lg:rounded-[32px]
 						lg:px-9 lg:py-8 lg:[grid-area:2/2]"
 				>
-					<h3 className="text-center text-[24px] leading-none lg:text-[40px]">Gifts by CedarRise</h3>
+					<h3 className="text-center text-[24px]/none lg:text-[40px]">Gifts by CedarRise</h3>
 
 					<p className="grow text-[10px]/[14px] text-pretty lg:max-w-[524px] lg:text-[16px]/[28px]">
 						Gifts by CedarRise curates beautiful and thoughtful gift packages for celebrations,
@@ -423,27 +426,25 @@ function FinalCTASection() {
 	return (
 		<section
 			className="flex flex-col items-center rounded-[24px] bg-cedar-black p-6 text-center
-				lg:rounded-[32px] lg:p-[64px]"
+				text-cedar-white lg:rounded-[32px] lg:p-[64px]"
 		>
-			<h2 className="text-[32px] leading-none text-cedar-yellow lg:text-[48px]">
-				Be Part of the Change
-			</h2>
+			<h2 className="text-[32px]/none text-cedar-yellow lg:text-[48px]">Be Part of the Change</h2>
 
-			<p className="mt-2 text-[10px] text-cedar-white lg:mt-4 lg:text-base">
+			<p className="mt-2 text-[10px] lg:mt-4 lg:text-base">
 				Join us in shaping a better future for the next generation.
 			</p>
 
-			<NavLink href="#" className="mt-10 flex items-center gap-2 lg:mt-12.5 lg:gap-8.5">
+			<div className="mt-10 flex items-center gap-2 lg:mt-12.5 lg:gap-8.5">
 				<Button className="shrink-0">Donate Now</Button>
 
-				<span className="flex items-center gap-2">
-					<p className="text-[14px] font-medium text-cedar-white lg:text-[20px]">Get Involved</p>
+				<NavLink href="#" className="flex items-center gap-2">
+					<p className="text-[14px] font-medium lg:text-[20px]">Get Involved</p>
 
 					<Button theme="secondary" size="icon" className="shrink-0">
 						<IconBox icon="solar:arrow-right-up-outline" />
 					</Button>
-				</span>
-			</NavLink>
+				</NavLink>
+			</div>
 		</section>
 	);
 }
@@ -451,7 +452,7 @@ function FinalCTASection() {
 function ContactSection() {
 	return (
 		<section className="flex flex-col items-center gap-6 px-4 lg:gap-10">
-			<h2 className="text-center text-[32px] leading-none lg:text-[40px]">We’d Love Your Feedback</h2>
+			<h2 className="text-center text-[32px]/none lg:text-[40px]">We’d Love Your Feedback</h2>
 
 			<ContactForm />
 		</section>
