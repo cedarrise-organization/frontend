@@ -34,8 +34,8 @@ function DonateIntroSection() {
 			</header>
 
 			<article
-				className="flex w-full flex-col gap-4 rounded-[24px] bg-cedar-red p-6 text-cedar-white
-					lg:min-h-[306px] lg:justify-center lg:gap-6 lg:rounded-[32px] lg:p-11"
+				className="flex w-full flex-col gap-4 rounded-[24px] bg-cedar-red p-9 text-cedar-white
+					lg:min-h-[306px] lg:justify-center lg:gap-6 lg:rounded-[32px] lg:p-12"
 			>
 				<h2 className="text-[24px]/none lg:text-[40px]">Support Areas:</h2>
 

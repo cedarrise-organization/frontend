@@ -1,1 +1,1 @@
-export { default as heroImg } from "./hero-img.svg?override";
+export { default as partnerHeroImg } from "./partner-hero-img.svg?override";

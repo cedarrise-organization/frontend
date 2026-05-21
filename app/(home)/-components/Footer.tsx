@@ -29,10 +29,10 @@ const contactInfo = [
 function Footer() {
 	return (
 		<footer
-			className="mt-12 flex w-full flex-col items-center gap-10 bg-cedar-white px-4 py-8 lg:mt-20
-				lg:gap-20 lg:px-[120px] lg:py-[60px]"
+			className="flex w-full flex-col items-center gap-10 bg-cedar-white px-4 py-8 lg:gap-20
+				lg:px-[100px] lg:py-[60px]"
 		>
-			<section className="flex gap-9">
+			<section className="flex w-full justify-center gap-9 lg:justify-between">
 				<header className="flex flex-col">
 					<Logo />
 
