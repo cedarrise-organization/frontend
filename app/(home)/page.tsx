@@ -75,10 +75,7 @@ function HeroSection() {
 				</div>
 			</article>
 
-			<article
-				className="relative h-[444px] w-full min-w-[360px] lg:h-[472px] lg:max-w-[562px]
-					lg:self-center"
-			>
+			<article className="relative h-[444px] w-full lg:h-[472px] lg:max-w-[562px] lg:self-center">
 				<Image
 					src={heroImg}
 					width={380}
@@ -398,8 +395,9 @@ function CtaSectionOne() {
 							/>
 						</div>
 
-						<Button className="px-6.5 max-lg:shrink-0 lg:px-5">
-							View Collection <IconBox icon="ph:arrow-right" className="shrink-0 lg:size-7.5" />
+						<Button className="px-5 max-lg:shrink-0">
+							View Collection{" "}
+							<IconBox icon="ph:arrow-right" className="size-4 shrink-0 lg:size-7.5" />
 						</Button>
 					</div>
 				</article>

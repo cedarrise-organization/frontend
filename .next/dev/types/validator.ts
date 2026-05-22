@@ -81,6 +81,33 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
   type __Unused = __Check
 }
 
+// Validate ../../../app/(home)/get-involved/volunteer/feedback/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/get-involved/volunteer/feedback">> = Specific
+  const handler = {} as typeof import("../../../app/(home)/get-involved/volunteer/feedback/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/(home)/get-involved/volunteer/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/get-involved/volunteer">> = Specific
+  const handler = {} as typeof import("../../../app/(home)/get-involved/volunteer/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/(home)/get-involved/volunteer/register/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/get-involved/volunteer/register">> = Specific
+  const handler = {} as typeof import("../../../app/(home)/get-involved/volunteer/register/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../../app/(home)/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/">> = Specific
@@ -90,10 +117,64 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
   type __Unused = __Check
 }
 
+// Validate ../../../app/(home)/social-initiatives/ash/feedback/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/social-initiatives/ash/feedback">> = Specific
+  const handler = {} as typeof import("../../../app/(home)/social-initiatives/ash/feedback/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/(home)/social-initiatives/ash/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/social-initiatives/ash">> = Specific
+  const handler = {} as typeof import("../../../app/(home)/social-initiatives/ash/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/(home)/social-initiatives/ash/register/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/social-initiatives/ash/register">> = Specific
+  const handler = {} as typeof import("../../../app/(home)/social-initiatives/ash/register/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../../app/(home)/social-initiatives/outreaches/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/social-initiatives/outreaches">> = Specific
   const handler = {} as typeof import("../../../app/(home)/social-initiatives/outreaches/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/(home)/social-initiatives/tacots/feedback/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/social-initiatives/tacots/feedback">> = Specific
+  const handler = {} as typeof import("../../../app/(home)/social-initiatives/tacots/feedback/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/(home)/social-initiatives/tacots/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/social-initiatives/tacots">> = Specific
+  const handler = {} as typeof import("../../../app/(home)/social-initiatives/tacots/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/(home)/social-initiatives/tacots/recommendation/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/social-initiatives/tacots/recommendation">> = Specific
+  const handler = {} as typeof import("../../../app/(home)/social-initiatives/tacots/recommendation/page.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check
