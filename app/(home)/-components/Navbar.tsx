@@ -24,7 +24,7 @@ function NavBar() {
 			ref={observedElementRef}
 			className={cnJoin(
 				`sticky top-0 isolate z-500 flex w-full items-center justify-between gap-12 px-4 py-3
-				transition-shadow duration-300 ease-[ease] lg:px-[100px] lg:py-10`,
+				transition-shadow duration-300 ease-[ease] lg:px-[100px] lg:py-5`,
 				isScrolled && "bg-cedar-white shadow-[0_2px_4px_hsl(0,0%,0%,0.05)]"
 			)}
 		>
@@ -215,7 +215,7 @@ function MobileNavigation(props: { className?: string }) {
 										)}
 										className="flex h-10 w-full items-center justify-between rounded-[14px] px-4
 											hover:bg-[hsl(0,0%,94%)] hover:text-cedar-red
-											data-[active=true]:bg-cedar-black data-[active=true]:text-cedar-white"
+											data-[active=true]:bg-cedar-yellow data-[active=true]:text-cedar-white"
 									>
 										<span>{linkItem.label}</span>
 										<IconBox
@@ -225,27 +225,23 @@ function MobileNavigation(props: { className?: string }) {
 										/>
 									</CollapsibleAnimated.Trigger>
 
-									<CollapsibleAnimated.Content
-										className="mt-1 flex flex-col gap-1 rounded-[16px] p-1"
-									>
+									<CollapsibleAnimated.Content className="mt-2 flex flex-col gap-1 pl-5">
 										<For
 											each={linkItem.children}
 											renderItem={(childItem) => (
 												<NavLink
 													key={childItem.label}
 													href={childItem.link}
-													className="group flex h-9 items-center justify-between gap-4
-														rounded-[12px] px-4 transition-colors hover:bg-[hsl(0,0%,94%)]
-														hover:text-cedar-red data-[active=true]:bg-cedar-black
+													className="group flex h-9 items-center gap-3 rounded-[12px] px-4
+														transition-colors hover:bg-[hsl(0,0%,94%)] hover:text-cedar-red
+														data-[active=true]:bg-cedar-black
 														data-[active=true]:text-cedar-white"
 												>
-													<span className="flex items-center gap-3">
-														<span
-															className="size-2 rounded-full bg-cedar-yellow opacity-0
-																group-data-[active=true]:opacity-100"
-														/>
-														<span>{childItem.label}</span>
-													</span>
+													<span
+														className="size-2 rounded-full bg-cedar-yellow opacity-0
+															group-data-[active=true]:opacity-100"
+													/>
+													<p>{childItem.label}</p>
 												</NavLink>
 											)}
 										/>
