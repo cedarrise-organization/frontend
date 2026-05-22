@@ -23,7 +23,7 @@ function BlogIntroSection() {
 	return (
 		<section className="flex flex-col gap-5 lg:gap-10">
 			<header className="flex flex-col gap-3">
-				<h1 className="text-[24px]/none lg:text-[40px]">Stories, Updates & Insights</h1>
+				<h1 className="text-[24px]/[1.2] lg:text-[40px]">Stories, Updates & Insights</h1>
 				<p className="text-[10px]/4 text-pretty max-lg:max-w-[282px] lg:text-base/7">
 					Stay informed with the latest news, program updates, and impact stories from CedarRise.
 				</p>
@@ -57,7 +57,7 @@ function BlogIntroSection() {
 					className="flex w-full flex-col gap-4 rounded-[24px] bg-cedar-red p-8 text-cedar-white
 						lg:max-w-[386px] lg:gap-11 lg:rounded-[32px]"
 				>
-					<h2 className="text-[24px]/none lg:text-[40px]/[1.25]">From Our Community</h2>
+					<h2 className="text-[24px]/[1.2] lg:text-[40px]/[1.25]">From Our Community</h2>
 					<p className="text-[10px]/4 text-pretty lg:text-base/7">
 						Explore stories, announcements, and reports that highlight our work, impact, and ongoing
 						initiatives across communities.
@@ -79,7 +79,7 @@ const featuredPosts = Array.from({ length: 6 }, (_, index) => ({
 function FeaturedPostsSection() {
 	return (
 		<section className="flex flex-col gap-4 lg:gap-8">
-			<h2 className="text-center text-[24px]/none lg:text-[40px]">Featured</h2>
+			<h2 className="text-center text-[24px]/[1.2] lg:text-[40px]">Featured</h2>
 
 			<ForWithWrapper
 				className="grid grid-cols-1 gap-5 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-5"
@@ -117,7 +117,7 @@ function FinalCTASection() {
 			className="flex flex-col items-center rounded-[24px] bg-cedar-black p-6 text-center
 				text-cedar-white lg:rounded-[32px] lg:p-[64px]"
 		>
-			<h2 className="text-[32px]/none text-cedar-yellow lg:text-[48px]">Stay Connected</h2>
+			<h2 className="text-[32px]/[1.2] text-cedar-yellow lg:text-[48px]">Stay Connected</h2>
 
 			<p className="mt-2 text-[10px] lg:mt-4 lg:text-base">
 				Follow our journey and be part of the impact we're creating.

@@ -25,7 +25,7 @@ function DonateIntroSection() {
 	return (
 		<section className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
 			<header className="flex w-full flex-col gap-4 lg:max-w-[286px]">
-				<h1 className="text-[40px]/none text-cedar-red lg:text-[64px]">Donate</h1>
+				<h1 className="text-[40px]/[1.2] text-cedar-red lg:text-[64px]">Donate</h1>
 
 				<p className="text-[12px]/4 text-pretty lg:text-base/7">
 					Give the gift of opportunity. Your financial support fuels everything we do. Every amount
@@ -37,7 +37,7 @@ function DonateIntroSection() {
 				className="flex w-full flex-col gap-4 rounded-[24px] bg-cedar-red p-9 text-cedar-white
 					lg:min-h-[306px] lg:justify-center lg:gap-6 lg:rounded-[32px] lg:p-12"
 			>
-				<h2 className="text-[24px]/none lg:text-[40px]">Support Areas:</h2>
+				<h2 className="text-[24px]/[1.2] lg:text-[40px]">Support Areas:</h2>
 
 				<ForWithWrapper
 					className="flex flex-col gap-3 lg:gap-5"
@@ -68,7 +68,7 @@ function DonateFormSection() {
 
 			<article className="flex w-full flex-col gap-6">
 				<header className="flex items-center justify-between gap-[64px] lg:px-9">
-					<h2 className="shrink-0 leading-none lg:text-[24px]">Donate Form</h2>
+					<h2 className="shrink-0 leading-[1.2] lg:text-[24px]">Donate Form</h2>
 					<p className="text-[10px]/4 text-cedar-black/60 lg:max-w-[290px] lg:text-[10px]/4">
 						*Please fill information correctly according to field tag
 					</p>

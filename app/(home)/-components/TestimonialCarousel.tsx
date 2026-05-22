@@ -3,6 +3,7 @@
 import autoplay from "embla-carousel-autoplay";
 import { For } from "@/components/common/for";
 import { Carousel } from "@/components/ui";
+import { cnJoin } from "@/lib/utils/cn";
 
 const testimonials: Array<{ description: string; title: string }> = [
 	{
@@ -36,23 +37,27 @@ function TestimonialCarousel() {
 	return (
 		<Carousel.Root
 			className="w-full lg:mt-12"
+			options={{ loop: true }}
 			plugins={[
 				autoplay({
-					delay: 2800,
+					delay: 2600,
 					stopOnFocusIn: true,
 					stopOnInteraction: false,
 					stopOnMouseEnter: true,
 				}),
 			]}
 		>
-			<Carousel.Content className="gap-3 select-none lg:gap-5">
+			<Carousel.Content className="-mr-3 gap-3 select-none lg:-mr-5 lg:gap-5">
 				<For
 					each={testimonials}
 					renderItem={(testimonial, index) => (
 						<Carousel.Item
 							key={index}
-							className="min-h-[318px] w-[92%] cursor-grab active:cursor-grabbing lg:min-h-[336px]
-								lg:w-full lg:max-w-[586px]"
+							className={cnJoin(
+								`min-h-[318px] w-[92%] cursor-grab active:cursor-grabbing lg:min-h-[336px]
+								lg:w-full lg:max-w-[586px]`,
+								index === testimonials.length - 1 && "pr-5"
+							)}
 						>
 							<article
 								className="flex size-full flex-col gap-5 rounded-[24px] bg-[hsl(0,0%,94%)] py-6

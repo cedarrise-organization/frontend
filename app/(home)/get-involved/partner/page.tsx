@@ -35,7 +35,7 @@ function PartnerHeroSection() {
 				className="flex w-full flex-col gap-4 rounded-[24px] bg-cedar-red p-9 text-cedar-white
 					lg:min-h-[420px] lg:max-w-[424px] lg:gap-8 lg:rounded-[32px] lg:p-12"
 			>
-				<h2 className="text-[24px]/none lg:text-[40px]">Ways to Partner:</h2>
+				<h2 className="text-[24px]/[1.2] lg:text-[40px]">Ways to Partner:</h2>
 
 				<ForWithWrapper
 					className="flex flex-col gap-3 lg:gap-5"
@@ -68,12 +68,12 @@ function PartnerRegistrationSection() {
 			className="flex items-center justify-between gap-5 rounded-[16px] bg-cedar-black py-2 pr-2 pl-6
 				text-cedar-white lg:gap-12 lg:rounded-[20px] lg:py-5.5 lg:pr-5.5 lg:pl-12"
 		>
-			<NavLink href="#" className="text-[14px]/none underline underline-offset-5 lg:hidden">
+			<NavLink href="#" className="text-[14px]/[1.2] underline underline-offset-5 lg:hidden">
 				Sign Up to be a Partner
 			</NavLink>
 
 			<div className="contents max-lg:hidden">
-				<NavLink href="#" className="text-[24px]/none underline underline-offset-5">
+				<NavLink href="#" className="text-[24px]/[1.2] underline underline-offset-5">
 					Partner Registration Form
 				</NavLink>
 

@@ -98,7 +98,7 @@ function HeroSection() {
 							className="flex h-[92px] w-[102px] flex-col justify-center gap-1 rounded-[16px]
 								bg-cedar-black px-4 text-cedar-yellow lg:w-[124px] lg:rounded-[12px] lg:px-7"
 						>
-							<h4 className="text-[32px]/none">{stat.count}+</h4>
+							<h4 className="text-[32px]/[1.2]">{stat.count}+</h4>
 							<p className="text-[10px]/4 lg:text-[12px]">{stat.label}</p>
 						</li>
 					)}
@@ -137,8 +137,8 @@ function WhatWeDoSection() {
 			className="rounded-[24px] bg-cedar-black px-5 pt-7.5 pb-9.5 lg:mt-10 lg:w-fit lg:rounded-[40px]
 				lg:px-[80px] lg:pt-11 lg:pb-[96px]"
 		>
-			<h2 className="text-center leading-none text-cedar-yellow lg:text-[24px]">What we do</h2>
-			<h3 className="mt-2 text-center text-[20px]/none text-cedar-white lg:mt-3 lg:text-[40px]">
+			<h2 className="text-center leading-[1.2] text-cedar-yellow lg:text-[24px]">What we do</h2>
+			<h3 className="mt-2 text-center text-[20px]/[1.2] text-cedar-white lg:mt-3 lg:text-[40px]">
 				Dismantling barriers, building futures.
 			</h3>
 
@@ -203,7 +203,7 @@ function WhatWeDoSection() {
 										className="size-5 lg:size-8"
 									/>
 								</span>
-								<h4 className="leading-none text-cedar-white lg:text-[24px]">{offer.title}</h4>
+								<h4 className="leading-[1.2] text-cedar-white lg:text-[24px]">{offer.title}</h4>
 								<p className="text-[10px]/[1.4] text-pretty text-cedar-white/80 lg:text-[14px]">
 									{offer.description}
 								</p>
@@ -243,7 +243,7 @@ function OurProgrammesSection() {
 	return (
 		<section className="flex flex-col gap-6 lg:gap-12">
 			<header className="flex flex-col gap-3 lg:flex-row lg:justify-between lg:gap-9.5">
-				<h2 className="shrink-0 text-[24px]/none lg:text-[48px]">Our Programmes</h2>
+				<h2 className="shrink-0 text-[24px]/[1.2] lg:text-[48px]">Our Programmes</h2>
 				<p className="max-w-[825px] text-[12px]/5 text-black lg:text-base/7">
 					At CedarRise, our social initiatives focus on expanding opportunity for underserved
 					communities, particularly children and young people who face barriers to education,
@@ -299,8 +299,8 @@ function OurProgrammesSection() {
 function TestimonialsSection() {
 	return (
 		<section className="flex flex-col gap-3">
-			<h2 className="text-center leading-none text-cedar-yellow lg:text-[24px]">Testimonials</h2>
-			<h3 className="text-center text-[24px]/none lg:text-[40px]">Our Impact So Far</h3>
+			<h2 className="text-center leading-[1.2] text-cedar-yellow lg:text-[24px]">Testimonials</h2>
+			<h3 className="text-center text-[24px]/[1.2] lg:text-[40px]">Our Impact So Far</h3>
 
 			<TestimonialCarousel />
 		</section>
@@ -336,7 +336,7 @@ function CtaSectionOne() {
 				className="flex flex-col items-center gap-10 rounded-[32px] bg-[hsl(0,0%,94%)] px-6 py-7
 					lg:gap-12 lg:px-10.5 lg:py-10 lg:[grid-area:2/1]"
 			>
-				<h3 className="text-center text-[24px]/none lg:text-[40px]">ASH Online Tutorials</h3>
+				<h3 className="text-center text-[24px]/[1.2] lg:text-[40px]">ASH Online Tutorials</h3>
 
 				<p className="max-w-[285px] grow text-[10px]/[1.5] text-pretty lg:max-w-[456px] lg:text-[14px]">
 					Learning support that empowers students and communities. ASH Online Tutorials provides
@@ -360,7 +360,7 @@ function CtaSectionOne() {
 					className="flex flex-col items-center gap-4 bg-[hsl(0,0%,94%)] lg:gap-5.5 lg:rounded-[32px]
 						lg:px-9 lg:py-8 lg:[grid-area:2/2]"
 				>
-					<h3 className="text-center text-[24px]/none lg:text-[40px]">Gifts by CedarRise</h3>
+					<h3 className="text-center text-[24px]/[1.2] lg:text-[40px]">Gifts by CedarRise</h3>
 
 					<p className="grow text-[10px]/[14px] text-pretty lg:max-w-[524px] lg:text-[16px]/[28px]">
 						Gifts by CedarRise curates beautiful and thoughtful gift packages for celebrations,
@@ -428,7 +428,7 @@ function FinalCTASection() {
 			className="flex flex-col items-center rounded-[24px] bg-cedar-black p-6 text-center
 				text-cedar-white lg:rounded-[32px] lg:p-[64px]"
 		>
-			<h2 className="text-[32px]/none text-cedar-yellow lg:text-[48px]">Be Part of the Change</h2>
+			<h2 className="text-[32px]/[1.2] text-cedar-yellow lg:text-[48px]">Be Part of the Change</h2>
 
 			<p className="mt-2 text-[10px] lg:mt-4 lg:text-base">
 				Join us in shaping a better future for the next generation.
@@ -452,7 +452,7 @@ function FinalCTASection() {
 function ContactSection() {
 	return (
 		<section className="flex flex-col items-center gap-6 px-4 lg:gap-10">
-			<h2 className="text-center text-[32px]/none lg:text-[40px]">We’d Love Your Feedback</h2>
+			<h2 className="text-center text-[32px]/[1.2] lg:text-[40px]">We’d Love Your Feedback</h2>
 
 			<ContactForm />
 		</section>

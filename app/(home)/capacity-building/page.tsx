@@ -39,7 +39,7 @@ function HeroSection() {
 				<span className="absolute inset-0 rounded-[inherit] bg-cedar-red/64" />
 			</div>
 
-			<h1 className="text-center text-[40px]/none text-cedar-white lg:text-[80px]">
+			<h1 className="text-center text-[40px]/[1.2] text-cedar-white lg:text-[80px]">
 				Capacity Building
 			</h1>
 		</section>
@@ -98,7 +98,7 @@ function IntroSection() {
 							format.theme === "red" && "bg-cedar-red"
 						)}
 					>
-						<h3 className="text-[14px]/none text-cedar-white lg:text-[24px]">{format.title}</h3>
+						<h3 className="text-[14px]/[1.2] text-cedar-white lg:text-[24px]">{format.title}</h3>
 						<p className="text-[10px]/4 text-pretty text-cedar-white/80 lg:text-base/7">
 							{format.description}
 						</p>
@@ -138,7 +138,7 @@ function FeaturedCapacityProgramsSection() {
 			className="flex flex-col gap-5 rounded-[24px] bg-cedar-black px-5 pt-8.5 pb-4.5 text-cedar-white
 				lg:gap-11 lg:rounded-[40px] lg:px-[60px] lg:pt-11.5 lg:pb-9"
 		>
-			<h2 className="text-center text-[20px]/none lg:text-[40px]">
+			<h2 className="text-center text-[20px]/[1.2] lg:text-[40px]">
 				Featured Capacity-Building Programs
 			</h2>
 
@@ -151,7 +151,7 @@ function FeaturedCapacityProgramsSection() {
 						className="flex min-h-[140px] flex-col justify-center rounded-[16px] bg-[hsl(240,5%,5%)]
 							px-6 lg:min-h-[180px] lg:rounded-[20px]"
 					>
-						<h3 className="text-[14px]/none lg:text-[24px]">{program.title}</h3>
+						<h3 className="text-[14px]/[1.2] lg:text-[24px]">{program.title}</h3>
 						<p className="mt-3 text-[10px]/4 text-pretty text-cedar-white/80 lg:text-[14px]/6">
 							{program.description}
 						</p>
@@ -180,7 +180,7 @@ const steps: Array<{ description: string; title: string }> = [
 function HowItWorksSection() {
 	return (
 		<section className="flex flex-col items-center gap-6.5 lg:gap-[60px]">
-			<h2 className="text-center text-[24px]/none lg:text-[40px]/none">How it Works</h2>
+			<h2 className="text-center text-[24px]/[1.2] lg:text-[40px]/[1.2]">How it Works</h2>
 
 			<article className="flex w-full gap-2.5 lg:flex-col lg:px-[64px]">
 				<ForWithWrapper
@@ -212,7 +212,7 @@ function HowItWorksSection() {
 					each={steps}
 					renderItem={(step) => (
 						<li key={step.title} className="flex flex-col gap-2">
-							<h3 className="text-[14px]/none lg:text-[24px]">{step.title}</h3>
+							<h3 className="text-[14px]/[1.2] lg:text-[24px]">{step.title}</h3>
 							<p className="max-w-[220px] text-[10px]/4 text-cedar-black/80 lg:text-[14px]/6">
 								{step.description}
 							</p>
@@ -227,7 +227,7 @@ function HowItWorksSection() {
 function RegisterPromptSection() {
 	return (
 		<section className="mt-5 flex items-center justify-center gap-2 lg:mt-9 lg:gap-7.5">
-			<h2 className="text-[24px]/none underline underline-offset-5 lg:text-[40px] lg:decoration-1">
+			<h2 className="text-[24px]/[1.2] underline underline-offset-5 lg:text-[40px] lg:decoration-1">
 				Register for a Program
 			</h2>
 
@@ -244,7 +244,7 @@ function PartnerCtaSection() {
 			className="flex flex-col items-center rounded-[24px] bg-[hsl(0,0%,94%)] p-6 text-center
 				text-cedar-black lg:rounded-[32px] lg:p-[64px]"
 		>
-			<h2 className="text-[32px]/none lg:text-[48px]">Partner With Us to Build Capacity</h2>
+			<h2 className="text-[32px]/[1.2] lg:text-[48px]">Partner With Us to Build Capacity</h2>
 
 			<p className="mt-2 text-[10px] lg:mt-4 lg:text-base">
 				We collaborate with schools, organizations, and institutions to deliver impactful training
