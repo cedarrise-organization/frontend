@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { partnerHeroImg } from "@/assets/images/get-involved";
+import { heroImg } from "@/assets/images/get-involved/partner";
 import { ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
 import { NavLink } from "@/components/common/NavLink";
@@ -52,7 +52,7 @@ function PartnerHeroSection() {
 			</article>
 
 			<Image
-				src={partnerHeroImg}
+				src={heroImg}
 				alt="CedarRise partners"
 				priority={true}
 				className="min-h-[334px] w-full min-w-0 rounded-[24px] object-cover lg:min-h-[420px]
