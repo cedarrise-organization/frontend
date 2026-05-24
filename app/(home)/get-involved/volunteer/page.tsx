@@ -2,7 +2,7 @@ import Image from "next/image";
 import { heroImg } from "@/assets/images/get-involved/volunteer";
 import { ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
-import { NavLink } from "@/components/common/NavLink";
+import { NavLink, type MainAppRoutes } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
 import { Main } from "../../-components/Main";
 
@@ -10,7 +10,7 @@ function VolunteerPage() {
 	return (
 		<Main className="gap-10 lg:gap-[80px]">
 			<VolunteerHeroSection />
-			<VolunteerRegistrationAndFeedbackSection />
+			<VolunteerFormLinksSection />
 		</Main>
 	);
 }
@@ -69,44 +69,42 @@ function VolunteerHeroSection() {
 	);
 }
 
-function VolunteerRegistrationAndFeedbackSection() {
+const volunteerFormLinks = [
+	{
+		href: "/get-involved/volunteer/register",
+		label: "Sign Up as a Volunteer",
+	},
+	{
+		href: "/get-involved/volunteer/feedback",
+		label: "Leave us a feedback",
+	},
+] satisfies Array<{ href: MainAppRoutes; label: string }>;
+
+function VolunteerFormLinksSection() {
 	return (
 		<section className="flex flex-col gap-4 lg:gap-5">
-			<article
-				className="flex items-center justify-between gap-5 rounded-[16px] bg-cedar-black py-2 pr-2 pl-6
-					text-cedar-white lg:gap-12 lg:rounded-[20px] lg:py-5.5 lg:pr-5.5 lg:pl-12"
-			>
-				<NavLink
-					href="/get-involved/volunteer/register"
-					className="text-[24px]/[1.2] underline underline-offset-5"
-				>
-					Sign Up as a Volunteer
-				</NavLink>
+			<ForWithWrapper
+				className="flex flex-col gap-4 lg:gap-5"
+				each={volunteerFormLinks}
+				renderItem={(item) => (
+					<li
+						key={item.label}
+						className="flex items-center justify-between gap-5 rounded-[16px] bg-cedar-black py-2
+							pr-2 pl-6 text-cedar-white lg:gap-12 lg:rounded-[20px] lg:py-5.5 lg:pr-5.5 lg:pl-12"
+					>
+						<NavLink
+							href={item.href}
+							className="text-[14px]/[1.2] underline underline-offset-5 lg:text-[24px]"
+						>
+							{item.label}
+						</NavLink>
 
-				<Button size="icon" className="shrink-0 self-end lg:self-auto" asChild={true}>
-					<NavLink href="/get-involved/volunteer/register">
-						<IconBox icon="solar:arrow-right-up-outline" />
-					</NavLink>
-				</Button>
-			</article>
-
-			<article
-				className="flex items-center justify-between gap-5 rounded-[16px] bg-cedar-black py-2 pr-2 pl-6
-					text-cedar-white lg:gap-12 lg:rounded-[20px] lg:py-5.5 lg:pr-5.5 lg:pl-12"
-			>
-				<NavLink
-					href="/get-involved/volunteer/feedback"
-					className="text-[24px]/[1.2] underline underline-offset-5"
-				>
-					Leave us a feedback
-				</NavLink>
-
-				<Button size="icon" className="shrink-0 self-end lg:self-auto" asChild={true}>
-					<NavLink href="/get-involved/volunteer/feedback">
-						<IconBox icon="solar:arrow-right-up-outline" />
-					</NavLink>
-				</Button>
-			</article>
+						<Button size="icon" className="shrink-0 self-end lg:self-auto">
+							<IconBox icon="solar:arrow-right-up-outline" />
+						</Button>
+					</li>
+				)}
+			/>
 		</section>
 	);
 }

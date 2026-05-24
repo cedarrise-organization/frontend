@@ -23,9 +23,10 @@ function NavBar() {
 		<header
 			ref={observedElementRef}
 			className={cnJoin(
-				`sticky top-0 isolate z-500 flex w-full items-center justify-between gap-12 px-4 py-3
-				transition-shadow duration-300 ease-[ease] lg:px-[100px] lg:py-5`,
-				isScrolled && "bg-cedar-white shadow-[0_2px_4px_hsl(0,0%,0%,0.05)]"
+				`sticky top-0 isolate z-10 flex w-full scrollbar-thin items-center justify-between gap-10
+				overflow-x-auto bg-cedar-white/90 px-4 py-3 transition-shadow duration-300 ease-[ease]
+				lg:px-[100px] lg:py-5 lg:backdrop-blur-2xl`,
+				isScrolled && "shadow-[0_2px_4px_hsl(0,0%,0%,0.05)]"
 			)}
 		>
 			<Logo />
@@ -70,10 +71,10 @@ function DesktopNavigation(props: { className?: string }) {
 	const pathname = usePathname();
 
 	return (
-		<section className={cnMerge("flex w-full", className)}>
+		<section className={className}>
 			<ForWithWrapper
 				as="nav"
-				className="flex min-w-fit gap-4"
+				className="flex min-w-fit gap-2"
 				each={navLinkItems}
 				renderItem={(linkItem) => (
 					<Fragment key={linkItem.label}>
@@ -81,20 +82,22 @@ function DesktopNavigation(props: { className?: string }) {
 							<NavLink
 								href={linkItem.link}
 								className="inline-flex h-[56px] shrink-0 items-center justify-center rounded-[20px]
-									p-5 data-[active=true]:bg-cedar-yellow data-[active=true]:text-cedar-white"
+									p-5 transition-colors hover:bg-[hsl(0,0%,94%)] hover:text-cedar-red
+									data-[active=true]:bg-cedar-yellow data-[active=true]:text-cedar-white"
 							>
 								{linkItem.label}
 							</NavLink>
 						)}
 
 						{linkItem.children && (
-							<DropdownMenu.Root>
+							<DropdownMenu.Root modal={false}>
 								<DropdownMenu.Trigger
 									data-active={linkItem.children.some(
 										(childLinkItem) => childLinkItem.link === pathname
 									)}
 									className="inline-flex h-[56px] shrink-0 items-center justify-center
-										rounded-[20px] p-5 data-[active=true]:bg-cedar-yellow
+										rounded-[20px] p-5 transition-colors hover:bg-[hsl(0,0%,94%)]
+										hover:text-cedar-red data-[active=true]:bg-cedar-yellow
 										data-[active=true]:text-cedar-white"
 								>
 									{linkItem.label}
@@ -113,16 +116,13 @@ function DesktopNavigation(props: { className?: string }) {
 												<DropdownMenu.Item
 													asChild={true}
 													key={childLinkItem.label}
-													className="rounded-[18px] p-0"
+													className="group flex min-h-[54px] items-center justify-between
+														gap-4 rounded-[18px] p-0 px-4 text-[14px] transition-colors
+														focus:bg-[hsl(0,0%,84%)] focus:text-cedar-red
+														data-[active=true]:bg-cedar-black
+														data-[active=true]:text-cedar-white"
 												>
-													<NavLink
-														href={childLinkItem.link}
-														className="group flex min-h-[54px] items-center justify-between
-															gap-4 rounded-[18px] px-4 text-[14px] transition-colors
-															hover:bg-[hsl(0,0%,94%)] hover:text-cedar-red
-															data-[active=true]:bg-cedar-black
-															data-[active=true]:text-cedar-white"
-													>
+													<NavLink href={childLinkItem.link}>
 														<div className="flex items-center gap-3">
 															<span
 																className="size-2 rounded-full bg-cedar-yellow opacity-0

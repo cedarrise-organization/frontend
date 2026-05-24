@@ -10,7 +10,7 @@ function PartnerPage() {
 	return (
 		<Main className="gap-10 lg:gap-[80px]">
 			<PartnerHeroSection />
-			<PartnerRegistrationSection />
+			<PartnerFormLinkSection />
 		</Main>
 	);
 }
@@ -62,7 +62,7 @@ function PartnerHeroSection() {
 	);
 }
 
-function PartnerRegistrationSection() {
+function PartnerFormLinkSection() {
 	return (
 		<section
 			className="flex items-center justify-between gap-5 rounded-[16px] bg-cedar-black py-2 pr-2 pl-6

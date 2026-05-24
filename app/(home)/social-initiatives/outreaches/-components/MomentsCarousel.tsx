@@ -3,7 +3,7 @@
 import { tw } from "@zayne-labs/toolkit-core";
 import autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
-import { outreachHeroImg, outReachImpactSectionImg } from "@/assets/images/social-initiative";
+import { heroImg, impactSectionImg } from "@/assets/images/social-initiatives/outreaches";
 import { For } from "@/components/common/for";
 import { Carousel } from "@/components/ui";
 import { cnJoin } from "@/lib/utils/cn";
@@ -15,18 +15,18 @@ type GalleryItem = {
 
 const galleryRows: GalleryItem[][] = [
 	[
-		{ image: outreachHeroImg, size: tw`w-1/3` },
-		{ image: outReachImpactSectionImg, size: tw`w-2/3` },
-		{ image: outreachHeroImg, size: tw`w-1/3` },
+		{ image: heroImg, size: tw`w-1/3` },
+		{ image: impactSectionImg, size: tw`w-2/3` },
+		{ image: heroImg, size: tw`w-1/3` },
 	],
 	[
-		{ image: outReachImpactSectionImg, size: tw`w-1/4` },
-		{ image: outreachHeroImg, size: tw`w-3/4` },
-		{ image: outReachImpactSectionImg, size: tw`w-2/4` },
+		{ image: impactSectionImg, size: tw`w-1/4` },
+		{ image: heroImg, size: tw`w-3/4` },
+		{ image: impactSectionImg, size: tw`w-2/4` },
 	],
 	[
-		{ image: outreachHeroImg, size: tw`w-[40%]` },
-		{ image: outReachImpactSectionImg, size: tw`w-[60%]` },
+		{ image: heroImg, size: tw`w-[40%]` },
+		{ image: impactSectionImg, size: tw`w-[60%]` },
 	],
 ];
 

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { outreachHeroImg, outReachImpactSectionImg } from "@/assets/images/social-initiative";
+import { heroImg, impactSectionImg } from "@/assets/images/social-initiatives/outreaches";
 import { ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
 import { NavLink } from "@/components/common/NavLink";
@@ -66,7 +66,7 @@ function OutreachOverviewSection() {
 			>
 				<div className="relative h-[284px] rounded-[20px] lg:h-[370px]">
 					<Image
-						src={outreachHeroImg}
+						src={heroImg}
 						alt="CedarRise outreach group"
 						priority={true}
 						className="absolute inset-0 size-full rounded-[inherit] object-cover"
@@ -193,7 +193,7 @@ function StoriesImpactSection() {
 				className="flex w-full flex-col gap-6 rounded-[24px] bg-[hsl(0,0%,94%)] p-5 lg:rounded-[32px]"
 			>
 				<h2
-					className="w-fit rounded-[12px] bg-cedar-black px-7 py-4 text-cedar-yellow lg:px-8 lg:py-3.5
+					className="w-fit rounded-[12px] bg-cedar-black px-7 py-3 text-cedar-yellow lg:px-8 lg:py-3.5
 						lg:text-[20px]"
 				>
 					Our Impact
@@ -215,7 +215,7 @@ function StoriesImpactSection() {
 				/>
 
 				<Image
-					src={outReachImpactSectionImg}
+					src={impactSectionImg}
 					alt="CedarRise outreach impact"
 					className="h-[251px] rounded-[16px] object-cover lg:h-[279px] lg:rounded-[20px]"
 				/>
