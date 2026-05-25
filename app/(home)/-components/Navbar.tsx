@@ -24,8 +24,8 @@ function NavBar() {
 			ref={observedElementRef}
 			className={cnJoin(
 				`sticky top-0 isolate z-10 flex w-full scrollbar-thin items-center justify-between gap-10
-				overflow-x-auto bg-cedar-white/90 px-4 py-3 transition-shadow duration-300 ease-[ease]
-				lg:px-[100px] lg:py-5 lg:backdrop-blur-2xl`,
+				overflow-x-auto bg-cedar-white px-4 py-3 transition-shadow duration-300 ease-[ease]
+				lg:bg-cedar-white/90 lg:px-[100px] lg:py-5 lg:backdrop-blur-2xl`,
 				isScrolled && "shadow-[0_2px_4px_hsl(0,0%,0%,0.05)]"
 			)}
 		>
