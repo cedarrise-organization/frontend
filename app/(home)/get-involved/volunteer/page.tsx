@@ -2,7 +2,7 @@ import Image from "next/image";
 import { heroImg } from "@/assets/images/get-involved/volunteer";
 import { ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
-import { NavLink, type MainAppRoutes } from "@/components/common/NavLink";
+import { NavLink, NavLinkEphemeral, type MainAppRoutes } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
 import { Main } from "../../-components/Main";
 
@@ -99,11 +99,11 @@ function VolunteerFormLinksSection() {
 							{item.label}
 						</NavLink>
 
-						<NavLink href={item.href} className="contents">
+						<NavLinkEphemeral href={item.href}>
 							<Button size="icon" className="shrink-0 self-end lg:self-auto">
 								<IconBox icon="solar:arrow-right-up-outline" />
 							</Button>
-						</NavLink>
+						</NavLinkEphemeral>
 					</li>
 				)}
 			/>

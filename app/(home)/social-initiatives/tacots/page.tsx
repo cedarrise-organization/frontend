@@ -2,7 +2,7 @@ import Image from "next/image";
 import { approachSectionImg, heroImg } from "@/assets/images/social-initiatives/tacots";
 import { ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
-import { NavLink, type MainAppRoutes } from "@/components/common/NavLink";
+import { NavLink, NavLinkEphemeral, type MainAppRoutes } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
 import { cnJoin } from "@/lib/utils/cn";
 import { Main } from "../../-components/Main";
@@ -29,21 +29,23 @@ function TacotsHeroSection() {
 	return (
 		<section className="flex flex-col gap-8 lg:gap-10">
 			<header className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
-				<h1 className="text-[32px]/[1.2] lg:max-w-[503px] lg:text-[48px]">
+				<h1 className="text-[32px]/[1.2] lg:max-w-[590px] lg:text-[64px]">
 					TACOTS <span className="text-cedar-red">(Take a Child off the Streets)</span>
 				</h1>
 
-				<div className="flex flex-col gap-6 lg:max-w-[440px]">
+				<div className="flex flex-col gap-6 lg:max-w-[514px]">
 					<p className="text-[10px]/4 text-pretty lg:text-base/6">
-						Reconnecting out-of-school and at-risk children with opportunity, mentorship, and a
-						clearer path toward education.
+						Reconnecting out-of-school and at-risk children with education, mentorship, and a pathway
+						to a better future.
 					</p>
 
-					<div className="flex items-center gap-3 lg:gap-5">
-						<Button className="h-[64px] shrink-0 text-base">Donate Now</Button>
+					<div className="flex items-center justify-between gap-3 lg:gap-8">
+						<NavLinkEphemeral href="/social-initiatives/tacots/recommendation">
+							<Button className="h-[64px] shrink-0 px-5 lg:text-base">Refer a child</Button>
+						</NavLinkEphemeral>
 
-						<NavLink href="#" className="flex items-center gap-4.5">
-							<p className="font-medium lg:text-[20px]">Get Involved</p>
+						<NavLink href="#" className="flex items-center gap-4">
+							<p className="text-[14px] font-medium">Become a Benefactor</p>
 
 							<Button
 								theme="secondary"
@@ -58,8 +60,8 @@ function TacotsHeroSection() {
 			</header>
 
 			<article
-				className="relative isolate flex min-h-[268px] items-end justify-center rounded-[24px] px-6
-					pb-9 text-center text-cedar-white lg:min-h-[370px] lg:rounded-[32px] lg:pb-10"
+				className="relative isolate flex min-h-[320px] items-end justify-center rounded-[24px] px-6
+					pb-10.5 text-center text-cedar-white lg:min-h-[410px] lg:rounded-[32px] lg:pb-[55px]"
 			>
 				<Image
 					src={heroImg}
@@ -73,7 +75,7 @@ function TacotsHeroSection() {
 						bg-[linear-gradient(180deg,theme(--color-cedar-black/0)_0%,theme(--color-cedar-black)_100%)]"
 				/>
 
-				<h2 className="text-[24px]/[1.2] lg:text-[40px]">Every Child Deserves a Seat at Success.</h2>
+				<h2 className="text-[24px]/[1.2] lg:text-[48px]">Every Child Deserves a Seat at Success.</h2>
 			</article>
 		</section>
 	);
@@ -89,15 +91,20 @@ const impactStats = [
 function TacotsOverviewSection() {
 	return (
 		<section className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5">
-			<article className="flex flex-col gap-6 rounded-[24px] bg-[hsl(0,0%,94%)] p-5 lg:rounded-[32px]">
-				<h2 className="w-fit rounded-[12px] bg-cedar-black px-7 py-3 text-cedar-yellow">Our Impact</h2>
+			<article className="flex flex-col gap-4 rounded-[24px] bg-[hsl(0,0%,94%)] p-5 lg:rounded-[32px]">
+				<h2
+					className="w-fit rounded-[12px] bg-cedar-black px-7 py-3 text-cedar-yellow lg:rounded-[20px]
+						lg:text-[24px]"
+				>
+					Our Impact
+				</h2>
 
 				<ForWithWrapper
-					className="grid grid-cols-2 gap-x-10 gap-y-5 lg:gap-x-16"
+					className="grid grid-cols-[repeat(2,max-content)] gap-x-12 gap-y-5"
 					each={impactStats}
 					renderItem={(stat) => (
 						<li key={stat.label}>
-							<h3 className="text-[32px]/[1.2] lg:text-[40px]">{stat.value}</h3>
+							<h3 className="text-[32px]/[1.2] lg:text-[48px]">{stat.value}</h3>
 							<p className="mt-1 text-[10px]/4 text-pretty lg:text-[14px]/5">{stat.label}</p>
 						</li>
 					)}
@@ -108,25 +115,27 @@ function TacotsOverviewSection() {
 				className="flex flex-col gap-4 rounded-[24px] bg-[hsl(0,0%,94%)] p-6 lg:rounded-[32px] lg:px-10
 					lg:py-8"
 			>
-				<h2 className="text-[24px]/[1.2] lg:text-[32px]">About TACOTS</h2>
+				<h2 className="text-[24px]/[1.2] lg:text-[40px]">About TACOTS</h2>
 
-				<p className="text-[10px]/4 text-pretty lg:text-[14px]/6">
-					TACOTS (Take a Child off the Streets) is CedarRise&apos;s social initiative focused on
-					addressing educational exclusion among out-of-school children.
-				</p>
+				<div className="text-[11px]/4 text-pretty lg:text-base/7">
+					<p>
+						TACOTS (Take a Child off the Streets) is CedarRise's social initiative focused on
+						addressing educational exclusion among out-of-school children.
+					</p>
 
-				<p className="text-[10px]/4 text-pretty lg:text-[14px]/6">
-					The programme identifies vulnerable children, reconnects them with formal education, and
-					provides sponsorship, academic tracking, emotional care, social support to help them build
-					stable and meaningful futures.
-				</p>
+					<p>
+						The programme identifies vulnerable children, reconnects them with formal education, and
+						provides sponsorship, academic tracking, emotional care, social support to help them
+						build stable and meaningful futures.
+					</p>
+				</div>
 			</article>
 
 			<article
-				className="flex flex-col gap-4 rounded-[24px] bg-cedar-yellow p-6 text-cedar-white
-					lg:rounded-[32px] lg:px-10 lg:py-8"
+				className="flex flex-col gap-4 self-start rounded-[24px] bg-cedar-yellow p-6 text-cedar-white
+					max-lg:order-3 lg:gap-5 lg:rounded-[32px] lg:px-11 lg:py-7.5"
 			>
-				<h2 className="text-[24px]/[1.2] lg:text-[32px]">Who We Serve</h2>
+				<h2 className="text-[24px]/[1.2] lg:text-[40px]">Who We Serve</h2>
 
 				<p className="text-[10px]/4 text-pretty lg:text-[14px]/6">
 					TACOTS supports children aged 5-18 who are out of school, at risk of dropping out, or from
@@ -136,17 +145,20 @@ function TacotsOverviewSection() {
 			</article>
 
 			<article
-				className="flex flex-col gap-4 rounded-[24px] bg-cedar-red p-6 text-cedar-white
-					lg:rounded-[32px] lg:px-10 lg:py-8"
+				className="flex flex-col gap-4 rounded-[24px] bg-cedar-red p-6 text-cedar-white lg:gap-5
+					lg:rounded-[32px] lg:px-11 lg:py-7.5"
 			>
-				<h2 className="text-[24px]/[1.2] lg:text-[32px]">The Challenge</h2>
+				<h2 className="text-[24px]/[1.2] lg:text-[40px]">The Challenge</h2>
 
-				<p className="text-[10px]/4 text-pretty text-cedar-white/80 lg:text-[14px]/6">
-					Many children face barriers to education due to poverty, instability, and lack of access to
-					support systems. Without intervention, these children are likely to lose years of learning
-					and opportunity. TACOTS exists to break this cycle by restoring access to education and
-					opportunity.
-				</p>
+				<div className="text-[11px]/4 text-pretty text-cedar-white/80 lg:text-base/7">
+					<p>
+						Many children face barriers to education due to poverty, instability, and lack of access
+						to support systems. Without intervention, these challenges can lead to long-term social
+						and economic disadvantages
+					</p>
+
+					<p>TACOTS exists to break this cycle by restoring access to education and opportunity.</p>
+				</div>
 			</article>
 		</section>
 	);
@@ -174,27 +186,27 @@ const approachSteps = [
 function TacotsApproachSection() {
 	return (
 		<section
-			className="flex flex-col gap-8 rounded-[24px] bg-cedar-black p-6 text-cedar-white lg:flex-row
+			className="flex flex-col gap-10 rounded-[24px] bg-cedar-black p-7 text-cedar-white lg:flex-row
 				lg:items-center lg:gap-12 lg:rounded-[32px] lg:p-10"
 		>
-			<article className="flex w-full flex-col gap-6 lg:max-w-[470px]">
-				<h2 className="text-center text-[24px]/[1.2] lg:text-left lg:text-[32px]">Our Approach</h2>
+			<article className="flex w-full flex-col gap-10 lg:max-w-[480px] lg:gap-11">
+				<h2 className="text-[24px]/[1.2] max-lg:text-center lg:text-[40px]">Our Approach</h2>
 
 				<ForWithWrapper
-					className="flex flex-col gap-4 lg:gap-5"
+					className="flex flex-col gap-6 lg:gap-12"
 					each={approachSteps}
 					renderItem={(step, index) => (
-						<li key={step.title} className="flex items-center gap-4 lg:gap-5">
-							<span
-								className="grid size-[54px] shrink-0 place-content-center rounded-[12px]
-									bg-cedar-red text-[24px] text-cedar-yellow lg:size-[64px]"
+						<li key={step.title} className="flex items-center gap-5">
+							<h4
+								className="grid size-[64px] shrink-0 place-content-center rounded-[12px]
+									bg-cedar-red text-[32px] text-cedar-yellow lg:size-[80px] lg:text-[40px]"
 							>
 								{index + 1}
-							</span>
+							</h4>
 
-							<div className="flex flex-col gap-1.5">
-								<h3 className="text-[12px]/[1.2] lg:text-base">{step.title}</h3>
-								<p className="text-[10px]/4 text-pretty text-cedar-white/72 lg:text-[14px]/5">
+							<div className="flex flex-col gap-2">
+								<h3 className="text-[20px]/[1.2] lg:text-[24px]">{step.title}</h3>
+								<p className="text-[10px]/4 text-pretty text-cedar-white/80 lg:text-[14px]/5">
 									{step.description}
 								</p>
 							</div>
@@ -206,7 +218,7 @@ function TacotsApproachSection() {
 			<Image
 				src={approachSectionImg}
 				alt="TACOTS approach session"
-				className="h-[286px] rounded-[16px] object-cover lg:h-[480px] lg:min-w-0 lg:rounded-[24px]"
+				className="min-h-[363px] rounded-[20px] object-cover lg:min-h-full"
 			/>
 		</section>
 	);
@@ -223,22 +235,21 @@ const supportItems = [
 
 function SupportSection() {
 	return (
-		<section className="flex flex-col items-center gap-8">
-			<h2 className="text-center text-[24px]/[1.2] lg:text-[32px]">What We Provide</h2>
+		<section className="flex flex-col items-center gap-10 lg:gap-11">
+			<h2 className="text-center text-[24px]/[1.2] lg:text-[40px]">What We Provide</h2>
 
 			<ForWithWrapper
-				className="flex max-w-[968px] flex-wrap justify-center gap-3 lg:gap-4"
+				className="flex max-w-[1040px] flex-wrap justify-center gap-4 lg:gap-5"
 				each={supportItems}
 				renderItem={(item, index) => (
 					<li
 						key={item}
 						className={cnJoin(
-							`rounded-[12px] px-4 py-3 text-[10px] font-medium text-cedar-white lg:px-6
-							lg:text-[14px]`,
+							"rounded-[12px] px-4 py-5 lg:rounded-[20px] lg:p-6",
 							index % 2 === 0 ? "bg-cedar-red" : "bg-cedar-black"
 						)}
 					>
-						{item}
+						<h3 className="text-[14px]/[1.2] font-medium text-cedar-white lg:text-[24px]">{item}</h3>
 					</li>
 				)}
 			/>
@@ -248,8 +259,8 @@ function SupportSection() {
 
 function StoriesSection() {
 	return (
-		<section className="flex flex-col gap-6 lg:gap-7">
-			<h2 className="text-[24px]/[1.2] lg:text-[32px]">Impact Testimonials</h2>
+		<section className="flex flex-col gap-10">
+			<h2 className="text-[24px]/[1.2] lg:text-[40px]">Impact Testimonials</h2>
 
 			<TacotsStoriesCarousel />
 		</section>
@@ -258,8 +269,8 @@ function StoriesSection() {
 
 function MomentsSection() {
 	return (
-		<section className="flex flex-col gap-6 lg:gap-8">
-			<h2 className="text-[24px]/[1.2] lg:text-[32px]">Some Moments of TACOTS</h2>
+		<section className="flex flex-col gap-6 lg:gap-10">
+			<h2 className="text-[24px]/[1.2] lg:text-[40px]">Some Moments of TACOTS</h2>
 
 			<TacotsMomentsCarousel />
 		</section>
@@ -302,14 +313,14 @@ function TacotsFormLinksSection() {
 							{item.description}
 						</p>
 
-						<NavLink href={item.href} className="contents">
+						<NavLinkEphemeral href={item.href}>
 							<Button
 								size="icon"
 								className="size-10 shrink-0 self-end rounded-[12px] text-base lg:self-auto"
 							>
 								<IconBox icon="solar:arrow-right-up-outline" />
 							</Button>
-						</NavLink>
+						</NavLinkEphemeral>
 					</li>
 				)}
 			/>
@@ -332,9 +343,11 @@ function FinalCTASection() {
 			</p>
 
 			<div className="mt-10 flex items-center gap-2 lg:mt-12.5 lg:gap-8.5">
-				<Button className="shrink-0">Donate Now</Button>
+				<NavLinkEphemeral href="/donate">
+					<Button className="shrink-0">Donate Now</Button>
+				</NavLinkEphemeral>
 
-				<NavLink href="#" className="flex items-center gap-2">
+				<NavLink href="/get-involved/partner" className="flex items-center gap-2">
 					<p className="text-[14px] font-medium lg:text-[20px]">Get Involved</p>
 
 					<Button theme="secondary" size="icon" className="shrink-0">

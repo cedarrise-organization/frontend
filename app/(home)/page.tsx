@@ -9,7 +9,7 @@ import {
 } from "@/assets/images/landing";
 import { ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
-import { NavLink } from "@/components/common/NavLink";
+import { NavLink, NavLinkEphemeral } from "@/components/common/NavLink";
 import {
 	communityOutReachIcon,
 	educationIcon,
@@ -59,9 +59,11 @@ function HeroSection() {
 				</p>
 
 				<div className="mt-12 flex items-center gap-4.5 lg:mt-20 lg:gap-11">
-					<Button className="h-[64px] shrink-0 text-base">Donate Now</Button>
+					<NavLinkEphemeral href="/donate">
+						<Button className="h-[64px] shrink-0 text-base">Donate Now</Button>
+					</NavLinkEphemeral>
 
-					<NavLink href="#" className="flex items-center gap-4.5">
+					<NavLink href="/get-involved/partner" className="flex items-center gap-4.5">
 						<p className="font-medium lg:text-[20px]">Get Involved</p>
 
 						<Button
@@ -346,7 +348,9 @@ function CtaSectionOne() {
 					need.
 				</p>
 
-				<Button>Enroll now</Button>
+				<NavLinkEphemeral href="/social-initiatives/ash/register">
+					<Button>Enroll now</Button>
+				</NavLinkEphemeral>
 			</article>
 
 			<div
@@ -381,7 +385,10 @@ function CtaSectionOne() {
 									{ icon: "ri:mail-fill", info: "ash.cedarrise@gmail.com" },
 								]}
 								renderItem={(item) => (
-									<li key={item.info} className="flex items-center text-[10px] lg:text-base">
+									<li
+										key={item.info}
+										className="flex items-center gap-0.5 text-[10px] lg:text-base"
+									>
 										<span
 											className="grid size-3.5 place-content-center rounded-full bg-cedar-yellow
 												text-cedar-white lg:size-5.5"
@@ -395,8 +402,8 @@ function CtaSectionOne() {
 							/>
 						</div>
 
-						<Button className="px-5 max-lg:shrink-0">
-							View Collection{" "}
+						<Button className="px-6.5 max-lg:shrink-0 lg:px-5">
+							<p>View Collection</p>
 							<IconBox icon="ph:arrow-right" className="size-4 shrink-0 lg:size-7.5" />
 						</Button>
 					</div>
@@ -433,9 +440,11 @@ function FinalCTASection() {
 			</p>
 
 			<div className="mt-10 flex items-center gap-2 lg:mt-12.5 lg:gap-8.5">
-				<Button className="shrink-0">Donate Now</Button>
+				<NavLinkEphemeral href="/donate">
+					<Button className="shrink-0">Donate Now</Button>
+				</NavLinkEphemeral>
 
-				<NavLink href="#" className="flex items-center gap-2">
+				<NavLink href="/get-involved/partner" className="flex items-center gap-2">
 					<p className="text-[14px] font-medium lg:text-[20px]">Get Involved</p>
 
 					<Button theme="secondary" size="icon" className="shrink-0">

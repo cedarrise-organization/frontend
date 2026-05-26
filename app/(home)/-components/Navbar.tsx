@@ -123,14 +123,7 @@ function DesktopNavigation(props: { className?: string }) {
 														data-[active=true]:text-cedar-white"
 												>
 													<NavLink href={childLinkItem.link}>
-														<div className="flex items-center gap-3">
-															<span
-																className="size-2 rounded-full bg-cedar-yellow opacity-0
-																	transition-opacity group-hover:opacity-100
-																	group-data-[active=true]:opacity-100"
-															/>
-															<p>{childLinkItem.label}</p>
-														</div>
+														<p>{childLinkItem.label}</p>
 
 														<span
 															className="grid size-7 place-content-center rounded-full
@@ -234,10 +227,6 @@ function MobileNavigation(props: { className?: string }) {
 														data-[active=true]:bg-cedar-black
 														data-[active=true]:text-cedar-white"
 												>
-													<span
-														className="size-2 rounded-full bg-cedar-yellow opacity-0
-															group-data-[active=true]:opacity-100"
-													/>
 													<p>{childItem.label}</p>
 												</NavLink>
 											)}

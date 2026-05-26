@@ -3,7 +3,7 @@ import { heroImg as blogHeroImg } from "@/assets/images/blog";
 import { heroImg as blogCardImg } from "@/assets/images/capacity-building";
 import { ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
-import { NavLink } from "@/components/common/NavLink";
+import { NavLink, NavLinkEphemeral } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
 import { Main } from "../-components/Main";
 
@@ -68,7 +68,7 @@ function BlogIntroSection() {
 	);
 }
 
-const featuredPosts = Array.from({ length: 6 }, (_, index) => ({
+const featuredPosts = [...Array(6).keys()].map((index) => ({
 	date: "05/05/26",
 	description:
 		"A look into how the ASH program continues to support students academically and personally across underserved communities.",
@@ -124,9 +124,11 @@ function FinalCTASection() {
 			</p>
 
 			<div className="mt-10 flex items-center gap-2 lg:mt-12.5 lg:gap-8.5">
-				<Button className="shrink-0">Donate</Button>
+				<NavLinkEphemeral href="/donate">
+					<Button className="shrink-0">Donate</Button>
+				</NavLinkEphemeral>
 
-				<NavLink href="#" className="flex items-center gap-2">
+				<NavLink href="/get-involved/partner" className="flex items-center gap-2">
 					<p className="text-[14px] font-medium lg:text-[20px]">Get Involved</p>
 
 					<Button theme="secondary" size="icon" className="shrink-0">

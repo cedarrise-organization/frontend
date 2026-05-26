@@ -6,10 +6,11 @@ import type { Route } from "next";
 import Link, { type LinkProps } from "next/link";
 import { usePathname } from "next/navigation";
 import type { AppRoutes } from "@/.next/dev/types/routes";
+import { cnMerge } from "@/lib/utils/cn";
 
 export type MainAppRoutes<TRouteType extends string = AppRoutes> = Route<TRouteType>;
 
-function NavLink<TRouteType extends string = AppRoutes>(
+export function NavLink<TRouteType extends string = AppRoutes>(
 	props: Omit<LinkProps<TRouteType>, "href"> & {
 		href:
 			| (Omit<UrlObject, "pathname"> & { pathname: MainAppRoutes<TRouteType> })
@@ -29,4 +30,8 @@ function NavLink<TRouteType extends string = AppRoutes>(
 	);
 }
 
-export { NavLink };
+export const NavLinkEphemeral: typeof NavLink = (props) => {
+	const { className, ...restOfProps } = props;
+
+	return <NavLink className={cnMerge("contents", className)} {...restOfProps} />;
+};

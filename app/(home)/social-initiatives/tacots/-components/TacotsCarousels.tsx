@@ -108,22 +108,23 @@ function TacotsStoriesCarousel() {
 						<Carousel.Item
 							key={index}
 							className={cnJoin(
-								`min-h-[154px] w-[92%] cursor-grab active:cursor-grabbing lg:min-h-[184px]
-								lg:w-full lg:max-w-[586px]`,
+								`min-h-[172px] w-[92%] cursor-grab active:cursor-grabbing lg:min-h-[224px]
+								lg:w-full lg:max-w-[590px]`,
 								index === array.length - 1 && "pr-5"
 							)}
 						>
 							<article
-								className="flex size-full flex-col gap-5 rounded-[16px] bg-[hsl(0,0%,94%)] p-5"
+								className="flex size-full flex-col gap-5 rounded-[16px] bg-[hsl(0,0%,94%)] py-6
+									pr-5 pl-6.5"
 							>
-								<div className="flex items-center gap-4">
+								<div className="flex items-center gap-4 lg:gap-6">
 									<span
-										className="grid size-10 shrink-0 place-content-center rounded-[16px]
-											bg-cedar-yellow text-[40px] text-cedar-red"
+										className="grid h-11 w-[55px] shrink-0 place-content-center rounded-[20px]
+											bg-cedar-yellow text-[64px] text-cedar-red"
 									>
 										<svg
-											width="16"
-											height="14"
+											width="22"
+											height="19"
 											viewBox="0 0 22 19"
 											fill="none"
 											xmlns="http://www.w3.org/2000/svg"
@@ -135,12 +136,10 @@ function TacotsStoriesCarousel() {
 										</svg>
 									</span>
 
-									<h3 className="text-[10px]/[1.2] text-cedar-red lg:text-[14px]">
-										{story.title}
-									</h3>
+									<h3 className="leading-[1.2] text-cedar-red lg:text-[20px]">{story.title}</h3>
 								</div>
 
-								<p className="text-[10px]/4 text-pretty lg:text-[14px]/6">"{story.quote}"</p>
+								<p className="text-[12px]/[1.2] text-pretty lg:text-base">"{story.quote}"</p>
 							</article>
 						</Carousel.Item>
 					)}

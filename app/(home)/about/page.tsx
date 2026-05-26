@@ -2,7 +2,7 @@ import Image from "next/image";
 import { aboutCoreValueDesktopImg, aboutCoreValueMobileImg, aboutHeroImg } from "@/assets/images/about";
 import { ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
-import { NavLink } from "@/components/common/NavLink";
+import { NavLink, NavLinkEphemeral } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
 import { Main } from "../-components/Main";
 
@@ -79,7 +79,7 @@ function MissionVisionSection() {
 			<article className="rounded-[20px] bg-cedar-red p-6 text-cedar-white lg:rounded-[24px] lg:p-10">
 				<div className="flex items-start justify-between gap-4">
 					<h2 className="text-[24px]/[1.2] lg:text-[32px]/[1.2]">Mission</h2>
-					<IconBox icon="solar:target-linear" className="size-8 shrink-0 lg:size-10" />
+					<IconBox icon="solar:target-linear" className="size-6 shrink-0 lg:size-10" />
 				</div>
 
 				<p className="mt-6 text-[12px]/[1.6] lg:text-base/7">
@@ -91,7 +91,7 @@ function MissionVisionSection() {
 			<article className="rounded-[20px] bg-cedar-yellow p-6 text-cedar-white lg:rounded-[24px] lg:p-10">
 				<div className="flex items-start justify-between gap-4">
 					<h2 className="text-[24px]/[1.2] lg:text-[32px]/[1.2]">Vision</h2>
-					<IconBox icon="solar:magnifer-linear" className="size-8 shrink-0 lg:size-10" />
+					<IconBox icon="solar:magnifer-linear" className="size-6 shrink-0 lg:size-10" />
 				</div>
 
 				<p className="mt-6 text-[12px]/[1.6] lg:text-base/7">
@@ -106,14 +106,12 @@ function MissionVisionSection() {
 function CoreValuesSection() {
 	return (
 		<section className="flex flex-col items-center gap-6 lg:gap-8">
-			<h2 className="text-center text-[28px]/[1.2] lg:text-[40px]/[1.2]">Our Core Values</h2>
-
 			<picture className="w-full max-w-[1050px]">
 				<source media="(min-width: 1024px)" srcSet={aboutCoreValueDesktopImg.src} />
 
 				<Image
 					src={aboutCoreValueMobileImg}
-					alt="CedarRise core values: empowerment, innovation, integrity, community, resilience, sustainability, and holistic development"
+					alt="CedarRise core values"
 					className="w-full object-contain"
 					sizes="(min-width: 1024px) 1050px, 100vw"
 				/>
@@ -163,9 +161,11 @@ function FinalCTASection() {
 			</p>
 
 			<div className="mt-10 flex items-center gap-2 lg:mt-12.5 lg:gap-8.5">
-				<Button className="shrink-0">Donate Now</Button>
+				<NavLinkEphemeral href="/donate">
+					<Button className="shrink-0">Donate Now</Button>
+				</NavLinkEphemeral>
 
-				<NavLink href="#" className="flex items-center gap-2">
+				<NavLink href="/get-involved/partner" className="flex items-center gap-2">
 					<p className="text-[14px] font-medium lg:text-[20px]">Get Involved</p>
 
 					<Button theme="secondary" size="icon" className="shrink-0">

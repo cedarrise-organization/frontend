@@ -2,7 +2,7 @@ import Image from "next/image";
 import { heroImg } from "@/assets/images/get-involved/partner";
 import { ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
-import { NavLink } from "@/components/common/NavLink";
+import { NavLink, NavLinkEphemeral } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
 import { Main } from "../../-components/Main";
 
@@ -73,7 +73,10 @@ function PartnerFormLinkSection() {
 			</NavLink>
 
 			<div className="contents max-lg:hidden">
-				<NavLink href="#" className="text-[24px]/[1.2] underline underline-offset-5">
+				<NavLink
+					href="/get-involved/volunteer/register"
+					className="text-[24px]/[1.2] underline underline-offset-5"
+				>
 					Partner Registration Form
 				</NavLink>
 
@@ -82,9 +85,11 @@ function PartnerFormLinkSection() {
 				</p>
 			</div>
 
-			<Button size="icon" className="shrink-0 self-end lg:self-auto">
-				<IconBox icon="solar:arrow-right-up-outline" />
-			</Button>
+			<NavLinkEphemeral href="/get-involved/volunteer/register">
+				<Button size="icon" className="shrink-0 self-end lg:self-auto">
+					<IconBox icon="solar:arrow-right-up-outline" />
+				</Button>
+			</NavLinkEphemeral>
 		</section>
 	);
 }

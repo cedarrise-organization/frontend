@@ -2,7 +2,7 @@ import Image from "next/image";
 import { heroImg, impactSectionImg } from "@/assets/images/social-initiatives/ash";
 import { ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
-import { NavLink, type MainAppRoutes } from "@/components/common/NavLink";
+import { NavLink, NavLinkEphemeral, type MainAppRoutes } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
 import { Main } from "../../-components/Main";
 import { AshMomentsCarousel, AshStoriesCarousel } from "./-components/AshCarousels";
@@ -220,11 +220,11 @@ function AshFormLinksSection() {
 
 						<p className="text-cedar-white/80 max-lg:hidden lg:text-base/6">{item.description}</p>
 
-						<NavLink href={item.href} className="contents">
+						<NavLinkEphemeral href={item.href}>
 							<Button size="icon" className="shrink-0 self-end lg:self-auto">
 								<IconBox icon="solar:arrow-right-up-outline" />
 							</Button>
-						</NavLink>
+						</NavLinkEphemeral>
 					</li>
 				)}
 			/>

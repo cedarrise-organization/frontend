@@ -1,23 +1,23 @@
 import { ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
 import { Logo } from "@/components/common/Logo";
-import { NavLink } from "@/components/common/NavLink";
+import { NavLink, type MainAppRoutes } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
 
 const quickLinks = [
 	{ href: "/", label: "Home" },
-	{ href: "#", label: "About" },
-	{ href: "#", label: "Social Initiatives" },
-	{ href: "#", label: "Capacity Building" },
-	{ href: "#", label: "Blog" },
-];
+	{ href: "/about", label: "About" },
+	{ href: "/social-initiatives/ash", label: "Social Initiatives" },
+	{ href: "/capacity-building", label: "Capacity Building" },
+	{ href: "/blog", label: "Blog" },
+] satisfies Array<{ href: MainAppRoutes; label: string }>;
 
 const socialInitiatives = [
-	{ href: "#", label: "After School Hours (ASH)" },
-	{ href: "#", label: "TACOTS" },
-	{ href: "#", label: "Community Outreach" },
+	{ href: "/social-initiatives/ash", label: "After School Hours (ASH)" },
+	{ href: "/social-initiatives/tacots", label: "TACOTS" },
+	{ href: "/social-initiatives/outreaches", label: "Community Outreach" },
 	{ href: "#", label: "Workshops" },
-];
+] satisfies Array<{ href: MainAppRoutes; label: string }>;
 
 const contactInfo = [
 	{ icon: "ph:map-pin-fill", text: "SouthEast Nigeria" },
@@ -61,7 +61,7 @@ function Footer() {
 							className="flex flex-col gap-4 text-[8px] font-light lg:text-[14px]"
 							each={quickLinks}
 							renderItem={(link) => (
-								<NavLink key={link.label} href={link.href as never}>
+								<NavLink key={link.label} href={link.href}>
 									{link.label}
 								</NavLink>
 							)}
@@ -76,7 +76,7 @@ function Footer() {
 							className="flex flex-col gap-4 text-[8px] font-light lg:text-[14px]"
 							each={socialInitiatives}
 							renderItem={(link) => (
-								<NavLink key={link.label} href={link.href as never}>
+								<NavLink key={link.label} href={link.href}>
 									{link.label}
 								</NavLink>
 							)}
@@ -91,7 +91,7 @@ function Footer() {
 							className="flex flex-col gap-4 text-[8px] font-light lg:text-[14px]"
 							each={contactInfo}
 							renderItem={(info) => (
-								<li key={info.text} className="flex items-center">
+								<li key={info.text} className="flex items-center gap-0.5">
 									<span
 										className="grid size-3 place-content-center rounded-full bg-cedar-yellow
 											text-cedar-white lg:size-5"
