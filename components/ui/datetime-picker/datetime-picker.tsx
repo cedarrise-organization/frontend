@@ -89,17 +89,14 @@ export function DateTimePicker(props: DatePickerProps) {
 				</button>
 			</Popover.Trigger>
 
-			<Popover.Content
-				className="flex w-fit rounded-[10px] border-[1.4px] border-cedar-red p-0"
-			>
+			<Popover.Content className="flex w-fit rounded-[10px] border-[1.4px] border-cedar-red p-0">
 				{showDatePicker && (
 					<Calendar
 						mode="single"
 						captionLayout="dropdown"
 						classNames={{
 							button_next: "hover:bg-cedar-yellow/20 hover:text-cedar-black",
-							button_previous:
-								"hover:bg-cedar-yellow/20 hover:text-cedar-black",
+							button_previous: "hover:bg-cedar-yellow/20 hover:text-cedar-black",
 							today: "bg-cedar-yellow/20",
 
 							...calenderClassNames,
@@ -295,8 +292,7 @@ function TimePicker(props: TimePickerProps) {
 							className={cnMerge(
 								"aspect-square shrink-0",
 								shadcnButtonVariants({ size: "icon", variant: "ghost" }),
-								`hover:bg-cedar-red/10 hover:text-cedar-black
-								data-[selected=true]:bg-cedar-red
+								`hover:bg-cedar-red/10 hover:text-cedar-black data-[selected=true]:bg-cedar-red
 								data-[selected=true]:text-shadcn-primary-foreground`
 							)}
 							onClick={() => handleTimeChange("hour", hour)}
@@ -320,8 +316,7 @@ function TimePicker(props: TimePickerProps) {
 							className={cnMerge(
 								"aspect-square shrink-0",
 								shadcnButtonVariants({ size: "icon", variant: "ghost" }),
-								`hover:bg-cedar-red/10 hover:text-cedar-black
-								data-[selected=true]:bg-cedar-red
+								`hover:bg-cedar-red/10 hover:text-cedar-black data-[selected=true]:bg-cedar-red
 								data-[selected=true]:text-shadcn-primary-foreground`
 							)}
 							onClick={() => handleTimeChange("minute", minute)}
@@ -349,8 +344,7 @@ function TimePicker(props: TimePickerProps) {
 								className={cnMerge(
 									"aspect-square shrink-0",
 									shadcnButtonVariants({ size: "icon", variant: "ghost" }),
-									`hover:bg-cedar-red/10 hover:text-cedar-black
-									data-[selected=true]:bg-cedar-red
+									`hover:bg-cedar-red/10 hover:text-cedar-black data-[selected=true]:bg-cedar-red
 									data-[selected=true]:text-shadcn-primary-foreground`
 								)}
 								onClick={() => handleTimeChange("am-pm", am_pm)}
