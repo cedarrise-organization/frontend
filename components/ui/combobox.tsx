@@ -1,6 +1,8 @@
 "use client";
 
+import { dataAttr } from "@zayne-labs/toolkit-core";
 import { useControllableState } from "@zayne-labs/toolkit-react";
+import { isFunction } from "@zayne-labs/toolkit-type-helpers";
 import { createContext, use, useEffect, useMemo, useRef, useState } from "react";
 import * as Command from "@/components/ui/command";
 import { shadcnButtonVariants, type ShadcnButtonProps } from "@/components/ui/constants";
@@ -100,8 +102,20 @@ function ComboboxRoot(props: ComboboxProps) {
 	);
 }
 
-function ComboboxTrigger(props: ShadcnButtonProps & { classNames?: { base?: string; icon?: string } }) {
-	const { children, className, classNames, ...restOfProps } = props;
+function ComboboxTrigger(
+	props: ShadcnButtonProps & {
+		children?:
+			| React.ReactNode
+			| ((ctx: {
+					resolvedValue: string | undefined;
+					selectedOption: ComboboxData | undefined;
+			  }) => React.ReactNode);
+		classNames?: { base?: string; icon?: string };
+		icon?: string;
+		placeholder?: string;
+	}
+) {
+	const { children, className, classNames, icon, placeholder, ...restOfProps } = props;
 
 	const { data, setWidth, type, value } = use(ComboboxContext);
 
@@ -129,23 +143,31 @@ function ComboboxTrigger(props: ShadcnButtonProps & { classNames?: { base?: stri
 		};
 	}, [setWidth]);
 
+	const selectedOption = data.find((item) => item.value === value);
+
+	const resolvedValue = value ? selectedOption?.label : (placeholder ?? `Select ${type}...`);
+
+	const resolvedChildren = isFunction(children) ? children({ resolvedValue, selectedOption }) : children;
+
 	return (
 		<Popover.Trigger asChild={true}>
 			<button
 				type="button"
+				data-placeholder={dataAttr(!value)}
 				{...restOfProps}
 				className={cnMerge(shadcnButtonVariants({ className, variant: "outline" }), classNames?.base)}
 				ref={elementRef}
 			>
-				{children ?? (
-					<span className="flex w-full items-center justify-between gap-2">
-						{value ? data.find((item) => item.value === value)?.label : `Select ${type}...`}
+				{resolvedChildren ?? (
+					<>
+						<p>{resolvedValue}</p>
 
 						<IconBox
-							icon="lucide:chevrons-up-down"
+							// eslint-disable-next-line ts-eslint/no-unnecessary-condition
+							icon={(icon as never) ?? "lucide:chevrons-up-down"}
 							className={cnMerge("size-4 shrink-0 text-shadcn-muted-foreground", classNames?.icon)}
 						/>
-					</span>
+					</>
 				)}
 			</button>
 		</Popover.Trigger>

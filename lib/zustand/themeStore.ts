@@ -106,12 +106,12 @@ export const useThemeStore = createReactStore(
 	)
 );
 
-useThemeStore.subscribe.withSelector(
-	(state) => state.theme,
-	(theme) => {
-		if (!isBrowser()) return;
+// useThemeStore.subscribe.withSelector(
+// 	(state) => state.theme,
+// 	(theme) => {
+// 		if (!isBrowser()) return;
 
-		document.documentElement.dataset.theme = theme;
-	},
-	{ fireListenerImmediately: true }
-);
+// 		document.documentElement.dataset.theme = theme;
+// 	},
+// 	{ fireListenerImmediately: true }
+// );

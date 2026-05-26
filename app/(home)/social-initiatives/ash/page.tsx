@@ -201,7 +201,7 @@ const formLinks = [
 
 function AshFormLinksSection() {
 	return (
-		<section className="flex flex-col gap-4 lg:gap-5">
+		<section>
 			<ForWithWrapper
 				className="flex flex-col gap-4 lg:gap-5"
 				each={formLinks}
@@ -220,9 +220,11 @@ function AshFormLinksSection() {
 
 						<p className="text-cedar-white/80 max-lg:hidden lg:text-base/6">{item.description}</p>
 
-						<Button size="icon" className="shrink-0 self-end lg:self-auto">
-							<IconBox icon="solar:arrow-right-up-outline" />
-						</Button>
+						<NavLink href={item.href} className="contents">
+							<Button size="icon" className="shrink-0 self-end lg:self-auto">
+								<IconBox icon="solar:arrow-right-up-outline" />
+							</Button>
+						</NavLink>
 					</li>
 				)}
 			/>

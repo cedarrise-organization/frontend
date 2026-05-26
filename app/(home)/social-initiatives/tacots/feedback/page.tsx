@@ -5,14 +5,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { defineEnumDeep } from "@zayne-labs/toolkit-type-helpers";
 import { useForm, type UseFormReturn } from "react-hook-form";
 import { z } from "zod";
-import { Main } from "@/app/(home)/-components/Main";
 import {
 	OptionQuestionField,
 	RatingQuestionField,
 	SelectField,
+	StepperList,
 	TextAreaField,
 	TextField,
-} from "@/app/(home)/-components/SharedFormParts";
+} from "@/app/(home)/-components/FormPartsShared";
+import { Main } from "@/app/(home)/-components/Main";
 import { For } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
 import { NavLink } from "@/components/common/NavLink";
@@ -122,7 +123,7 @@ function TacotsFeedbackForm() {
 				linear={true}
 				className="flex flex-col gap-10 lg:gap-12"
 			>
-				<StepperList />
+				<StepperList items={stepperItems} />
 
 				<For
 					each={stepperItems}
@@ -169,32 +170,6 @@ function TacotsFeedbackForm() {
 				</Steps.Context>
 			</Steps.Root>
 		</Form.Root>
-	);
-}
-
-function StepperList() {
-	return (
-		<Steps.List className="flex justify-center">
-			<For
-				each={stepperItems}
-				renderItem={(item, index) => (
-					<Steps.Item key={item.title} index={index} className="flex items-center">
-						{index !== 0 && (
-							<Steps.Separator className="h-0.5 w-[125px] bg-cedar-red/30 data-current:bg-cedar-red" />
-						)}
-
-						<Steps.Trigger
-							className="grid size-4 place-content-center rounded-full outline-none lg:size-6"
-						>
-							<Steps.Indicator
-								className="size-4 rounded-full border border-cedar-red bg-cedar-white
-									data-complete:bg-cedar-red data-current:bg-cedar-red lg:size-6"
-							/>
-						</Steps.Trigger>
-					</Steps.Item>
-				)}
-			/>
-		</Steps.List>
 	);
 }
 

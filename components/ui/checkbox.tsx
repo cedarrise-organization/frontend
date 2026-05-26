@@ -4,8 +4,16 @@ import { Checkbox as CheckboxPrimitive } from "radix-ui";
 import { cnMerge } from "@/lib/utils/cn";
 import { IconBox } from "../common/IconBox";
 
-function Checkbox(props: React.ComponentProps<typeof CheckboxPrimitive.Root>) {
-	const { className, ...restOfProps } = props;
+function Checkbox(
+	props: React.ComponentProps<typeof CheckboxPrimitive.Root> & {
+		classNames?: {
+			base?: string;
+			icon?: string;
+			indicator?: string;
+		};
+	}
+) {
+	const { className, classNames, ...restOfProps } = props;
 
 	return (
 		<CheckboxPrimitive.Root
@@ -21,15 +29,19 @@ function Checkbox(props: React.ComponentProps<typeof CheckboxPrimitive.Root>) {
 				data-checked:text-shadcn-primary-foreground dark:bg-shadcn-input/30
 				dark:aria-invalid:border-shadcn-destructive/50 dark:aria-invalid:ring-shadcn-destructive/40
 				dark:data-checked:bg-shadcn-primary`,
-				className
+				className,
+				classNames?.base
 			)}
 			{...restOfProps}
 		>
 			<CheckboxPrimitive.Indicator
 				data-slot="checkbox-indicator"
-				className="grid place-content-center text-current transition-none"
+				className={cnMerge(
+					"grid place-content-center text-current transition-none",
+					classNames?.indicator
+				)}
 			>
-				<IconBox icon="lucide:check" className="size-3.5" />
+				<IconBox icon="lucide:check" className={cnMerge("size-3.5", classNames?.icon)} />
 			</CheckboxPrimitive.Indicator>
 		</CheckboxPrimitive.Root>
 	);

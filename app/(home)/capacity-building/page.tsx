@@ -188,12 +188,14 @@ function HowItWorksSection() {
 					each={steps}
 					renderItem={(step, index) => {
 						const stepCount = index + 1;
-						const isLastStep = stepCount === steps.length;
 
 						return (
 							<li
-								className={cnJoin("flex flex-col items-center lg:flex-row", !isLastStep && "grow")}
+								key={stepCount}
+								className={cnJoin("flex flex-col items-center lg:flex-row", index !== 0 && "grow")}
 							>
+								{index !== 0 && <hr className="h-full w-0.5 bg-cedar-red lg:h-0.5 lg:w-full" />}
+
 								<h3
 									key={step.title}
 									className="grid size-8 shrink-0 place-content-center rounded-full bg-cedar-red
@@ -201,7 +203,6 @@ function HowItWorksSection() {
 								>
 									{stepCount}
 								</h3>
-								{!isLastStep && <hr className="h-full w-0.5 bg-cedar-red lg:h-0.5 lg:w-full" />}
 							</li>
 						);
 					}}

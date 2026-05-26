@@ -281,7 +281,7 @@ const formLinks = [
 
 function TacotsFormLinksSection() {
 	return (
-		<section className="flex flex-col gap-4 lg:gap-5">
+		<section>
 			<ForWithWrapper
 				className="flex flex-col gap-3 lg:gap-4"
 				each={formLinks}
@@ -302,12 +302,14 @@ function TacotsFormLinksSection() {
 							{item.description}
 						</p>
 
-						<Button
-							size="icon"
-							className="size-10 shrink-0 self-end rounded-[12px] text-base lg:self-auto"
-						>
-							<IconBox icon="solar:arrow-right-up-outline" />
-						</Button>
+						<NavLink href={item.href} className="contents">
+							<Button
+								size="icon"
+								className="size-10 shrink-0 self-end rounded-[12px] text-base lg:self-auto"
+							>
+								<IconBox icon="solar:arrow-right-up-outline" />
+							</Button>
+						</NavLink>
 					</li>
 				)}
 			/>
