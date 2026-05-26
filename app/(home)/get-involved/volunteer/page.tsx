@@ -99,9 +99,11 @@ function VolunteerFormLinksSection() {
 							{item.label}
 						</NavLink>
 
-						<Button size="icon" className="shrink-0 self-end lg:self-auto">
-							<IconBox icon="solar:arrow-right-up-outline" />
-						</Button>
+						<NavLink href={item.href} className="contents">
+							<Button size="icon" className="shrink-0 self-end lg:self-auto">
+								<IconBox icon="solar:arrow-right-up-outline" />
+							</Button>
+						</NavLink>
 					</li>
 				)}
 			/>

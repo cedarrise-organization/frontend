@@ -176,11 +176,6 @@ function MobileNavigation(props: { className?: string }) {
 					:	"w-0 bg-cedar-white duration-750",
 					className
 				)}
-				onClick={(event) => {
-					const element = event.target as HTMLElement;
-
-					element.tagName === "A" && toggleNavShow();
-				}}
 			>
 				<Logo />
 
@@ -192,6 +187,7 @@ function MobileNavigation(props: { className?: string }) {
 						<Fragment key={linkItem.label}>
 							{linkItem.link && (
 								<NavLink
+									onClick={toggleNavShow}
 									key={linkItem.label}
 									href={linkItem.link}
 									className="group flex h-10 items-center justify-between gap-4 rounded-[14px]
@@ -230,6 +226,7 @@ function MobileNavigation(props: { className?: string }) {
 											each={linkItem.children}
 											renderItem={(childItem) => (
 												<NavLink
+													onClick={toggleNavShow}
 													key={childItem.label}
 													href={childItem.link}
 													className="group flex h-9 items-center gap-3 rounded-[12px] px-4
