@@ -60,7 +60,7 @@ export default FeedbackFormPage;
 function FormHeaderSection() {
 	return (
 		<header
-			className="flex w-full items-center gap-5 rounded-[12px] bg-cedar-black p-2 text-cedar-white
+			className="flex w-full items-center gap-5 rounded-[12px] bg-cedar-black p-3 text-cedar-white
 				lg:rounded-[20px] lg:p-5"
 		>
 			<Button asChild={true} theme="secondary" size="icon" className="shrink-0">
@@ -69,9 +69,7 @@ function FormHeaderSection() {
 				</NavLink>
 			</Button>
 
-			<h1 className="w-full text-center text-[20px]/[1.2] lg:text-[32px]">
-				ASH Program Feedback Form
-			</h1>
+			<h1 className="w-full text-center text-[20px]/[1.2] lg:text-[32px]">ASH Program Feedback Form</h1>
 		</header>
 	);
 }
@@ -231,7 +229,13 @@ function StudentFeedbackStep(props: StepProps) {
 					control={form.control}
 					name="programActivities"
 					question="2. What part of ASH has helped you the most?"
-					options={["Homework support", "Reading", "Mathematics", "Mentorship", "Creative activities"]}
+					options={[
+						"Homework support",
+						"Reading",
+						"Mathematics",
+						"Mentorship",
+						"Creative activities",
+					]}
 				/>
 
 				<OptionQuestionField
@@ -288,7 +292,12 @@ function ParentGuardianFeedbackStep(props: StepProps) {
 					question="Relationship to Student"
 					options={["Father", "Mother", "Guardian", "Relative"]}
 				/>
-				<TextField control={form.control} name="parentPhoneNumber" placeholder="Phone Number" type="tel" />
+				<TextField
+					control={form.control}
+					name="parentPhoneNumber"
+					placeholder="Phone Number"
+					type="tel"
+				/>
 			</section>
 
 			<section className="flex flex-col gap-4 lg:gap-5">
@@ -298,7 +307,12 @@ function ParentGuardianFeedbackStep(props: StepProps) {
 					control={form.control}
 					name="childAcademicProgress"
 					question="1. Have you noticed improvement in your child's school performance?"
-					options={["Yes - significant improvement", "Some improvement", "No noticeable change", "Not sure"]}
+					options={[
+						"Yes - significant improvement",
+						"Some improvement",
+						"No noticeable change",
+						"Not sure",
+					]}
 				/>
 
 				<OptionQuestionField

@@ -104,7 +104,7 @@ export default RegisterFormPage;
 function FormHeaderSection() {
 	return (
 		<header
-			className="flex w-full items-center gap-5 rounded-[12px] bg-cedar-black p-2 text-cedar-white
+			className="flex w-full items-center gap-5 rounded-[12px] bg-cedar-black p-3 text-cedar-white
 				lg:rounded-[20px] lg:p-5"
 		>
 			<Button asChild={true} theme="secondary" size="icon" className="shrink-0">
