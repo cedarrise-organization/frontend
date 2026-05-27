@@ -6,6 +6,7 @@ import { NavLink } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
 import { cnJoin } from "@/lib/utils/cn";
 import { Main } from "../-components/Main";
+import { RegisterProgramAccordion } from "./-components/RegisterProgramAccordion";
 
 function CapacityBuildingPage() {
 	return (
@@ -227,14 +228,8 @@ function HowItWorksSection() {
 
 function RegisterPromptSection() {
 	return (
-		<section className="mt-5 flex items-center justify-center gap-2 lg:mt-9 lg:gap-7.5">
-			<h2 className="text-[24px]/[1.2] underline underline-offset-5 lg:text-[40px] lg:decoration-1">
-				Register for a Program
-			</h2>
-
-			<Button size="icon" className="lg:text-[30px]">
-				<IconBox icon="lucide:chevron-down" />
-			</Button>
+		<section className="mt-5 lg:mt-9">
+			<RegisterProgramAccordion />
 		</section>
 	);
 }
