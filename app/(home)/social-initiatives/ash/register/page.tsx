@@ -358,11 +358,7 @@ function SchoolInformationStep(props: StepProps) {
 				type="number"
 			/>
 
-			<FileUploadField
-				control={form.control}
-				name="lastResult"
-				label="Upload Last School Result"
-			/>
+			<FileUploadField control={form.control} name="lastResult" label="Upload Last School Result" />
 
 			<section className="flex flex-col gap-4 lg:gap-5">
 				<h2 className="leading-[1.2] lg:text-[24px]">Program Participation</h2>
@@ -576,4 +572,3 @@ const stateOptions = nigeriaStatesAndLGA.map(({ state }) => state);
 function getLocalGovernmentAreaOptions(state: string) {
 	return nigeriaStatesAndLGA.find((stateItem) => stateItem.state === state)?.lgas ?? [];
 }
-

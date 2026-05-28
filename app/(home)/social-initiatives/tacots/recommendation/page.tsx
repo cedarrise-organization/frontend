@@ -736,4 +736,3 @@ const incomeSourceOptions = [
 	"No regular income",
 	"Other: _________",
 ];
-

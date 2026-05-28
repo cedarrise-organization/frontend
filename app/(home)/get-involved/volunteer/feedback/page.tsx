@@ -405,4 +405,3 @@ const skillsGainedOptions = [
 	"Program facilitation",
 ];
 const yesMaybeNoOptions = ["Yes", "Maybe", "No"];
-

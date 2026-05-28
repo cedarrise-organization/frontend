@@ -307,7 +307,11 @@ function ParentFeedbackStep(props: StepProps) {
 			<section className="flex flex-col gap-4 lg:gap-5">
 				<FormSectionHeader title="Student Information" />
 
-				<TextField control={form.control} name="parentGuardianName" placeholder="Parent / Guardian Name" />
+				<TextField
+					control={form.control}
+					name="parentGuardianName"
+					placeholder="Parent / Guardian Name"
+				/>
 
 				<OptionQuestionField
 					control={form.control}
@@ -377,4 +381,3 @@ function ParentFeedbackStep(props: StepProps) {
 		</div>
 	);
 }
-

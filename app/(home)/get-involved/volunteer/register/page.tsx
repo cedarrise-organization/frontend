@@ -453,4 +453,3 @@ const yesNoOptions = ["Yes", "No"];
 const mediaConsentOptions = [
 	"Usage: These materials may be used for promotional, educational, reporting and evaluation purposes on websites, social media platforms, and in digital or printed publications.",
 ];
-
