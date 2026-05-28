@@ -1,152 +1,69 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { tw } from "@zayne-labs/toolkit-core";
-import autoplay from "embla-carousel-autoplay";
-import Image from "next/image";
-import { approachSectionImg, heroImg } from "@/assets/images/social-initiatives/tacots";
-import { For } from "@/components/common/for";
-import { Carousel } from "@/components/ui";
-import { cnJoin } from "@/lib/utils/cn";
-
-type GalleryItem = {
-	image: string;
-	size: string;
-};
-
-const galleryRows: GalleryItem[][] = [
-	[
-		{ image: heroImg, size: tw`w-[60%]` },
-		{ image: approachSectionImg, size: tw`w-[40%]` },
-	],
-	[
-		{ image: approachSectionImg, size: tw`w-[30%]` },
-		{ image: heroImg, size: tw`w-[40%]` },
-		{ image: approachSectionImg, size: tw`w-[30%]` },
-	],
-];
+import { MomentsCarouselShared } from "@/app/(home)/-components/MomentsCarouselShared";
+import { TestimonialCarouselShared } from "@/app/(home)/-components/TestimonialCarouselShared";
+import { ForWithWrapper } from "@/components/common/for";
+import { tacotsCarouselsQuery } from "@/lib/react-query/queryOptions";
+import { chunkArray } from "@/lib/utils/common";
 
 function TacotsMomentsCarousel() {
+	const tacotsCarouselsQueryResult = useQuery(tacotsCarouselsQuery());
+
+	const galleryRows = chunkArray(tacotsCarouselsQueryResult.data?.data, 3).map((chunk) =>
+		chunk.map((image) => ({
+			image,
+			size: tw`w-(--image-width)`,
+			style: { "--image-width": `30%` } as React.CSSProperties,
+		}))
+	);
+
 	return (
-		<div className="flex flex-col gap-3 overflow-hidden lg:gap-5">
-			<For
-				each={galleryRows}
-				renderItem={(galleryRow, galleryRowIndex) => (
-					<Carousel.Root
-						key={galleryRowIndex}
-						className="w-full"
-						options={{ loop: true }}
-						plugins={[
-							autoplay({
-								delay: 2000 + galleryRowIndex * 400,
-								stopOnFocusIn: true,
-								stopOnInteraction: false,
-								stopOnMouseEnter: true,
-							}),
-						]}
-					>
-						<Carousel.Content className="-mr-3 gap-3 select-none lg:-mr-5 lg:gap-5">
-							<For
-								each={galleryRow}
-								renderItem={(galleryRowItem, galleryRowItemIndex) => (
-									<Carousel.Item
-										key={galleryRowItemIndex}
-										className={cnJoin(
-											"h-[240px] cursor-grab active:cursor-grabbing lg:h-[300px]",
-											galleryRowItem.size,
-											galleryRowItemIndex === galleryRow.length - 1 && "pr-5"
-										)}
-									>
-										<Image
-											src={galleryRowItem.image}
-											alt="TACOTS moment"
-											className="size-full rounded-[12px] object-cover lg:rounded-[16px]"
-										/>
-									</Carousel.Item>
-								)}
-							/>
-						</Carousel.Content>
-					</Carousel.Root>
-				)}
-			/>
-		</div>
+		<ForWithWrapper
+			className="flex flex-col gap-3 overflow-hidden lg:gap-5"
+			each={galleryRows}
+			renderItem={(galleryRow, galleryRowIndex) => (
+				<MomentsCarouselShared
+					key={galleryRowIndex}
+					galleryRow={galleryRow}
+					galleryRowIndex={galleryRowIndex}
+					imageAlt="TACOTS moment"
+				/>
+			)}
+		/>
 	);
 }
 
 const stories = [
 	{
-		quote: "My daughter's discipline and sense of responsibility have improved greatly. She reads more and makes us proud at home.",
-		title: "L.L, Parent of Beneficiary",
+		quote: "This scholarship has helped my family in countless ways I cannot fully express. I am overjoyed and grateful, and I pray that the sponsors are blessed in all they do, with abundant rewards and protection from the Lord.",
+		title: "E.O (Mother of Beneficiary)",
 	},
 	{
-		quote: "The sponsorship has lifted a financial burden from my family and has given me confidence to continue learning even when things are difficult.",
-		title: "R.A, JSS1, Holy Rosary High School, Awgu",
+		quote: "Since my son began this scholarship, I have seen remarkable changes in him—he has grown, is eager to learn, and even asked to join a holiday learning program. I am grateful to God and the sponsors, and I pray they are blessed with good health and more opportunities to do good",
+		title: "N.C (Father of Beneficiary)",
 	},
 	{
-		quote: "What out-of-school children need most is someone who believes they can still have a future. TACOTS gave that hope back.",
-		title: "TACOTS Volunteer",
+		quote: "After losing my husband, I could not imagine how to train my daughter, but this scholarship came as God’s answer to my prayers. My daughter has changed positively—she is calmer, listens to corrections, and reads more, though still playful as a child. I am deeply thankful to the sponsors for remembering families like mine and pray that God strengthens and blesses them for all they have done.",
+		title: "A.I (Mother of Beneficiary)",
+	},
+	{
+		quote: "This sponsorship has helped my parents by paying my school fees, and I am happy to be in JSS2. I thank my sponsors for supporting me, and I always keep them in my prayers.",
+		title: "C. E (Student, St. Vincent de Paul Seminary, JSS2)",
+	},
+	{
+		quote: "The sponsorship has lifted a financial burden from my family and has given me a better academic environment to grow in. I thank the sponsors sincerely and pray God blesses them with long life and endless favor.",
+		title: "P.A (Student, Holy Rosary High School, JSS2)",
+	},
+	{
+		quote: "This scholarship has lifted the heavy financial load from my mother, leaving her only with minor costs. I am very happy and thankful, and I pray that the good Lord blesses the sponsors for all they’ve done.",
+		title: "A.P  (Student, St. Vincent de Paul Seminary, JSS2)",
 	},
 ];
 
 function TacotsStoriesCarousel() {
-	return (
-		<Carousel.Root
-			className="w-full"
-			options={{ loop: true }}
-			plugins={[
-				autoplay({
-					delay: 2600,
-					stopOnFocusIn: true,
-					stopOnInteraction: false,
-					stopOnMouseEnter: true,
-				}),
-			]}
-		>
-			<Carousel.Content className="-mr-3 gap-3 select-none lg:-mr-5 lg:gap-5">
-				<For
-					each={stories}
-					renderItem={(story, index, array) => (
-						<Carousel.Item
-							key={index}
-							className={cnJoin(
-								`min-h-[172px] w-[92%] cursor-grab active:cursor-grabbing lg:min-h-[224px]
-								lg:w-full lg:max-w-[590px]`,
-								index === array.length - 1 && "pr-5"
-							)}
-						>
-							<article
-								className="flex size-full flex-col gap-5 rounded-[16px] bg-[hsl(0,0%,94%)] py-6
-									pr-5 pl-6.5"
-							>
-								<div className="flex items-center gap-4 lg:gap-6">
-									<span
-										className="grid h-11 w-[55px] shrink-0 place-content-center rounded-[20px]
-											bg-cedar-yellow text-[64px] text-cedar-red"
-									>
-										<svg
-											width="22"
-											height="19"
-											viewBox="0 0 22 19"
-											fill="none"
-											xmlns="http://www.w3.org/2000/svg"
-										>
-											<path
-												d="M-0.000238419 0.000179291V3.20018C3.26376 4.03218 4.86376 5.95218 4.92776 9.98418H-0.000238419V18.6242H8.83176V12.0962C8.83176 4.86418 6.65576 1.40818 -0.000238419 0.000179291ZM12.3518 0.000179291V3.20018C15.6158 4.03218 17.2158 5.95218 17.2798 9.98418H12.3518V18.6242H21.1838V12.0962C21.1838 4.86418 19.0078 1.40818 12.3518 0.000179291Z"
-												fill="currentColor"
-											/>
-										</svg>
-									</span>
-
-									<h3 className="leading-[1.2] text-cedar-red lg:text-[20px]">{story.title}</h3>
-								</div>
-
-								<p className="text-[12px]/[1.2] text-pretty lg:text-base">"{story.quote}"</p>
-							</article>
-						</Carousel.Item>
-					)}
-				/>
-			</Carousel.Content>
-		</Carousel.Root>
-	);
+	return <TestimonialCarouselShared testimonials={stories} />;
 }
 
 export { TacotsMomentsCarousel, TacotsStoriesCarousel };

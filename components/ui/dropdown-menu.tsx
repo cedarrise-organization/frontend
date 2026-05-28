@@ -58,10 +58,9 @@ function DropdownMenuItem(
 			data-slot="dropdown-menu-item"
 			data-variant={variant}
 			className={cnMerge(
-				`relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden
-				select-none focus:bg-shadcn-accent focus:text-shadcn-accent-foreground
-				data-disabled:pointer-events-none data-disabled:opacity-50
-				data-[variant=destructive]:text-shadcn-destructive
+				`relative flex items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none
+				focus:bg-shadcn-accent focus:text-shadcn-accent-foreground data-disabled:pointer-events-none
+				data-disabled:opacity-50 data-[variant=destructive]:text-shadcn-destructive
 				data-[variant=destructive]:focus:bg-shadcn-destructive/10
 				data-[variant=destructive]:focus:text-shadcn-destructive
 				dark:data-[variant=destructive]:focus:bg-shadcn-destructive/20 [&_svg]:pointer-events-none

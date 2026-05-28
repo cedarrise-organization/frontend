@@ -21,29 +21,29 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { cnJoin } from "@/lib/utils/cn";
 
-const ashFeedbackFormSchema = z.object({
-	academicConfidence: z.string(),
+const ashFeedbackFrontendSchema = z.object({
+	academicImprovementNoticed: z.string(),
 	additionalComments: z.string(),
-	attendanceExperience: z.string(),
-	challenges: z.string(),
-	childAcademicProgress: z.string(),
-	childAttitudeChange: z.string(),
+	attendanceFrequency: z.string(),
+	childBenefited: z.string(),
+	confidenceBehaviorChange: z.string(),
+	confidenceRating: z.string(),
 	currentClass: z.string(),
-	currentSchool: z.string(),
-	guardianName: z.string(),
-	homePractice: z.string(),
-	parentPhoneNumber: z.string(),
-	parentProgramSatisfaction: z.string(),
-	parentRelationshipToStudent: z.string(),
-	parentSuggestions: z.string(),
-	programActivities: z.string(),
-	programEnjoyment: z.string(),
-	programImpact: z.string(),
-	programImprovements: z.string(),
+	enjoyedParts: z.string(),
+	learningImprovementRating: z.string(),
+	mostValuableAspects: z.string(),
+	parentGuardianName: z.string(),
+	parentGuardianRelationship: z.string(),
+	parentImprovementSuggestions: z.string(),
+	parentPhone: z.string(),
+	parentSatisfactionRating: z.string(),
+	programImpactOnChild: z.string(),
+	schoolName: z.string(),
+	studentEnjoyedMost: z.string(),
 	studentFirstName: z.string(),
+	studentImprovementSuggestions: z.string(),
 	studentSurname: z.string(),
-	subjectImprovement: z.string(),
-	tutorSupport: z.string(),
+	volunteerSupportRating: z.string(),
 });
 
 function FeedbackFormPage() {
@@ -88,30 +88,30 @@ const stepperItems = defineEnumDeep([
 function AshFeedbackForm() {
 	const form = useForm({
 		defaultValues: {
-			academicConfidence: "",
+			academicImprovementNoticed: "",
 			additionalComments: "",
-			attendanceExperience: "",
-			challenges: "",
-			childAcademicProgress: "",
-			childAttitudeChange: "",
+			attendanceFrequency: "",
+			childBenefited: "",
+			confidenceBehaviorChange: "",
+			confidenceRating: "",
 			currentClass: "",
-			currentSchool: "",
-			guardianName: "",
-			homePractice: "",
-			parentPhoneNumber: "",
-			parentProgramSatisfaction: "",
-			parentRelationshipToStudent: "",
-			parentSuggestions: "",
-			programActivities: "",
-			programEnjoyment: "",
-			programImpact: "",
-			programImprovements: "",
+			enjoyedParts: "",
+			learningImprovementRating: "",
+			mostValuableAspects: "",
+			parentGuardianName: "",
+			parentGuardianRelationship: "",
+			parentImprovementSuggestions: "",
+			parentPhone: "",
+			parentSatisfactionRating: "",
+			programImpactOnChild: "",
+			schoolName: "",
+			studentEnjoyedMost: "",
 			studentFirstName: "",
+			studentImprovementSuggestions: "",
 			studentSurname: "",
-			subjectImprovement: "",
-			tutorSupport: "",
+			volunteerSupportRating: "",
 		},
-		resolver: zodResolver(ashFeedbackFormSchema),
+		resolver: zodResolver(ashFeedbackFrontendSchema),
 	});
 
 	const onSubmit = form.handleSubmit(() => {});
@@ -192,7 +192,7 @@ function FormSectionHeader(props: { title: string }) {
 }
 
 type StepProps = {
-	form: UseFormReturn<z.infer<typeof ashFeedbackFormSchema>>;
+	form: UseFormReturn<z.infer<typeof ashFeedbackFrontendSchema>>;
 };
 
 function StudentFeedbackStep(props: StepProps) {
@@ -205,7 +205,7 @@ function StudentFeedbackStep(props: StepProps) {
 
 				<TextField control={form.control} name="studentFirstName" placeholder="Student First Name" />
 				<TextField control={form.control} name="studentSurname" placeholder="Student Surname" />
-				<TextField control={form.control} name="currentSchool" placeholder="Current School" />
+				<TextField control={form.control} name="schoolName" placeholder="Current School" />
 				<SelectField
 					control={form.control}
 					classNames={{ trigger: "max-w-[305px]" }}
@@ -220,14 +220,14 @@ function StudentFeedbackStep(props: StepProps) {
 
 				<OptionQuestionField
 					control={form.control}
-					name="programEnjoyment"
+					name="attendanceFrequency"
 					question="1. How much do you enjoy attending ASH?"
 					options={["Very much", "Somewhat", "Not sure", "Not much"]}
 				/>
 
 				<OptionQuestionField
 					control={form.control}
-					name="programActivities"
+					name="enjoyedParts"
 					question="2. What part of ASH has helped you the most?"
 					options={[
 						"Homework support",
@@ -240,14 +240,14 @@ function StudentFeedbackStep(props: StepProps) {
 
 				<OptionQuestionField
 					control={form.control}
-					name="subjectImprovement"
+					name="learningImprovementRating"
 					question="3. Which subject area has improved the most?"
 					options={["English", "Mathematics", "Science", "Social Studies", "Other"]}
 				/>
 
 				<RatingQuestionField
 					control={form.control}
-					name="academicConfidence"
+					name="confidenceRating"
 					question="4. ASH has improved my confidence in school work."
 					leftLabel="Strongly disagree"
 					rightLabel="Strongly agree"
@@ -255,7 +255,7 @@ function StudentFeedbackStep(props: StepProps) {
 
 				<RatingQuestionField
 					control={form.control}
-					name="tutorSupport"
+					name="volunteerSupportRating"
 					question="5. Tutors and mentors explain things clearly."
 					leftLabel="Strongly disagree"
 					rightLabel="Strongly agree"
@@ -263,13 +263,13 @@ function StudentFeedbackStep(props: StepProps) {
 
 				<TextAreaField
 					control={form.control}
-					name="challenges"
+					name="studentEnjoyedMost"
 					label="What challenges are you still facing in school?"
 				/>
 
 				<TextAreaField
 					control={form.control}
-					name="programImprovements"
+					name="studentImprovementSuggestions"
 					label="What can make ASH better for students?"
 				/>
 			</section>
@@ -285,16 +285,16 @@ function ParentGuardianFeedbackStep(props: StepProps) {
 			<section className="flex flex-col gap-4 lg:gap-5">
 				<FormSectionHeader title="Parent / Guardian Information" />
 
-				<TextField control={form.control} name="guardianName" placeholder="Parent / Guardian Name" />
+				<TextField control={form.control} name="parentGuardianName" placeholder="Parent / Guardian Name" />
 				<OptionQuestionField
 					control={form.control}
-					name="parentRelationshipToStudent"
+					name="parentGuardianRelationship"
 					question="Relationship to Student"
 					options={["Father", "Mother", "Guardian", "Relative"]}
 				/>
 				<TextField
 					control={form.control}
-					name="parentPhoneNumber"
+					name="parentPhone"
 					placeholder="Phone Number"
 					type="tel"
 				/>
@@ -305,7 +305,7 @@ function ParentGuardianFeedbackStep(props: StepProps) {
 
 				<OptionQuestionField
 					control={form.control}
-					name="childAcademicProgress"
+					name="academicImprovementNoticed"
 					question="1. Have you noticed improvement in your child's school performance?"
 					options={[
 						"Yes - significant improvement",
@@ -317,28 +317,28 @@ function ParentGuardianFeedbackStep(props: StepProps) {
 
 				<OptionQuestionField
 					control={form.control}
-					name="childAttitudeChange"
+					name="confidenceBehaviorChange"
 					question="2. Have you noticed positive changes in your child's study habits?"
 					options={["Yes - very positive", "Some improvement", "No change", "Not sure"]}
 				/>
 
 				<OptionQuestionField
 					control={form.control}
-					name="homePractice"
+					name="mostValuableAspects"
 					question="3. Does the student practice ASH assignments or lessons at home?"
 					options={["Regularly", "Sometimes", "Rarely", "Not sure"]}
 				/>
 
 				<OptionQuestionField
 					control={form.control}
-					name="attendanceExperience"
+					name="childBenefited"
 					question="4. How would you describe the student's attendance experience?"
 					options={["Very consistent", "Mostly consistent", "Needs support", "Not sure"]}
 				/>
 
 				<RatingQuestionField
 					control={form.control}
-					name="parentProgramSatisfaction"
+					name="parentSatisfactionRating"
 					question="5. How satisfied are you with the ASH program?"
 					leftLabel="Very dissatisfied"
 					rightLabel="Very satisfied"
@@ -346,13 +346,13 @@ function ParentGuardianFeedbackStep(props: StepProps) {
 
 				<TextAreaField
 					control={form.control}
-					name="programImpact"
+					name="programImpactOnChild"
 					label="What impact has ASH had on your child or family?"
 				/>
 
 				<TextAreaField
 					control={form.control}
-					name="parentSuggestions"
+					name="parentImprovementSuggestions"
 					label="What improvements would you recommend?"
 				/>
 
@@ -380,3 +380,4 @@ const classOptions = [
 	"SS 2",
 	"SS 3",
 ];
+

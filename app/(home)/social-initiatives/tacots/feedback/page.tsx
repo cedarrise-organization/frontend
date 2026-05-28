@@ -21,27 +21,28 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { cnJoin } from "@/lib/utils/cn";
 
-const tacotsFeedbackFormSchema = z.object({
-	academicPerformance: z.string(),
+const tacotsFeedbackFrontendSchema = z.object({
+	academicImprovementNoticed: z.string(),
 	additionalComments: z.string(),
-	attitudeChanges: z.string(),
-	challenges: z.string(),
+	attitudeChangeNoticed: z.string(),
+	currentChallenges: z.string(),
 	currentClass: z.string(),
 	currentSchool: z.string(),
-	financialBurden: z.string(),
-	guardianName: z.string(),
-	impactOnFamily: z.string(),
-	mentorshipImpact: z.string(),
-	motivationImproved: z.string(),
-	parentSatisfaction: z.string(),
-	phoneNumber: z.string(),
-	programImprovements: z.string(),
-	programLikes: z.string(),
-	relationshipToStudent: z.string(),
-	scholarshipHelped: z.string(),
+	likedMost: z.string(),
+	mentorshipImpactRating: z.string(),
+	mostHelpfulSupport: z.string(),
+	parentGuardianName: z.string(),
+	parentGuardianRelationship: z.string(),
+	parentImprovementSuggestions: z.string(),
+	parentPhone: z.string(),
+	parentSatisfactionRating: z.string(),
+	programImpactOnFamily: z.string(),
+	scholarshipHelpedStay: z.string(),
+	scholarshipReducedBurden: z.string(),
 	studentFirstName: z.string(),
+	studentImprovementSuggestions: z.string(),
 	studentSurname: z.string(),
-	supportHelpedMost: z.string(),
+	studyMotivationRating: z.string(),
 });
 
 function FeedbackFormPage() {
@@ -86,28 +87,29 @@ const stepperItems = defineEnumDeep([
 function TacotsFeedbackForm() {
 	const form = useForm({
 		defaultValues: {
-			academicPerformance: "",
+			academicImprovementNoticed: "",
 			additionalComments: "",
-			attitudeChanges: "",
-			challenges: "",
+			attitudeChangeNoticed: "",
+			currentChallenges: "",
 			currentClass: "",
 			currentSchool: "",
-			financialBurden: "",
-			guardianName: "",
-			impactOnFamily: "",
-			mentorshipImpact: "",
-			motivationImproved: "",
-			parentSatisfaction: "",
-			phoneNumber: "",
-			programImprovements: "",
-			programLikes: "",
-			relationshipToStudent: "",
-			scholarshipHelped: "",
+			likedMost: "",
+			mentorshipImpactRating: "",
+			mostHelpfulSupport: "",
+			parentGuardianName: "",
+			parentGuardianRelationship: "",
+			parentImprovementSuggestions: "",
+			parentPhone: "",
+			parentSatisfactionRating: "",
+			programImpactOnFamily: "",
+			scholarshipHelpedStay: "",
+			scholarshipReducedBurden: "",
 			studentFirstName: "",
+			studentImprovementSuggestions: "",
 			studentSurname: "",
-			supportHelpedMost: "",
+			studyMotivationRating: "",
 		},
-		resolver: zodResolver(tacotsFeedbackFormSchema),
+		resolver: zodResolver(tacotsFeedbackFrontendSchema),
 	});
 
 	const onSubmit = form.handleSubmit(() => {});
@@ -187,7 +189,7 @@ function FormSectionHeader(props: { title: string }) {
 }
 
 type StepProps = {
-	form: UseFormReturn<z.infer<typeof tacotsFeedbackFormSchema>>;
+	form: UseFormReturn<z.infer<typeof tacotsFeedbackFrontendSchema>>;
 };
 
 const classOptions = [
@@ -233,14 +235,14 @@ function StudentFeedbackStep(props: StepProps) {
 
 				<OptionQuestionField
 					control={form.control}
-					name="scholarshipHelped"
+					name="scholarshipHelpedStay"
 					question="1. Has the TACOTS scholarship helped you stay in school?"
 					options={["Yes - very much", "Yes - somewhat", "Not sure", "No"]}
 				/>
 
 				<OptionQuestionField
 					control={form.control}
-					name="supportHelpedMost"
+					name="mostHelpfulSupport"
 					question="2. What support from TACOTS has helped you the most?"
 					options={[
 						"Tuition support",
@@ -253,7 +255,7 @@ function StudentFeedbackStep(props: StepProps) {
 
 				<RatingQuestionField
 					control={form.control}
-					name="motivationImproved"
+					name="studyMotivationRating"
 					question="3. Because of TACOTS, my motivation to study has improved."
 					leftLabel="Strongly disagree"
 					rightLabel="Strongly agree"
@@ -261,7 +263,7 @@ function StudentFeedbackStep(props: StepProps) {
 
 				<RatingQuestionField
 					control={form.control}
-					name="mentorshipImpact"
+					name="mentorshipImpactRating"
 					question="4. TACOTS mentorship and guidance have helped me personally."
 					leftLabel="Strongly disagree"
 					rightLabel="Strongly agree"
@@ -269,7 +271,7 @@ function StudentFeedbackStep(props: StepProps) {
 
 				<OptionQuestionField
 					control={form.control}
-					name="challenges"
+					name="currentChallenges"
 					question="5. What challenges are you currently facing in school?"
 					options={[
 						"Difficulty understanding subjects",
@@ -283,13 +285,13 @@ function StudentFeedbackStep(props: StepProps) {
 
 				<TextAreaField
 					control={form.control}
-					name="programLikes"
+					name="likedMost"
 					label="What do you like most about the TACOTS program?"
 				/>
 
 				<TextAreaField
 					control={form.control}
-					name="programImprovements"
+					name="studentImprovementSuggestions"
 					label="What suggestions do you have to improve the program?"
 				/>
 			</section>
@@ -305,16 +307,16 @@ function ParentFeedbackStep(props: StepProps) {
 			<section className="flex flex-col gap-4 lg:gap-5">
 				<FormSectionHeader title="Student Information" />
 
-				<TextField control={form.control} name="guardianName" placeholder="Parent / Guardian Name" />
+				<TextField control={form.control} name="parentGuardianName" placeholder="Parent / Guardian Name" />
 
 				<OptionQuestionField
 					control={form.control}
-					name="relationshipToStudent"
+					name="parentGuardianRelationship"
 					question="Relationship to Student"
 					options={["Father", "Mother", "Guardian", "Relative"]}
 				/>
 
-				<TextField control={form.control} name="phoneNumber" placeholder="Phone Number" type="tel" />
+				<TextField control={form.control} name="parentPhone" placeholder="Phone Number" type="tel" />
 			</section>
 
 			<section className="flex flex-col gap-4 lg:gap-5">
@@ -322,14 +324,14 @@ function ParentFeedbackStep(props: StepProps) {
 
 				<OptionQuestionField
 					control={form.control}
-					name="financialBurden"
+					name="scholarshipReducedBurden"
 					question="1. Has the TACOTS scholarship helped reduce the financial burden?"
 					options={["Yes - significantly", "Yes - somewhat", "Not really", "Not sure"]}
 				/>
 
 				<OptionQuestionField
 					control={form.control}
-					name="academicPerformance"
+					name="academicImprovementNoticed"
 					question="2. Have you noticed improvement in your child's academic performance?"
 					options={[
 						"Yes - significant improvement",
@@ -341,14 +343,14 @@ function ParentFeedbackStep(props: StepProps) {
 
 				<OptionQuestionField
 					control={form.control}
-					name="attitudeChanges"
+					name="attitudeChangeNoticed"
 					question="3. Have you observed positive changes in your child's attitude toward school?"
 					options={["Yes - very positive change", "Some improvement", "No change", "Not sure"]}
 				/>
 
 				<RatingQuestionField
 					control={form.control}
-					name="parentSatisfaction"
+					name="parentSatisfactionRating"
 					question="4. How satisfied are you with the TACOTS scholarship program?"
 					leftLabel="Very dissatisfied"
 					rightLabel="Very satisfied"
@@ -356,13 +358,13 @@ function ParentFeedbackStep(props: StepProps) {
 
 				<TextAreaField
 					control={form.control}
-					name="impactOnFamily"
+					name="programImpactOnFamily"
 					label="What impact has the TACOTS program had on your child or family?"
 				/>
 
 				<TextAreaField
 					control={form.control}
-					name="programImprovements"
+					name="parentImprovementSuggestions"
 					label="What improvements would you recommend for the program?"
 				/>
 
@@ -375,3 +377,4 @@ function ParentFeedbackStep(props: StepProps) {
 		</div>
 	);
 }
+

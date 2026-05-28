@@ -50,44 +50,44 @@ const declarationText =
 const consentAgreementText =
 	"I hereby grant consent for my child to participate in the program and all related activities. I understand that they may be photographed or recorded during the program.";
 
-const ashRegisterFormSchema = z.object({
+const ashRegisterFrontendSchema = z.object({
 	age: z.string(),
-	averageHouseholdIncomePerYear: z.string(),
-	classLevel: z.string(),
-	conditionAffectsLearning: z.string(),
-	currentPassportPhotograph: z.custom<File>().nullable(),
-	dateOfBirth: z.string(),
+	assignedMentor: z.string(),
+	classPositionLastTerm: z.string(),
+	currentClass: z.string(),
 	declarationConfirmed: z.boolean(),
-	fatherName: z.string(),
-	fatherOccupation: z.string(),
-	fatherPhoneNumber: z.string(),
+	dob: z.string(),
+	fathersName: z.string(),
+	fathersOccupation: z.string(),
+	fathersPhone: z.string(),
+	firstName: z.string(),
 	gender: z.string(),
 	guardianName: z.string(),
 	guardianOccupation: z.string(),
-	guardianPhoneNumber: z.string(),
+	guardianPhone: z.string(),
 	guardianRelationship: z.string(),
-	healthConcerns: z.array(z.boolean()),
+	hasLearningCondition: z.string(),
 	homeAddress: z.string(),
-	lastResultPicture: z.custom<File>().nullable(),
-	lastTermClassPosition: z.string(),
-	mentorName: z.string(),
-	motherName: z.string(),
-	motherOccupation: z.string(),
-	motherPhoneNumber: z.string(),
-	parentSignatureAndName: z.custom<File>().nullable(),
-	phoneNumber: z.string(),
+	householdIncomeRange: z.string(),
+	lastResult: z.custom<File>().nullable(),
+	learningConditions: z.array(z.boolean()),
+	middleName: z.string(),
+	mothersName: z.string(),
+	mothersOccupation: z.string(),
+	mothersPhone: z.string(),
+	parentConsent: z.boolean(),
+	parentSignature: z.custom<File>().nullable(),
+	passportPhoto: z.custom<File>().nullable(),
 	pretestScore: z.string(),
-	previousAfterSchoolProgram: z.string(),
+	prevAfterschoolProgram: z.string(),
 	primaryLanguage: z.string(),
-	programAgreementAccepted: z.boolean(),
 	reasonForJoining: z.string(),
-	schoolLocalGovernmentArea: z.string(),
+	schoolLga: z.string(),
 	schoolName: z.string(),
 	schoolState: z.string(),
 	schoolTown: z.string(),
-	studentFirstName: z.string(),
-	studentMiddleName: z.string(),
-	studentSurname: z.string(),
+	studentPhone: z.string(),
+	surname: z.string(),
 });
 
 function RegisterFormPage() {
@@ -143,44 +143,44 @@ function AshRegisterForm() {
 	const form = useForm({
 		defaultValues: {
 			age: "",
-			averageHouseholdIncomePerYear: "",
-			classLevel: "",
-			conditionAffectsLearning: "",
-			currentPassportPhotograph: null,
-			dateOfBirth: "",
+			assignedMentor: "",
+			classPositionLastTerm: "",
+			currentClass: "",
 			declarationConfirmed: false,
-			fatherName: "",
-			fatherOccupation: "",
-			fatherPhoneNumber: "",
+			dob: "",
+			fathersName: "",
+			fathersOccupation: "",
+			fathersPhone: "",
+			firstName: "",
 			gender: "",
 			guardianName: "",
 			guardianOccupation: "",
-			guardianPhoneNumber: "",
+			guardianPhone: "",
 			guardianRelationship: "",
-			healthConcerns: healthConcernOptions.map(() => false),
+			hasLearningCondition: "",
 			homeAddress: "",
-			lastResultPicture: null,
-			lastTermClassPosition: "",
-			mentorName: "",
-			motherName: "",
-			motherOccupation: "",
-			motherPhoneNumber: "",
-			parentSignatureAndName: null,
-			phoneNumber: "",
+			householdIncomeRange: "",
+			lastResult: null,
+			learningConditions: healthConcernOptions.map(() => false),
+			middleName: "",
+			mothersName: "",
+			mothersOccupation: "",
+			mothersPhone: "",
+			parentConsent: false,
+			parentSignature: null,
+			passportPhoto: null,
 			pretestScore: "",
-			previousAfterSchoolProgram: "",
+			prevAfterschoolProgram: "",
 			primaryLanguage: "",
-			programAgreementAccepted: false,
 			reasonForJoining: "",
-			schoolLocalGovernmentArea: "",
+			schoolLga: "",
 			schoolName: "",
 			schoolState: "",
 			schoolTown: "",
-			studentFirstName: "",
-			studentMiddleName: "",
-			studentSurname: "",
+			studentPhone: "",
+			surname: "",
 		},
-		resolver: zodResolver(ashRegisterFormSchema),
+		resolver: zodResolver(ashRegisterFrontendSchema),
 	});
 
 	const onSubmit = form.handleSubmit(() => {});
@@ -261,7 +261,7 @@ function FormSectionHeader(props: { title: string }) {
 }
 
 type StepProps = {
-	form: UseFormReturn<z.infer<typeof ashRegisterFormSchema>>;
+	form: UseFormReturn<z.infer<typeof ashRegisterFrontendSchema>>;
 };
 
 function StudentPersonalInformationStep(props: StepProps) {
@@ -271,9 +271,9 @@ function StudentPersonalInformationStep(props: StepProps) {
 		<section className="flex flex-col gap-4 lg:gap-5">
 			<FormSectionHeader title="Student Personal Information" />
 
-			<TextField control={form.control} name="studentFirstName" placeholder="First Name" />
-			<TextField control={form.control} name="studentMiddleName" placeholder="Middle Name" />
-			<TextField control={form.control} name="studentSurname" placeholder="Surname" />
+			<TextField control={form.control} name="firstName" placeholder="First Name" />
+			<TextField control={form.control} name="middleName" placeholder="Middle Name" />
+			<TextField control={form.control} name="surname" placeholder="Surname" />
 
 			<SelectField
 				control={form.control}
@@ -283,7 +283,7 @@ function StudentPersonalInformationStep(props: StepProps) {
 				options={ageOptions}
 			/>
 
-			<DateField control={form.control} name="dateOfBirth" placeholder="Date of Birth" />
+			<DateField control={form.control} name="dob" placeholder="Date of Birth" />
 
 			<OptionQuestionField
 				control={form.control}
@@ -300,10 +300,10 @@ function StudentPersonalInformationStep(props: StepProps) {
 			/>
 
 			<TextField control={form.control} name="homeAddress" placeholder="Home Address" />
-			<TextField control={form.control} name="phoneNumber" placeholder="Phone Number" type="tel" />
+			<TextField control={form.control} name="studentPhone" placeholder="Phone Number" type="tel" />
 			<FileUploadField
 				control={form.control}
-				name="currentPassportPhotograph"
+				name="passportPhoto"
 				label="Upload Student Passport Photograph"
 			/>
 		</section>
@@ -334,7 +334,7 @@ function SchoolInformationStep(props: StepProps) {
 						<SelectField
 							control={form.control}
 							classNames={{ trigger: "w-full px-4 lg:px-9" }}
-							name="schoolLocalGovernmentArea"
+							name="schoolLga"
 							placeholder="Local Government Area"
 							options={getLocalGovernmentAreaOptions(schoolState)}
 						/>
@@ -344,14 +344,14 @@ function SchoolInformationStep(props: StepProps) {
 
 			<SelectField
 				control={form.control}
-				name="classLevel"
+				name="currentClass"
 				placeholder="Current Class"
 				options={classOptions}
 			/>
 
 			<TextField
 				control={form.control}
-				name="lastTermClassPosition"
+				name="classPositionLastTerm"
 				placeholder="Position in Class (Last Term)"
 				min={1}
 				step={1}
@@ -360,7 +360,7 @@ function SchoolInformationStep(props: StepProps) {
 
 			<FileUploadField
 				control={form.control}
-				name="lastResultPicture"
+				name="lastResult"
 				label="Upload Last School Result"
 			/>
 
@@ -369,7 +369,7 @@ function SchoolInformationStep(props: StepProps) {
 
 				<OptionQuestionField
 					control={form.control}
-					name="previousAfterSchoolProgram"
+					name="prevAfterschoolProgram"
 					question="Has the student previously participated in an after-school program?"
 					options={["Yes", "No"]}
 				/>
@@ -391,22 +391,22 @@ function ParentGuardianInformationStep(props: StepProps) {
 		<section className="flex flex-col gap-4 lg:gap-5">
 			<FormSectionHeader title="Parent / Guardian Information" />
 
-			<TextField control={form.control} name="fatherName" placeholder="Father's Name" />
+			<TextField control={form.control} name="fathersName" placeholder="Father's Name" />
 			<TextField
 				control={form.control}
-				name="fatherPhoneNumber"
+				name="fathersPhone"
 				placeholder="Father's Phone Number"
 				type="tel"
 			/>
-			<TextField control={form.control} name="fatherOccupation" placeholder="Father's Occupation" />
-			<TextField control={form.control} name="motherName" placeholder="Mother's Name" />
+			<TextField control={form.control} name="fathersOccupation" placeholder="Father's Occupation" />
+			<TextField control={form.control} name="mothersName" placeholder="Mother's Name" />
 			<TextField
 				control={form.control}
-				name="motherPhoneNumber"
+				name="mothersPhone"
 				placeholder="Mother's Phone Number"
 				type="tel"
 			/>
-			<TextField control={form.control} name="motherOccupation" placeholder="Mother's Occupation" />
+			<TextField control={form.control} name="mothersOccupation" placeholder="Mother's Occupation" />
 			<TextField
 				control={form.control}
 				name="guardianName"
@@ -421,7 +421,7 @@ function ParentGuardianInformationStep(props: StepProps) {
 			/>
 			<TextField
 				control={form.control}
-				name="guardianPhoneNumber"
+				name="guardianPhone"
 				placeholder="Guardian Phone Number"
 				type="tel"
 			/>
@@ -429,7 +429,7 @@ function ParentGuardianInformationStep(props: StepProps) {
 			<SelectField
 				control={form.control}
 				classNames={{ trigger: "max-w-[390px]" }}
-				name="averageHouseholdIncomePerYear"
+				name="householdIncomeRange"
 				placeholder="Average Household Income Per Year"
 				options={householdIncomeOptions}
 			/>
@@ -447,14 +447,14 @@ function WellbeingConsentStep(props: StepProps) {
 
 				<OptionQuestionField
 					control={form.control}
-					name="conditionAffectsLearning"
+					name="hasLearningCondition"
 					question="Does the student have any condition that may affect learning?"
 					options={learningConditionOptions}
 				/>
 
 				<CheckboxQuestionField
 					control={form.control}
-					name="healthConcerns"
+					name="learningConditions"
 					question="If yes, specify"
 					options={healthConcernOptions}
 				/>
@@ -467,7 +467,7 @@ function WellbeingConsentStep(props: StepProps) {
 
 				<Form.Field
 					control={form.control}
-					name="programAgreementAccepted"
+					name="parentConsent"
 					className="w-full flex-row items-start gap-3 text-[12px] text-cedar-black/64 lg:text-[14px]"
 				>
 					<Form.FieldBoundController
@@ -519,7 +519,7 @@ function WellbeingConsentStep(props: StepProps) {
 
 				<FileUploadField
 					control={form.control}
-					name="parentSignatureAndName"
+					name="parentSignature"
 					label="Upload a copy of parents signature and name"
 				/>
 			</section>
@@ -527,7 +527,7 @@ function WellbeingConsentStep(props: StepProps) {
 			<section className="flex flex-col gap-4 lg:gap-5">
 				<h2 className="leading-[1.2] lg:text-[24px]">Official Use</h2>
 
-				<TextField control={form.control} name="mentorName" placeholder="Mentor's Name" />
+				<TextField control={form.control} name="assignedMentor" placeholder="Mentor's Name" />
 				<TextField
 					control={form.control}
 					name="pretestScore"
@@ -576,3 +576,4 @@ const stateOptions = nigeriaStatesAndLGA.map(({ state }) => state);
 function getLocalGovernmentAreaOptions(state: string) {
 	return nigeriaStatesAndLGA.find((stateItem) => stateItem.state === state)?.lgas ?? [];
 }
+

@@ -26,68 +26,67 @@ import { Form } from "@/components/ui/form";
 import { getNigeriaStatesAndLGA } from "@/lib/constants/nigeria";
 import { cnJoin } from "@/lib/utils/cn";
 
-const tacotsRecommendationFormSchema = z.object({
-	additionalComments: z.string(),
+const tacotsRecommendationFrontendSchema = z.object({
 	age: z.string(),
-	averageLastTermExam: z.string(),
-	averageMonthlyHouseholdIncome: z.string(),
+	annualHouseholdIncome: z.string(),
+	avgMonthlyIncome: z.string(),
 	careerGoal: z.string(),
-	childFamilyPosition: z.string(),
-	currentPassportPhotograph: z.custom<File>().nullable(),
-	dateOfBirth: z.string(),
+	catholicSacraments: z.array(z.string()),
+	childBackgroundNotes: z.string(),
+	classPositionLastTerm: z.string(),
 	declarationConfirmed: z.boolean(),
 	diocese: z.string(),
-	disciplineLevel: z.string(),
-	electricityAccess: z.string(),
-	fatherName: z.string(),
-	fatherOccupation: z.string(),
-	fatherPhoneNumber: z.string(),
-	financialBurden: z.string(),
+	disciplineRating: z.string(),
+	dob: z.string(),
+	familyPosition: z.string(),
+	fathersName: z.string(),
+	fathersOccupation: z.string(),
+	fathersPhone: z.string(),
+	firstName: z.string(),
 	gender: z.string(),
 	guardianAddress: z.string(),
 	guardianName: z.string(),
 	guardianOccupation: z.string(),
-	guardianPhoneNumber: z.string(),
+	guardianPhone: z.string(),
+	guardianRelationship: z.string(),
+	hasElectricity: z.string(),
 	homeAddress: z.string(),
-	householdIncomeSource: z.array(z.string()),
 	householdSize: z.string(),
-	incomeEarnersCount: z.string(),
+	incomeSources: z.array(z.string()),
 	lastClass: z.string(),
-	lastResultPicture: z.custom<File>().nullable(),
-	lastSchoolAttendedYear: z.string(),
-	lastTermClassPosition: z.string(),
-	localGovernmentArea: z.string(),
+	lastResult: z.custom<File>().nullable(),
+	lastTermAverage: z.string(),
+	lastYearAttended: z.string(),
+	lga: z.string(),
+	livesWith: z.string(),
 	middleName: z.string(),
-	motherName: z.string(),
-	motherOccupation: z.string(),
-	motherPhoneNumber: z.string(),
+	mothersName: z.string(),
+	mothersOccupation: z.string(),
+	mothersPhone: z.string(),
 	nationality: z.string(),
-	parentAddress: z.string(),
+	numIncomeEarners: z.string(),
+	numSiblings: z.string(),
+	otherImportantInfo: z.string(),
+	parentsAddress: z.string(),
 	parishAttended: z.string(),
-	participantPhoneNumber: z.string(),
+	passportPhoto: z.custom<File>().nullable(),
+	phoneNumber: z.string(),
 	primaryLanguage: z.string(),
 	recommenderAddress: z.string(),
-	recommenderBackground: z.string(),
 	recommenderFirstName: z.string(),
 	recommenderLastName: z.string(),
-	recommenderPhoneNumber: z.string(),
-	relationshipToStudent: z.string(),
+	recommenderPhone: z.string(),
 	religion: z.string(),
 	residenceType: z.string(),
-	residesWith: z.string(),
-	responsibilityLevel: z.string(),
-	sacramentsReceived: z.array(z.string()),
-	schoolCity: z.string(),
+	responsibilityRating: z.string(),
 	schoolName: z.string(),
 	schoolState: z.string(),
-	siblingsCount: z.string(),
+	schoolTown: z.string(),
 	specialCircumstances: z.array(z.string()),
 	stateOfOrigin: z.string(),
-	studentFirstName: z.string(),
-	studentMiddleName: z.string(),
 	studentStatement: z.string(),
-	studentSurname: z.string(),
-	supportNeeded: z.array(z.string()),
+	supportTypesNeeded: z.array(z.string()),
+	surname: z.string(),
 });
 
 function RecommendationFormPage() {
@@ -142,69 +141,68 @@ const stepperItems = defineEnumDeep([
 function TacotsRecommendationForm() {
 	const form = useForm({
 		defaultValues: {
-			additionalComments: "",
 			age: "",
-			averageLastTermExam: "",
-			averageMonthlyHouseholdIncome: "",
+			annualHouseholdIncome: "",
+			avgMonthlyIncome: "",
 			careerGoal: "",
-			childFamilyPosition: "",
-			currentPassportPhotograph: null,
-			dateOfBirth: "",
+			catholicSacraments: [],
+			childBackgroundNotes: "",
+			classPositionLastTerm: "",
 			declarationConfirmed: false,
 			diocese: "",
-			disciplineLevel: "",
-			electricityAccess: "",
-			fatherName: "",
-			fatherOccupation: "",
-			fatherPhoneNumber: "",
-			financialBurden: "",
+			disciplineRating: "",
+			dob: "",
+			familyPosition: "",
+			fathersName: "",
+			fathersOccupation: "",
+			fathersPhone: "",
+			firstName: "",
 			gender: "",
 			guardianAddress: "",
 			guardianName: "",
 			guardianOccupation: "",
-			guardianPhoneNumber: "",
+			guardianPhone: "",
+			guardianRelationship: "",
+			hasElectricity: "",
 			homeAddress: "",
-			householdIncomeSource: [],
 			householdSize: "",
-			incomeEarnersCount: "",
+			incomeSources: [],
 			lastClass: "",
-			lastResultPicture: null,
-			lastSchoolAttendedYear: "",
-			lastTermClassPosition: "",
-			localGovernmentArea: "",
+			lastResult: null,
+			lastTermAverage: "",
+			lastYearAttended: "",
+			lga: "",
+			livesWith: "",
 			middleName: "",
-			motherName: "",
-			motherOccupation: "",
-			motherPhoneNumber: "",
+			mothersName: "",
+			mothersOccupation: "",
+			mothersPhone: "",
 			nationality: "",
-			parentAddress: "",
+			numIncomeEarners: "",
+			numSiblings: "",
+			otherImportantInfo: "",
+			parentsAddress: "",
 			parishAttended: "",
-			participantPhoneNumber: "",
+			passportPhoto: null,
+			phoneNumber: "",
 			primaryLanguage: "",
 			recommenderAddress: "",
-			recommenderBackground: "",
 			recommenderFirstName: "",
 			recommenderLastName: "",
-			recommenderPhoneNumber: "",
-			relationshipToStudent: "",
+			recommenderPhone: "",
 			religion: "",
 			residenceType: "",
-			residesWith: "",
-			responsibilityLevel: "",
-			sacramentsReceived: [],
-			schoolCity: "",
+			responsibilityRating: "",
 			schoolName: "",
 			schoolState: "",
-			siblingsCount: "",
+			schoolTown: "",
 			specialCircumstances: [],
 			stateOfOrigin: "",
-			studentFirstName: "",
-			studentMiddleName: "",
 			studentStatement: "",
-			studentSurname: "",
-			supportNeeded: [],
+			supportTypesNeeded: [],
+			surname: "",
 		},
-		resolver: zodResolver(tacotsRecommendationFormSchema),
+		resolver: zodResolver(tacotsRecommendationFrontendSchema),
 	});
 
 	const onSubmit = form.handleSubmit(() => {});
@@ -284,7 +282,7 @@ function FormSectionHeader(props: { title: string }) {
 }
 
 type StepProps = {
-	form: UseFormReturn<z.infer<typeof tacotsRecommendationFormSchema>>;
+	form: UseFormReturn<z.infer<typeof tacotsRecommendationFrontendSchema>>;
 };
 
 function StudentPersonalInformationStep(props: StepProps) {
@@ -294,9 +292,9 @@ function StudentPersonalInformationStep(props: StepProps) {
 		<section className="flex flex-col gap-4 lg:gap-5">
 			<FormSectionHeader title="Student Personal Information" />
 
-			<TextField control={form.control} name="studentFirstName" placeholder="First Name" />
-			<TextField control={form.control} name="studentMiddleName" placeholder="Middle Name" />
-			<TextField control={form.control} name="studentSurname" placeholder="Surname" />
+			<TextField control={form.control} name="firstName" placeholder="First Name" />
+			<TextField control={form.control} name="middleName" placeholder="Middle Name" />
+			<TextField control={form.control} name="surname" placeholder="Surname" />
 
 			<SelectField
 				control={form.control}
@@ -306,7 +304,7 @@ function StudentPersonalInformationStep(props: StepProps) {
 				options={ageOptions}
 			/>
 
-			<DateField control={form.control} name="dateOfBirth" placeholder="Date of Birth" />
+			<DateField control={form.control} name="dob" placeholder="Date of Birth" />
 
 			<OptionQuestionField
 				control={form.control}
@@ -324,7 +322,7 @@ function StudentPersonalInformationStep(props: StepProps) {
 
 			<CheckboxQuestionField
 				control={form.control}
-				name="sacramentsReceived"
+				name="catholicSacraments"
 				question="If Catholic - Sacraments Received"
 				options={["Baptism", "First Holy Communion", "Confirmation", "None yet"]}
 			/>
@@ -345,7 +343,7 @@ function StudentPersonalInformationStep(props: StepProps) {
 
 			<TextField
 				control={form.control}
-				name="participantPhoneNumber"
+				name="phoneNumber"
 				placeholder="Participant's Phone Number"
 				type="tel"
 			/>
@@ -359,7 +357,7 @@ function StudentPersonalInformationStep(props: StepProps) {
 					placeholder="State of Origin"
 					options={stateOptions}
 					type="state of origin"
-					onValueChange={() => form.setValue("localGovernmentArea", "")}
+					onValueChange={() => form.setValue("lga", "")}
 				/>
 
 				<Form.Watch control={form.control} name="stateOfOrigin">
@@ -367,7 +365,7 @@ function StudentPersonalInformationStep(props: StepProps) {
 						<ComboboxField
 							control={form.control}
 							classNames={{ trigger: "w-full px-4 lg:px-9" }}
-							name="localGovernmentArea"
+							name="lga"
 							placeholder="Local Government Area"
 							options={getLgaOptions(stateOfOrigin)}
 							type="local government area"
@@ -396,7 +394,7 @@ function EducationalInformationStep(props: StepProps) {
 			/>
 
 			<div className="flex flex-col gap-3">
-				<TextField control={form.control} name="schoolCity" placeholder="Town/ City" />
+				<TextField control={form.control} name="schoolTown" placeholder="Town/ City" />
 				<SelectField
 					control={form.control}
 					name="schoolState"
@@ -407,7 +405,7 @@ function EducationalInformationStep(props: StepProps) {
 
 			<SelectField
 				control={form.control}
-				name="lastSchoolAttendedYear"
+				name="lastYearAttended"
 				placeholder="Last Year Student Attended School"
 				options={yearOptions}
 			/>
@@ -422,7 +420,7 @@ function EducationalInformationStep(props: StepProps) {
 
 			<TextField
 				control={form.control}
-				name="lastTermClassPosition"
+				name="classPositionLastTerm"
 				placeholder="Position in Class at the Last Term"
 				min={1}
 				step={1}
@@ -431,7 +429,7 @@ function EducationalInformationStep(props: StepProps) {
 
 			<TextField
 				control={form.control}
-				name="averageLastTermExam"
+				name="lastTermAverage"
 				placeholder="Student's Average in the Last Term's exam"
 				min={0}
 				max={100}
@@ -441,13 +439,13 @@ function EducationalInformationStep(props: StepProps) {
 
 			<FileUploadField
 				control={form.control}
-				name="currentPassportPhotograph"
+				name="passportPhoto"
 				label="Upload a Current Passport Photograph"
 			/>
 
 			<FileUploadField
 				control={form.control}
-				name="lastResultPicture"
+				name="lastResult"
 				label="Upload a Picture of Last Result"
 			/>
 		</section>
@@ -462,23 +460,23 @@ function FamilyBackgroundStep(props: StepProps) {
 			<section className="flex flex-col gap-4 lg:gap-5">
 				<FormSectionHeader title="Family Background" />
 
-				<TextField control={form.control} name="fatherName" placeholder="Father's Name" />
-				<TextField control={form.control} name="fatherOccupation" placeholder="Father's Occupation" />
+				<TextField control={form.control} name="fathersName" placeholder="Father's Name" />
+				<TextField control={form.control} name="fathersOccupation" placeholder="Father's Occupation" />
 				<TextField
 					control={form.control}
-					name="fatherPhoneNumber"
+					name="fathersPhone"
 					placeholder="Father's Phone Number"
 					type="tel"
 				/>
-				<TextField control={form.control} name="motherName" placeholder="Mother's Name" />
-				<TextField control={form.control} name="motherOccupation" placeholder="Mother's Occupation" />
+				<TextField control={form.control} name="mothersName" placeholder="Mother's Name" />
+				<TextField control={form.control} name="mothersOccupation" placeholder="Mother's Occupation" />
 				<TextField
 					control={form.control}
-					name="motherPhoneNumber"
+					name="mothersPhone"
 					placeholder="Mother's Phone Number"
 					type="tel"
 				/>
-				<TextField control={form.control} name="parentAddress" placeholder="Parent's Address" />
+				<TextField control={form.control} name="parentsAddress" placeholder="Parent's Address" />
 				<TextField
 					control={form.control}
 					name="guardianName"
@@ -486,14 +484,14 @@ function FamilyBackgroundStep(props: StepProps) {
 				/>
 				<TextField
 					control={form.control}
-					name="guardianPhoneNumber"
+					name="guardianPhone"
 					placeholder="Guardian Phone Number"
 					type="tel"
 				/>
 				<SelectField
 					control={form.control}
 					classNames={{ trigger: "max-w-[305px]" }}
-					name="relationshipToStudent"
+					name="guardianRelationship"
 					placeholder="Relationship to Student"
 					options={relationshipOptions}
 				/>
@@ -513,13 +511,13 @@ function FamilyBackgroundStep(props: StepProps) {
 				<SelectField
 					control={form.control}
 					classNames={{ trigger: "max-w-[380px]" }}
-					name="siblingsCount"
+					name="numSiblings"
 					placeholder="Number of Siblings"
 					options={siblingsOptions}
 				/>
 				<TextField
 					control={form.control}
-					name="childFamilyPosition"
+					name="familyPosition"
 					placeholder="Child's Position in the Family (eg: 1st, 2nd, 5th..)"
 				/>
 
@@ -536,28 +534,28 @@ function FamilyBackgroundStep(props: StepProps) {
 
 				<OptionQuestionField
 					control={form.control}
-					name="financialBurden"
+					name="annualHouseholdIncome"
 					question="1. Annual Household Income"
 					options={incomeOptions}
 				/>
 
 				<CheckboxQuestionField
 					control={form.control}
-					name="householdIncomeSource"
+					name="incomeSources"
 					question="2. Source of Household Income"
 					options={incomeSourceOptions}
 				/>
 
 				<OptionQuestionField
 					control={form.control}
-					name="incomeEarnersCount"
+					name="numIncomeEarners"
 					question="3. Number of Income Earners in the Household"
 					options={["None", "1", "2", "3", "More than 3"]}
 				/>
 
 				<TextField
 					control={form.control}
-					name="averageMonthlyHouseholdIncome"
+					name="avgMonthlyIncome"
 					placeholder="Average Monthly Household Income"
 					min={0}
 					step={1}
@@ -566,7 +564,7 @@ function FamilyBackgroundStep(props: StepProps) {
 
 				<OptionQuestionField
 					control={form.control}
-					name="residesWith"
+					name="livesWith"
 					question="4. Who does the student currently live with?"
 					options={[
 						"Both parents",
@@ -594,7 +592,7 @@ function FamilyBackgroundStep(props: StepProps) {
 
 				<OptionQuestionField
 					control={form.control}
-					name="electricityAccess"
+					name="hasElectricity"
 					question="6. Does the household have access to electricity?"
 					options={["Yes", "No", "Sometimes"]}
 				/>
@@ -615,7 +613,7 @@ function RecommenderDetailsStep(props: StepProps) {
 				<TextField control={form.control} name="recommenderLastName" placeholder="Last Name" />
 				<TextField
 					control={form.control}
-					name="recommenderPhoneNumber"
+					name="recommenderPhone"
 					placeholder="Phone Number"
 					type="tel"
 				/>
@@ -627,20 +625,20 @@ function RecommenderDetailsStep(props: StepProps) {
 
 				<TextAreaField
 					control={form.control}
-					name="recommenderBackground"
+					name="childBackgroundNotes"
 					label="Tells us a bit about this child's background, why he/she needs support"
 				/>
 
 				<CheckboxQuestionField
 					control={form.control}
-					name="supportNeeded"
+					name="supportTypesNeeded"
 					question="1. Types of Support Needed"
 					options={["Tuition (School Fees)", "School Resources", "Transportation", "Other:"]}
 				/>
 
 				<TextAreaField
 					control={form.control}
-					name="additionalComments"
+					name="otherImportantInfo"
 					label="Any Other Important Information About the Child or Their Current Circumstances"
 				/>
 			</section>
@@ -650,7 +648,7 @@ function RecommenderDetailsStep(props: StepProps) {
 
 				<RatingQuestionField
 					control={form.control}
-					name="disciplineLevel"
+					name="disciplineRating"
 					question="1. Level of Discipline"
 					leftLabel="Poor"
 					rightLabel="Excellent"
@@ -658,7 +656,7 @@ function RecommenderDetailsStep(props: StepProps) {
 
 				<RatingQuestionField
 					control={form.control}
-					name="responsibilityLevel"
+					name="responsibilityRating"
 					question="2. Sense of Responsibility"
 					leftLabel="Poor"
 					rightLabel="Excellent"
@@ -738,3 +736,4 @@ const incomeSourceOptions = [
 	"No regular income",
 	"Other: _________",
 ];
+

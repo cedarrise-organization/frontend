@@ -1,17 +1,22 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { backendApiSchemaRoutes } from "@/lib/api/callBackendApi/apiSchema";
+import { TextAreaField, TextField } from "../../-components/FormPartsShared";
+
+const DonateFormSchema = backendApiSchemaRoutes["@post/donate"].body;
 
 function DonateForm() {
 	const form = useForm({
 		defaultValues: {
 			amount: "",
-			comment: "",
 			email: "",
-			fullName: "",
+			name: "",
 		},
+		resolver: zodResolver(DonateFormSchema),
 	});
 
 	return (
@@ -19,46 +24,26 @@ function DonateForm() {
 			<Form.Field control={form.control} name="amount">
 				<Form.InputGroup className="gap-4">
 					<Form.Input
-						inputMode="decimal"
 						type="number"
-						className="h-[64px] w-full rounded-[12px] bg-[hsl(0,0%,94%)] px-6 text-[10px]
-							placeholder:text-cedar-black/40 lg:px-9 lg:text-[14px]"
+						className="h-[54px] rounded-[12px] bg-[hsl(0,0%,94%)] px-9 text-[12px]
+							placeholder:text-cedar-black/40 lg:h-[64px] lg:text-[14px]"
 						placeholder="Input Amount you wish to donate"
 					/>
 
-					<span
-						className="grid size-[64px] shrink-0 place-content-center rounded-[12px]
-							bg-[hsl(0,0%,94%)] text-[10px] text-cedar-black lg:text-[14px]"
+					<Form.InputRightItem
+						className="size-[54px] shrink-0 rounded-[12px] bg-[hsl(0,0%,94%)] text-[10px]
+							text-cedar-black lg:size-[64px] lg:text-[14px]"
 					>
 						NGN
-					</span>
+					</Form.InputRightItem>
 				</Form.InputGroup>
 			</Form.Field>
 
-			<Form.Field control={form.control} name="fullName">
-				<Form.Input
-					className="h-[64px] rounded-[12px] bg-[hsl(0,0%,94%)] px-6 text-[10px]
-						placeholder:text-cedar-black/40 lg:px-9 lg:text-[14px]"
-					placeholder="Full Name"
-				/>
-			</Form.Field>
+			<TextField control={form.control} name="name" placeholder="Full Name" />
 
-			<Form.Field control={form.control} name="email">
-				<Form.Input
-					type="email"
-					className="h-[64px] rounded-[12px] bg-[hsl(0,0%,94%)] px-6 text-[10px]
-						placeholder:text-cedar-black/40 lg:px-9 lg:text-[14px]"
-					placeholder="E-mail"
-				/>
-			</Form.Field>
+			<TextField control={form.control} name="email" placeholder="E-mail" type="email" />
 
-			<Form.Field control={form.control} name="comment">
-				<Form.TextArea
-					className="min-h-[124px] rounded-[12px] bg-[hsl(0,0%,94%)] px-6 py-4 text-[10px]
-						placeholder:text-cedar-black/40 lg:px-9 lg:text-[14px]"
-					placeholder="Note / Comment"
-				/>
-			</Form.Field>
+			<TextAreaField control={form.control} name="comment" label="Note / Comment" />
 
 			<Form.Submit asChild={true}>
 				<Button className="mt-5 self-end px-8">Donate</Button>

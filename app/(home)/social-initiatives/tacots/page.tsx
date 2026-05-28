@@ -5,6 +5,7 @@ import { IconBox } from "@/components/common/IconBox";
 import { NavLink, NavLinkEphemeral, type MainAppRoutes } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
 import { cnJoin } from "@/lib/utils/cn";
+import { FinalCTASection } from "../../-components/FinalCTASectionShared";
 import { Main } from "../../-components/Main";
 import { TacotsMomentsCarousel, TacotsStoriesCarousel } from "./-components/TacotsCarousels";
 
@@ -92,12 +93,12 @@ function TacotsOverviewSection() {
 	return (
 		<section className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5">
 			<article className="flex flex-col gap-4 rounded-[24px] bg-[hsl(0,0%,94%)] p-5 lg:rounded-[32px]">
-				<h2
+				<h3
 					className="w-fit rounded-[12px] bg-cedar-black px-7 py-3 text-cedar-yellow lg:rounded-[20px]
 						lg:text-[24px]"
 				>
 					Our Impact
-				</h2>
+				</h3>
 
 				<ForWithWrapper
 					className="grid grid-cols-[repeat(2,max-content)] gap-x-12 gap-y-5"
@@ -115,7 +116,7 @@ function TacotsOverviewSection() {
 				className="flex flex-col gap-4 rounded-[24px] bg-[hsl(0,0%,94%)] p-6 lg:rounded-[32px] lg:px-10
 					lg:py-8"
 			>
-				<h2 className="text-[24px]/[1.2] lg:text-[40px]">About TACOTS</h2>
+				<h3 className="text-[24px]/[1.2] lg:text-[40px]">About TACOTS</h3>
 
 				<div className="text-[11px]/4 text-pretty lg:text-base/7">
 					<p>
@@ -324,37 +325,6 @@ function TacotsFormLinksSection() {
 					</li>
 				)}
 			/>
-		</section>
-	);
-}
-
-function FinalCTASection() {
-	return (
-		<section
-			className="flex flex-col items-center rounded-[24px] bg-cedar-black p-6 text-center
-				text-cedar-white lg:rounded-[32px] lg:p-[64px]"
-		>
-			<h2 className="text-[24px]/[1.2] text-cedar-yellow lg:text-[40px]">
-				Support a Child&apos;s Learning Journey
-			</h2>
-
-			<p className="mt-2 text-[10px] lg:mt-4 lg:text-base">
-				Your support can provide education, mentorship, and a future filled with possibility.
-			</p>
-
-			<div className="mt-10 flex items-center gap-2 lg:mt-12.5 lg:gap-8.5">
-				<NavLinkEphemeral href="/donate">
-					<Button className="shrink-0">Donate Now</Button>
-				</NavLinkEphemeral>
-
-				<NavLink href="/get-involved/partner" className="flex items-center gap-2">
-					<p className="text-[14px] font-medium lg:text-[20px]">Get Involved</p>
-
-					<Button theme="secondary" size="icon" className="shrink-0">
-						<IconBox icon="solar:arrow-right-up-outline" />
-					</Button>
-				</NavLink>
-			</div>
 		</section>
 	);
 }

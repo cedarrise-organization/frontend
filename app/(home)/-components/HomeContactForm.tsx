@@ -1,16 +1,21 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { backendApiSchemaRoutes } from "@/lib/api/callBackendApi/apiSchema";
 import { TextAreaField, TextField } from "./FormPartsShared";
 
-function ContactForm() {
+const ContactFormSchema = backendApiSchemaRoutes["@post/feedback/home"].body;
+
+function HomeContactForm() {
 	const form = useForm({
 		defaultValues: {
 			email: "",
 			feedback: "",
 		},
+		resolver: zodResolver(ContactFormSchema),
 	});
 
 	return (
@@ -26,4 +31,4 @@ function ContactForm() {
 	);
 }
 
-export { ContactForm };
+export { HomeContactForm };

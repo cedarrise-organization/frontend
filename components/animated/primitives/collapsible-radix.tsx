@@ -92,7 +92,7 @@ function CollapsibleContent(
 		<AnimatePresence>
 			{keepRendered ?
 				<CollapsiblePrimitive.Content asChild={true} forceMount={true}>
-					<motion.li
+					<motion.div
 						key="collapsible-content"
 						data-slot="collapsible-content"
 						layout={true}
@@ -106,11 +106,11 @@ function CollapsibleContent(
 						{...restOfProps}
 					>
 						{children}
-					</motion.li>
+					</motion.div>
 				</CollapsiblePrimitive.Content>
 			:	isOpen && (
 					<CollapsiblePrimitive.Content asChild={true} forceMount={true}>
-						<motion.li
+						<motion.div
 							key="collapsible-content"
 							data-slot="collapsible-content"
 							layout={true}
@@ -121,7 +121,7 @@ function CollapsibleContent(
 							{...restOfProps}
 						>
 							{children}
-						</motion.li>
+						</motion.div>
 					</CollapsiblePrimitive.Content>
 				)
 			}

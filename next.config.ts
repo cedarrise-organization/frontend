@@ -5,6 +5,17 @@ const config: NextConfig = {
 		position: "bottom-right",
 	},
 
+	images: {
+		remotePatterns: [
+			{
+				hostname: "res.cloudinary.com",
+				pathname: "/**",
+				port: "",
+				protocol: "https",
+			},
+		],
+	},
+
 	reactStrictMode: true,
 
 	typedRoutes: true,

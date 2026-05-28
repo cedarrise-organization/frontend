@@ -24,27 +24,29 @@ import { Form } from "@/components/ui/form";
 import { getNigeriaStatesAndLGA } from "@/lib/constants/nigeria";
 import { cnJoin } from "@/lib/utils/cn";
 
-const volunteerRegisterSchema = z.object({
+const volunteerRegisterFrontendSchema = z.object({
+	additionalInfo: z.string(),
 	age: z.string(),
-	ashAcademicAreas: z.array(z.boolean()),
-	ashAvailability: z.array(z.boolean()),
-	ashExtracurricularActivities: z.array(z.boolean()),
+	ashAcademicArea: z.array(z.boolean()),
+	ashExtracurricular: z.array(z.boolean()),
+	ashSaturdayAvailability: z.array(z.boolean()),
 	availability: z.array(z.boolean()),
 	city: z.string(),
 	commitmentDuration: z.array(z.boolean()),
-	dateOfBirth: z.string(),
-	educationLevel: z.string(),
+	dob: z.string(),
 	emailAddress: z.string(),
 	firstName: z.string(),
 	gender: z.string(),
+	highestEducation: z.string(),
 	homeAddress: z.string(),
 	mediaConsent: z.array(z.boolean()),
 	middleName: z.string(),
 	occupation: z.string(),
 	phoneNumber: z.string(),
-	policyAgreement: z.array(z.boolean()),
 	reasonForVolunteering: z.string(),
-	skills: z.array(z.boolean()),
+	registrationDate: z.string(),
+	safeguardingAgreement: z.array(z.boolean()),
+	skillsToContribute: z.array(z.boolean()),
 	state: z.string(),
 	surname: z.string(),
 	volunteerAreas: z.array(z.boolean()),
@@ -92,31 +94,33 @@ const stepperItems = defineEnumDeep([
 function VolunteerRegisterForm() {
 	const form = useForm({
 		defaultValues: {
+			additionalInfo: "",
 			age: "",
-			ashAcademicAreas: ashAcademicAreaOptions.map(() => false),
-			ashAvailability: ashAvailabilityOptions.map(() => false),
-			ashExtracurricularActivities: ashExtracurricularOptions.map(() => false),
+			ashAcademicArea: ashAcademicAreaOptions.map(() => false),
+			ashExtracurricular: ashExtracurricularOptions.map(() => false),
+			ashSaturdayAvailability: ashAvailabilityOptions.map(() => false),
 			availability: availabilityOptions.map(() => false),
 			city: "",
 			commitmentDuration: commitmentDurationOptions.map(() => false),
-			dateOfBirth: "",
-			educationLevel: "",
+			dob: "",
 			emailAddress: "",
 			firstName: "",
 			gender: "",
+			highestEducation: "",
 			homeAddress: "",
 			mediaConsent: mediaConsentOptions.map(() => false),
 			middleName: "",
 			occupation: "",
 			phoneNumber: "",
-			policyAgreement: yesNoOptions.map(() => false),
 			reasonForVolunteering: "",
-			skills: skillOptions.map(() => false),
+			registrationDate: "",
+			safeguardingAgreement: yesNoOptions.map(() => false),
+			skillsToContribute: skillOptions.map(() => false),
 			state: "",
 			surname: "",
 			volunteerAreas: volunteerAreaOptions.map(() => false),
 		},
-		resolver: zodResolver(volunteerRegisterSchema),
+		resolver: zodResolver(volunteerRegisterFrontendSchema),
 	});
 
 	const onSubmit = form.handleSubmit(() => {});
@@ -197,7 +201,7 @@ function FormSectionHeader(props: { title: string }) {
 }
 
 type StepProps = {
-	form: UseFormReturn<z.infer<typeof volunteerRegisterSchema>>;
+	form: UseFormReturn<z.infer<typeof volunteerRegisterFrontendSchema>>;
 };
 
 function VolunteerInformationStep(props: StepProps) {
@@ -226,7 +230,7 @@ function VolunteerInformationStep(props: StepProps) {
 				options={ageOptions}
 			/>
 
-			<DateField control={form.control} name="dateOfBirth" placeholder="Date of Birth" />
+			<DateField control={form.control} name="dob" placeholder="Date of Birth" />
 			<TextField control={form.control} name="phoneNumber" placeholder="Phone Number" type="tel" />
 			<TextField control={form.control} name="emailAddress" placeholder="Email Address" type="email" />
 			<TextField control={form.control} name="homeAddress" placeholder="Home address" />
@@ -260,7 +264,7 @@ function VolunteerInformationStep(props: StepProps) {
 			<TextField control={form.control} name="occupation" placeholder="Occupation / Profession" />
 			<SelectField
 				control={form.control}
-				name="educationLevel"
+				name="highestEducation"
 				placeholder="Highest Level of Education"
 				options={educationLevelOptions}
 			/>
@@ -291,7 +295,7 @@ function VolunteerInterestStep(props: StepProps) {
 
 				<CheckboxQuestionField
 					control={form.control}
-					name="skills"
+					name="skillsToContribute"
 					question="2. Skills you can contribute"
 					options={skillOptions}
 				/>
@@ -325,21 +329,21 @@ function VolunteerInterestStep(props: StepProps) {
 
 				<CheckboxQuestionField
 					control={form.control}
-					name="ashAvailability"
+					name="ashSaturdayAvailability"
 					question="1. Availability for ASH Saturday Sessions"
 					options={ashAvailabilityOptions}
 				/>
 
 				<CheckboxQuestionField
 					control={form.control}
-					name="ashAcademicAreas"
+					name="ashAcademicArea"
 					question="2. Academic area you would like to teach"
 					options={ashAcademicAreaOptions}
 				/>
 
 				<CheckboxQuestionField
 					control={form.control}
-					name="ashExtracurricularActivities"
+					name="ashExtracurricular"
 					question="3. Extracurricular activities you would like to support"
 					options={ashExtracurricularOptions}
 				/>
@@ -356,7 +360,7 @@ function VolunteerInterestStep(props: StepProps) {
 
 				<CheckboxQuestionField
 					control={form.control}
-					name="policyAgreement"
+					name="safeguardingAgreement"
 					question="Do you agree to follow CedarRise volunteer guidelines and safeguarding policies?"
 					options={yesNoOptions}
 				/>
@@ -449,3 +453,4 @@ const yesNoOptions = ["Yes", "No"];
 const mediaConsentOptions = [
 	"Usage: These materials may be used for promotional, educational, reporting and evaluation purposes on websites, social media platforms, and in digital or printed publications.",
 ];
+

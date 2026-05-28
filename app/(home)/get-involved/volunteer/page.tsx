@@ -42,7 +42,7 @@ function VolunteerHeroSection() {
 				className="flex w-full flex-col gap-4 rounded-[24px] bg-cedar-red p-9 text-cedar-white
 					lg:min-h-[420px] lg:max-w-[424px] lg:gap-8 lg:rounded-[32px] lg:p-12"
 			>
-				<h2 className="text-[24px]/[1.2] lg:text-[40px]">Ways to Help::</h2>
+				<h2 className="text-[24px]/[1.2] lg:text-[40px]">Ways to Help:</h2>
 
 				<ForWithWrapper
 					className="flex flex-col gap-3 lg:gap-5"

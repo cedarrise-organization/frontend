@@ -9,7 +9,7 @@ import {
 } from "@/assets/images/landing";
 import { ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
-import { NavLink, NavLinkEphemeral } from "@/components/common/NavLink";
+import { NavLink, NavLinkEphemeral, type MainAppRoutes } from "@/components/common/NavLink";
 import {
 	communityOutReachIcon,
 	educationIcon,
@@ -18,9 +18,10 @@ import {
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { cnJoin } from "@/lib/utils/cn";
-import { ContactForm } from "./-components/ContactForm";
+import { FinalCTASection } from "./-components/FinalCTASectionShared";
+import { HomeContactForm } from "./-components/HomeContactForm";
+import { HomeTestimonialCarousel } from "./-components/HomeTestimonialCarousel";
 import { Main } from "./-components/Main";
-import { TestimonialCarousel } from "./-components/TestimonialCarousel";
 
 function HomePage() {
 	return (
@@ -215,25 +216,29 @@ function WhatWeDoSection() {
 	);
 }
 
-const initiatives: Array<{ description: string; image: string; title: string }> = [
+const initiatives: Array<{ description: string; image: string; link: MainAppRoutes; title: string }> = [
 	{
 		description: "Supporting students with academic excellence beyond the classroom.",
 		image: programmeOne,
+		link: "/social-initiatives/ash",
 		title: "ASH (After School Hours)",
 	},
 	{
 		description: "Taking children off the streets and guiding them toward purpose.",
 		image: programmeTwo,
+		link: "/social-initiatives/tacots",
 		title: "TACOTS (Take a Child Off The Streets)",
 	},
 	{
 		description: "Community-driven initiatives creating real impact.",
 		image: programmeThree,
+		link: "/social-initiatives/outreaches",
 		title: "Outreaches",
 	},
 	{
 		description: "Transformative learning experiences designed to meet real-world needs.",
 		image: programmeFour,
+		link: "/capacity-building",
 		title: "Capacity Building",
 	},
 ];
@@ -278,9 +283,11 @@ function OurProgrammesSection() {
 							/>
 						</div>
 
-						<Button theme="secondary" size="icon" className="mt-3 mr-3 self-end lg:mt-4 lg:mr-4">
-							<IconBox icon="solar:arrow-right-up-outline" />
-						</Button>
+						<NavLinkEphemeral href={initiative.link}>
+							<Button theme="secondary" size="icon" className="mt-3 mr-3 self-end lg:mt-4 lg:mr-4">
+								<IconBox icon="solar:arrow-right-up-outline" />
+							</Button>
+						</NavLinkEphemeral>
 
 						<div className="flex flex-col gap-2 px-10 text-cedar-white lg:gap-2.5">
 							<h3 className="text-[24px] lg:text-[36px]">{initiative.title}</h3>
@@ -301,7 +308,7 @@ function TestimonialsSection() {
 			<h2 className="text-center leading-[1.2] text-cedar-yellow lg:text-[24px]">Testimonials</h2>
 			<h3 className="text-center text-[24px]/[1.2] lg:text-[40px]">Our Impact So Far</h3>
 
-			<TestimonialCarousel />
+			<HomeTestimonialCarousel />
 		</section>
 	);
 }
@@ -402,10 +409,16 @@ function CtaSectionOne() {
 							/>
 						</div>
 
-						<Button className="px-6.5 max-lg:shrink-0 lg:px-5">
-							<p>View Collection</p>
-							<IconBox icon="ph:arrow-right" className="size-4 shrink-0 lg:size-7.5" />
-						</Button>
+						<a
+							rel="noopener noreferrer"
+							target="_blank"
+							href="https://api.whatsapp.com/send/?phone=%2B2349039377669&text&type=phone_number&app_absent=0"
+						>
+							<Button className="px-6.5 max-lg:shrink-0 lg:px-5">
+								<p>View Collection</p>
+								<IconBox icon="ph:arrow-right" className="size-4 shrink-0 lg:size-7.5" />
+							</Button>
+						</a>
 					</div>
 				</article>
 
@@ -427,41 +440,12 @@ function CtaSectionOne() {
 	);
 }
 
-function FinalCTASection() {
-	return (
-		<section
-			className="flex flex-col items-center rounded-[24px] bg-cedar-black p-6 text-center
-				text-cedar-white lg:rounded-[32px] lg:p-[64px]"
-		>
-			<h2 className="text-[32px]/[1.2] text-cedar-yellow lg:text-[48px]">Be Part of the Change</h2>
-
-			<p className="mt-2 text-[10px] lg:mt-4 lg:text-base">
-				Join us in shaping a better future for the next generation.
-			</p>
-
-			<div className="mt-10 flex items-center gap-2 lg:mt-12.5 lg:gap-8.5">
-				<NavLinkEphemeral href="/donate">
-					<Button className="shrink-0">Donate Now</Button>
-				</NavLinkEphemeral>
-
-				<NavLink href="/get-involved/partner" className="flex items-center gap-2">
-					<p className="text-[14px] font-medium lg:text-[20px]">Get Involved</p>
-
-					<Button theme="secondary" size="icon" className="shrink-0">
-						<IconBox icon="solar:arrow-right-up-outline" />
-					</Button>
-				</NavLink>
-			</div>
-		</section>
-	);
-}
-
 function ContactSection() {
 	return (
 		<section className="flex flex-col items-center gap-6 px-4 lg:gap-10">
 			<h2 className="text-center text-[32px]/[1.2] lg:text-[40px]">We’d Love Your Feedback</h2>
 
-			<ContactForm />
+			<HomeContactForm />
 		</section>
 	);
 }

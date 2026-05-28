@@ -21,27 +21,27 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { cnJoin } from "@/lib/utils/cn";
 
-const volunteerFeedbackSchema = z.object({
-	activitiesInvolved: z.array(z.boolean()),
+const volunteerFeedbackFrontendSchema = z.object({
+	activitiesInvolvedIn: z.array(z.boolean()),
 	additionalComments: z.string(),
-	beneficiaryHelp: z.array(z.boolean()),
-	challenges: z.string(),
+	challengesExperienced: z.string(),
 	continueVolunteering: z.array(z.boolean()),
-	date: z.string(),
-	developedNewSkills: z.array(z.boolean()),
-	experiencePositive: z.string(),
+	enjoyedMost: z.string(),
 	firstName: z.string(),
-	improvements: z.string(),
-	mostEnjoyed: z.string(),
-	programImpact: z.array(z.boolean()),
-	programVolunteeredWith: z.array(z.boolean()),
-	recommendVolunteering: z.array(z.boolean()),
-	roleClear: z.string(),
+	improvementSuggestions: z.string(),
+	organizationRating: z.string(),
+	overallExperienceRating: z.string(),
+	programMadeImpact: z.array(z.boolean()),
+	programVolunteered: z.array(z.boolean()),
+	roleClarityRating: z.string(),
+	skillsDeveloped: z.array(z.boolean()),
 	skillsGained: z.array(z.boolean()),
-	supportedByTeam: z.string(),
+	submissionDate: z.string(),
 	surname: z.string(),
-	volunteerActivitiesOrganized: z.string(),
+	teamSupportRating: z.string(),
 	volunteerDuration: z.array(z.boolean()),
+	waysProgramHelped: z.array(z.boolean()),
+	wouldRecommend: z.array(z.boolean()),
 });
 
 function VolunteerFeedbackPage() {
@@ -90,28 +90,28 @@ const stepperItems = defineEnumDeep([
 function VolunteerFeedbackForm() {
 	const form = useForm({
 		defaultValues: {
-			activitiesInvolved: activityOptions.map(() => false),
+			activitiesInvolvedIn: activityOptions.map(() => false),
 			additionalComments: "",
-			beneficiaryHelp: beneficiaryHelpOptions.map(() => false),
-			challenges: "",
+			challengesExperienced: "",
 			continueVolunteering: yesMaybeNoOptions.map(() => false),
-			date: "",
-			developedNewSkills: skillDevelopmentOptions.map(() => false),
-			experiencePositive: "",
+			enjoyedMost: "",
 			firstName: "",
-			improvements: "",
-			mostEnjoyed: "",
-			programImpact: programImpactOptions.map(() => false),
-			programVolunteeredWith: programVolunteeredWithOptions.map(() => false),
-			recommendVolunteering: yesMaybeNoOptions.map(() => false),
-			roleClear: "",
+			improvementSuggestions: "",
+			organizationRating: "",
+			overallExperienceRating: "",
+			programMadeImpact: programImpactOptions.map(() => false),
+			programVolunteered: programVolunteeredWithOptions.map(() => false),
+			roleClarityRating: "",
+			skillsDeveloped: skillDevelopmentOptions.map(() => false),
 			skillsGained: skillsGainedOptions.map(() => false),
-			supportedByTeam: "",
+			submissionDate: "",
 			surname: "",
-			volunteerActivitiesOrganized: "",
+			teamSupportRating: "",
 			volunteerDuration: volunteerDurationOptions.map(() => false),
+			waysProgramHelped: beneficiaryHelpOptions.map(() => false),
+			wouldRecommend: yesMaybeNoOptions.map(() => false),
 		},
-		resolver: zodResolver(volunteerFeedbackSchema),
+		resolver: zodResolver(volunteerFeedbackFrontendSchema),
 	});
 
 	const onSubmit = form.handleSubmit(() => {});
@@ -192,7 +192,7 @@ function FormSectionHeader(props: { title: string }) {
 }
 
 type StepProps = {
-	form: UseFormReturn<z.infer<typeof volunteerFeedbackSchema>>;
+	form: UseFormReturn<z.infer<typeof volunteerFeedbackFrontendSchema>>;
 };
 
 function VolunteerExperienceStep(props: StepProps) {
@@ -208,7 +208,7 @@ function VolunteerExperienceStep(props: StepProps) {
 
 				<CheckboxQuestionField
 					control={form.control}
-					name="programVolunteeredWith"
+					name="programVolunteered"
 					question="1. Program you volunteered with"
 					options={programVolunteeredWithOptions}
 				/>
@@ -226,7 +226,7 @@ function VolunteerExperienceStep(props: StepProps) {
 
 				<RatingQuestionField
 					control={form.control}
-					name="experiencePositive"
+					name="overallExperienceRating"
 					question="1. My volunteering experience with CedarRise has been positive."
 					leftLabel="Strongly disagree"
 					rightLabel="Strongly agree"
@@ -234,7 +234,7 @@ function VolunteerExperienceStep(props: StepProps) {
 
 				<RatingQuestionField
 					control={form.control}
-					name="roleClear"
+					name="roleClarityRating"
 					question="2. I clearly understood my role as a volunteer"
 					leftLabel="Strongly disagree"
 					rightLabel="Strongly agree"
@@ -242,7 +242,7 @@ function VolunteerExperienceStep(props: StepProps) {
 
 				<RatingQuestionField
 					control={form.control}
-					name="supportedByTeam"
+					name="teamSupportRating"
 					question="3. I felt supported by the CedarRise team."
 					leftLabel="Strongly disagree"
 					rightLabel="Strongly agree"
@@ -250,7 +250,7 @@ function VolunteerExperienceStep(props: StepProps) {
 
 				<RatingQuestionField
 					control={form.control}
-					name="volunteerActivitiesOrganized"
+					name="organizationRating"
 					question="4. The volunteer activities were well organized."
 					leftLabel="Strongly disagree"
 					rightLabel="Strongly agree"
@@ -270,14 +270,14 @@ function VolunteerImpactStep(props: StepProps) {
 
 				<CheckboxQuestionField
 					control={form.control}
-					name="programImpact"
+					name="programMadeImpact"
 					question="1. Do you believe the program you supported made a positive impact?"
 					options={programImpactOptions}
 				/>
 
 				<CheckboxQuestionField
 					control={form.control}
-					name="beneficiaryHelp"
+					name="waysProgramHelped"
 					question="2. In what ways do you think the program helped beneficiaries?"
 					options={beneficiaryHelpOptions}
 				/>
@@ -288,14 +288,14 @@ function VolunteerImpactStep(props: StepProps) {
 
 				<CheckboxQuestionField
 					control={form.control}
-					name="activitiesInvolved"
+					name="activitiesInvolvedIn"
 					question="1. What activities were you mainly involved in?"
 					options={activityOptions}
 				/>
 
 				<CheckboxQuestionField
 					control={form.control}
-					name="developedNewSkills"
+					name="skillsDeveloped"
 					question="2. Did volunteering with CedarRise help you develop new skills?"
 					options={skillDevelopmentOptions}
 				/>
@@ -321,17 +321,17 @@ function SuggestionsImprovementStep(props: StepProps) {
 
 				<TextAreaField
 					control={form.control}
-					name="mostEnjoyed"
+					name="enjoyedMost"
 					label="What did you enjoy most about volunteering with CedarRise?"
 				/>
 				<TextAreaField
 					control={form.control}
-					name="challenges"
+					name="challengesExperienced"
 					label="What challenges did you experience while volunteering?"
 				/>
 				<TextAreaField
 					control={form.control}
-					name="improvements"
+					name="improvementSuggestions"
 					label="What improvements would you suggest for the volunteer program?"
 				/>
 			</section>
@@ -347,7 +347,7 @@ function SuggestionsImprovementStep(props: StepProps) {
 				/>
 				<CheckboxQuestionField
 					control={form.control}
-					name="recommendVolunteering"
+					name="wouldRecommend"
 					question="2. Would you recommend volunteering with CedarRise to others?"
 					options={yesMaybeNoOptions}
 				/>
@@ -356,7 +356,7 @@ function SuggestionsImprovementStep(props: StepProps) {
 					name="additionalComments"
 					label="Any additional comments or feedback"
 				/>
-				<DateField control={form.control} name="date" placeholder="Date" />
+				<DateField control={form.control} name="submissionDate" placeholder="Date" />
 			</section>
 		</section>
 	);
@@ -405,3 +405,4 @@ const skillsGainedOptions = [
 	"Program facilitation",
 ];
 const yesMaybeNoOptions = ["Yes", "Maybe", "No"];
+

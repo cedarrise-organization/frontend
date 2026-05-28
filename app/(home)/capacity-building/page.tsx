@@ -2,10 +2,11 @@ import Image from "next/image";
 import { heroImg } from "@/assets/images/capacity-building";
 import { ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
-import { NavLink } from "@/components/common/NavLink";
+import { NavLink, NavLinkEphemeral } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
 import { cnJoin } from "@/lib/utils/cn";
 import { Main } from "../-components/Main";
+import { CapacityBuildingMomentsCarousel } from "./-components/CapacityBuildingCarousels";
 import { RegisterProgramAccordion } from "./-components/RegisterProgramAccordion";
 
 function CapacityBuildingPage() {
@@ -15,6 +16,7 @@ function CapacityBuildingPage() {
 			<IntroSection />
 			<FeaturedCapacityProgramsSection />
 			<HowItWorksSection />
+			<MomentsSection />
 			<RegisterPromptSection />
 			<PartnerCtaSection />
 		</Main>
@@ -72,7 +74,7 @@ function IntroSection() {
 	return (
 		<section className="flex flex-col gap-4 lg:flex-row lg:justify-center lg:gap-10.5">
 			<article className="flex w-full flex-col gap-4 lg:max-w-[569px] lg:gap-10.5">
-				<h2 className="text-[24px]/[1.1] lg:text-[40px]">
+				<h2 className="text-[24px]/[1.2] lg:text-[40px]">
 					What is Capacity Building at <span className="text-cedar-red">CedarRise?</span>
 				</h2>
 
@@ -139,7 +141,7 @@ function FeaturedCapacityProgramsSection() {
 			className="flex flex-col gap-5 rounded-[24px] bg-cedar-black px-5 pt-8.5 pb-4.5 text-cedar-white
 				lg:gap-11 lg:rounded-[40px] lg:px-[60px] lg:pt-11.5 lg:pb-9"
 		>
-			<h2 className="text-center text-[20px]/[1.2] lg:text-[40px]">
+			<h2 className="text-center text-[24px]/[1.2] lg:text-[40px]">
 				Featured Capacity-Building Programs
 			</h2>
 
@@ -181,7 +183,7 @@ const steps: Array<{ description: string; title: string }> = [
 function HowItWorksSection() {
 	return (
 		<section className="flex flex-col items-center gap-6.5 lg:gap-[60px]">
-			<h2 className="text-center text-[24px]/[1.2] lg:text-[40px]/[1.2]">How it Works</h2>
+			<h2 className="text-center text-[24px]/[1.2] lg:text-[40px]">How it Works</h2>
 
 			<article className="flex w-full gap-2.5 lg:flex-col lg:px-[64px]">
 				<ForWithWrapper
@@ -226,6 +228,18 @@ function HowItWorksSection() {
 	);
 }
 
+function MomentsSection() {
+	return (
+		<section className="flex flex-col gap-6 lg:gap-12">
+			<h2 className="text-center text-[24px]/[1.1] lg:text-[40px]">
+				Moments from Our Capacity Building Exercise
+			</h2>
+
+			<CapacityBuildingMomentsCarousel />
+		</section>
+	);
+}
+
 function RegisterPromptSection() {
 	return (
 		<section className="mt-5 lg:mt-9">
@@ -248,7 +262,9 @@ function PartnerCtaSection() {
 			</p>
 
 			<div className="mt-10 flex items-center gap-2 lg:mt-12.5 lg:gap-8.5">
-				<Button className="shrink-0">Partner with us</Button>
+				<NavLinkEphemeral href="/get-involved/partner" className="shrink-0">
+					<Button>Partner with us</Button>
+				</NavLinkEphemeral>
 
 				<NavLink href="#" className="flex items-center gap-2">
 					<p className="text-[14px] font-medium lg:text-[20px]">Contact Us</p>

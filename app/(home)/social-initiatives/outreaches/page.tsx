@@ -1,11 +1,10 @@
 import Image from "next/image";
 import { heroImg, impactSectionImg } from "@/assets/images/social-initiatives/outreaches";
 import { ForWithWrapper } from "@/components/common/for";
-import { IconBox } from "@/components/common/IconBox";
-import { NavLink } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
+import { FinalCTASection } from "../../-components/FinalCTASectionShared";
 import { Main } from "../../-components/Main";
-import { MomentsCarousel } from "./-components/MomentsCarousel";
+import { OutreachesMomentsCarousel } from "./-components/OutreachesCarousels";
 
 function OutreachesPage() {
 	return (
@@ -134,8 +133,8 @@ const stories = [
 		title: "Community Leader, Awka",
 	},
 	{
-		quote: "This outreach renewed the community's hope in the power of education and human connection.",
-		title: "Community Leader, Awka",
+		quote: "We were shown simple acts of care that made a lasting difference. We are grateful for the support, and attention given to us.",
+		title: "Community Member",
 	},
 ];
 
@@ -151,7 +150,7 @@ function StoriesImpactSection() {
 	return (
 		<section className="flex flex-col gap-5 lg:flex-row">
 			<article className="flex w-full flex-col gap-5 max-lg:hidden">
-				<h2 className="text-[40px]/[1.2]">Stories from the Field</h2>
+				<h3 className="text-[40px]/[1.2]">Stories from the Field</h3>
 
 				<ForWithWrapper
 					className="flex flex-col gap-5"
@@ -192,12 +191,12 @@ function StoriesImpactSection() {
 			<article
 				className="flex w-full flex-col gap-6 rounded-[24px] bg-[hsl(0,0%,94%)] p-5 lg:rounded-[32px]"
 			>
-				<h2
-					className="w-fit rounded-[12px] bg-cedar-black px-7 py-3 text-cedar-yellow lg:px-8 lg:py-3.5
-						lg:text-[20px]"
+				<h3
+					className="w-fit rounded-[12px] bg-cedar-black px-7 py-3 text-cedar-yellow lg:rounded-[20px]
+						lg:text-[24px]"
 				>
 					Our Impact
-				</h2>
+				</h3>
 
 				<ForWithWrapper
 					className="grid grid-cols-[repeat(3,auto)] gap-x-1 gap-y-5 lg:grid-cols-[repeat(2,auto)]
@@ -227,39 +226,9 @@ function StoriesImpactSection() {
 function MomentsSection() {
 	return (
 		<section className="flex flex-col gap-6 lg:gap-12">
-			<h2 className="text-center text-[32px]/[1.2] lg:text-[64px]">Moments from Our Outreaches</h2>
+			<h2 className="text-center text-[24px]/[1.2] lg:text-[40px]">Moments from Our Outreaches</h2>
 
-			<MomentsCarousel />
-		</section>
-	);
-}
-
-function FinalCTASection() {
-	return (
-		<section
-			className="flex flex-col items-center rounded-[24px] bg-cedar-black p-6 text-center
-				text-cedar-white lg:rounded-[32px] lg:p-[64px]"
-		>
-			<h2 className="text-[32px]/[1.2] text-cedar-yellow lg:text-[48px]">
-				Help Us Reach More Communities
-			</h2>
-
-			<p className="mt-2 text-[10px] lg:mt-4 lg:text-base">
-				Support outreaches that bring care, learning, and practical help closer to the people who need
-				it.
-			</p>
-
-			<div className="mt-10 flex items-center gap-2 lg:mt-12.5 lg:gap-8.5">
-				<Button className="shrink-0">Donate Now</Button>
-
-				<NavLink href="#" className="flex items-center gap-2">
-					<p className="text-[14px] font-medium lg:text-[20px]">Get Involved</p>
-
-					<Button theme="secondary" size="icon" className="shrink-0">
-						<IconBox icon="solar:arrow-right-up-outline" />
-					</Button>
-				</NavLink>
-			</div>
+			<OutreachesMomentsCarousel />
 		</section>
 	);
 }
