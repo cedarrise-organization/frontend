@@ -1,11 +1,13 @@
 "use client";
 
 import autoplay from "embla-carousel-autoplay";
+import Image from "next/image";
 import { For } from "@/components/common/for";
 import { Carousel } from "@/components/ui";
+import type { CarouselItemQueryResultType } from "@/lib/react-query/queryOptions";
 import { cnJoin, cnMerge } from "@/lib/utils/cn";
 
-function TestimonialCarouselShared(props: {
+export function TestimonialCarouselShared(props: {
 	className?: string;
 	testimonials: Array<{ quote: string; title: string }>;
 }) {
@@ -70,4 +72,52 @@ function TestimonialCarouselShared(props: {
 	);
 }
 
-export { TestimonialCarouselShared };
+type MomentsCarouselSharedProps = {
+	galleryRow: Array<CarouselItemQueryResultType["data"][number]>;
+	galleryRowIndex: number;
+	imageAlt: string;
+};
+
+export function MomentsCarouselShared(props: MomentsCarouselSharedProps) {
+	const { galleryRow, galleryRowIndex, imageAlt } = props;
+
+	return (
+		<Carousel.Root
+			className="w-full"
+			options={{ loop: false }}
+			plugins={[
+				autoplay({
+					delay: 2000 + galleryRowIndex * 400,
+					stopOnFocusIn: true,
+					stopOnInteraction: false,
+					stopOnMouseEnter: true,
+				}),
+			]}
+		>
+			<Carousel.Content className="-mr-3 gap-3 select-none lg:-mr-5 lg:gap-5">
+				<For
+					each={galleryRow}
+					renderItem={(galleryRowItem, galleryRowItemIndex) => (
+						<Carousel.Item
+							key={galleryRowItem.public_id}
+							className={cnJoin(
+								"h-[240px] w-(--image-width) cursor-grab active:cursor-grabbing lg:h-[300px]",
+								galleryRowItemIndex === galleryRow.length - 1 && "pr-5"
+							)}
+							style={{ "--image-width": `30%` } as React.CSSProperties}
+						>
+							<Image
+								id={galleryRowItem.public_id}
+								src={galleryRowItem.url}
+								width={300}
+								height={300}
+								alt={imageAlt}
+								className="size-full rounded-[24px] object-cover lg:rounded-[32px]"
+							/>
+						</Carousel.Item>
+					)}
+				/>
+			</Carousel.Content>
+		</Carousel.Root>
+	);
+}

@@ -2,9 +2,10 @@
 
 import { Steps } from "@ark-ui/react/steps";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { defineEnumDeep } from "@zayne-labs/toolkit-type-helpers";
-import { useForm, type UseFormReturn } from "react-hook-form";
-import { z } from "zod";
+import { toFormData } from "@zayne-labs/callapi/utils";
+import { createUseStorageState } from "@zayne-labs/toolkit-react";
+import { useForm } from "react-hook-form";
+import type { z } from "zod";
 import {
 	CheckboxQuestionField,
 	ComboboxField,
@@ -13,86 +14,52 @@ import {
 	OptionQuestionField,
 	RatingQuestionField,
 	SelectField,
-	StepperList,
 	TextAreaField,
 	TextField,
 } from "@/app/(home)/-components/FormPartsShared";
+import {
+	defineFormStepItems,
+	FormPageHeader,
+	FormStepComponentSectionHeader,
+	FormStepFooter,
+	FormStepList,
+	FormStepMainContent,
+} from "@/app/(home)/-components/FormStepPartsShared";
 import { Main } from "@/app/(home)/-components/Main";
-import { For } from "@/components/common/for";
-import { IconBox } from "@/components/common/IconBox";
-import { NavLink } from "@/components/common/NavLink";
-import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { getNigeriaStatesAndLGA } from "@/lib/constants/nigeria";
-import { cnJoin } from "@/lib/utils/cn";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Form, useFormRootContext } from "@/components/ui/form";
+import { callBackendApiForQuery } from "@/lib/api/callBackendApi";
+import {
+	ClassOptions,
+	GenderOptions,
+	getLgaOptions,
+	HouseholdSizeOptions,
+	NigeriaStateOptions,
+	PrimaryLanguageOptions,
+	SiblingsOptions,
+	TacotsAgeOptions,
+	TacotsAnnualHouseholdIncomeOptions,
+	TacotsCatholicSacramentOptions,
+	TacotsFamilyPositionOptions,
+	TacotsGuardianRelationshipOptions,
+	TacotsIncomeEarnerCountOptions,
+	TacotsIncomeSourceOptions,
+	TacotsLivesWithOptions,
+	TacotsRecommendationFrontendSchema,
+	TacotsRecommendationReligionOptions,
+	TacotsResidenceTypeOptions,
+	TacotsSpecialCircumstanceOptions,
+	TacotsSupportTypeOptions,
+	TacotsYearOptions,
+	YesNoSometimesOptions,
+} from "@/lib/api/callBackendApi/apiSchema";
 
-const tacotsRecommendationFrontendSchema = z.object({
-	age: z.string(),
-	annualHouseholdIncome: z.string(),
-	avgMonthlyIncome: z.string(),
-	careerGoal: z.string(),
-	catholicSacraments: z.array(z.string()),
-	childBackgroundNotes: z.string(),
-	classPositionLastTerm: z.string(),
-	declarationConfirmed: z.boolean(),
-	diocese: z.string(),
-	disciplineRating: z.string(),
-	dob: z.string(),
-	familyPosition: z.string(),
-	fathersName: z.string(),
-	fathersOccupation: z.string(),
-	fathersPhone: z.string(),
-	firstName: z.string(),
-	gender: z.string(),
-	guardianAddress: z.string(),
-	guardianName: z.string(),
-	guardianOccupation: z.string(),
-	guardianPhone: z.string(),
-	guardianRelationship: z.string(),
-	hasElectricity: z.string(),
-	homeAddress: z.string(),
-	householdSize: z.string(),
-	incomeSources: z.array(z.string()),
-	lastClass: z.string(),
-	lastResult: z.custom<File>().nullable(),
-	lastTermAverage: z.string(),
-	lastYearAttended: z.string(),
-	lga: z.string(),
-	livesWith: z.string(),
-	middleName: z.string(),
-	mothersName: z.string(),
-	mothersOccupation: z.string(),
-	mothersPhone: z.string(),
-	nationality: z.string(),
-	numIncomeEarners: z.string(),
-	numSiblings: z.string(),
-	otherImportantInfo: z.string(),
-	parentsAddress: z.string(),
-	parishAttended: z.string(),
-	passportPhoto: z.custom<File>().nullable(),
-	phoneNumber: z.string(),
-	primaryLanguage: z.string(),
-	recommenderAddress: z.string(),
-	recommenderFirstName: z.string(),
-	recommenderLastName: z.string(),
-	recommenderPhone: z.string(),
-	religion: z.string(),
-	residenceType: z.string(),
-	responsibilityRating: z.string(),
-	schoolName: z.string(),
-	schoolState: z.string(),
-	schoolTown: z.string(),
-	specialCircumstances: z.array(z.string()),
-	stateOfOrigin: z.string(),
-	studentStatement: z.string(),
-	supportTypesNeeded: z.array(z.string()),
-	surname: z.string(),
-});
+const TacotsRecommendationSchema = TacotsRecommendationFrontendSchema;
 
 function RecommendationFormPage() {
 	return (
 		<Main className="items-center gap-10 lg:gap-[64px]">
-			<FormHeaderSection />
+			<FormPageHeader title="TACOTS Recommendation Form" href="/social-initiatives/tacots" />
 			<TacotsRecommendationForm />
 		</Main>
 	);
@@ -100,47 +67,104 @@ function RecommendationFormPage() {
 
 export default RecommendationFormPage;
 
-function FormHeaderSection() {
-	return (
-		<header
-			className="flex w-full items-center gap-5 rounded-[12px] bg-cedar-black p-3 text-cedar-white
-				lg:rounded-[20px] lg:p-5"
-		>
-			<Button asChild={true} theme="secondary" size="icon" className="shrink-0">
-				<NavLink href="/social-initiatives/tacots">
-					<IconBox icon="ph:arrow-left" />
-				</NavLink>
-			</Button>
-
-			<h1 className="w-full text-center text-[20px]/[1.2] lg:text-[32px]">
-				TACOTS Recommendation Form
-			</h1>
-		</header>
-	);
-}
-
-const stepperItems = defineEnumDeep([
+const stepItems = defineFormStepItems([
 	{
-		StepComponent: StudentPersonalInformationStep,
+		StepComponent: StudentPersonalInformationStepOne,
 		title: "Student personal information",
+		validator: TacotsRecommendationSchema.pick({
+			age: true,
+			catholicSacraments: true,
+			diocese: true,
+			dob: true,
+			firstName: true,
+			gender: true,
+			homeAddress: true,
+			lga: true,
+			middleName: true,
+			nationality: true,
+			parishAttended: true,
+			phoneNumber: true,
+			primaryLanguage: true,
+			religion: true,
+			stateOfOrigin: true,
+			surname: true,
+		}),
 	},
 	{
-		StepComponent: EducationalInformationStep,
+		StepComponent: EducationalInformationStepTwo,
 		title: "Educational information",
+		validator: TacotsRecommendationSchema.pick({
+			classPositionLastTerm: true,
+			lastClass: true,
+			lastResult: true,
+			lastTermAverage: true,
+			lastYearAttended: true,
+			passportPhoto: true,
+			schoolName: true,
+			schoolState: true,
+			schoolTown: true,
+		}),
 	},
 	{
-		StepComponent: FamilyBackgroundStep,
+		StepComponent: FamilyBackgroundStepThree,
 		title: "Family background",
+		validator: TacotsRecommendationSchema.pick({
+			annualHouseholdIncome: true,
+			avgMonthlyIncome: true,
+			familyPosition: true,
+			fathersName: true,
+			fathersOccupation: true,
+			fathersPhone: true,
+			guardianAddress: true,
+			guardianName: true,
+			guardianOccupation: true,
+			guardianPhone: true,
+			guardianRelationship: true,
+			hasElectricity: true,
+			householdSize: true,
+			incomeSources: true,
+			livesWith: true,
+			mothersName: true,
+			mothersOccupation: true,
+			mothersPhone: true,
+			numIncomeEarners: true,
+			numSiblings: true,
+			parentsAddress: true,
+			residenceType: true,
+			specialCircumstances: true,
+		}),
 	},
 	{
-		StepComponent: RecommenderDetailsStep,
+		StepComponent: RecommenderDetailsStepFour,
 		title: "Recommender details",
+		validator: TacotsRecommendationSchema.pick({
+			careerGoal: true,
+			childBackgroundNotes: true,
+			declarationConfirmed: true,
+			disciplineRating: true,
+			otherImportantInfo: true,
+			recommenderAddress: true,
+			recommenderFirstName: true,
+			recommenderLastName: true,
+			recommenderPhone: true,
+			responsibilityRating: true,
+			studentStatement: true,
+			supportTypesNeeded: true,
+		}),
 	},
 ]);
 
-function TacotsRecommendationForm() {
-	const form = useForm({
-		defaultValues: {
+const stepItemsCount = stepItems.length - 1;
+
+type TacotsRecommendationFormStoreType = {
+	currentStep: number;
+	formStepData: z.infer<typeof TacotsRecommendationSchema>;
+};
+
+const useTacotsRecommendationStorageState = createUseStorageState<TacotsRecommendationFormStoreType>({
+	defaultValue: {
+		currentStep: 0,
+		formStepData: {
 			age: "",
 			annualHouseholdIncome: "",
 			avgMonthlyIncome: "",
@@ -196,101 +220,69 @@ function TacotsRecommendationForm() {
 			schoolName: "",
 			schoolState: "",
 			schoolTown: "",
-			specialCircumstances: [],
+			specialCircumstances: "",
 			stateOfOrigin: "",
 			studentStatement: "",
 			supportTypesNeeded: [],
 			surname: "",
-		},
-		resolver: zodResolver(tacotsRecommendationFrontendSchema),
+		} as unknown as TacotsRecommendationFormStoreType["formStepData"],
+	},
+	key: "tacots-recommendation-form-data",
+});
+
+function TacotsRecommendationForm() {
+	const [storeValues, storeActions] = useTacotsRecommendationStorageState();
+
+	const form = useForm({
+		resolver: zodResolver(stepItems[storeValues.currentStep]?.validator ?? TacotsRecommendationSchema),
+		values: storeValues.formStepData as never,
 	});
 
-	const onSubmit = form.handleSubmit(() => {});
+	const onSubmit = form.handleSubmit(async (data) => {
+		storeActions.setState((state) => ({ formStepData: { ...state.formStepData, ...data } }));
+
+		if (storeValues.currentStep !== stepItemsCount) return;
+
+		await callBackendApiForQuery("@post/forms/tacots/recommendation", {
+			body: toFormData({
+				...storeValues.formStepData,
+				...data,
+			}),
+			meta: { toast: { success: true } },
+			onSuccess: () => {
+				form.reset();
+				storeActions.removeState();
+			},
+		});
+	});
 
 	return (
-		<Form.Root
-			form={form}
-			className="w-full lg:max-w-[590px]"
-			onSubmit={(event) => void onSubmit(event)}
+		<Steps.Root
+			count={stepItemsCount}
+			linear={true}
+			step={storeValues.currentStep}
+			onStepChange={(details) => storeActions.setState({ currentStep: details.step })}
+			className="flex min-h-screen w-full flex-col gap-10 lg:max-w-[590px] lg:gap-12"
+			suppressHydrationWarning={true}
 		>
-			<Steps.Root
-				count={stepperItems.length - 1}
-				linear={true}
-				className="flex flex-col gap-10 lg:gap-12"
-			>
-				<StepperList items={stepperItems} />
+			<FormStepList items={stepItems} />
 
-				<For
-					each={stepperItems}
-					renderItem={(step, index) => (
-						<Steps.Content key={step.title} index={index}>
-							<step.StepComponent form={form} />
-						</Steps.Content>
-					)}
-				/>
+			<Form.Root form={form} onSubmit={(event) => void onSubmit(event)} className="gap-10 lg:gap-12">
+				<FormStepMainContent items={stepItems} />
 
-				<Steps.Context>
-					{(steps) => {
-						return (
-							<div
-								className={cnJoin(
-									"flex",
-									!steps.hasPrevStep ? "justify-end" : "justify-between gap-3"
-								)}
-							>
-								{steps.hasPrevStep && (
-									<Steps.PrevTrigger asChild={true}>
-										<Button type="button" className="h-12 px-[64px] text-[12px]">
-											Back
-										</Button>
-									</Steps.PrevTrigger>
-								)}
-								{steps.hasNextStep && (
-									<Steps.NextTrigger asChild={true}>
-										<Button type="button" className="h-12 px-[64px] text-[12px]">
-											Next
-										</Button>
-									</Steps.NextTrigger>
-								)}
-								{steps.isCompleted && (
-									<Form.Submit asChild={true}>
-										<Button type="button" className="h-12 px-[64px] text-[12px]">
-											Submit
-										</Button>
-									</Form.Submit>
-								)}
-							</div>
-						);
-					}}
-				</Steps.Context>
-			</Steps.Root>
-		</Form.Root>
+				<FormStepFooter />
+			</Form.Root>
+		</Steps.Root>
 	);
 }
 
-function FormSectionHeader(props: { title: string }) {
-	const { title } = props;
+function StudentPersonalInformationStepOne() {
+	const { control } = useFormRootContext<z.infer<(typeof stepItems)[0]["validator"]>>();
+	const form = { control };
 
 	return (
-		<header className="flex items-center justify-between gap-6">
-			<h2 className="shrink-0 leading-[1.2] lg:text-[24px]">{title}</h2>
-			<p className="text-[8px]/3 text-cedar-black/64 max-lg:max-w-[132px] lg:text-[12px]/4">
-				*Please fill information correctly according to field tag
-			</p>
-		</header>
-	);
-}
-
-type StepProps = {
-	form: UseFormReturn<z.infer<typeof tacotsRecommendationFrontendSchema>>;
-};
-
-function StudentPersonalInformationStep(props: StepProps) {
-	const { form } = props;
-
-	return (
-		<section className="flex flex-col gap-4 lg:gap-5">
-			<FormSectionHeader title="Student Personal Information" />
+		<>
+			<FormStepComponentSectionHeader title="Student Personal Information" />
 
 			<TextField control={form.control} name="firstName" placeholder="First Name" />
 			<TextField control={form.control} name="middleName" placeholder="Middle Name" />
@@ -301,7 +293,7 @@ function StudentPersonalInformationStep(props: StepProps) {
 				classNames={{ trigger: "w-fit" }}
 				name="age"
 				placeholder="Age"
-				options={ageOptions}
+				options={TacotsAgeOptions}
 			/>
 
 			<DateField control={form.control} name="dob" placeholder="Date of Birth" />
@@ -310,21 +302,21 @@ function StudentPersonalInformationStep(props: StepProps) {
 				control={form.control}
 				name="gender"
 				question="Gender"
-				options={["Male", "Female"]}
+				options={GenderOptions}
 			/>
 
 			<SelectField
 				control={form.control}
 				name="religion"
 				placeholder="Religion/Denomination"
-				options={religionOptions}
+				options={TacotsRecommendationReligionOptions}
 			/>
 
 			<CheckboxQuestionField
 				control={form.control}
 				name="catholicSacraments"
 				question="If Catholic - Sacraments Received"
-				options={["Baptism", "First Holy Communion", "Confirmation", "None yet"]}
+				options={TacotsCatholicSacramentOptions}
 			/>
 
 			<TextField
@@ -338,7 +330,7 @@ function StudentPersonalInformationStep(props: StepProps) {
 				control={form.control}
 				name="primaryLanguage"
 				placeholder="Primary Language Spoken at Home"
-				options={languageOptions}
+				options={PrimaryLanguageOptions}
 			/>
 
 			<TextField
@@ -353,39 +345,35 @@ function StudentPersonalInformationStep(props: StepProps) {
 				<ComboboxField
 					control={form.control}
 					name="stateOfOrigin"
-					classNames={{ trigger: "w-full px-4 lg:px-9" }}
 					placeholder="State of Origin"
-					options={stateOptions}
-					type="state of origin"
-					onValueChange={() => form.setValue("lga", "")}
+					options={NigeriaStateOptions}
 				/>
 
 				<Form.Watch control={form.control} name="stateOfOrigin">
 					{(stateOfOrigin) => (
 						<ComboboxField
 							control={form.control}
-							classNames={{ trigger: "w-full px-4 lg:px-9" }}
+							disabled={!stateOfOrigin}
 							name="lga"
 							placeholder="Local Government Area"
 							options={getLgaOptions(stateOfOrigin)}
-							type="local government area"
-							disabled={!stateOfOrigin}
 						/>
 					)}
 				</Form.Watch>
 			</div>
 
 			<TextField control={form.control} name="homeAddress" placeholder="Home Address / Community" />
-		</section>
+		</>
 	);
 }
 
-function EducationalInformationStep(props: StepProps) {
-	const { form } = props;
+function EducationalInformationStepTwo() {
+	const { control } = useFormRootContext<z.infer<(typeof stepItems)[1]["validator"]>>();
+	const form = { control };
 
 	return (
-		<section className="flex flex-col gap-4 lg:gap-5">
-			<FormSectionHeader title="Educational Information" />
+		<>
+			<FormStepComponentSectionHeader title="Educational Information" />
 
 			<TextField
 				control={form.control}
@@ -399,7 +387,7 @@ function EducationalInformationStep(props: StepProps) {
 					control={form.control}
 					name="schoolState"
 					placeholder="State"
-					options={stateOptions}
+					options={NigeriaStateOptions}
 				/>
 			</div>
 
@@ -407,7 +395,7 @@ function EducationalInformationStep(props: StepProps) {
 				control={form.control}
 				name="lastYearAttended"
 				placeholder="Last Year Student Attended School"
-				options={yearOptions}
+				options={TacotsYearOptions}
 			/>
 
 			<SelectField
@@ -415,7 +403,7 @@ function EducationalInformationStep(props: StepProps) {
 				classNames={{ trigger: "max-w-[380px]" }}
 				name="lastClass"
 				placeholder="Last Class"
-				options={classOptions}
+				options={ClassOptions}
 			/>
 
 			<TextField
@@ -448,17 +436,18 @@ function EducationalInformationStep(props: StepProps) {
 				name="lastResult"
 				label="Upload a Picture of Last Result"
 			/>
-		</section>
+		</>
 	);
 }
 
-function FamilyBackgroundStep(props: StepProps) {
-	const { form } = props;
+function FamilyBackgroundStepThree() {
+	const { control } = useFormRootContext<z.infer<(typeof stepItems)[2]["validator"]>>();
+	const form = { control };
 
 	return (
-		<div className="flex flex-col gap-10">
+		<>
 			<section className="flex flex-col gap-4 lg:gap-5">
-				<FormSectionHeader title="Family Background" />
+				<FormStepComponentSectionHeader title="Family Background" />
 
 				<TextField control={form.control} name="fathersName" placeholder="Father's Name" />
 				<TextField control={form.control} name="fathersOccupation" placeholder="Father's Occupation" />
@@ -493,7 +482,7 @@ function FamilyBackgroundStep(props: StepProps) {
 					classNames={{ trigger: "max-w-[305px]" }}
 					name="guardianRelationship"
 					placeholder="Relationship to Student"
-					options={relationshipOptions}
+					options={TacotsGuardianRelationshipOptions}
 				/>
 				<TextField
 					control={form.control}
@@ -506,26 +495,28 @@ function FamilyBackgroundStep(props: StepProps) {
 					classNames={{ trigger: "max-w-[380px]" }}
 					name="householdSize"
 					placeholder="Household Size"
-					options={householdSizeOptions}
+					options={HouseholdSizeOptions}
 				/>
 				<SelectField
 					control={form.control}
 					classNames={{ trigger: "max-w-[380px]" }}
 					name="numSiblings"
 					placeholder="Number of Siblings"
-					options={siblingsOptions}
+					options={SiblingsOptions}
 				/>
-				<TextField
+				<SelectField
 					control={form.control}
+					classNames={{ trigger: "max-w-[380px]" }}
 					name="familyPosition"
-					placeholder="Child's Position in the Family (eg: 1st, 2nd, 5th..)"
+					placeholder="Child's Position in the Family"
+					options={TacotsFamilyPositionOptions}
 				/>
 
-				<CheckboxQuestionField
+				<OptionQuestionField
 					control={form.control}
 					name="specialCircumstances"
 					question="Special Circumstances"
-					options={["Orphan", "Single Parent", "Low Family Income", "None", "Other: _____"]}
+					options={TacotsSpecialCircumstanceOptions}
 				/>
 			</section>
 
@@ -536,21 +527,21 @@ function FamilyBackgroundStep(props: StepProps) {
 					control={form.control}
 					name="annualHouseholdIncome"
 					question="1. Annual Household Income"
-					options={incomeOptions}
+					options={TacotsAnnualHouseholdIncomeOptions}
 				/>
 
 				<CheckboxQuestionField
 					control={form.control}
 					name="incomeSources"
 					question="2. Source of Household Income"
-					options={incomeSourceOptions}
+					options={TacotsIncomeSourceOptions}
 				/>
 
 				<OptionQuestionField
 					control={form.control}
 					name="numIncomeEarners"
 					question="3. Number of Income Earners in the Household"
-					options={["None", "1", "2", "3", "More than 3"]}
+					options={TacotsIncomeEarnerCountOptions}
 				/>
 
 				<TextField
@@ -566,48 +557,35 @@ function FamilyBackgroundStep(props: StepProps) {
 					control={form.control}
 					name="livesWith"
 					question="4. Who does the student currently live with?"
-					options={[
-						"Both parents",
-						"Mother only",
-						"Father only",
-						"Grand parent",
-						"Other Relative",
-						"Guardian",
-						"Alone",
-					]}
+					options={TacotsLivesWithOptions}
 				/>
 
 				<OptionQuestionField
 					control={form.control}
 					name="residenceType"
 					question="5. Type of Residence"
-					options={[
-						"Family House",
-						"Rented Apartment",
-						"Shared Accommodation",
-						"Temporary Shelter",
-						"Other",
-					]}
+					options={TacotsResidenceTypeOptions}
 				/>
 
 				<OptionQuestionField
 					control={form.control}
 					name="hasElectricity"
 					question="6. Does the household have access to electricity?"
-					options={["Yes", "No", "Sometimes"]}
+					options={YesNoSometimesOptions}
 				/>
 			</section>
-		</div>
+		</>
 	);
 }
 
-function RecommenderDetailsStep(props: StepProps) {
-	const { form } = props;
+function RecommenderDetailsStepFour() {
+	const { control } = useFormRootContext<z.infer<(typeof stepItems)[3]["validator"]>>();
+	const form = { control };
 
 	return (
-		<div className="flex flex-col gap-10">
+		<>
 			<section className="flex flex-col gap-4 lg:gap-5">
-				<FormSectionHeader title="Recommender's Details" />
+				<FormStepComponentSectionHeader title="Recommender's Details" />
 
 				<TextField control={form.control} name="recommenderFirstName" placeholder="First Name" />
 				<TextField control={form.control} name="recommenderLastName" placeholder="Last Name" />
@@ -633,7 +611,7 @@ function RecommenderDetailsStep(props: StepProps) {
 					control={form.control}
 					name="supportTypesNeeded"
 					question="1. Types of Support Needed"
-					options={["Tuition (School Fees)", "School Resources", "Transportation", "Other:"]}
+					options={TacotsSupportTypeOptions}
 				/>
 
 				<TextAreaField
@@ -670,69 +648,31 @@ function RecommenderDetailsStep(props: StepProps) {
 			<section className="flex flex-col gap-4 lg:gap-5">
 				<h2 className="leading-[1.2] lg:text-[24px]">Declaration</h2>
 
-				<CheckboxQuestionField
+				<Form.Field
 					control={form.control}
 					name="declarationConfirmed"
-					options={[
-						"I confirm that the information provided in this registration form is true and accurate.",
-					]}
-				/>
+					className="w-full flex-row items-start gap-3 text-[12px] text-cedar-black/64 lg:text-[14px]"
+				>
+					<Form.FieldBoundController
+						render={({ field }) => (
+							<Checkbox
+								id="declaration-confirmed"
+								checked={field.value}
+								onCheckedChange={field.onChange}
+								classNames={{
+									base: `mt-[2px] size-4 rounded-[4px] border-[1.5px] border-cedar-black/40
+									bg-transparent data-checked:bg-transparent lg:mt-[3px]`,
+									icon: "size-3",
+								}}
+							/>
+						)}
+					/>
+
+					<Form.Label htmlFor="declaration-confirmed">
+						I confirm that the information provided in this registration form is true and accurate.
+					</Form.Label>
+				</Form.Field>
 			</section>
-		</div>
+		</>
 	);
 }
-
-const ageOptions = [...Array(16).keys()].map((age) => `${age + 1}`);
-const currentYear = new Date().getFullYear();
-const yearOptions = [...Array(26).keys()].map((year) => `${currentYear - year}`);
-
-const religionOptions = ["Catholic", "Anglican", "Pentecostal", "Muslim", "Traditional", "Other"];
-const languageOptions = ["Igbo", "English", "Hausa", "Yoruba", "Pidgin", "Other"];
-
-const nigeriaStatesAndLGA = getNigeriaStatesAndLGA();
-
-const stateOptions = nigeriaStatesAndLGA.map(({ state }) => state);
-
-function getLgaOptions(state: string) {
-	return nigeriaStatesAndLGA.find((item) => item.state === state)?.lgas ?? [];
-}
-
-const classOptions = [
-	"Primary 1",
-	"Primary 2",
-	"Primary 3",
-	"Primary 4",
-	"Primary 5",
-	"Primary 6",
-	"JSS 1",
-	"JSS 2",
-	"JSS 3",
-	"SS 1",
-	"SS 2",
-	"SS 3",
-];
-
-const relationshipOptions = ["Father", "Mother", "Guardian", "Relative", "Other"];
-const householdSizeOptions = ["1 - 3", "4 - 6", "7 - 9", "10+"];
-const siblingsOptions = ["None", "1", "2", "3", "4", "5+"];
-
-const incomeOptions = [
-	"No stable income",
-	"Less than ₦100,000",
-	"₦100,000 - ₦300,000",
-	"₦300,001 - ₦600,000",
-	"₦600,001 - ₦1,000,000",
-	"Above ₦1,000,000",
-];
-
-const incomeSourceOptions = [
-	"Farming",
-	"Trading / Small Business",
-	"Salary / Formal Employment",
-	"Artisan / Skilled Labour",
-	"Daily Wage Work",
-	"Support from relative",
-	"Government support",
-	"No regular income",
-	"Other: _________",
-];

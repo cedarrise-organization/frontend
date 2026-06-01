@@ -295,30 +295,25 @@ function TacotsFormLinksSection() {
 	return (
 		<section>
 			<ForWithWrapper
-				className="flex flex-col gap-3 lg:gap-4"
+				className="flex flex-col gap-4 lg:gap-5"
 				each={formLinks}
 				renderItem={(item) => (
 					<li
 						key={item.label}
-						className="flex items-center justify-between gap-5 rounded-[14px] bg-cedar-black py-2
-							pr-2 pl-5 text-cedar-white lg:gap-12 lg:rounded-[16px] lg:py-4 lg:pr-4 lg:pl-10"
+						className="flex items-center justify-between gap-5 rounded-[16px] bg-cedar-black py-2
+							pr-2 pl-6 text-cedar-white lg:gap-12 lg:rounded-[20px] lg:py-5.5 lg:pr-5.5 lg:pl-12"
 					>
 						<NavLink
 							href={item.href}
-							className="text-[12px]/[1.2] underline underline-offset-5 lg:text-base"
+							className="text-[14px]/[1.2] underline underline-offset-5 lg:text-[24px]"
 						>
 							{item.label}
 						</NavLink>
 
-						<p className="text-[10px]/4 text-cedar-white/80 max-lg:hidden lg:text-[12px]/5">
-							{item.description}
-						</p>
+						<p className="text-cedar-white/80 max-lg:hidden lg:text-base/6">{item.description}</p>
 
 						<NavLinkEphemeral href={item.href}>
-							<Button
-								size="icon"
-								className="size-10 shrink-0 self-end rounded-[12px] text-base lg:self-auto"
-							>
+							<Button size="icon" className="shrink-0 self-end lg:self-auto">
 								<IconBox icon="solar:arrow-right-up-outline" />
 							</Button>
 						</NavLinkEphemeral>

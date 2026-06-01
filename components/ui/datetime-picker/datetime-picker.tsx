@@ -120,7 +120,7 @@ export function DateTimePicker(props: DatePickerProps) {
 						onSelect={(selectedDate) => {
 							if (!selectedDate) return;
 
-							setDateString(format(selectedDate, dateFormats?.onChangeDate ?? "MM-dd-yyyy"));
+							setDateString(format(selectedDate, dateFormats?.onChangeDate ?? "dd-MM-yyyy"));
 						}}
 						{...restOfCalenderProps}
 					/>

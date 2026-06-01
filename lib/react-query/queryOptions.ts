@@ -48,3 +48,7 @@ export const tacotsCarouselsQuery = () => {
 		staleTime: Infinity,
 	});
 };
+
+export type CarouselItemQueryResultType = Awaited<
+	ReturnType<NonNullable<ReturnType<typeof tacotsCarouselsQuery>["select"]>>
+>;

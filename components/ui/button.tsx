@@ -2,11 +2,10 @@
 
 import type { InferProps, PolymorphicPropsStrict } from "@zayne-labs/toolkit-react/utils";
 import type { Prettify } from "@zayne-labs/toolkit-type-helpers";
-import Image from "next/image";
 import { tv, type VariantProps } from "tailwind-variants";
 import { Slot } from "@/components/common/slot";
 import { cnJoin } from "@/lib/utils/cn";
-import { spinnerIcon } from "../icons";
+import { SpinnerIcon } from "../icons/SpinnerIcon";
 
 export type ButtonProps = InferProps<"button">
 	& Prettify<
@@ -24,7 +23,7 @@ export const buttonVariants = tv({
 
 	compoundVariants: [
 		{
-			className: "grid justify-items-center",
+			className: "relative",
 			isLoading: true,
 			loadingStyle: "replace-content",
 		},
@@ -141,12 +140,15 @@ function Button<TElement extends React.ElementType>(props: PolymorphicPropsStric
 		<>
 			<Slot.Slottable>
 				{loadingStyle === "replace-content" ?
-					<div className="invisible [grid-area:1/1]">{children}</div>
+					<div className="invisible contents">{children}</div>
 				:	children}
 			</Slot.Slottable>
-
-			<span className={cnJoin(loadingStyle === "replace-content" && "[grid-area:1/1]")}>
-				<Image src={spinnerIcon} alt="Spinner" width={20} height={20} className="size-5" />
+			<span
+				className={cnJoin(
+					loadingStyle === "replace-content" && "absolute inset-0 inline-grid place-content-center"
+				)}
+			>
+				<SpinnerIcon className="size-5" />
 			</span>
 		</>
 	);

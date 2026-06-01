@@ -1,9 +1,11 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { tw } from "@zayne-labs/toolkit-core";
-import { MomentsCarouselShared } from "@/app/(home)/-components/MomentsCarouselShared";
-import { TestimonialCarouselShared } from "@/app/(home)/-components/TestimonialCarouselShared";
+import { useMemo } from "react";
+import {
+	MomentsCarouselShared,
+	TestimonialCarouselShared,
+} from "@/app/(home)/-components/CarouselsShared";
 import { ForWithWrapper } from "@/components/common/for";
 import { ashCarouselsQuery } from "@/lib/react-query/queryOptions";
 import { chunkArray } from "@/lib/utils/common";
@@ -11,12 +13,9 @@ import { chunkArray } from "@/lib/utils/common";
 export function AshMomentsCarousel() {
 	const ashCarouselsQueryResult = useQuery(ashCarouselsQuery());
 
-	const galleryRows = chunkArray(ashCarouselsQueryResult.data?.data, 3).map((chunk) =>
-		chunk.map((image) => ({
-			image,
-			size: tw`w-(--image-width)`,
-			style: { "--image-width": `30%` } as React.CSSProperties,
-		}))
+	const galleryRows = useMemo(
+		() => chunkArray(ashCarouselsQueryResult.data?.data, 3),
+		[ashCarouselsQueryResult.data?.data]
 	);
 
 	return (

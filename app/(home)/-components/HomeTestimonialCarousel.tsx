@@ -1,4 +1,4 @@
-import { TestimonialCarouselShared } from "./TestimonialCarouselShared";
+import { TestimonialCarouselShared } from "./CarouselsShared";
 
 const testimonials: Array<{ quote: string; title: string }> = [
 	{

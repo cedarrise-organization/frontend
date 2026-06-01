@@ -13,6 +13,7 @@ function DonateForm() {
 	const form = useForm({
 		defaultValues: {
 			amount: "",
+			comment: "",
 			email: "",
 			name: "",
 		},
@@ -46,7 +47,15 @@ function DonateForm() {
 			<TextAreaField control={form.control} name="comment" label="Note / Comment" />
 
 			<Form.Submit asChild={true}>
-				<Button className="mt-5 self-end px-8">Donate</Button>
+				{(formState) => (
+					<Button
+						isLoading={formState.isSubmitting}
+						isDisabled={formState.isSubmitting}
+						className="mt-5 self-end px-8"
+					>
+						Donate
+					</Button>
+				)}
 			</Form.Submit>
 		</Form.Root>
 	);

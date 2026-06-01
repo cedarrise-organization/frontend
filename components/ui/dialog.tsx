@@ -12,7 +12,9 @@ type ContextType = {
 	setIsOpen: (open: boolean) => void;
 };
 
-const [DialogStateContextProvider, useDialogStateContext] = createCustomContext<ContextType>();
+const [DialogContextProvider, useDialogContext] = createCustomContext<ContextType>({
+	name: "DialogContext",
+});
 
 function DialogRoot(props: React.ComponentProps<typeof DialogPrimitive.Root>) {
 	const {
@@ -32,14 +34,14 @@ function DialogRoot(props: React.ComponentProps<typeof DialogPrimitive.Root>) {
 	const contextValue = useMemo(() => ({ isOpen, setIsOpen }) satisfies ContextType, [setIsOpen, isOpen]);
 
 	return (
-		<DialogStateContextProvider value={contextValue}>
+		<DialogContextProvider value={contextValue}>
 			<DialogPrimitive.Root
 				data-slot="dialog-root"
 				{...restOfProps}
 				open={isOpen}
 				onOpenChange={setIsOpen}
 			/>
-		</DialogStateContextProvider>
+		</DialogContextProvider>
 	);
 }
 
@@ -48,7 +50,7 @@ type RenderFn = (props: ContextType) => React.ReactNode;
 function DialogContext(props: DiscriminatedRenderProps<RenderFn>) {
 	const { children, render } = props;
 
-	const dialogCtx = useDialogStateContext();
+	const dialogCtx = useDialogContext();
 
 	const selectedRenderFn = typeof children === "function" ? children : render;
 
@@ -168,5 +170,5 @@ export {
 	DialogRoot as Root,
 	DialogTitle as Title,
 	// eslint-disable-next-line react-refresh/only-export-components
-	useDialogStateContext,
+	useDialogContext,
 };

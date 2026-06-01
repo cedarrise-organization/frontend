@@ -1,9 +1,9 @@
 "use client";
 
 import { dataAttr } from "@zayne-labs/toolkit-core";
-import { useControllableState } from "@zayne-labs/toolkit-react";
+import { createCustomContext, useControllableState } from "@zayne-labs/toolkit-react";
 import { isFunction } from "@zayne-labs/toolkit-type-helpers";
-import { createContext, use, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import * as Command from "@/components/ui/command";
 import { shadcnButtonVariants, type ShadcnButtonProps } from "@/components/ui/constants";
 import * as Popover from "@/components/ui/popover";
@@ -28,17 +28,8 @@ type ComboboxContextType = {
 	width: number;
 };
 
-const ComboboxContext = createContext<ComboboxContextType>({
-	data: [],
-	inputValue: "",
-	onOpenChange: () => {},
-	onValueChange: () => {},
-	open: false,
-	setInputValue: () => {},
-	setWidth: () => {},
-	type: "item",
-	value: "",
-	width: 200,
+const [ComboboxContextProvider, useComboboxContext] = createCustomContext<ComboboxContextType>({
+	name: "ComboboxContext",
 });
 
 type ComboboxProps = React.ComponentProps<typeof Popover.Root> & {
@@ -56,27 +47,28 @@ function ComboboxRoot(props: ComboboxProps) {
 		data,
 		defaultOpen = false,
 		defaultValue,
-		onOpenChange: controlledOnOpenChange,
-		onValueChange: controlledOnValueChange,
-		open: controlledOpen,
+		onOpenChange: onOpenChangeProp,
+		onValueChange: onValueChangeProp,
+		open: openProp,
 		type,
-		value: controlledValue,
+		value: valueProp,
 		...restOfProps
 	} = props;
 
 	const [value, onValueChange] = useControllableState({
 		defaultProp: defaultValue,
-		onChange: controlledOnValueChange,
-		prop: controlledValue,
+		onChange: onValueChangeProp,
+		prop: valueProp,
 	});
 
 	const [open, onOpenChange] = useControllableState({
 		defaultProp: defaultOpen,
-		onChange: controlledOnOpenChange,
-		prop: controlledOpen,
+		onChange: onOpenChangeProp,
+		prop: openProp,
 	});
 
 	const [width, setWidth] = useState(200);
+
 	const [inputValue, setInputValue] = useState("");
 
 	const contextValue = useMemo(
@@ -96,9 +88,9 @@ function ComboboxRoot(props: ComboboxProps) {
 	);
 
 	return (
-		<ComboboxContext value={contextValue}>
+		<ComboboxContextProvider value={contextValue}>
 			<Popover.Root {...restOfProps} open={open} onOpenChange={onOpenChange} />
-		</ComboboxContext>
+		</ComboboxContextProvider>
 	);
 }
 
@@ -112,12 +104,12 @@ function ComboboxTrigger(
 			  }) => React.ReactNode);
 		classNames?: { base?: string; icon?: string };
 		icon?: string;
-		placeholder?: string;
+		placeholder?: string | ((ctx: Pick<ComboboxContextType, "type">) => string);
 	}
 ) {
 	const { children, className, classNames, icon, placeholder, ...restOfProps } = props;
 
-	const { data, setWidth, type, value } = use(ComboboxContext);
+	const { data, setWidth, type, value } = useComboboxContext();
 
 	const elementRef = useRef<HTMLButtonElement>(null);
 
@@ -145,7 +137,10 @@ function ComboboxTrigger(
 
 	const selectedOption = data.find((item) => item.value === value);
 
-	const resolvedValue = value ? selectedOption?.label : (placeholder ?? `Select ${type}...`);
+	const resolvedPlaceholder =
+		isFunction(placeholder) ? placeholder({ type }) : (placeholder ?? `Select ${type}...`);
+
+	const resolvedValue = value ? selectedOption?.label : resolvedPlaceholder;
 
 	const resolvedChildren = isFunction(children) ? children({ resolvedValue, selectedOption }) : children;
 
@@ -180,7 +175,7 @@ function ComboboxContent(
 	}
 ) {
 	const { className, popoverOptions, ...restOfProps } = props;
-	const { width } = use(ComboboxContext);
+	const { width } = useComboboxContext();
 
 	return (
 		<Popover.Content className={cnMerge("p-0", className)} style={{ width }} {...popoverOptions}>
@@ -190,35 +185,39 @@ function ComboboxContent(
 }
 
 function ComboboxInput(
-	props: React.ComponentProps<typeof Command.Input> & {
+	props: Omit<React.ComponentProps<typeof Command.Input>, "placeholder"> & {
 		defaultValue?: string;
 		onValueChange?: (value: string) => void;
+		placeholder?: string | ((ctx: Pick<ComboboxContextType, "type">) => string);
 		value?: string;
 	}
 ) {
 	const {
 		defaultValue,
-		onValueChange: controlledOnValueChange,
-		value: controlledValue,
+		onValueChange: onValueChangeProp,
+		placeholder,
+		value: valueProp,
 		...restOfProps
 	} = props;
-	const { inputValue, setInputValue, type } = use(ComboboxContext);
+
+	const { inputValue, setInputValue, type } = useComboboxContext();
 
 	const [value, onValueChange] = useControllableState({
 		defaultProp: defaultValue ?? inputValue,
 		onChange: (newValue) => {
-			// Sync with context state
 			setInputValue(newValue);
-			// Call external onChange if provided
-			controlledOnValueChange?.(newValue);
+			onValueChangeProp?.(newValue);
 		},
-		prop: controlledValue,
+		prop: valueProp,
 	});
+
+	const resolvedPlaceholder =
+		isFunction(placeholder) ? placeholder({ type }) : (placeholder ?? `Search ${type}...`);
 
 	return (
 		<Command.Input
 			onValueChange={onValueChange}
-			placeholder={`Search ${type}...`}
+			placeholder={resolvedPlaceholder}
 			value={value}
 			{...restOfProps}
 		/>
@@ -229,12 +228,18 @@ function ComboboxList(props: React.ComponentProps<typeof Command.List>) {
 	return <Command.List {...props} />;
 }
 
-function ComboboxEmpty(props: React.ComponentProps<typeof Command.Empty>) {
+function ComboboxEmpty(
+	props: Omit<React.ComponentProps<typeof Command.Empty>, "children"> & {
+		children?: string | ((ctx: Pick<ComboboxContextType, "type">) => string);
+	}
+) {
 	const { children, ...restOfProps } = props;
 
-	const { type } = use(ComboboxContext);
+	const { type } = useComboboxContext();
 
-	return <Command.Empty {...restOfProps}>{children ?? `No ${type} found.`}</Command.Empty>;
+	const resolvedChildren = isFunction(children) ? children({ type }) : (children ?? `No ${type} found.`);
+
+	return <Command.Empty {...restOfProps}>{resolvedChildren}</Command.Empty>;
 }
 
 function ComboboxGroup(props: React.ComponentProps<typeof Command.Group>) {
@@ -243,7 +248,8 @@ function ComboboxGroup(props: React.ComponentProps<typeof Command.Group>) {
 
 function ComboboxItem(props: React.ComponentProps<typeof Command.Item>) {
 	const { onSelect, ...restOfProps } = props;
-	const { onOpenChange, onValueChange } = use(ComboboxContext);
+
+	const { onOpenChange, onValueChange } = useComboboxContext();
 
 	return (
 		<Command.Item
@@ -269,7 +275,8 @@ type ComboboxCreateNewProps = {
 
 function ComboboxCreateNew(props: ComboboxCreateNewProps) {
 	const { children, className, onCreateNew } = props;
-	const { inputValue, onOpenChange, onValueChange, type } = use(ComboboxContext);
+
+	const { inputValue, onOpenChange, onValueChange, type } = useComboboxContext();
 
 	if (!inputValue.trim()) {
 		return null;

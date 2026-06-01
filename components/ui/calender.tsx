@@ -1,3 +1,4 @@
+/* eslint-disable react-you-might-not-need-an-effect/no-event-handler */
 /* eslint-disable react/no-nested-component-definitions */
 "use client";
 
@@ -223,7 +224,6 @@ export function Calendar(
 }
 
 export function CalendarDayButton(props: React.ComponentProps<typeof DayButton> & ShadcnButtonProps) {
-	// eslint-disable-next-line react-you-might-not-need-an-effect/no-event-handler
 	const { className, day, modifiers, size = "icon", variant = "ghost", ...restOfProps } = props;
 
 	const defaultClassNames = getDefaultClassNames();
