@@ -9,6 +9,7 @@ import {
 	CheckboxQuestionField,
 	ComboboxField,
 	DateField,
+	FormErrorMessageShared,
 	OptionQuestionField,
 	SelectField,
 	TextAreaField,
@@ -58,7 +59,7 @@ export default VolunteerRegisterPage;
 
 const stepItems = defineFormStepItems([
 	{
-		StepComponent: VolunteerInformationStep,
+		StepComponent: VolunteerInformationStepOne,
 		title: "Volunteer information",
 		validator: VolunteerRegisterSchema.pick({
 			age: true,
@@ -77,7 +78,7 @@ const stepItems = defineFormStepItems([
 		}),
 	},
 	{
-		StepComponent: VolunteerInterestStep,
+		StepComponent: VolunteerInterestStepTwo,
 		title: "Volunteer interest",
 		validator: VolunteerRegisterSchema.pick({
 			additionalInfo: true,
@@ -88,7 +89,6 @@ const stepItems = defineFormStepItems([
 			commitmentDuration: true,
 			mediaConsent: true,
 			reasonForVolunteering: true,
-			registrationDate: true,
 			safeguardingAgreement: true,
 			skillsToContribute: true,
 			volunteerAreas: true,
@@ -108,32 +108,30 @@ const useVolunteerRegisterStorageState = createUseStorageState<VolunteerRegister
 		currentStep: 0,
 		formStepData: {
 			additionalInfo: "",
-			age: "",
-			ashAcademicArea: "",
+			age: "" as never,
+			ashAcademicArea: "" as never,
 			ashExtracurricular: [],
-			ashInterest: "",
-			ashSaturdayAvailability: "",
+			ashSaturdayAvailability: "" as never,
 			availability: [],
 			city: "",
-			commitmentDuration: "",
+			commitmentDuration: "" as never,
 			dob: "",
 			emailAddress: "",
 			firstName: "",
-			gender: "",
-			highestEducation: "",
+			gender: "" as never,
+			highestEducation: "" as never,
 			homeAddress: "",
 			mediaConsent: false,
 			middleName: "",
 			occupation: "",
 			phoneNumber: "",
 			reasonForVolunteering: "",
-			registrationDate: "",
-			safeguardingAgreement: "",
+			safeguardingAgreement: "" as never,
 			skillsToContribute: [],
-			state: "",
+			state: "" as never,
 			surname: "",
 			volunteerAreas: [],
-		} as unknown as VolunteerRegisterFormStoreType["formStepData"],
+		},
 	},
 	key: "volunteer-register-form-data",
 });
@@ -184,7 +182,7 @@ function VolunteerRegisterForm() {
 	);
 }
 
-function VolunteerInformationStep() {
+function VolunteerInformationStepOne() {
 	const { control } = useFormRootContext<z.infer<(typeof stepItems)[0]["validator"]>>();
 
 	return (
@@ -242,7 +240,7 @@ function VolunteerInformationStep() {
 	);
 }
 
-function VolunteerInterestStep() {
+function VolunteerInterestStepTwo() {
 	const { control } = useFormRootContext<z.infer<(typeof stepItems)[1]["validator"]>>();
 
 	return (
@@ -350,24 +348,28 @@ function VolunteerInterestStep() {
 					className="w-full flex-row items-start gap-3 text-[12px] text-cedar-black/64 lg:text-[14px]"
 				>
 					<Form.FieldBoundController
-						render={({ field }) => (
-							<Checkbox
-								id="media-consent"
-								checked={field.value}
-								onCheckedChange={field.onChange}
-								classNames={{
-									base: `mt-[2px] size-4 rounded-[4px] border-[1.5px] border-cedar-black/40
-									bg-transparent data-checked:bg-transparent lg:mt-[3px]`,
-									icon: "size-3",
-								}}
-							/>
+						render={({ field, fieldContext }) => (
+							<>
+								<Checkbox
+									id={fieldContext.formItemId}
+									checked={field.value}
+									onCheckedChange={field.onChange}
+									classNames={{
+										base: `mt-[2px] size-4 rounded-[4px] border-[1.5px] border-cedar-black/40
+										bg-transparent data-checked:bg-transparent lg:mt-[3px]`,
+										icon: "size-3",
+									}}
+								/>
+								<Form.Label htmlFor={fieldContext.formItemId}>
+									Usage: These materials may be used for promotional, educational, reporting and
+									evaluation purposes on websites, social media platforms, and in digital or
+									printed publications.
+								</Form.Label>
+							</>
 						)}
 					/>
 
-					<Form.Label htmlFor="media-consent">
-						Usage: These materials may be used for promotional, educational, reporting and evaluation
-						purposes on websites, social media platforms, and in digital or printed publications.
-					</Form.Label>
+					<FormErrorMessageShared />
 				</Form.Field>
 			</section>
 		</>

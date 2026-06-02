@@ -547,7 +547,6 @@ const publicFormRoutes = defineSchemaRoutes({
 			ashExtracurricular: z
 				.array(z.enum(VolunteerAshExtracurricularOptions, "Select a valid option."))
 				.optional(),
-			ashInterest: optionalEnumSchema(YesNoOptions),
 			ashSaturdayAvailability: optionalEnumSchema(VolunteerAshSaturdayAvailabilityOptions),
 			availability: z
 				.array(z.enum(VolunteerAvailabilityOptions, "Select a valid option."))
@@ -565,7 +564,6 @@ const publicFormRoutes = defineSchemaRoutes({
 			occupation: optionalStringSchema,
 			phoneNumber: requiredStringSchema,
 			reasonForVolunteering: requiredStringSchema,
-			registrationDate: requiredStringSchema,
 			safeguardingAgreement: z.enum(YesNoOptions, "This field is required."),
 			skillsToContribute: z.array(z.enum(VolunteerSkillOptions, "Select a valid option.")).optional(),
 			state: z.enum(NigeriaStateOptions, "This field is required."),

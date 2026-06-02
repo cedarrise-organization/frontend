@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { callBackendApiForQuery } from "@/lib/api/callBackendApi";
 import { backendApiSchemaRoutes } from "@/lib/api/callBackendApi/apiSchema";
 import { TextAreaField, TextField } from "../../-components/FormPartsShared";
 
@@ -20,8 +21,18 @@ function DonateForm() {
 		resolver: zodResolver(DonateFormSchema),
 	});
 
+	const onSubmit = form.handleSubmit(async (data) => {
+		await callBackendApiForQuery("@post/donate", {
+			body: data,
+			meta: { toast: { success: true } },
+			onSuccess: () => {
+				form.reset();
+			},
+		});
+	});
+
 	return (
-		<Form.Root form={form} className="gap-5">
+		<Form.Root form={form} onSubmit={(event) => void onSubmit(event)} className="gap-5">
 			<Form.Field control={form.control} name="amount">
 				<Form.InputGroup className="gap-4">
 					<Form.Input

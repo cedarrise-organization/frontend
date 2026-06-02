@@ -34,7 +34,7 @@ function FormRequiredIndicator(props: { required: boolean | undefined }) {
 	);
 }
 
-function FormErrorMessageShared(props: Pick<InferProps<typeof Form.ErrorMessage>, "errorField">) {
+export function FormErrorMessageShared(props: Pick<InferProps<typeof Form.ErrorMessage>, "errorField">) {
 	const { errorField } = props;
 
 	return <Form.ErrorMessage errorField={errorField} classNames={{ container: "-mt-2" }} />;
@@ -429,7 +429,7 @@ export function FileUploadField<TFieldValues extends FieldValues, TTransformedVa
 				<Form.FieldBoundController
 					render={({ field }) => (
 						<DropZoneInput.Root
-							allowedFileTypes={["image/*"]}
+							allowedFileTypes={["image/png", "image/jpg", "image/jpeg", "image/webp"]}
 							maxFileCount={1}
 							multiple={false}
 							onChange={field.onChange}
@@ -440,14 +440,11 @@ export function FileUploadField<TFieldValues extends FieldValues, TTransformedVa
 									text-cedar-black/64 transition-colors data-drag-over:bg-cedar-red/10
 									lg:w-[142px]`,
 								}}
-								extraProps={{
-									input: {
-										accept: "image/*",
-									},
-								}}
 							>
 								<IconBox icon="solar:gallery-outline" className="size-6" />
 							</DropZoneInput.Area>
+
+							<DropZoneInput.ImagePreview />
 						</DropZoneInput.Root>
 					)}
 				/>
