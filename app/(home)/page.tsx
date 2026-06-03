@@ -138,9 +138,6 @@ function WhatWeDoSection() {
 				lg:px-[80px] lg:pt-11 lg:pb-[96px]"
 		>
 			<h2 className="text-center leading-[1.2] text-cedar-yellow lg:text-[24px]">What we do</h2>
-			<h3 className="mt-2 text-center text-[20px]/[1.2] text-cedar-white lg:mt-3 lg:text-[40px]">
-				Dismantling barriers, building futures.
-			</h3>
 
 			<ForWithWrapper
 				className="mt-9.5 grid grid-cols-2 gap-2 lg:mt-[52px]
@@ -365,12 +362,15 @@ function CtaSectionOne() {
 					max-lg:px-6 max-lg:py-7 lg:contents"
 			>
 				<article
-					className="flex flex-col items-center gap-4 bg-[hsl(0,0%,94%)] lg:gap-5.5 lg:rounded-[32px]
-						lg:px-9 lg:py-8 lg:[grid-area:2/2]"
+					className="flex flex-col items-center gap-10 rounded-[32px] bg-[hsl(0,0%,94%)] px-6 py-7
+						lg:gap-12 lg:px-10.5 lg:py-10 lg:[grid-area:2/2]"
 				>
 					<h3 className="text-center text-[24px]/[1.2] lg:text-[40px]">Gifts by CedarRise</h3>
 
-					<p className="grow text-[10px]/[14px] text-pretty lg:max-w-[524px] lg:text-[16px]/[28px]">
+					<p
+						className="max-w-[285px] grow text-[10px]/[1.5] text-pretty lg:max-w-[456px]
+							lg:text-[14px]"
+					>
 						Gifts by CedarRise curates beautiful and thoughtful gift packages for celebrations,
 						corporate events, milestones, and special occasions. Each gift is carefully assembled to
 						create memorable experiences while supporting a greater cause. Every purchase contributes
@@ -380,46 +380,17 @@ function CtaSectionOne() {
 						opportunity.
 					</p>
 
-					<div className="flex w-full items-end justify-between gap-3.5 lg:gap-8">
-						<div className="flex flex-col gap-2">
-							<p className="font-medium lg:text-[24px]">Contact us</p>
-
-							<ForWithWrapper
-								className="flex flex-col gap-0.5"
-								each={[
-									{ icon: "ph:phone-fill", info: "09090909090" },
-									{ icon: "ph:instagram-logo", info: "cedarriseinitiative" },
-									{ icon: "ri:mail-fill", info: "ash.cedarrise@gmail.com" },
-								]}
-								renderItem={(item) => (
-									<li
-										key={item.info}
-										className="flex items-center gap-0.5 text-[10px] lg:text-base"
-									>
-										<span
-											className="grid size-3.5 place-content-center rounded-full bg-cedar-yellow
-												text-cedar-white lg:size-5.5"
-										>
-											<IconBox icon={item.icon} />
-										</span>
-										<span>:</span>
-										<p className="ml-1 font-light">{item.info}</p>
-									</li>
-								)}
-							/>
-						</div>
-
-						<a
-							rel="noopener noreferrer"
-							target="_blank"
-							href="https://api.whatsapp.com/send/?phone=%2B2349039377669&text&type=phone_number&app_absent=0"
-						>
-							<Button className="px-6.5 max-lg:shrink-0 lg:px-5">
-								<p>View Collection</p>
-								<IconBox icon="ph:arrow-right" className="size-4 shrink-0 lg:size-7.5" />
-							</Button>
-						</a>
-					</div>
+					<a
+						rel="noopener noreferrer"
+						target="_blank"
+						href="https://api.whatsapp.com/send/?phone=%2B2349039377669&text&type=phone_number&app_absent=0"
+						className="contents"
+					>
+						<Button className="lg:px-12">
+							<p>View Collection</p>
+							<IconBox icon="ph:arrow-right" className="size-4 lg:size-7.5" />
+						</Button>
+					</a>
 				</article>
 
 				<article

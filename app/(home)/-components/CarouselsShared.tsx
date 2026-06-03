@@ -34,7 +34,7 @@ export function TestimonialCarouselShared(props: {
 							key={index}
 							className={cnJoin(
 								`min-h-[180px] w-[92%] cursor-grab active:cursor-grabbing lg:min-h-[224px]
-								lg:w-full lg:max-w-[586px]`,
+								lg:w-[70%] lg:max-w-[586px]`,
 								index === array.length - 1 && "pr-5"
 							)}
 						>

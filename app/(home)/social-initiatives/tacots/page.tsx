@@ -1,3 +1,4 @@
+import { tw } from "@zayne-labs/toolkit-core";
 import Image from "next/image";
 import { approachSectionImg, heroImg } from "@/assets/images/social-initiatives/tacots";
 import { ForWithWrapper } from "@/components/common/for";
@@ -7,17 +8,16 @@ import { Button } from "@/components/ui/button";
 import { cnJoin } from "@/lib/utils/cn";
 import { FinalCTASection } from "../../-components/FinalCTASectionShared";
 import { Main } from "../../-components/Main";
-import { TacotsMomentsCarousel, TacotsStoriesCarousel } from "./-components/TacotsCarousels";
+import { TacotsStoriesCarousel } from "./-components/TacotsCarousels";
 
 function TacotsPage() {
 	return (
 		<Main className="gap-10 lg:gap-[80px]">
 			<TacotsHeroSection />
-			<TacotsOverviewSection />
+			<TacotsImpactSection />
 			<TacotsApproachSection />
-			<SupportSection />
+			<WhatWeProvideSection />
 			<StoriesSection />
-			<MomentsSection />
 			<TacotsFormLinksSection />
 			<FinalCTASection />
 		</Main>
@@ -89,7 +89,7 @@ const impactStats = [
 	{ label: "Partner school", value: "3" },
 ];
 
-function TacotsOverviewSection() {
+function TacotsImpactSection() {
 	return (
 		<section className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5">
 			<article className="flex flex-col gap-4 rounded-[24px] bg-[hsl(0,0%,94%)] p-5 lg:rounded-[32px]">
@@ -225,32 +225,31 @@ function TacotsApproachSection() {
 	);
 }
 
-const supportItems = [
-	"School sponsorship (fees, books, uniforms)",
-	"Parental & family support",
-	"Life skills training",
-	"Community partnerships",
-	"Long-term academic tracking",
-	"One-on-one mentorship",
-];
+const whatWeProvideItems = [
+	{ color: tw`bg-cedar-red`, title: "School sponsorship (fees, books, uniforms)" },
+	{ color: tw`bg-cedar-black`, title: "Parental & family support" },
+	{ color: tw`bg-cedar-red`, title: "Life skills training" },
+	{ color: tw`bg-cedar-black`, title: "Community partnerships" },
+	{ color: tw`bg-cedar-black`, title: "One-on-one mentorship" },
+	{ color: tw`bg-cedar-red`, title: "Long-term academic tracking" },
+] as const;
 
-function SupportSection() {
+function WhatWeProvideSection() {
 	return (
 		<section className="flex flex-col items-center gap-10 lg:gap-11">
 			<h2 className="text-center text-[24px]/[1.2] lg:text-[40px]">What We Provide</h2>
 
 			<ForWithWrapper
-				className="flex max-w-[1040px] flex-wrap justify-center gap-4 lg:gap-5"
-				each={supportItems}
-				renderItem={(item, index) => (
+				className="flex max-w-[1040px] flex-wrap gap-4 lg:justify-center lg:gap-5"
+				each={whatWeProvideItems}
+				renderItem={(item) => (
 					<li
-						key={item}
-						className={cnJoin(
-							"rounded-[12px] px-4 py-5 lg:rounded-[20px] lg:p-6",
-							index % 2 === 0 ? "bg-cedar-red" : "bg-cedar-black"
-						)}
+						key={item.title}
+						className={cnJoin("rounded-[12px] px-4 py-5 lg:rounded-[20px] lg:p-6", item.color)}
 					>
-						<h3 className="text-[14px]/[1.2] font-medium text-cedar-white lg:text-[24px]">{item}</h3>
+						<h3 className="text-[14px]/[1.2] font-medium text-cedar-white lg:text-[24px]">
+							{item.title}
+						</h3>
 					</li>
 				)}
 			/>
@@ -264,16 +263,6 @@ function StoriesSection() {
 			<h2 className="text-[24px]/[1.2] lg:text-[40px]">Impact Testimonials</h2>
 
 			<TacotsStoriesCarousel />
-		</section>
-	);
-}
-
-function MomentsSection() {
-	return (
-		<section className="flex flex-col gap-6 lg:gap-10">
-			<h2 className="text-[24px]/[1.2] lg:text-[40px]">Some Moments of TACOTS</h2>
-
-			<TacotsMomentsCarousel />
 		</section>
 	);
 }

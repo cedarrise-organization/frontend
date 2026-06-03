@@ -10,3 +10,8 @@ export type StepItemsArray = ReadonlyArray<{
 export const defineFormStepItems = <const TStepItems extends StepItemsArray>(items: TStepItems) => {
 	return defineEnumDeep(items);
 };
+
+export type GetFormStepStoreType<TFormDataType extends Record<string, unknown>> = {
+	currentStep: number;
+	formStepData: TFormDataType;
+};

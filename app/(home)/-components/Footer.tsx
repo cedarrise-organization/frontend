@@ -46,8 +46,8 @@ function Footer() {
 
 					<Button
 						theme="secondary"
-						className="mt-[50px] h-8.5 rounded-[12px] px-6 text-[10px] lg:h-10 lg:rounded-[12px]
-							lg:px-6 lg:text-[14px]"
+						className="mt-12 h-8.5 rounded-[12px] px-6 text-[10px] lg:h-10 lg:rounded-[12px] lg:px-6
+							lg:text-[14px]"
 					>
 						Admin
 					</Button>
@@ -107,13 +107,7 @@ function Footer() {
 				</article>
 			</section>
 
-			<section className="flex w-full flex-col gap-4 text-center lg:gap-8">
-				<h4 className="text-[24px] font-medium text-cedar-yellow lg:-ml-12 lg:text-[32px]">
-					Rooted in purpose. Rising for impact.
-				</h4>
-
-				<p className="text-[8px] lg:text-[14px]">© 2026 CedarRise Initiative. All rights reserved.</p>
-			</section>
+			<p className="text-[8px] lg:text-[14px]">© 2026 CedarRise Initiative. All rights reserved.</p>
 		</footer>
 	);
 }

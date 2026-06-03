@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { heroImg, impactSectionImg } from "@/assets/images/social-initiatives/outreaches";
 import { ForWithWrapper } from "@/components/common/for";
+import { NavLinkEphemeral } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
 import { FinalCTASection } from "../../-components/FinalCTASectionShared";
 import { Main } from "../../-components/Main";
@@ -20,6 +21,25 @@ function OutreachesPage() {
 
 export default OutreachesPage;
 
+function OutreachHeroSection() {
+	return (
+		<section className="flex flex-col lg:items-center lg:text-center">
+			<h1 className="text-[40px]/[1.2] lg:max-w-[702px] lg:text-[48px]">
+				Connecting Needs with Opportunities at <span className="text-cedar-red">Outreaches</span>
+			</h1>
+
+			<p className="mt-4 text-[10px]/4 text-pretty lg:mt-8 lg:max-w-[521px] lg:text-base/6">
+				Bridging meaningful support directly to underserved communities through education, mentorship,
+				and sustainable impact initiatives.
+			</p>
+
+			<NavLinkEphemeral href="/get-involved/volunteer/register">
+				<Button className="mt-9 h-[64px] lg:mt-12 lg:text-base">Volunteer for an Outreach</Button>
+			</NavLinkEphemeral>
+		</section>
+	);
+}
+
 const outreachFocus = [
 	{
 		description: "Providing learning materials, mentorship, and academic support.",
@@ -38,23 +58,6 @@ const outreachFocus = [
 		title: "Community Engagement Events",
 	},
 ];
-
-function OutreachHeroSection() {
-	return (
-		<section className="flex flex-col lg:items-center lg:text-center">
-			<h1 className="text-[40px]/[1.2] lg:max-w-[702px] lg:text-[48px]">
-				Connecting Needs with Opportunities at <span className="text-cedar-red">Outreaches</span>
-			</h1>
-
-			<p className="mt-4 text-[10px]/4 text-pretty lg:mt-8 lg:max-w-[521px] lg:text-base/6">
-				Bridging meaningful support directly to underserved communities through education, mentorship,
-				and sustainable impact initiatives.
-			</p>
-
-			<Button className="mt-9 h-[64px] lg:mt-12 lg:text-base">Volunteer for an Outreach</Button>
-		</section>
-	);
-}
 
 function OutreachOverviewSection() {
 	return (
@@ -142,7 +145,7 @@ const impactStats = [
 	{ label: "Communities engaged", value: "4+" },
 	{ label: "Outreach events conducted", value: "3" },
 	{ label: "Volunteers", value: "12" },
-	{ label: "Individuals reached", value: "190+" },
+	{ label: "Beneficiaries reached", value: "190+" },
 	{ label: "Partner", value: "1" },
 ];
 

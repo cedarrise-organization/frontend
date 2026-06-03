@@ -15,7 +15,7 @@ const SonnerToaster = (props: ToasterProps) => {
 			// eslint-disable-next-line tailwindcss-better/no-unknown-classes
 			className="toaster group"
 			position="bottom-right"
-			duration={3000}
+			duration={5000}
 			closeButton={true}
 			toastOptions={{
 				classNames: {

@@ -22,10 +22,11 @@ import {
 	FormStepFooter,
 	FormStepList,
 	FormStepMainContent,
+	type GetFormStepStoreType,
 } from "@/app/(home)/-components/FormStepPartsShared";
 import { Main } from "@/app/(home)/-components/Main";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Form, useFormRootContext } from "@/components/ui/form";
+import { Form, useFormContext } from "@/components/ui/form";
 import { callBackendApiForQuery } from "@/lib/api/callBackendApi";
 import {
 	backendApiSchemaRoutes,
@@ -43,6 +44,7 @@ import {
 	VolunteerSkillOptions,
 	YesNoOptions,
 } from "@/lib/api/callBackendApi/apiSchema";
+import type { WithUndefined } from "@/lib/utils/type-helpers";
 
 const VolunteerRegisterSchema = backendApiSchemaRoutes["@post/volunteer/register"].body;
 
@@ -98,40 +100,37 @@ const stepItems = defineFormStepItems([
 
 const stepItemsCount = stepItems.length - 1;
 
-type VolunteerRegisterFormStoreType = {
-	currentStep: number;
-	formStepData: z.infer<typeof VolunteerRegisterSchema>;
-};
+type FormStepDataType = z.infer<typeof VolunteerRegisterSchema>;
 
-const useVolunteerRegisterStorageState = createUseStorageState<VolunteerRegisterFormStoreType>({
+const useVolunteerRegisterStorageState = createUseStorageState<GetFormStepStoreType<FormStepDataType>>({
 	defaultValue: {
 		currentStep: 0,
 		formStepData: {
 			additionalInfo: "",
-			age: "" as never,
-			ashAcademicArea: "" as never,
+			age: undefined,
+			ashAcademicArea: undefined,
 			ashExtracurricular: [],
-			ashSaturdayAvailability: "" as never,
+			ashSaturdayAvailability: undefined,
 			availability: [],
 			city: "",
-			commitmentDuration: "" as never,
+			commitmentDuration: undefined,
 			dob: "",
 			emailAddress: "",
 			firstName: "",
-			gender: "" as never,
-			highestEducation: "" as never,
+			gender: undefined,
+			highestEducation: undefined,
 			homeAddress: "",
 			mediaConsent: false,
 			middleName: "",
 			occupation: "",
 			phoneNumber: "",
 			reasonForVolunteering: "",
-			safeguardingAgreement: "" as never,
+			safeguardingAgreement: undefined,
 			skillsToContribute: [],
-			state: "" as never,
+			state: undefined,
 			surname: "",
 			volunteerAreas: [],
-		},
+		} satisfies WithUndefined<FormStepDataType> as unknown as FormStepDataType,
 	},
 	key: "volunteer-register-form-data",
 });
@@ -183,7 +182,7 @@ function VolunteerRegisterForm() {
 }
 
 function VolunteerInformationStepOne() {
-	const { control } = useFormRootContext<z.infer<(typeof stepItems)[0]["validator"]>>();
+	const { control } = useFormContext<z.infer<(typeof stepItems)[0]["validator"]>>();
 
 	return (
 		<>
@@ -241,7 +240,7 @@ function VolunteerInformationStepOne() {
 }
 
 function VolunteerInterestStepTwo() {
-	const { control } = useFormRootContext<z.infer<(typeof stepItems)[1]["validator"]>>();
+	const { control } = useFormContext<z.infer<(typeof stepItems)[1]["validator"]>>();
 
 	return (
 		<>

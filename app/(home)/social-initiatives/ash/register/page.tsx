@@ -23,10 +23,11 @@ import {
 	FormStepFooter,
 	FormStepList,
 	FormStepMainContent,
+	type GetFormStepStoreType,
 } from "@/app/(home)/-components/FormStepPartsShared";
 import { Main } from "@/app/(home)/-components/Main";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Form, useFormRootContext } from "@/components/ui/form";
+import { Form, useFormContext } from "@/components/ui/form";
 import { callBackendApiForQuery } from "@/lib/api/callBackendApi";
 import {
 	AshAgeOptions,
@@ -43,6 +44,7 @@ import {
 	PrimaryLanguageOptions,
 	YesNoOptions,
 } from "@/lib/api/callBackendApi/apiSchema";
+import type { WithUndefined } from "@/lib/utils/type-helpers";
 
 const AshRegisterSchema = AshRegisterFrontendSchema;
 
@@ -124,54 +126,51 @@ const stepItems = defineFormStepItems([
 
 const stepItemsCount = stepItems.length - 1;
 
-type AshRegisterFormStoreType = {
-	currentStep: number;
-	formStepData: z.infer<typeof AshRegisterSchema>;
-};
+type FormStepDataType = z.infer<typeof AshRegisterSchema>;
 
-const useAshRegisterStorageState = createUseStorageState<AshRegisterFormStoreType>({
+const useAshRegisterStorageState = createUseStorageState<GetFormStepStoreType<FormStepDataType>>({
 	defaultValue: {
 		currentStep: 0,
 		formStepData: {
-			age: "",
+			age: undefined,
 			assignedMentor: "",
 			classPositionLastTerm: "",
-			currentClass: "",
+			currentClass: undefined,
 			declarationConfirmed: false,
 			dob: "",
 			fathersName: "",
 			fathersOccupation: "",
 			fathersPhone: "",
 			firstName: "",
-			gender: "",
+			gender: undefined,
 			guardianName: "",
 			guardianOccupation: "",
 			guardianPhone: "",
-			guardianRelationship: "",
-			hasLearningCondition: "",
+			guardianRelationship: undefined,
+			hasLearningCondition: undefined,
 			homeAddress: "",
-			householdIncomeRange: "",
-			lastResult: null,
+			householdIncomeRange: undefined,
+			lastResult: undefined,
 			learningConditions: [],
 			middleName: "",
 			mothersName: "",
 			mothersOccupation: "",
 			mothersPhone: "",
 			parentConsent: false,
-			parentSignature: null,
-			passportPhoto: null,
+			parentSignature: undefined,
+			passportPhoto: undefined,
 			pretestScore: "",
-			prevAfterschoolProgram: "",
-			primaryLanguage: "",
-			programType: "",
+			prevAfterschoolProgram: undefined,
+			primaryLanguage: undefined,
+			programType: undefined,
 			reasonForJoining: "",
 			schoolLga: "",
 			schoolName: "",
-			schoolState: "",
+			schoolState: undefined,
 			schoolTown: "",
 			studentPhone: "",
 			surname: "",
-		} as unknown as AshRegisterFormStoreType["formStepData"],
+		} satisfies WithUndefined<FormStepDataType> as unknown as FormStepDataType,
 	},
 	key: "ash-register-form-data",
 });
@@ -223,7 +222,7 @@ function AshRegisterForm() {
 }
 
 function StudentPersonalInformationStep() {
-	const { control } = useFormRootContext<z.infer<(typeof stepItems)[0]["validator"]>>();
+	const { control } = useFormContext<z.infer<(typeof stepItems)[0]["validator"]>>();
 	const form = { control };
 
 	return (
@@ -277,7 +276,7 @@ function StudentPersonalInformationStep() {
 }
 
 function SchoolInformationStep() {
-	const { control } = useFormRootContext<z.infer<(typeof stepItems)[1]["validator"]>>();
+	const { control } = useFormContext<z.infer<(typeof stepItems)[1]["validator"]>>();
 	const form = { control };
 
 	return (
@@ -347,7 +346,7 @@ function SchoolInformationStep() {
 }
 
 function ParentGuardianInformationStep() {
-	const { control } = useFormRootContext<z.infer<(typeof stepItems)[2]["validator"]>>();
+	const { control } = useFormContext<z.infer<(typeof stepItems)[2]["validator"]>>();
 	const form = { control };
 
 	return (
@@ -411,7 +410,7 @@ function ParentGuardianInformationStep() {
 }
 
 function WellbeingConsentStep() {
-	const { control } = useFormRootContext<z.infer<(typeof stepItems)[3]["validator"]>>();
+	const { control } = useFormContext<z.infer<(typeof stepItems)[3]["validator"]>>();
 	const form = { control };
 
 	return (

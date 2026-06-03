@@ -69,7 +69,7 @@ const impactStats = [
 	{ label: "Volunteers", value: "14+" },
 	{ label: "Communities engaged", value: "4+" },
 	{ label: "Improvement in grades", value: "20%" },
-	{ label: "Improved concentration", value: "43.8%" },
+	{ label: "Improved academically", value: "43.8%" },
 ];
 
 function AshOverviewSection() {
@@ -77,8 +77,8 @@ function AshOverviewSection() {
 		<section className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5">
 			<article className="flex flex-col gap-5 rounded-[24px] bg-[hsl(0,0%,94%)] p-5 lg:rounded-[32px]">
 				<h2
-					className="w-fit rounded-[12px] bg-cedar-black px-7 py-3 text-cedar-yellow lg:px-8
-						lg:py-3.5"
+					className="w-fit rounded-[12px] bg-cedar-black px-7 py-3 text-cedar-yellow lg:rounded-[20px]
+						lg:text-[24px]"
 				>
 					Our Impact
 				</h2>
@@ -101,20 +101,20 @@ function AshOverviewSection() {
 				/>
 			</article>
 
-			<div className="flex flex-col gap-4">
+			<div className="flex flex-col justify-between gap-4">
 				<article
 					className="flex flex-col gap-4 rounded-[24px] bg-cedar-red p-6 text-cedar-white
-						lg:rounded-[32px] lg:px-12 lg:py-7.5"
+						lg:rounded-[32px] lg:px-12 lg:py-9"
 				>
 					<h2 className="text-[24px]/[1.2] lg:text-[40px]">About ASH</h2>
 
-					<p className="text-[10px]/4 text-pretty text-cedar-white/80 lg:text-[14px]/6">
+					<p className="text-[10px]/4 text-pretty text-cedar-white/80 lg:text-base/7">
 						ASH (After School Hours) is CedarRise's academic support program designed to help
 						underserved students improve their performance while building confidence, creativity, and
 						essential life skills.
 					</p>
 
-					<p className="text-[10px]/4 text-pretty text-cedar-white/80 lg:text-[14px]/6">
+					<p className="text-[10px]/4 text-pretty text-cedar-white/80 lg:text-base/7">
 						By combining structured tutoring, mentorship, and creative engagement, ASH provides a
 						balanced approach to both academic success and personal development.
 					</p>
@@ -122,11 +122,11 @@ function AshOverviewSection() {
 
 				<article
 					className="flex flex-col gap-4 rounded-[24px] bg-cedar-yellow p-6 text-cedar-white
-						lg:rounded-[32px] lg:px-12 lg:py-7.5"
+						lg:rounded-[32px] lg:px-12 lg:py-9"
 				>
-					<h2 className="text-[24px]/[1.2] lg:text-[32px]">Who We Serve</h2>
+					<h2 className="text-[24px]/[1.2] lg:text-[40px]">Who We Serve</h2>
 
-					<p className="text-[10px]/4 text-pretty lg:text-[14px]/6">
+					<p className="text-[10px]/4 text-pretty lg:text-base/7">
 						ASH supports students ages 8-18 from underserved communities, particularly those
 						attending public or low-cost private schools with limited access to academic support.
 					</p>
@@ -141,7 +141,6 @@ const studentGains = [
 	"Confidence & leadership development",
 	"Mentorship & guidance",
 	"Creative expression & performance arts",
-	"Practical life and employability skills",
 ];
 
 function StudentGainsSection() {
@@ -150,7 +149,7 @@ function StudentGainsSection() {
 			<h2 className="text-center text-[24px]/[1.2] lg:text-[40px]">What Students Gain</h2>
 
 			<ForWithWrapper
-				className="grid grid-cols-2 gap-4 max-lg:px-5 lg:grid-cols-5 lg:justify-center lg:gap-5"
+				className="grid grid-cols-2 gap-4 max-lg:px-5 lg:grid-cols-4 lg:justify-center lg:gap-5"
 				each={studentGains}
 				renderItem={(gain, index) => (
 					<li

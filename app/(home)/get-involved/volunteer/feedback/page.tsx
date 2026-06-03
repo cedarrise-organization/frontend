@@ -20,9 +20,10 @@ import {
 	FormStepFooter,
 	FormStepList,
 	FormStepMainContent,
+	type GetFormStepStoreType,
 } from "@/app/(home)/-components/FormStepPartsShared";
 import { Main } from "@/app/(home)/-components/Main";
-import { Form, useFormRootContext } from "@/components/ui/form";
+import { Form, useFormContext } from "@/components/ui/form";
 import { callBackendApiForQuery } from "@/lib/api/callBackendApi";
 import {
 	backendApiSchemaRoutes,
@@ -35,6 +36,7 @@ import {
 	VolunteerWaysProgramHelpedOptions,
 	YesMaybeNoOptions,
 } from "@/lib/api/callBackendApi/apiSchema";
+import type { WithUndefined } from "@/lib/utils/type-helpers";
 
 const VolunteerFeedbackSchema = backendApiSchemaRoutes["@post/volunteer/feedback"].body;
 
@@ -91,36 +93,33 @@ const stepItems = defineFormStepItems([
 
 const stepItemsCount = stepItems.length - 1;
 
-type VolunteerFeedbackFormStoreType = {
-	currentStep: number;
-	formStepData: z.infer<typeof VolunteerFeedbackSchema>;
-};
+type FormStepDataType = z.infer<typeof VolunteerFeedbackSchema>;
 
-const useVolunteerFeedbackStorageState = createUseStorageState<VolunteerFeedbackFormStoreType>({
+const useVolunteerFeedbackStorageState = createUseStorageState<GetFormStepStoreType<FormStepDataType>>({
 	defaultValue: {
 		currentStep: 0,
 		formStepData: {
 			activitiesInvolvedIn: [],
 			additionalComments: "",
 			challengesExperienced: "",
-			continueVolunteering: "",
+			continueVolunteering: undefined,
 			enjoyedMost: "",
 			firstName: "",
 			improvementSuggestions: "",
-			organizationRating: "",
-			overallExperienceRating: "",
-			programMadeImpact: "",
-			programVolunteered: "",
-			roleClarityRating: "",
-			skillsDeveloped: "",
+			organizationRating: 0,
+			overallExperienceRating: 0,
+			programMadeImpact: undefined,
+			programVolunteered: undefined,
+			roleClarityRating: 0,
+			skillsDeveloped: undefined,
 			skillsGained: [],
 			submissionDate: "",
 			surname: "",
-			teamSupportRating: "",
-			volunteerDuration: "",
+			teamSupportRating: 0,
+			volunteerDuration: undefined,
 			waysProgramHelped: [],
-			wouldRecommend: "",
-		} as unknown as VolunteerFeedbackFormStoreType["formStepData"],
+			wouldRecommend: undefined,
+		} satisfies WithUndefined<FormStepDataType> as unknown as FormStepDataType,
 	},
 	key: "volunteer-feedback-form-data",
 });
@@ -172,7 +171,7 @@ function VolunteerFeedbackForm() {
 }
 
 function VolunteerExperienceStep() {
-	const { control } = useFormRootContext<z.infer<(typeof stepItems)[0]["validator"]>>();
+	const { control } = useFormContext<z.infer<(typeof stepItems)[0]["validator"]>>();
 
 	return (
 		<>
@@ -237,7 +236,7 @@ function VolunteerExperienceStep() {
 }
 
 function VolunteerImpactStep() {
-	const { control } = useFormRootContext<z.infer<(typeof stepItems)[1]["validator"]>>();
+	const { control } = useFormContext<z.infer<(typeof stepItems)[1]["validator"]>>();
 
 	return (
 		<>
@@ -288,7 +287,7 @@ function VolunteerImpactStep() {
 }
 
 function SuggestionsImprovementStep() {
-	const { control } = useFormRootContext<z.infer<(typeof stepItems)[2]["validator"]>>();
+	const { control } = useFormContext<z.infer<(typeof stepItems)[2]["validator"]>>();
 
 	return (
 		<>

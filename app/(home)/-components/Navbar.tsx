@@ -25,7 +25,7 @@ function NavBar() {
 			className={cnJoin(
 				`sticky top-0 isolate z-10 flex w-full scrollbar-thin items-center justify-between gap-10
 				overflow-x-auto bg-cedar-white px-4 py-3 transition-shadow duration-300 ease-[ease]
-				lg:bg-cedar-white/90 lg:px-[100px] lg:py-5 lg:backdrop-blur-2xl`,
+				lg:bg-cedar-white/90 lg:px-[50px] lg:backdrop-blur-2xl`,
 				isScrolled && "shadow-[0_2px_4px_hsl(0,0%,0%,0.05)]"
 			)}
 		>
@@ -76,31 +76,28 @@ function DesktopNavigation(props: { className?: string }) {
 				as="nav"
 				className="flex min-w-fit gap-2"
 				each={navLinkItems}
-				renderItem={(linkItem) => (
-					<Fragment key={linkItem.label}>
-						{linkItem.link && (
+				renderItem={(item) => (
+					<Fragment key={item.label}>
+						{item.link && (
 							<NavLink
-								href={linkItem.link}
-								className="inline-flex h-[56px] shrink-0 items-center justify-center rounded-[20px]
-									p-5 transition-colors hover:bg-[hsl(0,0%,94%)] hover:text-cedar-red
+								href={item.link}
+								className="inline-flex h-12 shrink-0 items-center justify-center rounded-[20px] p-5
+									transition-colors hover:bg-[hsl(0,0%,94%)] hover:text-cedar-red
 									data-[active=true]:bg-cedar-yellow data-[active=true]:text-cedar-white"
 							>
-								{linkItem.label}
+								{item.label}
 							</NavLink>
 						)}
 
-						{linkItem.children && (
+						{item.children && (
 							<DropdownMenu.Root modal={false}>
 								<DropdownMenu.Trigger
-									data-active={linkItem.children.some(
-										(childLinkItem) => childLinkItem.link === pathname
-									)}
-									className="inline-flex h-[56px] shrink-0 items-center justify-center
-										rounded-[20px] p-5 transition-colors hover:bg-[hsl(0,0%,94%)]
-										hover:text-cedar-red data-[active=true]:bg-cedar-yellow
-										data-[active=true]:text-cedar-white"
+									data-active={item.children.some((childItem) => childItem.link === pathname)}
+									className="inline-flex h-12 shrink-0 items-center justify-center rounded-[20px]
+										p-5 transition-colors hover:bg-[hsl(0,0%,94%)] hover:text-cedar-red
+										data-[active=true]:bg-cedar-yellow data-[active=true]:text-cedar-white"
 								>
-									{linkItem.label}
+									{item.label}
 								</DropdownMenu.Trigger>
 
 								<DropdownMenu.Content
@@ -111,19 +108,19 @@ function DesktopNavigation(props: { className?: string }) {
 								>
 									<DropdownMenu.Group className="flex flex-col gap-1.5">
 										<For
-											each={linkItem.children}
-											renderItem={(childLinkItem) => (
+											each={item.children}
+											renderItem={(childItem) => (
 												<DropdownMenu.Item
 													asChild={true}
-													key={childLinkItem.label}
-													className="group flex min-h-[54px] items-center justify-between
-														gap-4 rounded-[18px] p-0 px-4 text-[14px] transition-colors
+													key={childItem.label}
+													className="group flex min-h-12 items-center justify-between gap-4
+														rounded-[18px] p-0 px-4 text-[14px] transition-colors
 														focus:bg-[hsl(0,0%,84%)] focus:text-cedar-red
 														data-[active=true]:bg-cedar-black
 														data-[active=true]:text-cedar-white"
 												>
-													<NavLink href={childLinkItem.link}>
-														<p>{childLinkItem.label}</p>
+													<NavLink href={childItem.link}>
+														<p>{childItem.label}</p>
 
 														<span
 															className="grid size-7 place-content-center rounded-full
@@ -183,7 +180,7 @@ function MobileNavigation(props: { className?: string }) {
 									onClick={toggleNavShow}
 									key={linkItem.label}
 									href={linkItem.link}
-									className="group flex h-10 items-center justify-between gap-4 rounded-[14px]
+									className="group flex h-12 items-center justify-between gap-4 rounded-[14px]
 										px-4 transition-colors hover:bg-[hsl(0,0%,94%)] hover:text-cedar-red
 										data-[active=true]:bg-cedar-black data-[active=true]:text-cedar-white"
 								>
@@ -202,7 +199,7 @@ function MobileNavigation(props: { className?: string }) {
 										data-active={linkItem.children.some(
 											(childLinkItem) => childLinkItem.link === pathname
 										)}
-										className="flex h-10 w-full items-center justify-between rounded-[14px] px-4
+										className="flex h-12 w-full items-center justify-between rounded-[14px] px-4
 											hover:bg-[hsl(0,0%,94%)] hover:text-cedar-red
 											data-[active=true]:bg-cedar-yellow data-[active=true]:text-cedar-white"
 									>
@@ -222,7 +219,7 @@ function MobileNavigation(props: { className?: string }) {
 													onClick={toggleNavShow}
 													key={childItem.label}
 													href={childItem.link}
-													className="group flex h-9 items-center gap-3 rounded-[12px] px-4
+													className="group flex h-12 items-center gap-3 rounded-[12px] px-4
 														transition-colors hover:bg-[hsl(0,0%,94%)] hover:text-cedar-red
 														data-[active=true]:bg-cedar-black
 														data-[active=true]:text-cedar-white"

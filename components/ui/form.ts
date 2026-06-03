@@ -1,3 +1,3 @@
 "use client";
 
-export { Form, FormInput, useFormRootContext, useFormFieldContext } from "@zayne-labs/ui-react/ui/form";
+export { Form, FormInput, useFormContext, useFormFieldContext } from "@zayne-labs/ui-react/ui/form";

@@ -1,7 +1,7 @@
 "use client";
 
 import type { InferProps } from "@zayne-labs/toolkit-react/utils";
-import type { DistributivePick } from "@zayne-labs/toolkit-type-helpers";
+import type { DistributiveOmit, DistributivePick } from "@zayne-labs/toolkit-type-helpers";
 import type { FieldValues } from "react-hook-form";
 import { RadioGroupAnimated } from "@/components/animated/ui";
 import * as DropZoneInput from "@/components/common/DropZoneInput";
@@ -34,10 +34,10 @@ function FormRequiredIndicator(props: { required: boolean | undefined }) {
 	);
 }
 
-export function FormErrorMessageShared(props: Pick<InferProps<typeof Form.ErrorMessage>, "errorField">) {
-	const { errorField } = props;
-
-	return <Form.ErrorMessage errorField={errorField} classNames={{ container: "-mt-2" }} />;
+export function FormErrorMessageShared(
+	props: DistributiveOmit<InferProps<typeof Form.ErrorMessage>, "className" | "classNames">
+) {
+	return <Form.ErrorMessage scrollToErrorOffset={150} {...props} classNames={{ container: "-mt-2" }} />;
 }
 
 export function OptionQuestionField<TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
@@ -207,7 +207,7 @@ export function CheckboxQuestionField<TFieldValues extends FieldValues, TTransfo
 				)}
 			/>
 
-			<FormErrorMessageShared errorField={name} />
+			<FormErrorMessageShared name={name} />
 		</div>
 	);
 }

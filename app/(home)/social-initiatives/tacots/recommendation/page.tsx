@@ -24,10 +24,11 @@ import {
 	FormStepFooter,
 	FormStepList,
 	FormStepMainContent,
+	type GetFormStepStoreType,
 } from "@/app/(home)/-components/FormStepPartsShared";
 import { Main } from "@/app/(home)/-components/Main";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Form, useFormRootContext } from "@/components/ui/form";
+import { Form, useFormContext } from "@/components/ui/form";
 import { callBackendApiForQuery } from "@/lib/api/callBackendApi";
 import {
 	ClassOptions,
@@ -53,6 +54,7 @@ import {
 	TacotsYearOptions,
 	YesNoSometimesOptions,
 } from "@/lib/api/callBackendApi/apiSchema";
+import type { WithUndefined } from "@/lib/utils/type-helpers";
 
 const TacotsRecommendationSchema = TacotsRecommendationFrontendSchema;
 
@@ -156,17 +158,14 @@ const stepItems = defineFormStepItems([
 
 const stepItemsCount = stepItems.length - 1;
 
-type TacotsRecommendationFormStoreType = {
-	currentStep: number;
-	formStepData: z.infer<typeof TacotsRecommendationSchema>;
-};
+type FormStepDataType = z.infer<typeof TacotsRecommendationSchema>;
 
-const useTacotsRecommendationStorageState = createUseStorageState<TacotsRecommendationFormStoreType>({
+const useTacotsRecommendationStorageState = createUseStorageState<GetFormStepStoreType<FormStepDataType>>({
 	defaultValue: {
 		currentStep: 0,
 		formStepData: {
-			age: "",
-			annualHouseholdIncome: "",
+			age: undefined,
+			annualHouseholdIncome: undefined,
 			avgMonthlyIncome: "",
 			careerGoal: "",
 			catholicSacraments: [],
@@ -174,58 +173,58 @@ const useTacotsRecommendationStorageState = createUseStorageState<TacotsRecommen
 			classPositionLastTerm: "",
 			declarationConfirmed: false,
 			diocese: "",
-			disciplineRating: "",
+			disciplineRating: 0,
 			dob: "",
-			familyPosition: "",
+			familyPosition: undefined,
 			fathersName: "",
 			fathersOccupation: "",
 			fathersPhone: "",
 			firstName: "",
-			gender: "",
+			gender: undefined,
 			guardianAddress: "",
 			guardianName: "",
 			guardianOccupation: "",
 			guardianPhone: "",
-			guardianRelationship: "",
-			hasElectricity: "",
+			guardianRelationship: undefined,
+			hasElectricity: undefined,
 			homeAddress: "",
-			householdSize: "",
+			householdSize: undefined,
 			incomeSources: [],
-			lastClass: "",
-			lastResult: null,
+			lastClass: undefined,
+			lastResult: undefined,
 			lastTermAverage: "",
-			lastYearAttended: "",
+			lastYearAttended: undefined,
 			lga: "",
-			livesWith: "",
+			livesWith: undefined,
 			middleName: "",
 			mothersName: "",
 			mothersOccupation: "",
 			mothersPhone: "",
 			nationality: "",
-			numIncomeEarners: "",
-			numSiblings: "",
+			numIncomeEarners: undefined,
+			numSiblings: undefined,
 			otherImportantInfo: "",
 			parentsAddress: "",
 			parishAttended: "",
-			passportPhoto: null,
+			passportPhoto: undefined,
 			phoneNumber: "",
-			primaryLanguage: "",
+			primaryLanguage: undefined,
 			recommenderAddress: "",
 			recommenderFirstName: "",
 			recommenderLastName: "",
 			recommenderPhone: "",
-			religion: "",
-			residenceType: "",
-			responsibilityRating: "",
+			religion: undefined,
+			residenceType: undefined,
+			responsibilityRating: 0,
 			schoolName: "",
-			schoolState: "",
+			schoolState: undefined,
 			schoolTown: "",
-			specialCircumstances: "",
-			stateOfOrigin: "",
+			specialCircumstances: undefined,
+			stateOfOrigin: undefined,
 			studentStatement: "",
 			supportTypesNeeded: [],
 			surname: "",
-		} as unknown as TacotsRecommendationFormStoreType["formStepData"],
+		} satisfies WithUndefined<FormStepDataType> as unknown as FormStepDataType,
 	},
 	key: "tacots-recommendation-form-data",
 });
@@ -277,7 +276,7 @@ function TacotsRecommendationForm() {
 }
 
 function StudentPersonalInformationStepOne() {
-	const { control } = useFormRootContext<z.infer<(typeof stepItems)[0]["validator"]>>();
+	const { control } = useFormContext<z.infer<(typeof stepItems)[0]["validator"]>>();
 	const form = { control };
 
 	return (
@@ -368,7 +367,7 @@ function StudentPersonalInformationStepOne() {
 }
 
 function EducationalInformationStepTwo() {
-	const { control } = useFormRootContext<z.infer<(typeof stepItems)[1]["validator"]>>();
+	const { control } = useFormContext<z.infer<(typeof stepItems)[1]["validator"]>>();
 	const form = { control };
 
 	return (
@@ -441,7 +440,7 @@ function EducationalInformationStepTwo() {
 }
 
 function FamilyBackgroundStepThree() {
-	const { control } = useFormRootContext<z.infer<(typeof stepItems)[2]["validator"]>>();
+	const { control } = useFormContext<z.infer<(typeof stepItems)[2]["validator"]>>();
 	const form = { control };
 
 	return (
@@ -579,7 +578,7 @@ function FamilyBackgroundStepThree() {
 }
 
 function RecommenderDetailsStepFour() {
-	const { control } = useFormRootContext<z.infer<(typeof stepItems)[3]["validator"]>>();
+	const { control } = useFormContext<z.infer<(typeof stepItems)[3]["validator"]>>();
 	const form = { control };
 
 	return (

@@ -20,9 +20,10 @@ import {
 	FormStepFooter,
 	FormStepList,
 	FormStepMainContent,
+	type GetFormStepStoreType,
 } from "@/app/(home)/-components/FormStepPartsShared";
 import { Main } from "@/app/(home)/-components/Main";
-import { Form, useFormRootContext } from "@/components/ui/form";
+import { Form, useFormContext } from "@/components/ui/form";
 import { callBackendApiForQuery } from "@/lib/api/callBackendApi";
 import {
 	AcademicImprovementNoticedOptions,
@@ -35,6 +36,7 @@ import {
 	TacotsScholarshipHelpedStayOptions,
 	TacotsScholarshipReducedBurdenOptions,
 } from "@/lib/api/callBackendApi/apiSchema";
+import type { WithUndefined } from "@/lib/utils/type-helpers";
 
 const TacotsFeedbackSchema = backendApiSchemaRoutes["@post/forms/tacots/feedback"].body;
 
@@ -87,37 +89,34 @@ const stepItems = defineFormStepItems([
 
 const stepItemsCount = stepItems.length - 1;
 
-type TacotsFeedbackFormStoreType = {
-	currentStep: number;
-	formStepData: z.infer<typeof TacotsFeedbackSchema>;
-};
+type FormStepDataType = z.infer<typeof TacotsFeedbackSchema>;
 
-const useTacotsFeedbackStorageState = createUseStorageState<TacotsFeedbackFormStoreType>({
+const useTacotsFeedbackStorageState = createUseStorageState<GetFormStepStoreType<FormStepDataType>>({
 	defaultValue: {
 		currentStep: 0,
 		formStepData: {
-			academicImprovementNoticed: "",
+			academicImprovementNoticed: undefined,
 			additionalComments: "",
-			attitudeChangeNoticed: "",
+			attitudeChangeNoticed: undefined,
 			currentChallenges: [],
-			currentClass: "",
+			currentClass: undefined,
 			currentSchool: "",
 			likedMost: "",
-			mentorshipImpactRating: "",
+			mentorshipImpactRating: 0,
 			mostHelpfulSupport: [],
 			parentGuardianName: "",
-			parentGuardianRelationship: "",
+			parentGuardianRelationship: undefined,
 			parentImprovementSuggestions: "",
 			parentPhone: "",
-			parentSatisfactionRating: "",
+			parentSatisfactionRating: undefined,
 			programImpactOnFamily: "",
-			scholarshipHelpedStay: "",
-			scholarshipReducedBurden: "",
+			scholarshipHelpedStay: undefined,
+			scholarshipReducedBurden: undefined,
 			studentFirstName: "",
 			studentImprovementSuggestions: "",
 			studentSurname: "",
-			studyMotivationRating: "",
-		} as unknown as TacotsFeedbackFormStoreType["formStepData"],
+			studyMotivationRating: 0,
+		} satisfies WithUndefined<FormStepDataType> as unknown as FormStepDataType,
 	},
 	key: "tacots-feedback-form-data",
 });
@@ -169,7 +168,7 @@ function TacotsFeedbackForm() {
 }
 
 function StudentFeedbackStep() {
-	const { control } = useFormRootContext<z.infer<(typeof stepItems)[0]["validator"]>>();
+	const { control } = useFormContext<z.infer<(typeof stepItems)[0]["validator"]>>();
 
 	return (
 		<>
@@ -248,7 +247,7 @@ function StudentFeedbackStep() {
 }
 
 function ParentFeedbackStep() {
-	const { control } = useFormRootContext<z.infer<(typeof stepItems)[1]["validator"]>>();
+	const { control } = useFormContext<z.infer<(typeof stepItems)[1]["validator"]>>();
 
 	return (
 		<>

@@ -112,9 +112,16 @@ const ratingSchema = stringWithNumberValidation(
 
 const requiredStringSchema = z.string().min(1, "This field is required.");
 
-const optionalStringSchema = z.string().optional();
+const dateStringSchema = z.iso.date("Enter a valid date.");
 
-const requiredFileSchema = z.file().nullable().refine(Boolean, "Upload a file.");
+const requiredPhoneNumberSchema = z.union(
+	[z.e164(), z.string().regex(/^0\d{10}$/)],
+	"Enter a valid phone number."
+);
+
+const optionalPhoneNumberSchema = requiredPhoneNumberSchema.optional();
+
+const requiredFileSchema = z.file("Upload a file.");
 
 const requiredEnumSchema = <const TOptions extends readonly string[]>(options: TOptions) => {
 	return z.enum(options, "This field is required.");
@@ -122,6 +129,14 @@ const requiredEnumSchema = <const TOptions extends readonly string[]>(options: T
 
 const optionalEnumSchema = <const TOptions extends readonly string[]>(options: TOptions) => {
 	return z.enum(options, "Select a valid option.").optional();
+};
+
+const requiredEnumArraySchema = <const TOptions extends readonly string[]>(options: TOptions) => {
+	return z.array(z.enum(options, "Select a valid option.")).min(1, "Select at least one option.");
+};
+
+const optionalEnumArraySchema = <const TOptions extends readonly string[]>(options: TOptions) => {
+	return z.array(z.enum(options, "Select a valid option.")).optional();
 };
 
 const paginatedQuerySchema = z
@@ -210,17 +225,14 @@ const adminRoutes = defineSchemaRoutes({
 		data: withBaseSuccessResponse(z.unknown()),
 		params: userIdParamsSchema,
 		query: z.object({
-			action: z.enum(["assign", "revoke"], "Select a valid role action."),
-			rolename: z.enum(["admin", "superadmin"], "Select a valid role."),
+			action: requiredEnumSchema(["assign", "revoke"]),
+			rolename: requiredEnumSchema(["admin", "superadmin"]),
 		}),
 	},
 
 	"@post/admin/users": {
 		body: loginBodySchema.extend({
-			department: z.enum(
-				["TACOTS", "ASH", "CAPACITY BUILDING", "OUTREACHES"],
-				"Select a valid department."
-			),
+			department: requiredEnumSchema(["TACOTS", "ASH", "CAPACITY BUILDING", "OUTREACHES"]),
 			name: z.string().min(3, "Enter at least 3 characters."),
 		}),
 		data: withBaseSuccessResponse(authUserSchema),
@@ -292,7 +304,7 @@ const clientSideRoutes = defineSchemaRoutes({
 			amount: stringWithNumberValidation(
 				z.int("Enter a donation amount.").min(100, "Donation amount must be at least 100.")
 			),
-			comment: optionalStringSchema,
+			comment: z.string().optional(),
 			email: z.email("Enter a valid email address."),
 			name: z.string().min(3, "Enter at least 3 characters."),
 		}),
@@ -321,33 +333,33 @@ export const AshRegisterFrontendSchema = z.object({
 	age: stringWithNumberValidation(
 		z.int("Enter a valid age.").min(6, "Age must be at least 6.").max(18, "Age must be 18 or below.")
 	),
-	assignedMentor: optionalStringSchema,
+	assignedMentor: z.string().optional(),
 	classPositionLastTerm: requiredStringSchema,
 	currentClass: requiredEnumSchema(ClassOptions),
 	declarationConfirmed: z.boolean().refine(Boolean, "This field is required."),
-	dob: requiredStringSchema,
+	dob: dateStringSchema,
 	fathersName: requiredStringSchema,
 	fathersOccupation: requiredStringSchema,
-	fathersPhone: optionalStringSchema,
+	fathersPhone: optionalPhoneNumberSchema,
 	firstName: requiredStringSchema,
 	gender: requiredEnumSchema(GenderOptions),
-	guardianName: optionalStringSchema,
-	guardianOccupation: optionalStringSchema,
-	guardianPhone: optionalStringSchema,
+	guardianName: z.string().optional(),
+	guardianOccupation: z.string().optional(),
+	guardianPhone: optionalPhoneNumberSchema,
 	guardianRelationship: optionalEnumSchema(AshGuardianRelationshipOptions),
 	hasLearningCondition: requiredEnumSchema(LearningConditionStatusOptions),
 	homeAddress: requiredStringSchema,
 	householdIncomeRange: optionalEnumSchema(AshHouseholdIncomeRangeOptions),
-	lastResult: z.file().nullable(),
-	learningConditions: z.array(z.enum(AshLearningConditionOptions, "Select a valid option.")).optional(),
-	middleName: optionalStringSchema,
+	lastResult: requiredFileSchema,
+	learningConditions: optionalEnumArraySchema(AshLearningConditionOptions),
+	middleName: z.string().optional(),
 	mothersName: requiredStringSchema,
-	mothersOccupation: optionalStringSchema,
-	mothersPhone: requiredStringSchema,
+	mothersOccupation: z.string().optional(),
+	mothersPhone: requiredPhoneNumberSchema,
 	parentConsent: z.boolean().refine(Boolean, "This field is required."),
 	parentSignature: requiredFileSchema,
 	passportPhoto: requiredFileSchema,
-	pretestScore: optionalStringSchema,
+	pretestScore: z.string().optional(),
 	prevAfterschoolProgram: requiredEnumSchema(YesNoOptions),
 	primaryLanguage: requiredEnumSchema(PrimaryLanguageOptions),
 	programType: requiredEnumSchema(AshProgramTypeOptions),
@@ -356,68 +368,64 @@ export const AshRegisterFrontendSchema = z.object({
 	schoolName: requiredStringSchema,
 	schoolState: requiredEnumSchema(NigeriaStateOptions),
 	schoolTown: requiredStringSchema,
-	studentPhone: optionalStringSchema,
+	studentPhone: optionalPhoneNumberSchema,
 	surname: requiredStringSchema,
 });
 
 export const TacotsRecommendationFrontendSchema = z.object({
 	age: stringWithNumberValidation(z.int("Enter a valid age.").min(6, "Age must be at least 6.")),
 	annualHouseholdIncome: requiredEnumSchema(TacotsAnnualHouseholdIncomeOptions),
-	avgMonthlyIncome: optionalStringSchema,
+	avgMonthlyIncome: z.string().optional(),
 	careerGoal: requiredStringSchema,
-	catholicSacraments: z
-		.array(z.enum(TacotsCatholicSacramentOptions, "Select a valid option."))
-		.optional(),
+	catholicSacraments: optionalEnumArraySchema(TacotsCatholicSacramentOptions),
 	childBackgroundNotes: requiredStringSchema,
 	classPositionLastTerm: requiredStringSchema,
 	declarationConfirmed: z.boolean().refine(Boolean, "This field is required."),
-	diocese: optionalStringSchema,
+	diocese: z.string().optional(),
 	disciplineRating: ratingSchema,
-	dob: requiredStringSchema,
+	dob: dateStringSchema,
 	familyPosition: requiredEnumSchema(TacotsFamilyPositionOptions),
 	fathersName: requiredStringSchema,
 	fathersOccupation: requiredStringSchema,
-	fathersPhone: requiredStringSchema,
+	fathersPhone: requiredPhoneNumberSchema,
 	firstName: requiredStringSchema,
 	gender: requiredEnumSchema(GenderOptions),
-	guardianAddress: optionalStringSchema,
-	guardianName: optionalStringSchema,
-	guardianOccupation: optionalStringSchema,
-	guardianPhone: optionalStringSchema,
+	guardianAddress: z.string().optional(),
+	guardianName: z.string().optional(),
+	guardianOccupation: z.string().optional(),
+	guardianPhone: optionalPhoneNumberSchema,
 	guardianRelationship: optionalEnumSchema(TacotsGuardianRelationshipOptions),
 	hasElectricity: requiredEnumSchema(YesNoSometimesOptions),
 	homeAddress: requiredStringSchema,
 	householdSize: stringWithNumberValidation(
 		z.int("Enter a valid household size.").min(2, "Household size must be at least 2.")
 	),
-	incomeSources: z
-		.array(z.enum(TacotsIncomeSourceOptions, "Select a valid option."))
-		.min(1, "Select at least one income source."),
+	incomeSources: requiredEnumArraySchema(TacotsIncomeSourceOptions),
 	lastClass: requiredEnumSchema(ClassOptions),
 	lastResult: requiredFileSchema,
-	lastTermAverage: optionalStringSchema,
+	lastTermAverage: z.string().optional(),
 	lastYearAttended: stringWithNumberValidation(z.int("Enter a valid year.")),
 	lga: requiredStringSchema,
 	livesWith: requiredEnumSchema(TacotsLivesWithOptions),
-	middleName: optionalStringSchema,
+	middleName: z.string().optional(),
 	mothersName: requiredStringSchema,
 	mothersOccupation: requiredStringSchema,
-	mothersPhone: requiredStringSchema,
+	mothersPhone: requiredPhoneNumberSchema,
 	nationality: requiredStringSchema,
 	numIncomeEarners: requiredEnumSchema(TacotsIncomeEarnerCountOptions),
 	numSiblings: stringWithNumberValidation(
 		z.int("Enter a valid number of siblings.").min(0, "Number of siblings cannot be negative.")
 	),
-	otherImportantInfo: optionalStringSchema,
+	otherImportantInfo: z.string().optional(),
 	parentsAddress: requiredStringSchema,
-	parishAttended: optionalStringSchema,
+	parishAttended: z.string().optional(),
 	passportPhoto: requiredFileSchema,
-	phoneNumber: optionalStringSchema,
+	phoneNumber: optionalPhoneNumberSchema,
 	primaryLanguage: requiredEnumSchema(PrimaryLanguageOptions),
 	recommenderAddress: requiredStringSchema,
 	recommenderFirstName: requiredStringSchema,
 	recommenderLastName: requiredStringSchema,
-	recommenderPhone: requiredStringSchema,
+	recommenderPhone: requiredPhoneNumberSchema,
 	religion: requiredEnumSchema(TacotsRecommendationReligionOptions),
 	residenceType: requiredEnumSchema(TacotsResidenceTypeOptions),
 	responsibilityRating: ratingSchema,
@@ -426,10 +434,8 @@ export const TacotsRecommendationFrontendSchema = z.object({
 	schoolTown: requiredStringSchema,
 	specialCircumstances: requiredEnumSchema(TacotsSpecialCircumstanceOptions),
 	stateOfOrigin: requiredEnumSchema(NigeriaStateOptions),
-	studentStatement: optionalStringSchema,
-	supportTypesNeeded: z
-		.array(z.enum(TacotsSupportTypeOptions, "Select a valid option."))
-		.min(1, "Select at least one support type."),
+	studentStatement: z.string().optional(),
+	supportTypesNeeded: requiredEnumArraySchema(TacotsSupportTypeOptions),
 	surname: requiredStringSchema,
 });
 
@@ -437,27 +443,25 @@ const publicFormRoutes = defineSchemaRoutes({
 	"@post/forms/ash/feedback": {
 		body: z.object({
 			academicImprovementNoticed: optionalEnumSchema(AcademicImprovementNoticedOptions),
-			additionalComments: optionalStringSchema,
-			attendanceFrequency: z.enum(AshAttendanceFrequencyOptions, "This field is required."),
-			childBenefited: z.enum(AshChildBenefitedOptions, "This field is required."),
+			additionalComments: z.string().optional(),
+			attendanceFrequency: requiredEnumSchema(AshAttendanceFrequencyOptions),
+			childBenefited: requiredEnumSchema(AshChildBenefitedOptions),
 			confidenceBehaviorChange: optionalEnumSchema(PositiveChangeNoticedOptions),
 			confidenceRating: ratingSchema,
-			currentClass: z.enum(AshFeedbackClassOptions, "This field is required."),
-			enjoyedParts: z.array(z.enum(AshEnjoyedPartsOptions, "Select a valid option.")).optional(),
+			currentClass: requiredEnumSchema(AshFeedbackClassOptions),
+			enjoyedParts: optionalEnumArraySchema(AshEnjoyedPartsOptions),
 			learningImprovementRating: ratingSchema,
-			mostValuableAspects: z
-				.array(z.enum(AshMostValuableAspectsOptions, "Select a valid option."))
-				.optional(),
+			mostValuableAspects: optionalEnumArraySchema(AshMostValuableAspectsOptions),
 			parentGuardianName: requiredStringSchema,
-			parentGuardianRelationship: z.enum(ParentGuardianRelationshipOptions, "This field is required."),
-			parentImprovementSuggestions: optionalStringSchema,
-			parentPhone: optionalStringSchema,
+			parentGuardianRelationship: requiredEnumSchema(ParentGuardianRelationshipOptions),
+			parentImprovementSuggestions: z.string().optional(),
+			parentPhone: optionalPhoneNumberSchema,
 			parentSatisfactionRating: ratingSchema.optional(),
-			programImpactOnChild: optionalStringSchema,
+			programImpactOnChild: z.string().optional(),
 			schoolName: requiredStringSchema,
-			studentEnjoyedMost: optionalStringSchema,
+			studentEnjoyedMost: z.string().optional(),
 			studentFirstName: requiredStringSchema,
-			studentImprovementSuggestions: optionalStringSchema,
+			studentImprovementSuggestions: z.string().optional(),
 			studentSurname: requiredStringSchema,
 			volunteerSupportRating: ratingSchema,
 		}),
@@ -472,31 +476,24 @@ const publicFormRoutes = defineSchemaRoutes({
 	"@post/forms/tacots/feedback": {
 		body: z.object({
 			academicImprovementNoticed: optionalEnumSchema(AcademicImprovementNoticedOptions),
-			additionalComments: optionalStringSchema,
+			additionalComments: z.string().optional(),
 			attitudeChangeNoticed: optionalEnumSchema(PositiveChangeNoticedOptions),
-			currentChallenges: z
-				.array(z.enum(TacotsCurrentChallengeOptions, "Select a valid option."))
-				.optional(),
-			currentClass: z.enum(TacotsFeedbackClassOptions, "This field is required."),
+			currentChallenges: optionalEnumArraySchema(TacotsCurrentChallengeOptions),
+			currentClass: requiredEnumSchema(TacotsFeedbackClassOptions),
 			currentSchool: requiredStringSchema,
-			likedMost: optionalStringSchema,
+			likedMost: z.string().optional(),
 			mentorshipImpactRating: ratingSchema,
-			mostHelpfulSupport: z
-				.array(z.enum(TacotsMostHelpfulSupportOptions, "Select a valid option."))
-				.optional(),
+			mostHelpfulSupport: optionalEnumArraySchema(TacotsMostHelpfulSupportOptions),
 			parentGuardianName: requiredStringSchema,
-			parentGuardianRelationship: z.enum(ParentGuardianRelationshipOptions, "This field is required."),
-			parentImprovementSuggestions: optionalStringSchema,
-			parentPhone: optionalStringSchema,
+			parentGuardianRelationship: requiredEnumSchema(ParentGuardianRelationshipOptions),
+			parentImprovementSuggestions: z.string().optional(),
+			parentPhone: optionalPhoneNumberSchema,
 			parentSatisfactionRating: ratingSchema.optional(),
-			programImpactOnFamily: optionalStringSchema,
-			scholarshipHelpedStay: z.enum(TacotsScholarshipHelpedStayOptions, "This field is required."),
-			scholarshipReducedBurden: z.enum(
-				TacotsScholarshipReducedBurdenOptions,
-				"This field is required."
-			),
+			programImpactOnFamily: z.string().optional(),
+			scholarshipHelpedStay: requiredEnumSchema(TacotsScholarshipHelpedStayOptions),
+			scholarshipReducedBurden: requiredEnumSchema(TacotsScholarshipReducedBurdenOptions),
 			studentFirstName: requiredStringSchema,
-			studentImprovementSuggestions: optionalStringSchema,
+			studentImprovementSuggestions: z.string().optional(),
 			studentSurname: requiredStringSchema,
 			studyMotivationRating: ratingSchema,
 		}),
@@ -510,30 +507,26 @@ const publicFormRoutes = defineSchemaRoutes({
 
 	"@post/volunteer/feedback": {
 		body: z.object({
-			activitiesInvolvedIn: z
-				.array(z.enum(VolunteerActivityOptions, "Select a valid option."))
-				.optional(),
-			additionalComments: optionalStringSchema,
-			challengesExperienced: optionalStringSchema,
+			activitiesInvolvedIn: optionalEnumArraySchema(VolunteerActivityOptions),
+			additionalComments: z.string().optional(),
+			challengesExperienced: z.string().optional(),
 			continueVolunteering: optionalEnumSchema(YesMaybeNoOptions),
-			enjoyedMost: optionalStringSchema,
+			enjoyedMost: z.string().optional(),
 			firstName: requiredStringSchema,
-			improvementSuggestions: optionalStringSchema,
+			improvementSuggestions: z.string().optional(),
 			organizationRating: ratingSchema,
 			overallExperienceRating: ratingSchema,
 			programMadeImpact: optionalEnumSchema(VolunteerProgramImpactOptions),
-			programVolunteered: z.enum(VolunteerFeedbackProgramOptions, "This field is required."),
+			programVolunteered: requiredEnumSchema(VolunteerFeedbackProgramOptions),
 			roleClarityRating: ratingSchema,
 			skillsDeveloped: optionalEnumSchema(VolunteerSkillDevelopedOptions),
-			skillsGained: z.array(z.enum(VolunteerSkillGainedOptions, "Select a valid option.")).optional(),
-			specificProgramDetails: optionalStringSchema,
-			submissionDate: requiredStringSchema,
+			skillsGained: optionalEnumArraySchema(VolunteerSkillGainedOptions),
+			specificProgramDetails: z.string().optional(),
+			submissionDate: dateStringSchema,
 			surname: requiredStringSchema,
 			teamSupportRating: ratingSchema,
 			volunteerDuration: optionalEnumSchema(VolunteerFeedbackDurationOptions),
-			waysProgramHelped: z
-				.array(z.enum(VolunteerWaysProgramHelpedOptions, "Select a valid option."))
-				.optional(),
+			waysProgramHelped: optionalEnumArraySchema(VolunteerWaysProgramHelpedOptions),
 			wouldRecommend: optionalEnumSchema(YesMaybeNoOptions),
 		}),
 		data: withBaseSuccessResponse(z.unknown()),
@@ -541,36 +534,30 @@ const publicFormRoutes = defineSchemaRoutes({
 
 	"@post/volunteer/register": {
 		body: z.object({
-			additionalInfo: optionalStringSchema,
+			additionalInfo: z.string().optional(),
 			age: stringWithNumberValidation(z.int("Enter a valid age.").min(16, "Age must be at least 16.")),
 			ashAcademicArea: optionalEnumSchema(VolunteerAshAcademicAreaOptions),
-			ashExtracurricular: z
-				.array(z.enum(VolunteerAshExtracurricularOptions, "Select a valid option."))
-				.optional(),
+			ashExtracurricular: optionalEnumArraySchema(VolunteerAshExtracurricularOptions),
 			ashSaturdayAvailability: optionalEnumSchema(VolunteerAshSaturdayAvailabilityOptions),
-			availability: z
-				.array(z.enum(VolunteerAvailabilityOptions, "Select a valid option."))
-				.min(1, "Select at least one availability option."),
+			availability: requiredEnumArraySchema(VolunteerAvailabilityOptions),
 			city: requiredStringSchema,
 			commitmentDuration: optionalEnumSchema(VolunteerCommitmentDurationOptions),
-			dob: requiredStringSchema,
+			dob: dateStringSchema,
 			emailAddress: z.email("Enter a valid email address."),
 			firstName: requiredStringSchema,
-			gender: z.enum(GenderOptions, "This field is required."),
+			gender: requiredEnumSchema(GenderOptions),
 			highestEducation: optionalEnumSchema(VolunteerHighestEducationOptions),
 			homeAddress: requiredStringSchema,
 			mediaConsent: z.boolean("Choose yes or no."),
-			middleName: optionalStringSchema,
-			occupation: optionalStringSchema,
-			phoneNumber: requiredStringSchema,
+			middleName: z.string().optional(),
+			occupation: z.string().optional(),
+			phoneNumber: requiredPhoneNumberSchema,
 			reasonForVolunteering: requiredStringSchema,
-			safeguardingAgreement: z.enum(YesNoOptions, "This field is required."),
-			skillsToContribute: z.array(z.enum(VolunteerSkillOptions, "Select a valid option.")).optional(),
-			state: z.enum(NigeriaStateOptions, "This field is required."),
+			safeguardingAgreement: requiredEnumSchema(YesNoOptions),
+			skillsToContribute: optionalEnumArraySchema(VolunteerSkillOptions),
+			state: requiredEnumSchema(NigeriaStateOptions),
 			surname: requiredStringSchema,
-			volunteerAreas: z
-				.array(z.enum(VolunteerAreaOptions, "Select a valid option."))
-				.min(1, "Select at least one volunteer area."),
+			volunteerAreas: requiredEnumArraySchema(VolunteerAreaOptions),
 		}),
 		data: withBaseSuccessResponse(z.unknown()),
 	},
@@ -654,46 +641,46 @@ const protectedFormRoutes = defineSchemaRoutes({
 
 	"@post/forms/capacity-building": {
 		body: z.object({
-			budgetAllocated: optionalStringSchema,
-			budgetUtilized: optionalStringSchema,
-			challengesAddressed: optionalStringSchema,
-			challengesEncountered: optionalStringSchema,
+			budgetAllocated: z.string().optional(),
+			budgetUtilized: z.string().optional(),
+			challengesAddressed: z.string().optional(),
+			challengesEncountered: z.string().optional(),
 			communicationAndCoordination: ratingSchema,
-			dateSubmitted: requiredStringSchema,
-			effectiveActivities: optionalStringSchema,
-			improvementSuggestions: optionalStringSchema,
-			inadequateResourcesExplanation: optionalStringSchema,
-			lessonsLearned: optionalStringSchema,
+			dateSubmitted: dateStringSchema,
+			effectiveActivities: z.string().optional(),
+			improvementSuggestions: z.string().optional(),
+			inadequateResourcesExplanation: z.string().optional(),
+			lessonsLearned: z.string().optional(),
 			listOfSponsors: requiredStringSchema,
 			location: requiredStringSchema,
-			majorActivities: optionalStringSchema,
+			majorActivities: z.string().optional(),
 			name: requiredStringSchema,
 			numberOfFacilitators: stringWithNumberValidation(z.int("Enter a whole number.")),
 			numberOfParticipants: stringWithNumberValidation(z.int("Enter a whole number.")),
 			numberOfSponsors: stringWithNumberValidation(z.int("Enter a whole number.")),
 			numberOfVolunteers: stringWithNumberValidation(z.int("Enter a whole number.")),
-			objectiveAchievement: z.enum(CapacityObjectiveAchievementOptions, "This field is required."),
+			objectiveAchievement: requiredEnumSchema(CapacityObjectiveAchievementOptions),
 			overallSuccess: optionalEnumSchema(CapacityOverallSuccessOptions),
-			participantEngagementLevel: z.enum(CapacityEngagementLevelOptions, "This field is required."),
-			partnerOrganizations: optionalStringSchema,
-			partnershipLevel: z.enum(CapacityPartnershipLevelOptions, "This field is required."),
+			participantEngagementLevel: requiredEnumSchema(CapacityEngagementLevelOptions),
+			partnerOrganizations: z.string().optional(),
+			partnershipLevel: requiredEnumSchema(CapacityPartnershipLevelOptions),
 			programCoordinator: requiredStringSchema,
-			programDate: requiredStringSchema,
-			programImpact: optionalStringSchema,
+			programDate: dateStringSchema,
+			programImpact: z.string().optional(),
 			programName: requiredStringSchema,
-			programObjectives: optionalStringSchema,
-			programOutcome: optionalStringSchema,
-			programType: z.enum(CapacityProgramTypeOptions, "This field is required."),
-			recommendFuturePrograms: optionalStringSchema,
+			programObjectives: z.string().optional(),
+			programOutcome: z.string().optional(),
+			programType: requiredEnumSchema(CapacityProgramTypeOptions),
+			recommendFuturePrograms: z.string().optional(),
 			recommendTheProgram: optionalEnumSchema(CapacityYesNoOptions),
 			resourceAvailability: ratingSchema,
 			role: requiredStringSchema,
-			sponsorshipType: z.enum(CapacitySponsorshipTypeOptions, "This field is required."),
+			sponsorshipType: requiredEnumSchema(CapacitySponsorshipTypeOptions),
 			targetAudience: requiredStringSchema,
 			teamworkAmongOrganizers: ratingSchema,
 			timeManagement: ratingSchema,
 			venueSuitability: ratingSchema,
-			wereResourcesAdequate: z.enum(CapacityYesNoOptions).optional(),
+			wereResourcesAdequate: optionalEnumSchema(CapacityYesNoOptions),
 		}),
 		data: withBaseSuccessResponse(z.unknown()),
 	},

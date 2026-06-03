@@ -7,8 +7,8 @@ function Main(props: InferProps<"main">) {
 	return (
 		<main
 			className={cnMerge(
-				`flex w-full max-w-[412px] grow flex-col px-4 pt-6 pb-12 lg:max-w-[1400px] lg:px-[100px]
-				lg:pt-8 lg:pb-[80px]`,
+				`flex w-full max-w-[412px] grow flex-col px-4 pt-6 pb-12 lg:max-w-[1300px] lg:px-[50px] lg:pt-8
+				lg:pb-[80px]`,
 				className
 			)}
 			{...restOfProps}

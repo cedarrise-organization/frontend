@@ -20,9 +20,10 @@ import {
 	FormStepFooter,
 	FormStepList,
 	FormStepMainContent,
+	type GetFormStepStoreType,
 } from "@/app/(home)/-components/FormStepPartsShared";
 import { Main } from "@/app/(home)/-components/Main";
-import { Form, useFormRootContext } from "@/components/ui/form";
+import { Form, useFormContext } from "@/components/ui/form";
 import { callBackendApiForQuery } from "@/lib/api/callBackendApi";
 import {
 	AcademicImprovementNoticedOptions,
@@ -35,6 +36,7 @@ import {
 	ParentGuardianRelationshipOptions,
 	PositiveChangeNoticedOptions,
 } from "@/lib/api/callBackendApi/apiSchema";
+import type { WithUndefined } from "@/lib/utils/type-helpers";
 
 const AshFeedbackSchema = backendApiSchemaRoutes["@post/forms/ash/feedback"].body;
 
@@ -88,38 +90,35 @@ const stepItems = defineFormStepItems([
 
 const stepItemsCount = stepItems.length - 1;
 
-type AshFeedbackFormStoreType = {
-	currentStep: number;
-	formStepData: z.infer<typeof AshFeedbackSchema>;
-};
+type FormStepDataType = z.infer<typeof AshFeedbackSchema>;
 
-const useAshFeedbackStorageState = createUseStorageState<AshFeedbackFormStoreType>({
+const useAshFeedbackStorageState = createUseStorageState<GetFormStepStoreType<FormStepDataType>>({
 	defaultValue: {
 		currentStep: 0,
 		formStepData: {
-			academicImprovementNoticed: "",
+			academicImprovementNoticed: undefined,
 			additionalComments: "",
-			attendanceFrequency: "",
-			childBenefited: "",
-			confidenceBehaviorChange: "",
-			confidenceRating: "",
-			currentClass: "",
+			attendanceFrequency: undefined,
+			childBenefited: undefined,
+			confidenceBehaviorChange: undefined,
+			confidenceRating: 0,
+			currentClass: undefined,
 			enjoyedParts: [],
-			learningImprovementRating: "",
+			learningImprovementRating: 0,
 			mostValuableAspects: [],
 			parentGuardianName: "",
-			parentGuardianRelationship: "",
+			parentGuardianRelationship: undefined,
 			parentImprovementSuggestions: "",
 			parentPhone: "",
-			parentSatisfactionRating: "",
+			parentSatisfactionRating: undefined,
 			programImpactOnChild: "",
 			schoolName: "",
 			studentEnjoyedMost: "",
 			studentFirstName: "",
 			studentImprovementSuggestions: "",
 			studentSurname: "",
-			volunteerSupportRating: "",
-		} as unknown as AshFeedbackFormStoreType["formStepData"],
+			volunteerSupportRating: undefined,
+		} satisfies WithUndefined<FormStepDataType> as unknown as FormStepDataType,
 	},
 	key: "ash-feedback-form-data",
 });
@@ -171,7 +170,7 @@ function AshFeedbackForm() {
 }
 
 function StudentFeedbackStepOne() {
-	const { control } = useFormRootContext<z.infer<(typeof stepItems)[0]["validator"]>>();
+	const { control } = useFormContext<z.infer<(typeof stepItems)[0]["validator"]>>();
 
 	return (
 		<>
@@ -248,7 +247,7 @@ function StudentFeedbackStepOne() {
 }
 
 function ParentGuardianFeedbackStepTwo() {
-	const { control } = useFormRootContext<z.infer<(typeof stepItems)[1]["validator"]>>();
+	const { control } = useFormContext<z.infer<(typeof stepItems)[1]["validator"]>>();
 
 	return (
 		<>
