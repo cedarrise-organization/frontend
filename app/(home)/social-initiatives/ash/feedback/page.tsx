@@ -128,7 +128,7 @@ function AshFeedbackForm() {
 	const [storeValues, storeActions] = useAshFeedbackStorageState();
 
 	const form = useForm({
-		resolver: zodResolver(AshFeedbackSchema),
+		resolver: zodResolver(stepItems[storeValues.currentStep]?.validator ?? AshFeedbackSchema),
 		values: storeValues.formStepData as unknown as z.input<typeof AshFeedbackSchema>,
 	});
 
