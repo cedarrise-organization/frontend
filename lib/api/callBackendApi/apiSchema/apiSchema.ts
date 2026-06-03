@@ -310,9 +310,13 @@ const clientSideRoutes = defineSchemaRoutes({
 		}),
 		data: withBaseSuccessResponse(
 			z.object({
-				access_code: z.string(),
-				authorization_url: z.url("Enter a valid URL."),
-				reference: z.string(),
+				data: z.object({
+					access_code: z.string(),
+					authorization_url: z.url("Enter a valid URL."),
+					reference: z.string(),
+				}),
+				message: z.string(),
+				status: z.boolean(),
 			})
 		),
 	},

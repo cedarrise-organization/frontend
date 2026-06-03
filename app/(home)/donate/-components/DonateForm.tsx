@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "@bprogress/next";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -21,11 +22,14 @@ function DonateForm() {
 		resolver: zodResolver(DonateFormSchema),
 	});
 
+	const router = useRouter();
+
 	const onSubmit = form.handleSubmit(async (data) => {
 		await callBackendApiForQuery("@post/donate", {
 			body: data,
 			meta: { toast: { success: true } },
-			onSuccess: () => {
+			onSuccess: (ctx) => {
+				router.push(ctx.data.data.data.authorization_url);
 				form.reset();
 			},
 		});
