@@ -101,10 +101,9 @@ export function MomentsCarouselShared(props: MomentsCarouselSharedProps) {
 						<Carousel.Item
 							key={galleryRowItem.public_id}
 							className={cnJoin(
-								"h-[240px] w-(--image-width) cursor-grab active:cursor-grabbing lg:h-[300px]",
+								"h-[240px] w-[50%] cursor-grab active:cursor-grabbing lg:h-[300px] lg:w-[30%]",
 								galleryRowItemIndex === galleryRow.length - 1 && "pr-5"
 							)}
-							style={{ "--image-width": `30%` } as React.CSSProperties}
 						>
 							<Image
 								id={galleryRowItem.public_id}
