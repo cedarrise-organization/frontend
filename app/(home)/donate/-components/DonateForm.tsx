@@ -2,7 +2,10 @@
 
 import { useRouter } from "@bprogress/next";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { callBackendApiForQuery } from "@/lib/api/callBackendApi";
@@ -11,7 +14,22 @@ import { TextAreaField, TextField } from "../../-components/FormPartsShared";
 
 const DonateFormSchema = backendApiSchemaRoutes["@post/donate"].body;
 
-function DonateForm() {
+function DonateFormImpl() {
+	const searchParams = useSearchParams();
+
+	const message = searchParams.get("message");
+	const error = searchParams.get("error");
+
+	useEffect(() => {
+		if (message) {
+			toast.success(message);
+		}
+
+		if (error) {
+			toast.error(error);
+		}
+	}, [message, error]);
+
 	const form = useForm({
 		defaultValues: {
 			amount: "",
@@ -73,6 +91,14 @@ function DonateForm() {
 				)}
 			</Form.Submit>
 		</Form.Root>
+	);
+}
+
+function DonateForm() {
+	return (
+		<Suspense>
+			<DonateFormImpl />
+		</Suspense>
 	);
 }
 
