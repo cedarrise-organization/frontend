@@ -86,7 +86,7 @@ function FeaturedPostsSection() {
 				renderItem={(post) => (
 					<li
 						key={post.id}
-						className="flex flex-col gap-5 rounded-[24px] bg-[hsl(0,0%,94%)] p-4 lg:rounded-[32px]"
+						className="flex flex-col gap-5 rounded-[24px] bg-cedar-grey p-4 lg:rounded-[32px]"
 					>
 						<Image
 							src={blogCardImg}

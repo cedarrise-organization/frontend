@@ -336,8 +336,8 @@ function CtaSectionOne() {
 			</article>
 
 			<article
-				className="flex flex-col items-center gap-10 rounded-[32px] bg-[hsl(0,0%,94%)] px-6 py-7
-					lg:gap-12 lg:px-10.5 lg:py-10 lg:[grid-area:2/1]"
+				className="flex flex-col items-center gap-6 rounded-[32px] bg-cedar-grey px-6 py-7 lg:gap-12
+					lg:px-10.5 lg:py-10 lg:[grid-area:2/1]"
 			>
 				<h3 className="text-center text-[24px]/[1.2] lg:text-[40px]">ASH Online Tutorials</h3>
 
@@ -358,11 +358,11 @@ function CtaSectionOne() {
 			</article>
 
 			<div
-				className="flex flex-col items-center gap-10 rounded-[24px] max-lg:bg-[hsl(0,0%,94%)]
-					max-lg:px-6 max-lg:py-7 lg:contents"
+				className="flex flex-col items-center gap-6 rounded-[24px] max-lg:bg-cedar-grey max-lg:px-6
+					max-lg:py-7 lg:contents"
 			>
 				<article
-					className="flex flex-col items-center gap-10 rounded-[32px] bg-[hsl(0,0%,94%)] px-6 py-7
+					className="flex flex-col items-center gap-10 rounded-[32px] bg-cedar-grey px-6 py-7
 						lg:gap-12 lg:px-10.5 lg:py-10 lg:[grid-area:2/2]"
 				>
 					<h3 className="text-center text-[24px]/[1.2] lg:text-[40px]">Gifts by CedarRise</h3>

@@ -232,7 +232,7 @@ export function TextField<TFieldValues extends FieldValues, TTransformedValues =
 				step={step}
 				type={type}
 				placeholder={placeholder}
-				className="h-[54px] rounded-[12px] bg-[hsl(0,0%,94%)] px-9 text-[12px] text-cedar-black
+				className="h-[54px] rounded-[12px] bg-cedar-grey px-9 text-[12px] text-cedar-black
 					placeholder:text-cedar-black/40 lg:h-[64px] lg:text-[14px]"
 			/>
 			<FormErrorMessageShared />
@@ -254,8 +254,8 @@ export function TextAreaField<TFieldValues extends FieldValues, TTransformedValu
 			<Form.Label className="text-[12px] text-cedar-black/64 lg:text-[14px]">{label}</Form.Label>
 
 			<Form.TextArea
-				className="min-h-[132px] rounded-[12px] bg-[hsl(0,0%,94%)] px-6 py-4 text-[12px]
-					text-cedar-black placeholder:text-cedar-black/40 lg:px-9 lg:text-[14px]"
+				className="min-h-[132px] rounded-[12px] bg-cedar-grey px-6 py-4 text-[12px] text-cedar-black
+					placeholder:text-cedar-black/40 lg:px-9 lg:text-[14px]"
 			/>
 			<FormErrorMessageShared />
 		</Form.Field>
@@ -280,7 +280,7 @@ export function SelectField<TFieldValues extends FieldValues, TTransformedValues
 					<Select.Root value={field.value} onValueChange={field.onChange}>
 						<Select.Trigger
 							className={cnMerge(
-								`h-[54px] justify-start gap-3 rounded-[12px] border-0 bg-[hsl(0,0%,94%)] px-9
+								`h-[54px] justify-start gap-3 rounded-[12px] border-0 bg-cedar-grey px-9
 								text-[12px] text-cedar-black shadow-none data-placeholder:text-cedar-black/40
 								lg:h-[64px] lg:text-[14px]`,
 								classNames?.trigger
@@ -344,7 +344,7 @@ export function ComboboxField<TFieldValues extends FieldValues, TTransformedValu
 								disabled={disabled}
 								classNames={{
 									base: `h-[54px] w-full shrink justify-start gap-3 rounded-[12px] border-0
-									bg-[hsl(0,0%,94%)] px-4 text-[12px] text-cedar-black/70 shadow-none
+									bg-cedar-grey px-4 text-[12px] text-cedar-black/70 shadow-none
 									disabled:pointer-events-none disabled:opacity-60
 									data-placeholder:text-cedar-black/40 lg:h-[64px] lg:px-9 lg:text-[14px]`,
 									icon: "size-4 shrink-0 text-cedar-black/40",
@@ -400,7 +400,7 @@ export function DateField<TFieldValues extends FieldValues, TTransformedValues =
 							onChangeDate: "yyyy-MM-dd",
 							visibleDate: "PPP",
 						}}
-						className="h-[54px] justify-between rounded-[12px] bg-[hsl(0,0%,94%)] px-9 text-[12px]
+						className="h-[54px] justify-between rounded-[12px] bg-cedar-grey px-9 text-[12px]
 							font-normal text-cedar-black/70 placeholder:text-cedar-black/40 lg:h-[64px] lg:px-9
 							lg:text-[14px]"
 					/>
@@ -436,7 +436,7 @@ export function FileUploadField<TFieldValues extends FieldValues, TTransformedVa
 						>
 							<DropZoneInput.Area
 								classNames={{
-									container: `h-[96px] w-[135px] cursor-pointer rounded-[12px] bg-[hsl(0,0%,94%)]
+									container: `h-[96px] w-[135px] cursor-pointer rounded-[12px] bg-cedar-grey
 									text-cedar-black/64 transition-colors data-drag-over:bg-cedar-red/10
 									lg:w-[142px]`,
 								}}

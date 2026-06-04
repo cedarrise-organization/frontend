@@ -12,6 +12,7 @@
 	--color-cedar-red: hsl(351, 96%, 30%);
 	--color-cedar-black: hsl(240, 5%, 11%);
 	--color-cedar-white: hsl(165, 100%, 99%);
+	--color-cedar-grey: hsl(0, 0%, 94%);
 }
 
 /* ------------------*/
@@ -32,11 +33,24 @@
 /* Main Theme        */
 /*-------------------*/
 @theme {
+	/*--- Breakpoints ---*/
 	--breakpoint-*: initial;
 	--breakpoint-sm: 480px;
 	--breakpoint-md: 780px;
 	--breakpoint-lg: 1024px;
 	--breakpoint-xl: 1280px;
+
+	/*--- Animations ---*/
+	--animate-slide-from-left: slideFromLeft 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+
+	@keyframes slideFromLeft {
+		from {
+			transform: translate3d(calc(100% * -1), 0, 0);
+		}
+		to {
+			transform: translate3d(0, 0, 0);
+		}
+	}
 }
 
 /* ------------------*/

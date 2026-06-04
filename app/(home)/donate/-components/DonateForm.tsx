@@ -2,7 +2,7 @@
 
 import { useRouter } from "@bprogress/next";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSearchParams } from "next/navigation";
+import { useQueryState } from "nuqs";
 import { Suspense, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -15,10 +15,9 @@ import { TextAreaField, TextField } from "../../-components/FormPartsShared";
 const DonateFormSchema = backendApiSchemaRoutes["@post/donate"].body;
 
 function DonateFormImpl() {
-	const searchParams = useSearchParams();
+	const [message] = useQueryState("message");
 
-	const message = searchParams.get("message");
-	const error = searchParams.get("error");
+	const [error] = useQueryState("error");
 
 	useEffect(() => {
 		if (message) {
@@ -59,14 +58,14 @@ function DonateFormImpl() {
 				<Form.InputGroup className="gap-4">
 					<Form.Input
 						type="number"
-						className="h-[54px] rounded-[12px] bg-[hsl(0,0%,94%)] px-9 text-[12px]
+						className="h-[54px] rounded-[12px] bg-cedar-grey px-9 text-[12px]
 							placeholder:text-cedar-black/40 lg:h-[64px] lg:text-[14px]"
 						placeholder="Input Amount you wish to donate"
 					/>
 
 					<Form.InputRightItem
-						className="size-[54px] shrink-0 rounded-[12px] bg-[hsl(0,0%,94%)] text-[10px]
-							text-cedar-black lg:size-[64px] lg:text-[14px]"
+						className="size-[54px] shrink-0 rounded-[12px] bg-cedar-grey text-[10px] text-cedar-black
+							lg:size-[64px] lg:text-[14px]"
 					>
 						NGN
 					</Form.InputRightItem>

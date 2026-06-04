@@ -75,7 +75,7 @@ const impactStats = [
 function AshOverviewSection() {
 	return (
 		<section className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5">
-			<article className="flex flex-col gap-5 rounded-[24px] bg-[hsl(0,0%,94%)] p-5 lg:rounded-[32px]">
+			<article className="flex flex-col gap-5 rounded-[24px] bg-cedar-grey p-5 lg:rounded-[32px]">
 				<h2
 					className="w-fit rounded-[12px] bg-cedar-black px-7 py-3 text-cedar-yellow lg:rounded-[20px]
 						lg:text-[24px]"

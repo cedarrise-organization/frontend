@@ -161,7 +161,7 @@ function StoriesImpactSection() {
 					renderItem={(story) => (
 						<li
 							key={story.title}
-							className="flex min-h-[164px] flex-col gap-6 rounded-[16px] bg-[hsl(0,0%,94%)] p-5"
+							className="flex min-h-[164px] flex-col gap-6 rounded-[16px] bg-cedar-grey p-5"
 						>
 							<div className="flex items-center gap-5">
 								<span
@@ -191,9 +191,7 @@ function StoriesImpactSection() {
 				/>
 			</article>
 
-			<article
-				className="flex w-full flex-col gap-6 rounded-[24px] bg-[hsl(0,0%,94%)] p-5 lg:rounded-[32px]"
-			>
+			<article className="flex w-full flex-col gap-6 rounded-[24px] bg-cedar-grey p-5 lg:rounded-[32px]">
 				<h3
 					className="w-fit rounded-[12px] bg-cedar-black px-7 py-3 text-cedar-yellow lg:rounded-[20px]
 						lg:text-[24px]"

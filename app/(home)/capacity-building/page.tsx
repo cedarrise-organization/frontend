@@ -251,7 +251,7 @@ function RegisterPromptSection() {
 function PartnerCtaSection() {
 	return (
 		<section
-			className="flex flex-col items-center rounded-[24px] bg-[hsl(0,0%,94%)] p-6 text-center
+			className="flex flex-col items-center rounded-[24px] bg-cedar-grey p-6 text-center
 				text-cedar-black lg:rounded-[32px] lg:p-[64px]"
 		>
 			<h2 className="text-[32px]/[1.2] lg:text-[48px]">Partner With Us to Build Capacity</h2>

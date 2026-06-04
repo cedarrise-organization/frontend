@@ -39,8 +39,8 @@ export function TestimonialCarouselShared(props: {
 							)}
 						>
 							<article
-								className="flex size-full flex-col gap-5 rounded-[24px] bg-[hsl(0,0%,94%)] py-6
-									pr-5 pl-6.5"
+								className="flex size-full flex-col gap-5 rounded-[24px] bg-cedar-grey py-6 pr-5
+									pl-6.5"
 							>
 								<span
 									className="grid h-11 w-[55px] shrink-0 place-content-center rounded-[20px]

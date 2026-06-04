@@ -82,7 +82,7 @@ function DesktopNavigation(props: { className?: string }) {
 							<NavLink
 								href={item.link}
 								className="inline-flex h-12 shrink-0 items-center justify-center rounded-[20px] p-5
-									transition-colors hover:bg-[hsl(0,0%,94%)] hover:text-cedar-red
+									transition-colors hover:bg-cedar-grey hover:text-cedar-red
 									data-[active=true]:bg-cedar-yellow data-[active=true]:text-cedar-white"
 							>
 								{item.label}
@@ -94,7 +94,7 @@ function DesktopNavigation(props: { className?: string }) {
 								<DropdownMenu.Trigger
 									data-active={item.children.some((childItem) => childItem.link === pathname)}
 									className="inline-flex h-12 shrink-0 items-center justify-center rounded-[20px]
-										p-5 transition-colors hover:bg-[hsl(0,0%,94%)] hover:text-cedar-red
+										p-5 transition-colors hover:bg-cedar-grey hover:text-cedar-red
 										data-[active=true]:bg-cedar-yellow data-[active=true]:text-cedar-white"
 								>
 									{item.label}
@@ -181,7 +181,7 @@ function MobileNavigation(props: { className?: string }) {
 									key={linkItem.label}
 									href={linkItem.link}
 									className="group flex h-12 items-center justify-between gap-4 rounded-[14px]
-										px-4 transition-colors hover:bg-[hsl(0,0%,94%)] hover:text-cedar-red
+										px-4 transition-colors hover:bg-cedar-grey hover:text-cedar-red
 										data-[active=true]:bg-cedar-black data-[active=true]:text-cedar-white"
 								>
 									{linkItem.label}
@@ -200,7 +200,7 @@ function MobileNavigation(props: { className?: string }) {
 											(childLinkItem) => childLinkItem.link === pathname
 										)}
 										className="flex h-12 w-full items-center justify-between rounded-[14px] px-4
-											hover:bg-[hsl(0,0%,94%)] hover:text-cedar-red
+											hover:bg-cedar-grey hover:text-cedar-red
 											data-[active=true]:bg-cedar-yellow data-[active=true]:text-cedar-white"
 									>
 										<span>{linkItem.label}</span>
@@ -220,7 +220,7 @@ function MobileNavigation(props: { className?: string }) {
 													key={childItem.label}
 													href={childItem.link}
 													className="group flex h-12 items-center gap-3 rounded-[12px] px-4
-														transition-colors hover:bg-[hsl(0,0%,94%)] hover:text-cedar-red
+														transition-colors hover:bg-cedar-grey hover:text-cedar-red
 														data-[active=true]:bg-cedar-black
 														data-[active=true]:text-cedar-white"
 												>
