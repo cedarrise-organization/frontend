@@ -189,7 +189,12 @@ function StudentFeedbackStep() {
 					required={true}
 				/>
 
-				<TextField control={control} name="currentSchool" placeholder="Current School" required={true} />
+				<TextField
+					control={control}
+					name="currentSchool"
+					placeholder="Current School"
+					required={true}
+				/>
 
 				<SelectField
 					control={control}

@@ -466,7 +466,12 @@ function FamilyBackgroundStepThree() {
 			<section className="flex flex-col gap-4 lg:gap-5">
 				<FormStepComponentSectionHeader title="Family Background" />
 
-				<TextField control={form.control} name="fathersName" placeholder="Father's Name" required={true} />
+				<TextField
+					control={form.control}
+					name="fathersName"
+					placeholder="Father's Name"
+					required={true}
+				/>
 				<TextField
 					control={form.control}
 					name="fathersOccupation"
@@ -480,7 +485,12 @@ function FamilyBackgroundStepThree() {
 					type="tel"
 					required={true}
 				/>
-				<TextField control={form.control} name="mothersName" placeholder="Mother's Name" required={true} />
+				<TextField
+					control={form.control}
+					name="mothersName"
+					placeholder="Mother's Name"
+					required={true}
+				/>
 				<TextField
 					control={form.control}
 					name="mothersOccupation"
