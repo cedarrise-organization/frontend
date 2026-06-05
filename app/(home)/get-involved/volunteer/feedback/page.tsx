@@ -178,14 +178,15 @@ function VolunteerExperienceStep() {
 			<section className="flex flex-col gap-4 lg:gap-5">
 				<FormStepComponentSectionHeader title="Volunteer Information" />
 
-				<TextField control={control} name="firstName" placeholder="First Name" />
-				<TextField control={control} name="surname" placeholder="Surname" />
+				<TextField control={control} name="firstName" placeholder="First Name" required={true} />
+				<TextField control={control} name="surname" placeholder="Surname" required={true} />
 
 				<OptionQuestionField
 					control={control}
 					name="programVolunteered"
 					question="1. Program you volunteered with"
 					options={VolunteerFeedbackProgramOptions}
+					required={true}
 				/>
 
 				<OptionQuestionField
@@ -205,6 +206,7 @@ function VolunteerExperienceStep() {
 					question="1. My volunteering experience with CedarRise has been positive."
 					leftLabel="Strongly disagree"
 					rightLabel="Strongly agree"
+					required={true}
 				/>
 
 				<RatingQuestionField
@@ -213,6 +215,7 @@ function VolunteerExperienceStep() {
 					question="2. I clearly understood my role as a volunteer"
 					leftLabel="Strongly disagree"
 					rightLabel="Strongly agree"
+					required={true}
 				/>
 
 				<RatingQuestionField
@@ -221,6 +224,7 @@ function VolunteerExperienceStep() {
 					question="3. I felt supported by the CedarRise team."
 					leftLabel="Strongly disagree"
 					rightLabel="Strongly agree"
+					required={true}
 				/>
 
 				<RatingQuestionField
@@ -229,6 +233,7 @@ function VolunteerExperienceStep() {
 					question="4. The volunteer activities were well organized."
 					leftLabel="Strongly disagree"
 					rightLabel="Strongly agree"
+					required={true}
 				/>
 			</section>
 		</>
@@ -331,7 +336,7 @@ function SuggestionsImprovementStep() {
 					name="additionalComments"
 					label="Any additional comments or feedback"
 				/>
-				<DateField control={control} name="submissionDate" placeholder="Date" />
+				<DateField control={control} name="submissionDate" placeholder="Date" required={true} />
 			</section>
 		</>
 	);

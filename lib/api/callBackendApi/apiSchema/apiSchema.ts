@@ -114,10 +114,10 @@ const requiredStringSchema = z.string().min(1, "This field is required.");
 
 const dateStringSchema = z.iso.date("Enter a valid date.");
 
-const requiredPhoneNumberSchema = z.union(
-	[z.e164(), z.string().regex(/^0\d{10}$/)],
-	"Enter a valid phone number."
-);
+const requiredPhoneNumberSchema = z.union([
+	z.e164("Enter a valid phone number."),
+	z.string().regex(/^0\d{10}$/, "Enter a valid phone number."),
+]);
 
 const optionalPhoneNumberSchema = requiredPhoneNumberSchema.optional();
 

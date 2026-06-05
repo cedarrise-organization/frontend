@@ -177,15 +177,26 @@ function StudentFeedbackStepOne() {
 			<section className="flex flex-col gap-4 lg:gap-5">
 				<FormStepComponentSectionHeader title="Student Information" />
 
-				<TextField control={control} name="studentFirstName" placeholder="Student First Name" />
-				<TextField control={control} name="studentSurname" placeholder="Student Surname" />
-				<TextField control={control} name="schoolName" placeholder="Current School" />
+				<TextField
+					control={control}
+					name="studentFirstName"
+					placeholder="Student First Name"
+					required={true}
+				/>
+				<TextField
+					control={control}
+					name="studentSurname"
+					placeholder="Student Surname"
+					required={true}
+				/>
+				<TextField control={control} name="schoolName" placeholder="Current School" required={true} />
 				<SelectField
 					control={control}
 					classNames={{ trigger: "max-w-[305px]" }}
 					name="currentClass"
 					placeholder="Current Class"
 					options={AshFeedbackClassOptions}
+					required={true}
 				/>
 			</section>
 
@@ -197,6 +208,7 @@ function StudentFeedbackStepOne() {
 					name="attendanceFrequency"
 					question="1. How much do you enjoy attending ASH?"
 					options={AshAttendanceFrequencyOptions}
+					required={true}
 				/>
 
 				<CheckboxQuestionField
@@ -212,6 +224,7 @@ function StudentFeedbackStepOne() {
 					question="3. Which subject area has improved the most?"
 					leftLabel="Strongly disagree"
 					rightLabel="Strongly agree"
+					required={true}
 				/>
 
 				<RatingQuestionField
@@ -220,6 +233,7 @@ function StudentFeedbackStepOne() {
 					question="4. ASH has improved my confidence in school work."
 					leftLabel="Strongly disagree"
 					rightLabel="Strongly agree"
+					required={true}
 				/>
 
 				<RatingQuestionField
@@ -228,6 +242,7 @@ function StudentFeedbackStepOne() {
 					question="5. Tutors and mentors explain things clearly."
 					leftLabel="Strongly disagree"
 					rightLabel="Strongly agree"
+					required={true}
 				/>
 
 				<TextAreaField
@@ -254,12 +269,18 @@ function ParentGuardianFeedbackStepTwo() {
 			<section className="flex flex-col gap-4 lg:gap-5">
 				<FormStepComponentSectionHeader title="Parent / Guardian Information" />
 
-				<TextField control={control} name="parentGuardianName" placeholder="Parent / Guardian Name" />
+				<TextField
+					control={control}
+					name="parentGuardianName"
+					placeholder="Parent / Guardian Name"
+					required={true}
+				/>
 				<OptionQuestionField
 					control={control}
 					name="parentGuardianRelationship"
 					question="Relationship to Student"
 					options={ParentGuardianRelationshipOptions}
+					required={true}
 				/>
 				<TextField control={control} name="parentPhone" placeholder="Phone Number" type="tel" />
 			</section>
@@ -293,6 +314,7 @@ function ParentGuardianFeedbackStepTwo() {
 					name="childBenefited"
 					question="4. How would you describe the student's attendance experience?"
 					options={AshChildBenefitedOptions}
+					required={true}
 				/>
 
 				<RatingQuestionField

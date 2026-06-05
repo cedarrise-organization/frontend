@@ -175,11 +175,21 @@ function StudentFeedbackStep() {
 			<section className="flex flex-col gap-4 lg:gap-5">
 				<FormStepComponentSectionHeader title="Student Information" />
 
-				<TextField control={control} name="studentFirstName" placeholder="Student First name" />
+				<TextField
+					control={control}
+					name="studentFirstName"
+					placeholder="Student First name"
+					required={true}
+				/>
 
-				<TextField control={control} name="studentSurname" placeholder="Student Surname" />
+				<TextField
+					control={control}
+					name="studentSurname"
+					placeholder="Student Surname"
+					required={true}
+				/>
 
-				<TextField control={control} name="currentSchool" placeholder="Current School" />
+				<TextField control={control} name="currentSchool" placeholder="Current School" required={true} />
 
 				<SelectField
 					control={control}
@@ -187,6 +197,7 @@ function StudentFeedbackStep() {
 					name="currentClass"
 					placeholder="Current Class"
 					options={TacotsFeedbackClassOptions}
+					required={true}
 				/>
 			</section>
 
@@ -198,6 +209,7 @@ function StudentFeedbackStep() {
 					name="scholarshipHelpedStay"
 					question="1. Has the TACOTS scholarship helped you stay in school?"
 					options={TacotsScholarshipHelpedStayOptions}
+					required={true}
 				/>
 
 				<CheckboxQuestionField
@@ -213,6 +225,7 @@ function StudentFeedbackStep() {
 					question="3. Because of TACOTS, my motivation to study has improved."
 					leftLabel="Strongly disagree"
 					rightLabel="Strongly agree"
+					required={true}
 				/>
 
 				<RatingQuestionField
@@ -221,6 +234,7 @@ function StudentFeedbackStep() {
 					question="4. TACOTS mentorship and guidance have helped me personally."
 					leftLabel="Strongly disagree"
 					rightLabel="Strongly agree"
+					required={true}
 				/>
 
 				<CheckboxQuestionField
@@ -254,13 +268,19 @@ function ParentFeedbackStep() {
 			<section className="flex flex-col gap-4 lg:gap-5">
 				<FormStepComponentSectionHeader title="Student Information" />
 
-				<TextField control={control} name="parentGuardianName" placeholder="Parent / Guardian Name" />
+				<TextField
+					control={control}
+					name="parentGuardianName"
+					placeholder="Parent / Guardian Name"
+					required={true}
+				/>
 
 				<OptionQuestionField
 					control={control}
 					name="parentGuardianRelationship"
 					question="Relationship to Student"
 					options={ParentGuardianRelationshipOptions}
+					required={true}
 				/>
 
 				<TextField control={control} name="parentPhone" placeholder="Phone Number" type="tel" />
@@ -274,6 +294,7 @@ function ParentFeedbackStep() {
 					name="scholarshipReducedBurden"
 					question="1. Has the TACOTS scholarship helped reduce the financial burden?"
 					options={TacotsScholarshipReducedBurdenOptions}
+					required={true}
 				/>
 
 				<OptionQuestionField

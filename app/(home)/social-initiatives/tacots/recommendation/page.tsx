@@ -283,9 +283,9 @@ function StudentPersonalInformationStepOne() {
 		<>
 			<FormStepComponentSectionHeader title="Student Personal Information" />
 
-			<TextField control={form.control} name="firstName" placeholder="First Name" />
+			<TextField control={form.control} name="firstName" placeholder="First Name" required={true} />
 			<TextField control={form.control} name="middleName" placeholder="Middle Name" />
-			<TextField control={form.control} name="surname" placeholder="Surname" />
+			<TextField control={form.control} name="surname" placeholder="Surname" required={true} />
 
 			<SelectField
 				control={form.control}
@@ -293,15 +293,17 @@ function StudentPersonalInformationStepOne() {
 				name="age"
 				placeholder="Age"
 				options={TacotsAgeOptions}
+				required={true}
 			/>
 
-			<DateField control={form.control} name="dob" placeholder="Date of Birth" />
+			<DateField control={form.control} name="dob" placeholder="Date of Birth" required={true} />
 
 			<OptionQuestionField
 				control={form.control}
 				name="gender"
 				question="Gender"
 				options={GenderOptions}
+				required={true}
 			/>
 
 			<SelectField
@@ -309,6 +311,7 @@ function StudentPersonalInformationStepOne() {
 				name="religion"
 				placeholder="Religion/Denomination"
 				options={TacotsRecommendationReligionOptions}
+				required={true}
 			/>
 
 			<CheckboxQuestionField
@@ -330,6 +333,7 @@ function StudentPersonalInformationStepOne() {
 				name="primaryLanguage"
 				placeholder="Primary Language Spoken at Home"
 				options={PrimaryLanguageOptions}
+				required={true}
 			/>
 
 			<TextField
@@ -338,7 +342,7 @@ function StudentPersonalInformationStepOne() {
 				placeholder="Participant's Phone Number"
 				type="tel"
 			/>
-			<TextField control={form.control} name="nationality" placeholder="Nationality" />
+			<TextField control={form.control} name="nationality" placeholder="Nationality" required={true} />
 
 			<div className="flex gap-3">
 				<ComboboxField
@@ -346,6 +350,7 @@ function StudentPersonalInformationStepOne() {
 					name="stateOfOrigin"
 					placeholder="State of Origin"
 					options={NigeriaStateOptions}
+					required={true}
 				/>
 
 				<Form.Watch control={form.control} name="stateOfOrigin">
@@ -356,12 +361,18 @@ function StudentPersonalInformationStepOne() {
 							name="lga"
 							placeholder="Local Government Area"
 							options={getLgaOptions(stateOfOrigin)}
+							required={true}
 						/>
 					)}
 				</Form.Watch>
 			</div>
 
-			<TextField control={form.control} name="homeAddress" placeholder="Home Address / Community" />
+			<TextField
+				control={form.control}
+				name="homeAddress"
+				placeholder="Home Address / Community"
+				required={true}
+			/>
 		</>
 	);
 }
@@ -378,15 +389,17 @@ function EducationalInformationStepTwo() {
 				control={form.control}
 				name="schoolName"
 				placeholder="Name of Current School or Last School Attended"
+				required={true}
 			/>
 
 			<div className="flex flex-col gap-3">
-				<TextField control={form.control} name="schoolTown" placeholder="Town/ City" />
+				<TextField control={form.control} name="schoolTown" placeholder="Town/ City" required={true} />
 				<SelectField
 					control={form.control}
 					name="schoolState"
 					placeholder="State"
 					options={NigeriaStateOptions}
+					required={true}
 				/>
 			</div>
 
@@ -395,6 +408,7 @@ function EducationalInformationStepTwo() {
 				name="lastYearAttended"
 				placeholder="Last Year Student Attended School"
 				options={TacotsYearOptions}
+				required={true}
 			/>
 
 			<SelectField
@@ -403,6 +417,7 @@ function EducationalInformationStepTwo() {
 				name="lastClass"
 				placeholder="Last Class"
 				options={ClassOptions}
+				required={true}
 			/>
 
 			<TextField
@@ -412,6 +427,7 @@ function EducationalInformationStepTwo() {
 				min={1}
 				step={1}
 				type="number"
+				required={true}
 			/>
 
 			<TextField
@@ -428,12 +444,14 @@ function EducationalInformationStepTwo() {
 				control={form.control}
 				name="passportPhoto"
 				label="Upload a Current Passport Photograph"
+				required={true}
 			/>
 
 			<FileUploadField
 				control={form.control}
 				name="lastResult"
 				label="Upload a Picture of Last Result"
+				required={true}
 			/>
 		</>
 	);
@@ -448,23 +466,40 @@ function FamilyBackgroundStepThree() {
 			<section className="flex flex-col gap-4 lg:gap-5">
 				<FormStepComponentSectionHeader title="Family Background" />
 
-				<TextField control={form.control} name="fathersName" placeholder="Father's Name" />
-				<TextField control={form.control} name="fathersOccupation" placeholder="Father's Occupation" />
+				<TextField control={form.control} name="fathersName" placeholder="Father's Name" required={true} />
+				<TextField
+					control={form.control}
+					name="fathersOccupation"
+					placeholder="Father's Occupation"
+					required={true}
+				/>
 				<TextField
 					control={form.control}
 					name="fathersPhone"
 					placeholder="Father's Phone Number"
 					type="tel"
+					required={true}
 				/>
-				<TextField control={form.control} name="mothersName" placeholder="Mother's Name" />
-				<TextField control={form.control} name="mothersOccupation" placeholder="Mother's Occupation" />
+				<TextField control={form.control} name="mothersName" placeholder="Mother's Name" required={true} />
+				<TextField
+					control={form.control}
+					name="mothersOccupation"
+					placeholder="Mother's Occupation"
+					required={true}
+				/>
 				<TextField
 					control={form.control}
 					name="mothersPhone"
 					placeholder="Mother's Phone Number"
 					type="tel"
+					required={true}
 				/>
-				<TextField control={form.control} name="parentsAddress" placeholder="Parent's Address" />
+				<TextField
+					control={form.control}
+					name="parentsAddress"
+					placeholder="Parent's Address"
+					required={true}
+				/>
 				<TextField
 					control={form.control}
 					name="guardianName"
@@ -495,6 +530,7 @@ function FamilyBackgroundStepThree() {
 					name="householdSize"
 					placeholder="Household Size"
 					options={HouseholdSizeOptions}
+					required={true}
 				/>
 				<SelectField
 					control={form.control}
@@ -502,6 +538,7 @@ function FamilyBackgroundStepThree() {
 					name="numSiblings"
 					placeholder="Number of Siblings"
 					options={SiblingsOptions}
+					required={true}
 				/>
 				<SelectField
 					control={form.control}
@@ -509,6 +546,7 @@ function FamilyBackgroundStepThree() {
 					name="familyPosition"
 					placeholder="Child's Position in the Family"
 					options={TacotsFamilyPositionOptions}
+					required={true}
 				/>
 
 				<OptionQuestionField
@@ -516,6 +554,7 @@ function FamilyBackgroundStepThree() {
 					name="specialCircumstances"
 					question="Special Circumstances"
 					options={TacotsSpecialCircumstanceOptions}
+					required={true}
 				/>
 			</section>
 
@@ -527,6 +566,7 @@ function FamilyBackgroundStepThree() {
 					name="annualHouseholdIncome"
 					question="1. Annual Household Income"
 					options={TacotsAnnualHouseholdIncomeOptions}
+					required={true}
 				/>
 
 				<CheckboxQuestionField
@@ -534,6 +574,7 @@ function FamilyBackgroundStepThree() {
 					name="incomeSources"
 					question="2. Source of Household Income"
 					options={TacotsIncomeSourceOptions}
+					required={true}
 				/>
 
 				<OptionQuestionField
@@ -541,6 +582,7 @@ function FamilyBackgroundStepThree() {
 					name="numIncomeEarners"
 					question="3. Number of Income Earners in the Household"
 					options={TacotsIncomeEarnerCountOptions}
+					required={true}
 				/>
 
 				<TextField
@@ -557,6 +599,7 @@ function FamilyBackgroundStepThree() {
 					name="livesWith"
 					question="4. Who does the student currently live with?"
 					options={TacotsLivesWithOptions}
+					required={true}
 				/>
 
 				<OptionQuestionField
@@ -564,6 +607,7 @@ function FamilyBackgroundStepThree() {
 					name="residenceType"
 					question="5. Type of Residence"
 					options={TacotsResidenceTypeOptions}
+					required={true}
 				/>
 
 				<OptionQuestionField
@@ -571,6 +615,7 @@ function FamilyBackgroundStepThree() {
 					name="hasElectricity"
 					question="6. Does the household have access to electricity?"
 					options={YesNoSometimesOptions}
+					required={true}
 				/>
 			</section>
 		</>
@@ -586,24 +631,37 @@ function RecommenderDetailsStepFour() {
 			<section className="flex flex-col gap-4 lg:gap-5">
 				<FormStepComponentSectionHeader title="Recommender's Details" />
 
-				<TextField control={form.control} name="recommenderFirstName" placeholder="First Name" />
-				<TextField control={form.control} name="recommenderLastName" placeholder="Last Name" />
+				<TextField
+					control={form.control}
+					name="recommenderFirstName"
+					placeholder="First Name"
+					required={true}
+				/>
+				<TextField
+					control={form.control}
+					name="recommenderLastName"
+					placeholder="Last Name"
+					required={true}
+				/>
 				<TextField
 					control={form.control}
 					name="recommenderPhone"
 					placeholder="Phone Number"
 					type="tel"
+					required={true}
 				/>
 				<TextField
 					control={form.control}
 					name="recommenderAddress"
 					placeholder="Home Address / Community"
+					required={true}
 				/>
 
 				<TextAreaField
 					control={form.control}
 					name="childBackgroundNotes"
 					label="Tells us a bit about this child's background, why he/she needs support"
+					required={true}
 				/>
 
 				<CheckboxQuestionField
@@ -611,6 +669,7 @@ function RecommenderDetailsStepFour() {
 					name="supportTypesNeeded"
 					question="1. Types of Support Needed"
 					options={TacotsSupportTypeOptions}
+					required={true}
 				/>
 
 				<TextAreaField
@@ -629,6 +688,7 @@ function RecommenderDetailsStepFour() {
 					question="1. Level of Discipline"
 					leftLabel="Poor"
 					rightLabel="Excellent"
+					required={true}
 				/>
 
 				<RatingQuestionField
@@ -637,9 +697,15 @@ function RecommenderDetailsStepFour() {
 					question="2. Sense of Responsibility"
 					leftLabel="Poor"
 					rightLabel="Excellent"
+					required={true}
 				/>
 
-				<TextField control={form.control} name="careerGoal" placeholder="Career Goal / Interest" />
+				<TextField
+					control={form.control}
+					name="careerGoal"
+					placeholder="Career Goal / Interest"
+					required={true}
+				/>
 
 				<TextAreaField control={form.control} name="studentStatement" label="Student's Statement" />
 			</section>

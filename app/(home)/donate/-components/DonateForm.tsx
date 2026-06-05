@@ -15,19 +15,22 @@ import { TextAreaField, TextField } from "../../-components/FormPartsShared";
 const DonateFormSchema = backendApiSchemaRoutes["@post/donate"].body;
 
 function DonateFormImpl() {
-	const [message] = useQueryState("message");
+	const [messageQuery, setMessageQuery] = useQueryState("message");
 
-	const [error] = useQueryState("error");
+	const [errorQuery, setErrorQuery] = useQueryState("error");
 
 	useEffect(() => {
-		if (message) {
-			toast.success(message);
+		if (messageQuery) {
+			toast.success(messageQuery);
+			void setMessageQuery(null);
+			return;
 		}
 
-		if (error) {
-			toast.error(error);
+		if (errorQuery) {
+			toast.error(errorQuery);
+			void setErrorQuery(null);
 		}
-	}, [message, error]);
+	}, [messageQuery, errorQuery, setMessageQuery, setErrorQuery]);
 
 	const form = useForm({
 		defaultValues: {

@@ -188,11 +188,17 @@ function VolunteerInformationStepOne() {
 		<>
 			<FormStepComponentSectionHeader title="Volunteer Information" />
 
-			<TextField control={control} name="firstName" placeholder="First Name" />
+			<TextField control={control} name="firstName" placeholder="First Name" required={true} />
 			<TextField control={control} name="middleName" placeholder="Middle Name" />
-			<TextField control={control} name="surname" placeholder="Surname" />
+			<TextField control={control} name="surname" placeholder="Surname" required={true} />
 
-			<OptionQuestionField control={control} name="gender" question="Gender" options={GenderOptions} />
+			<OptionQuestionField
+				control={control}
+				name="gender"
+				question="Gender"
+				options={GenderOptions}
+				required={true}
+			/>
 
 			<SelectField
 				control={control}
@@ -200,12 +206,25 @@ function VolunteerInformationStepOne() {
 				name="age"
 				placeholder="Age"
 				options={VolunteerAgeOptions}
+				required={true}
 			/>
 
-			<DateField control={control} name="dob" placeholder="Date of Birth" />
-			<TextField control={control} name="phoneNumber" placeholder="Phone Number" type="tel" />
-			<TextField control={control} name="emailAddress" placeholder="Email Address" type="email" />
-			<TextField control={control} name="homeAddress" placeholder="Home address" />
+			<DateField control={control} name="dob" placeholder="Date of Birth" required={true} />
+			<TextField
+				control={control}
+				name="phoneNumber"
+				placeholder="Phone Number"
+				type="tel"
+				required={true}
+			/>
+			<TextField
+				control={control}
+				name="emailAddress"
+				placeholder="Email Address"
+				type="email"
+				required={true}
+			/>
+			<TextField control={control} name="homeAddress" placeholder="Home address" required={true} />
 
 			<div className="flex gap-3 lg:gap-5 [&>div]:max-w-none">
 				<ComboboxField
@@ -213,6 +232,7 @@ function VolunteerInformationStepOne() {
 					name="state"
 					placeholder="State"
 					options={NigeriaStateOptions}
+					required={true}
 				/>
 
 				<Form.Watch control={control} name="state">
@@ -223,6 +243,7 @@ function VolunteerInformationStepOne() {
 							name="city"
 							placeholder="City"
 							options={getLgaOptions(state)}
+							required={true}
 						/>
 					)}
 				</Form.Watch>
@@ -251,6 +272,7 @@ function VolunteerInterestStepTwo() {
 					control={control}
 					name="reasonForVolunteering"
 					label="Why would you like to volunteer with CedarRise?"
+					required={true}
 				/>
 
 				<CheckboxQuestionField
@@ -258,6 +280,7 @@ function VolunteerInterestStepTwo() {
 					name="volunteerAreas"
 					question="1. Areas you would like to volunteer in"
 					options={VolunteerAreaOptions}
+					required={true}
 				/>
 
 				<CheckboxQuestionField
@@ -276,6 +299,7 @@ function VolunteerInterestStepTwo() {
 					name="availability"
 					question="1. When are you generally available to volunteer?"
 					options={VolunteerAvailabilityOptions}
+					required={true}
 				/>
 
 				<OptionQuestionField
@@ -330,6 +354,7 @@ function VolunteerInterestStepTwo() {
 					name="safeguardingAgreement"
 					question="Do you agree to follow CedarRise volunteer guidelines and safeguarding policies?"
 					options={YesNoOptions}
+					required={true}
 				/>
 			</section>
 

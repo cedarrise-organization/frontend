@@ -61,7 +61,7 @@ export default RegisterFormPage;
 
 const stepItems = defineFormStepItems([
 	{
-		StepComponent: StudentPersonalInformationStep,
+		StepComponent: StudentPersonalInformationStepOne,
 		title: "Student personal information",
 		validator: AshRegisterSchema.pick({
 			age: true,
@@ -78,7 +78,7 @@ const stepItems = defineFormStepItems([
 		}),
 	},
 	{
-		StepComponent: SchoolInformationStep,
+		StepComponent: SchoolInformationStepTwo,
 		title: "School information",
 		validator: AshRegisterSchema.pick({
 			classPositionLastTerm: true,
@@ -93,7 +93,7 @@ const stepItems = defineFormStepItems([
 		}),
 	},
 	{
-		StepComponent: ParentGuardianInformationStep,
+		StepComponent: ParentGuardianInformationStepThree,
 		title: "Parent / guardian information",
 		validator: AshRegisterSchema.pick({
 			fathersName: true,
@@ -110,7 +110,7 @@ const stepItems = defineFormStepItems([
 		}),
 	},
 	{
-		StepComponent: WellbeingConsentStep,
+		StepComponent: WellbeingConsentStepFour,
 		title: "Wellbeing and consent",
 		validator: AshRegisterSchema.pick({
 			assignedMentor: true,
@@ -221,7 +221,7 @@ function AshRegisterForm() {
 	);
 }
 
-function StudentPersonalInformationStep() {
+function StudentPersonalInformationStepOne() {
 	const { control } = useFormContext<z.infer<(typeof stepItems)[0]["validator"]>>();
 	const form = { control };
 
@@ -229,15 +229,16 @@ function StudentPersonalInformationStep() {
 		<>
 			<FormStepComponentSectionHeader title="Student Personal Information" />
 
-			<TextField control={form.control} name="firstName" placeholder="First Name" />
+			<TextField control={form.control} name="firstName" placeholder="First Name" required={true} />
 			<TextField control={form.control} name="middleName" placeholder="Middle Name" />
-			<TextField control={form.control} name="surname" placeholder="Surname" />
+			<TextField control={form.control} name="surname" placeholder="Surname" required={true} />
 
 			<OptionQuestionField
 				control={form.control}
 				name="programType"
 				question="Program Type"
 				options={AshProgramTypeOptions}
+				required={true}
 			/>
 
 			<SelectField
@@ -246,15 +247,17 @@ function StudentPersonalInformationStep() {
 				name="age"
 				placeholder="Age"
 				options={AshAgeOptions}
+				required={true}
 			/>
 
-			<DateField control={form.control} name="dob" placeholder="Date of Birth" />
+			<DateField control={form.control} name="dob" placeholder="Date of Birth" required={true} />
 
 			<OptionQuestionField
 				control={form.control}
 				name="gender"
 				question="Gender"
 				options={GenderOptions}
+				required={true}
 			/>
 
 			<SelectField
@@ -262,20 +265,22 @@ function StudentPersonalInformationStep() {
 				name="primaryLanguage"
 				placeholder="Primary Language Spoken at home"
 				options={PrimaryLanguageOptions}
+				required={true}
 			/>
 
-			<TextField control={form.control} name="homeAddress" placeholder="Home Address" />
+			<TextField control={form.control} name="homeAddress" placeholder="Home Address" required={true} />
 			<TextField control={form.control} name="studentPhone" placeholder="Phone Number" type="tel" />
 			<FileUploadField
 				control={form.control}
 				name="passportPhoto"
 				label="Upload Student Passport Photograph"
+				required={true}
 			/>
 		</>
 	);
 }
 
-function SchoolInformationStep() {
+function SchoolInformationStepTwo() {
 	const { control } = useFormContext<z.infer<(typeof stepItems)[1]["validator"]>>();
 	const form = { control };
 
@@ -283,17 +288,23 @@ function SchoolInformationStep() {
 		<>
 			<FormStepComponentSectionHeader title="School Information" />
 
-			<TextField control={form.control} name="schoolName" placeholder="Name of Current School" />
+			<TextField
+				control={form.control}
+				name="schoolName"
+				placeholder="Name of Current School"
+				required={true}
+			/>
 
 			<ComboboxField
 				control={form.control}
 				name="schoolState"
 				placeholder="State"
 				options={NigeriaStateOptions}
+				required={true}
 			/>
 
 			<div className="flex flex-col gap-4 lg:flex-row lg:gap-5">
-				<TextField control={form.control} name="schoolTown" placeholder="Town" />
+				<TextField control={form.control} name="schoolTown" placeholder="Town" required={true} />
 
 				<Form.Watch control={form.control} name="schoolState">
 					{(schoolState) => (
@@ -302,6 +313,7 @@ function SchoolInformationStep() {
 							name="schoolLga"
 							placeholder="Local Government Area"
 							options={getLgaOptions(schoolState)}
+							required={true}
 						/>
 					)}
 				</Form.Watch>
@@ -312,6 +324,7 @@ function SchoolInformationStep() {
 				name="currentClass"
 				placeholder="Current Class"
 				options={ClassOptions}
+				required={true}
 			/>
 
 			<TextField
@@ -321,9 +334,15 @@ function SchoolInformationStep() {
 				min={1}
 				step={1}
 				type="number"
+				required={true}
 			/>
 
-			<FileUploadField control={form.control} name="lastResult" label="Upload Last School Result" />
+			<FileUploadField
+				control={form.control}
+				name="lastResult"
+				label="Upload Last School Result"
+				required={true}
+			/>
 
 			<section className="flex flex-col gap-4 lg:gap-5">
 				<h2 className="leading-[1.2] lg:text-[24px]">Program Participation</h2>
@@ -333,19 +352,21 @@ function SchoolInformationStep() {
 					name="prevAfterschoolProgram"
 					question="Has the student previously participated in an after-school program?"
 					options={YesNoOptions}
+					required={true}
 				/>
 
 				<TextAreaField
 					control={form.control}
 					name="reasonForJoining"
 					label="Why does the student want to join the ASH program?"
+					required={true}
 				/>
 			</section>
 		</>
 	);
 }
 
-function ParentGuardianInformationStep() {
+function ParentGuardianInformationStepThree() {
 	const { control } = useFormContext<z.infer<(typeof stepItems)[2]["validator"]>>();
 	const form = { control };
 
@@ -353,7 +374,12 @@ function ParentGuardianInformationStep() {
 		<>
 			<FormStepComponentSectionHeader title="Parent / Guardian Information" />
 
-			<TextField control={form.control} name="fathersName" placeholder="Father's Name" />
+			<TextField
+				control={form.control}
+				name="fathersName"
+				placeholder="Father's Name"
+				required={true}
+			/>
 
 			<TextField
 				control={form.control}
@@ -362,15 +388,26 @@ function ParentGuardianInformationStep() {
 				type="tel"
 			/>
 
-			<TextField control={form.control} name="fathersOccupation" placeholder="Father's Occupation" />
+			<TextField
+				control={form.control}
+				name="fathersOccupation"
+				placeholder="Father's Occupation"
+				required={true}
+			/>
 
-			<TextField control={form.control} name="mothersName" placeholder="Mother's Name" />
+			<TextField
+				control={form.control}
+				name="mothersName"
+				placeholder="Mother's Name"
+				required={true}
+			/>
 
 			<TextField
 				control={form.control}
 				name="mothersPhone"
 				placeholder="Mother's Phone Number"
 				type="tel"
+				required={true}
 			/>
 
 			<TextField control={form.control} name="mothersOccupation" placeholder="Mother's Occupation" />
@@ -409,7 +446,7 @@ function ParentGuardianInformationStep() {
 	);
 }
 
-function WellbeingConsentStep() {
+function WellbeingConsentStepFour() {
 	const { control } = useFormContext<z.infer<(typeof stepItems)[3]["validator"]>>();
 	const form = { control };
 
@@ -423,6 +460,7 @@ function WellbeingConsentStep() {
 					name="hasLearningCondition"
 					question="Does the student have any condition that may affect learning?"
 					options={LearningConditionStatusOptions}
+					required={true}
 				/>
 
 				<CheckboxQuestionField
@@ -510,6 +548,7 @@ function WellbeingConsentStep() {
 					control={form.control}
 					name="parentSignature"
 					label="Upload a copy of parents signature and name"
+					required={true}
 				/>
 			</section>
 

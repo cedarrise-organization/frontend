@@ -29,7 +29,11 @@ function FormRequiredIndicator(props: { required: boolean | undefined }) {
 
 	return (
 		required && (
-			<Form.Description className="ml-1 text-[13px] leading-0 text-red-600">*</Form.Description>
+			<Form.Description
+				className="mt-2 -mb-1 ml-0.5 text-[10px] tracking-tight text-red-500 lg:text-[13px]"
+			>
+				*Required
+			</Form.Description>
 		)
 	);
 }
@@ -444,7 +448,7 @@ export function FileUploadField<TFieldValues extends FieldValues, TTransformedVa
 								<IconBox icon="solar:gallery-outline" className="size-6" />
 							</DropZoneInput.Area>
 
-							<DropZoneInput.ImagePreview />
+							<DropZoneInput.ImagePreview classNames={{ listContainer: "max-w-[300px]" }} />
 						</DropZoneInput.Root>
 					)}
 				/>
