@@ -492,7 +492,7 @@ function WellbeingConsentStepFour() {
 								onCheckedChange={field.onChange}
 								classNames={{
 									base: `mt-[2px] size-4 rounded-[4px] border-[1.5px] border-cedar-black/40
-									bg-transparent data-checked:bg-transparent lg:mt-[3px]`,
+									bg-transparent lg:mt-[3px] data-checked:bg-transparent`,
 									icon: "size-3",
 								}}
 							/>
@@ -532,7 +532,7 @@ function WellbeingConsentStepFour() {
 								onCheckedChange={field.onChange}
 								classNames={{
 									base: `mt-[2px] size-4 rounded-[4px] border-[1.5px] border-cedar-black/40
-									bg-transparent data-checked:bg-transparent lg:mt-[3px]`,
+									bg-transparent lg:mt-[3px] data-checked:bg-transparent`,
 									icon: "size-3",
 								}}
 							/>

@@ -115,7 +115,7 @@ export function RatingQuestionField<TFieldValues extends FieldValues, TTransform
 			<p>{question}</p>
 
 			<Form.FieldBoundController
-				render={({ field }) => (
+				render={({ field, fieldContext }) => (
 					<Form.InputGroup className="mt-3 items-start justify-start gap-4">
 						<Form.InputLeftItem className="mt-0.5 shrink-0">{leftLabel}</Form.InputLeftItem>
 
@@ -126,26 +126,22 @@ export function RatingQuestionField<TFieldValues extends FieldValues, TTransform
 						>
 							<For
 								each={ratingValues}
-								renderItem={(rating) => {
-									const id = `rating-${name}-${rating}`;
+								renderItem={(rating) => (
+									<div key={rating} className="flex flex-col items-center">
+										<RadioGroupAnimated.Item
+											id={`${fieldContext.formItemId}-${rating}`}
+											value={rating}
+											className="grid size-4 place-content-center rounded-full border
+												border-cedar-black/64"
+										>
+											<RadioGroupAnimated.Indicator className="size-2 rounded-full bg-cedar-red" />
+										</RadioGroupAnimated.Item>
 
-									return (
-										<div key={rating} className="flex flex-col items-center">
-											<RadioGroupAnimated.Item
-												id={id}
-												value={rating}
-												className="grid size-4 place-content-center rounded-full border
-													border-cedar-black/64"
-											>
-												<RadioGroupAnimated.Indicator
-													className="size-2 rounded-full bg-cedar-red"
-												/>
-											</RadioGroupAnimated.Item>
-
-											<Form.Label htmlFor={id}>{rating}</Form.Label>
-										</div>
-									);
-								}}
+										<Form.Label htmlFor={`${fieldContext.formItemId}-${rating}`}>
+											{rating}
+										</Form.Label>
+									</div>
+								)}
 							/>
 						</RadioGroupAnimated.Root>
 
@@ -197,8 +193,9 @@ export function CheckboxQuestionField<TFieldValues extends FieldValues, TTransfo
 											:	field.onChange(selectedItems.filter((item) => item !== option));
 										}}
 										classNames={{
-											base: `mt-0.5 size-4 rounded-[4px] border-[1.5px] border-cedar-black/40
-											bg-transparent data-checked:bg-transparent lg:mt-[3px]`,
+											base: `mt-0.5 size-4 border-[1.5px] border-cedar-black/40 bg-transparent
+											lg:mt-[3px] data-checked:border-cedar-black/40 data-checked:bg-transparent
+											data-checked:text-cedar-black/64`,
 											icon: "size-3",
 										}}
 									/>

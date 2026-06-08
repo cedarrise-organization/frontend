@@ -1,7 +1,7 @@
 import { DashboardHeader } from "./-components/DashboardHeader";
 import { DashboardSidebar } from "./-components/DashboardSidebar";
 
-function DashboardLayout({ children }: LayoutProps<"/dashboard">) {
+function DashboardLayout({ children }: LayoutProps<"/admin/dashboard">) {
 	return (
 		<div className="flex grow bg-[hsl(210,17%,98%)]">
 			<DashboardSidebar />

@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "@zayne-labs/ui-react/css/preset.css";
+@import "shadcn/tailwind.css";
 
 /* ------------------*/
 /* App Theme         */
@@ -37,7 +38,7 @@
 	--breakpoint-*: initial;
 	--breakpoint-sm: 480px;
 	--breakpoint-md: 780px;
-	--breakpoint-lg: 1024px;
+	--breakpoint-lg: 1000px;
 	--breakpoint-xl: 1280px;
 
 	/*--- Animations ---*/

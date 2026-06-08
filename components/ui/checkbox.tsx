@@ -25,9 +25,9 @@ function Checkbox(
 				focus-visible:ring-3 focus-visible:ring-shadcn-ring/50 disabled:cursor-not-allowed
 				disabled:opacity-50 aria-invalid:border-shadcn-destructive aria-invalid:ring-3
 				aria-invalid:ring-shadcn-destructive/20 aria-invalid:aria-checked:border-shadcn-primary
-				data-checked:border-shadcn-primary data-checked:bg-shadcn-primary
-				data-checked:text-shadcn-primary-foreground dark:bg-shadcn-input/30
-				dark:aria-invalid:border-shadcn-destructive/50 dark:aria-invalid:ring-shadcn-destructive/40
+				dark:bg-shadcn-input/30 dark:aria-invalid:border-shadcn-destructive/50
+				dark:aria-invalid:ring-shadcn-destructive/40 data-checked:border-shadcn-primary
+				data-checked:bg-shadcn-primary data-checked:text-shadcn-primary-foreground
 				dark:data-checked:bg-shadcn-primary`,
 				className,
 				classNames?.base
@@ -36,12 +36,9 @@ function Checkbox(
 		>
 			<CheckboxPrimitive.Indicator
 				data-slot="checkbox-indicator"
-				className={cnMerge(
-					"grid place-content-center text-current transition-none",
-					classNames?.indicator
-				)}
+				className={cnMerge("grid place-content-center", classNames?.indicator)}
 			>
-				<IconBox icon="lucide:check" className={cnMerge("size-3.5", classNames?.icon)} />
+				<IconBox icon="lucide:check" className={cnMerge("size-3.5 text-black", classNames?.icon)} />
 			</CheckboxPrimitive.Indicator>
 		</CheckboxPrimitive.Root>
 	);

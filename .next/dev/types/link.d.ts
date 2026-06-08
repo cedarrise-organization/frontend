@@ -34,9 +34,9 @@ declare namespace __next_route_internal_types__ {
   type StaticRoutes = 
     | `/`
     | `/about`
+    | `/admin/dashboard`
     | `/blog`
     | `/capacity-building`
-    | `/dashboard`
     | `/donate`
     | `/get-involved/partner`
     | `/get-involved/volunteer`

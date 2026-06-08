@@ -81,8 +81,8 @@ function DesktopNavigation(props: { className?: string }) {
 						{item.link && (
 							<NavLink
 								href={item.link}
-								className="inline-flex h-12 shrink-0 items-center justify-center rounded-[20px] p-5
-									transition-colors hover:bg-cedar-grey hover:text-cedar-red
+								className="inline-flex h-[56px] shrink-0 items-center justify-center rounded-[20px]
+									p-5 transition-colors hover:bg-cedar-grey hover:text-cedar-red
 									data-[active=true]:bg-cedar-yellow data-[active=true]:text-cedar-white"
 							>
 								{item.label}
@@ -93,8 +93,8 @@ function DesktopNavigation(props: { className?: string }) {
 							<DropdownMenu.Root modal={false}>
 								<DropdownMenu.Trigger
 									data-active={item.children.some((childItem) => childItem.link === pathname)}
-									className="inline-flex h-12 shrink-0 items-center justify-center rounded-[20px]
-										p-5 transition-colors hover:bg-cedar-grey hover:text-cedar-red
+									className="inline-flex h-[56px] shrink-0 items-center justify-center
+										rounded-[20px] p-5 transition-colors hover:bg-cedar-grey hover:text-cedar-red
 										data-[active=true]:bg-cedar-yellow data-[active=true]:text-cedar-white"
 								>
 									{item.label}
@@ -113,8 +113,8 @@ function DesktopNavigation(props: { className?: string }) {
 												<DropdownMenu.Item
 													asChild={true}
 													key={childItem.label}
-													className="group flex min-h-12 items-center justify-between gap-4
-														rounded-[18px] p-0 px-4 text-[14px] transition-colors
+													className="group flex min-h-[56px] items-center justify-between
+														gap-4 rounded-[18px] p-0 px-4 text-[14px] transition-colors
 														focus:bg-[hsl(0,0%,84%)] focus:text-cedar-red
 														data-[active=true]:bg-cedar-black
 														data-[active=true]:text-cedar-white"
@@ -211,7 +211,7 @@ function MobileNavigation(props: { className?: string }) {
 										/>
 									</CollapsibleAnimated.Trigger>
 
-									<CollapsibleAnimated.Content className="mt-2 flex flex-col gap-1 pl-5">
+									<CollapsibleAnimated.Content className="flex flex-col gap-1 pt-2 pl-5">
 										<For
 											each={linkItem.children}
 											renderItem={(childItem) => (

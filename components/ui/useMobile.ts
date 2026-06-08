@@ -1,8 +1,8 @@
 import { on } from "@zayne-labs/toolkit-core";
 import { useEffect, useState } from "react";
 
-const useIsMobile = (options: { enable?: boolean; mobileBreakpoint?: number }) => {
-	const { enable = true, mobileBreakpoint = 768 } = options;
+const useIsMobile = (options?: { enable?: boolean; mobileBreakpoint?: number }) => {
+	const { enable = true, mobileBreakpoint = 768 } = options ?? {};
 
 	const [isMobile, setIsMobile] = useState<boolean | undefined>();
 
