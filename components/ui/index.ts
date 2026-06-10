@@ -3,6 +3,7 @@ export * from "./calender";
 export * as Avatar from "./avatar";
 export { Badge } from "./badge";
 export * as Carousel from "./carousel";
+export * as Chart from "./chart";
 export * as Dialog from "./dialog";
 export * as Drawer from "./drawer";
 export * as DropdownMenu from "./dropdown-menu";

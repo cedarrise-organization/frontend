@@ -95,6 +95,7 @@ function DashboardSidebar() {
 			sidebarWidthIcon="64px"
 			sidebarWidthIconDesktop="90px"
 			withMobileBreakpoint={false}
+			className="max-lg:max-w-(--sidebar-width-icon)"
 		>
 			<Sidebar.Root
 				collapsible="icon"

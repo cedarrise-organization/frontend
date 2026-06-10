@@ -84,9 +84,9 @@ export const buttonVariants = tv({
 		},
 
 		size: {
-			icon: "size-10 text-base lg:size-[72px] lg:text-[24px]",
+			icon: "size-10 text-base lg:size-[70px] lg:text-[24px]",
 
-			medium: "h-[54px] w-fit px-9 text-[14px] font-medium lg:h-[72px] lg:px-[64px] lg:text-[20px]",
+			medium: "h-12 w-fit px-9 text-[14px] font-medium lg:h-[70px] lg:px-[64px] lg:text-[20px]",
 		},
 
 		theme: {

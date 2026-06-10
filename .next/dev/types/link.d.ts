@@ -35,6 +35,7 @@ declare namespace __next_route_internal_types__ {
     | `/`
     | `/about`
     | `/admin/dashboard`
+    | `/auth/admin/signin`
     | `/blog`
     | `/capacity-building`
     | `/donate`

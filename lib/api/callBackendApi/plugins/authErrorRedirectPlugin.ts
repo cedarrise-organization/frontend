@@ -1,7 +1,7 @@
 import type { RequestContext, ResponseErrorContext } from "@zayne-labs/callapi";
 import { definePlugin } from "@zayne-labs/callapi/utils";
 import { isBrowser } from "@zayne-labs/toolkit-core";
-import type { Awaitable, CallbackFn } from "@zayne-labs/toolkit-type-helpers";
+import type { Awaitable } from "@zayne-labs/toolkit-type-helpers";
 import type { MainAppRoutes } from "@/components/common/NavLink";
 import type { BaseApiErrorResponse } from "../apiSchema";
 import type { ToastPluginMeta } from "./toastPlugin";
@@ -9,17 +9,21 @@ import { isAuthErrorThatNeedsRedirect, isPathnameMatchingRoute, redirectTo } fro
 
 export type AuthErrorRedirectPluginMeta = {
 	auth?: {
+		redirectDelay?: number;
 		redirectErrorMessage?: string;
-		redirectFn?: CallbackFn<MainAppRoutes, Awaitable<void>>;
+		redirectFn?: (route: MainAppRoutes) => Awaitable<void>;
 		redirectRoute?: MainAppRoutes;
 		routesToExemptFromErrorRedirect?: Array<`${MainAppRoutes}/**` | `${string}/**` | MainAppRoutes>;
 		skipErrorRedirect?: boolean;
 	};
 };
 
-const defaultRedirectRoute = "#" satisfies Required<AuthErrorRedirectPluginMeta>["auth"]["redirectRoute"];
+const defaultRedirectRoute =
+	"/auth/admin/signin" satisfies Required<AuthErrorRedirectPluginMeta>["auth"]["redirectRoute"];
 
 const defaultRedirectErrorMessage = "Session is invalid or expired! Redirecting to login...";
+
+const defaultRedirectDelay = 1500;
 
 export const authErrorRedirectPlugin = (authOptions?: AuthErrorRedirectPluginMeta["auth"]) => {
 	const getAuthMetaAndDerivatives = (
@@ -28,7 +32,12 @@ export const authErrorRedirectPlugin = (authOptions?: AuthErrorRedirectPluginMet
 		const authMeta =
 			authOptions ? { ...authOptions, ...ctx.options.meta?.auth } : ctx.options.meta?.auth;
 
-		const redirectFn = authMeta?.redirectFn ?? redirectTo;
+		const redirectFn: Required<AuthErrorRedirectPluginMeta>["auth"]["redirectFn"] = (...params) => {
+			const selectedRedirectFn = authMeta?.redirectFn ?? redirectTo;
+			const redirectDelay = authMeta?.redirectDelay ?? defaultRedirectDelay;
+
+			setTimeout(() => void selectedRedirectFn(...params), redirectDelay);
+		};
 
 		const turnOffErrorToast = () => {
 			ctx.options.meta ??= {};
@@ -83,7 +92,9 @@ export const authErrorRedirectPlugin = (authOptions?: AuthErrorRedirectPluginMet
 
 				if (shouldSkipRouteFromRedirect || !isAuthErrorThatNeedsRedirect(ctx.error)) return;
 
-				isBrowser() && void redirectFn(signInRoute);
+				if (isBrowser()) {
+					void redirectFn(signInRoute);
+				}
 
 				throw new Error(redirectErrorMessage);
 			},

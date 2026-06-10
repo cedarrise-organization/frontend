@@ -4,15 +4,28 @@ import { defineSchema, defineSchemaRoutes } from "@zayne-labs/callapi/utils";
 import { z } from "zod";
 import {
 	AcademicImprovementNoticedOptions,
+	AcademicSessionOptions,
+	AdminDepartmentOptions,
+	AdminReviewStatusOptions,
+	AdminRoleActionOptions,
+	AdminRoleNameOptions,
+	AshAreasOfImprovementOptions,
 	AshAttendanceFrequencyOptions,
 	AshChildBenefitedOptions,
 	AshEnjoyedPartsOptions,
+	AshExitDurationOptions,
+	AshExitReasonOptions,
 	AshFeedbackClassOptions,
 	AshGuardianRelationshipOptions,
 	AshHouseholdIncomeRangeOptions,
 	AshLearningConditionOptions,
+	AshMentorshipReceivedOptions,
 	AshMostValuableAspectsOptions,
+	AshPostExitStatusOptions,
 	AshProgramTypeOptions,
+	AshSessionConductedOptions,
+	AshTermOptions,
+	AshTrackingSortByOptions,
 	CapacityEngagementLevelOptions,
 	CapacityObjectiveAchievementOptions,
 	CapacityOverallSuccessOptions,
@@ -27,22 +40,31 @@ import {
 	ParentGuardianRelationshipOptions,
 	PositiveChangeNoticedOptions,
 	PrimaryLanguageOptions,
+	ProjectStatusOptions,
+	ReviewStatusOptions,
 	TacotsAnnualHouseholdIncomeOptions,
+	TacotsAcademicTermOptions,
 	TacotsCatholicSacramentOptions,
 	TacotsCurrentChallengeOptions,
+	TacotsExitCompletedSecondaryElsewhereOptions,
+	TacotsExitCurrentStatusOptions,
+	TacotsExitReasonOptions,
 	TacotsFamilyPositionOptions,
 	TacotsFeedbackClassOptions,
 	TacotsGuardianRelationshipOptions,
+	TacotsHighestEducationAttainedOptions,
 	TacotsIncomeEarnerCountOptions,
 	TacotsIncomeSourceOptions,
 	TacotsLivesWithOptions,
 	TacotsMostHelpfulSupportOptions,
+	TacotsRecommendationSortByOptions,
 	TacotsRecommendationReligionOptions,
 	TacotsResidenceTypeOptions,
 	TacotsScholarshipHelpedStayOptions,
 	TacotsScholarshipReducedBurdenOptions,
 	TacotsSpecialCircumstanceOptions,
 	TacotsSupportTypeOptions,
+	TacotsVocationalSkillOptions,
 	VolunteerActivityOptions,
 	VolunteerAreaOptions,
 	VolunteerAshAcademicAreaOptions,
@@ -57,6 +79,7 @@ import {
 	VolunteerSkillDevelopedOptions,
 	VolunteerSkillGainedOptions,
 	VolunteerSkillOptions,
+	VolunteerSortByOptions,
 	VolunteerWaysProgramHelpedOptions,
 	YesMaybeNoOptions,
 	YesNoOptions,
@@ -155,6 +178,14 @@ const userIdParamsSchema = z.object({
 	userId: z.uuid("Invalid ID."),
 });
 
+const reviewStatusQuerySchema = z.object({
+	status: requiredEnumSchema(ReviewStatusOptions),
+});
+
+const adminReviewStatusQuerySchema = z.object({
+	status: requiredEnumSchema(AdminReviewStatusOptions),
+});
+
 const galleryPhotoSchema = z.object({
 	public_id: z.string(),
 	url: z.url("Enter a valid URL."),
@@ -180,9 +211,33 @@ const authUserSchema = z.object({
 	updatedAt: z.string().nullable().optional(),
 });
 
+const sessionUserSchema = authUserSchema
+	.pick({
+		department: true,
+		id: true,
+		name: true,
+	})
+	.partial({ department: true, name: true });
+
 const loginBodySchema = z.object({
 	email: z.email("Enter a valid email address."),
 	password: z.string().min(8, "Password must be at least 8 characters."),
+});
+
+const lookupItemSchema = z.object({
+	id: z.string(),
+	name: z.string(),
+});
+
+const projectSchema = z.object({
+	createdAt: z.string().optional(),
+	description: z.string().nullable().optional(),
+	id: z.uuid("Invalid ID."),
+	imagePublicId: z.string().nullable().optional(),
+	imageUrl: z.url("Enter a valid URL.").nullable().optional(),
+	status: requiredEnumSchema(ProjectStatusOptions),
+	title: z.string(),
+	updatedAt: z.string().nullable().optional(),
 });
 
 const defaultSchemaRoute = defineSchemaRoutes({
@@ -192,6 +247,10 @@ const defaultSchemaRoute = defineSchemaRoutes({
 });
 
 const authRoutes = defineSchemaRoutes({
+	"@get/auth/session": {
+		data: withBaseSuccessResponse(sessionUserSchema),
+	},
+
 	"@post/auth/login": {
 		body: loginBodySchema,
 		data: withBaseSuccessResponse(authUserSchema),
@@ -225,14 +284,14 @@ const adminRoutes = defineSchemaRoutes({
 		data: withBaseSuccessResponse(z.unknown()),
 		params: userIdParamsSchema,
 		query: z.object({
-			action: requiredEnumSchema(["assign", "revoke"]),
-			rolename: requiredEnumSchema(["admin", "superadmin"]),
+			action: requiredEnumSchema(AdminRoleActionOptions),
+			rolename: requiredEnumSchema(AdminRoleNameOptions),
 		}),
 	},
 
 	"@post/admin/users": {
 		body: loginBodySchema.extend({
-			department: requiredEnumSchema(["TACOTS", "ASH", "CAPACITY BUILDING", "OUTREACHES"]),
+			department: requiredEnumSchema(AdminDepartmentOptions),
 			name: z.string().min(3, "Enter at least 3 characters."),
 		}),
 		data: withBaseSuccessResponse(authUserSchema),
@@ -330,6 +389,66 @@ const clientSideRoutes = defineSchemaRoutes({
 				.max(500, "Keep this under 500 characters."),
 		}),
 		data: withBaseSuccessResponse(z.null()),
+	},
+});
+
+const dashboardRoutes = defineSchemaRoutes({
+	"@get/dashboard/cards": {
+		data: withBaseSuccessResponse(z.unknown()),
+	},
+
+	"@get/dashboard/enrollment": {
+		data: withBaseSuccessResponse(z.unknown()),
+	},
+
+	"@get/dashboard/institutional-effectiveness": {
+		data: withBaseSuccessResponse(z.unknown()),
+	},
+
+	"@get/dashboard/student-performance": {
+		data: withBaseSuccessResponse(z.unknown()),
+	},
+});
+
+const generalRoutes = defineSchemaRoutes({
+	"@delete/general/projects/:id": {
+		data: withBaseSuccessResponse(z.null()),
+		params: idParamsSchema,
+	},
+
+	"@get/general/projects": {
+		data: withBaseSuccessResponse(z.array(projectSchema)),
+	},
+
+	"@patch/general/projects/:id": {
+		data: withBaseSuccessResponse(projectSchema),
+		params: idParamsSchema,
+		query: z.object({
+			status: requiredEnumSchema(ProjectStatusOptions),
+		}),
+	},
+
+	"@post/general/projects": {
+		body: z.instanceof(FormData),
+		data: withBaseSuccessResponse(projectSchema),
+	},
+});
+
+const lookupRoutes = defineSchemaRoutes({
+	"@get/lookup/ash-students": {
+		data: withBaseSuccessResponse(z.array(lookupItemSchema)),
+	},
+
+	"@get/lookup/tacots-onboarded": {
+		data: withBaseSuccessResponse(z.array(lookupItemSchema)),
+	},
+
+	"@get/lookup/tacots-recommended": {
+		data: withBaseSuccessResponse(z.array(lookupItemSchema)),
+	},
+
+	"@get/lookup/volunteers": {
+		data: withBaseSuccessResponse(z.array(lookupItemSchema)),
 	},
 });
 
@@ -568,8 +687,88 @@ const publicFormRoutes = defineSchemaRoutes({
 });
 
 const protectedFormRoutes = defineSchemaRoutes({
+	"@delete/forms/ash/attendance/:id": {
+		data: withBaseSuccessResponse(z.null()),
+		params: idParamsSchema,
+	},
+
+	"@delete/forms/ash/exit/:id": {
+		data: withBaseSuccessResponse(z.null()),
+		params: idParamsSchema,
+	},
+
+	"@delete/forms/ash/registration/:id": {
+		data: withBaseSuccessResponse(z.null()),
+		params: idParamsSchema,
+	},
+
+	"@delete/forms/ash/tracking/:id": {
+		data: withBaseSuccessResponse(z.null()),
+		params: idParamsSchema,
+	},
+
 	"@delete/forms/capacity-building/:id": {
 		data: withBaseSuccessResponse(z.null()),
+		params: idParamsSchema,
+	},
+
+	"@delete/forms/outreaches/:id": {
+		data: withBaseSuccessResponse(z.null()),
+		params: idParamsSchema,
+	},
+
+	"@delete/forms/tacots/exit/:id": {
+		data: withBaseSuccessResponse(z.null()),
+		params: idParamsSchema,
+	},
+
+	"@delete/forms/tacots/feedback/:id": {
+		data: withBaseSuccessResponse(z.null()),
+		params: idParamsSchema,
+	},
+
+	"@delete/forms/tacots/onboarding/:id": {
+		data: withBaseSuccessResponse(z.null()),
+		params: idParamsSchema,
+	},
+
+	"@delete/forms/tacots/recommendation/:id": {
+		data: withBaseSuccessResponse(z.null()),
+		params: idParamsSchema,
+	},
+
+	"@delete/forms/tacots/tracking/:id": {
+		data: withBaseSuccessResponse(z.null()),
+		params: idParamsSchema,
+	},
+
+	"@delete/volunteer/:id": {
+		data: withBaseSuccessResponse(z.null()),
+		params: idParamsSchema,
+	},
+
+	"@delete/volunteer/feedback/:id": {
+		data: withBaseSuccessResponse(z.null()),
+		params: idParamsSchema,
+	},
+
+	"@get/forms/ash/attendance": {
+		data: withBaseSuccessResponse(z.array(z.unknown())),
+		query: paginatedQuerySchema,
+	},
+
+	"@get/forms/ash/attendance/:id": {
+		data: withBaseSuccessResponse(z.unknown()),
+		params: idParamsSchema,
+	},
+
+	"@get/forms/ash/exit": {
+		data: withBaseSuccessResponse(z.array(z.unknown())),
+		query: paginatedQuerySchema,
+	},
+
+	"@get/forms/ash/exit/:id": {
+		data: withBaseSuccessResponse(z.unknown()),
 		params: idParamsSchema,
 	},
 
@@ -585,7 +784,10 @@ const protectedFormRoutes = defineSchemaRoutes({
 
 	"@get/forms/ash/registration": {
 		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: paginatedQuerySchema,
+		query: paginatedQuerySchema.extend({
+			sortBy: optionalEnumSchema(AshTrackingSortByOptions),
+			status: optionalEnumSchema(ReviewStatusOptions),
+		}),
 	},
 
 	"@get/forms/ash/registration/:id": {
@@ -593,12 +795,45 @@ const protectedFormRoutes = defineSchemaRoutes({
 		params: idParamsSchema,
 	},
 
+	"@get/forms/ash/tracking": {
+		data: withBaseSuccessResponse(z.array(z.unknown())),
+		query: paginatedQuerySchema.extend({
+			academicSession: optionalEnumSchema(AcademicSessionOptions),
+			term: optionalEnumSchema(AshTermOptions),
+		}),
+	},
+
+	"@get/forms/ash/tracking/:id": {
+		data: withBaseSuccessResponse(z.unknown()),
+		params: idParamsSchema,
+	},
+
 	"@get/forms/capacity-building": {
 		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: paginatedQuerySchema.pick({ limit: true, page: true }),
+		query: paginatedQuerySchema,
 	},
 
 	"@get/forms/capacity-building/:id": {
+		data: withBaseSuccessResponse(z.unknown()),
+		params: idParamsSchema,
+	},
+
+	"@get/forms/outreaches": {
+		data: withBaseSuccessResponse(z.array(z.unknown())),
+		query: paginatedQuerySchema,
+	},
+
+	"@get/forms/outreaches/:id": {
+		data: withBaseSuccessResponse(z.unknown()),
+		params: idParamsSchema,
+	},
+
+	"@get/forms/tacots/exit": {
+		data: withBaseSuccessResponse(z.array(z.unknown())),
+		query: paginatedQuerySchema,
+	},
+
+	"@get/forms/tacots/exit/:id": {
 		data: withBaseSuccessResponse(z.unknown()),
 		params: idParamsSchema,
 	},
@@ -613,9 +848,22 @@ const protectedFormRoutes = defineSchemaRoutes({
 		params: idParamsSchema,
 	},
 
-	"@get/forms/tacots/recommendation": {
+	"@get/forms/tacots/onboarding": {
 		data: withBaseSuccessResponse(z.array(z.unknown())),
 		query: paginatedQuerySchema,
+	},
+
+	"@get/forms/tacots/onboarding/:id": {
+		data: withBaseSuccessResponse(z.unknown()),
+		params: idParamsSchema,
+	},
+
+	"@get/forms/tacots/recommendation": {
+		data: withBaseSuccessResponse(z.array(z.unknown())),
+		query: paginatedQuerySchema.extend({
+			sortBy: optionalEnumSchema(TacotsRecommendationSortByOptions),
+			status: optionalEnumSchema(AdminReviewStatusOptions),
+		}),
 	},
 
 	"@get/forms/tacots/recommendation/:id": {
@@ -623,9 +871,25 @@ const protectedFormRoutes = defineSchemaRoutes({
 		params: idParamsSchema,
 	},
 
+	"@get/forms/tacots/tracking": {
+		data: withBaseSuccessResponse(z.array(z.unknown())),
+		query: paginatedQuerySchema.extend({
+			academicSession: optionalEnumSchema(AcademicSessionOptions),
+			term: optionalEnumSchema(TacotsAcademicTermOptions),
+		}),
+	},
+
+	"@get/forms/tacots/tracking/:id": {
+		data: withBaseSuccessResponse(z.unknown()),
+		params: idParamsSchema,
+	},
+
 	"@get/volunteer": {
 		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: paginatedQuerySchema,
+		query: paginatedQuerySchema.extend({
+			sortBy: optionalEnumSchema(VolunteerSortByOptions),
+			status: optionalEnumSchema(ReviewStatusOptions),
+		}),
 	},
 
 	"@get/volunteer/:id": {
@@ -641,6 +905,75 @@ const protectedFormRoutes = defineSchemaRoutes({
 	"@get/volunteer/feedback/:id": {
 		data: withBaseSuccessResponse(z.unknown()),
 		params: idParamsSchema,
+	},
+
+	"@patch/forms/ash/registration/:id/assign-mentor": {
+		body: z.object({
+			mentor: z.string().min(3, "Enter at least 3 characters."),
+		}),
+		data: withBaseSuccessResponse(z.unknown()),
+		params: idParamsSchema,
+	},
+
+	"@patch/forms/ash/registration/:id/status": {
+		data: withBaseSuccessResponse(z.unknown()),
+		params: idParamsSchema,
+		query: reviewStatusQuerySchema,
+	},
+
+	"@patch/forms/tacots/recommendation/:id/status": {
+		data: withBaseSuccessResponse(z.unknown()),
+		params: idParamsSchema,
+		query: adminReviewStatusQuerySchema,
+	},
+
+	"@patch/volunteer/:id/status": {
+		data: withBaseSuccessResponse(z.unknown()),
+		params: idParamsSchema,
+		query: reviewStatusQuerySchema,
+	},
+
+	"@post/forms/ash/attendance": {
+		body: z.object({
+			programReview: z.string().optional(),
+			sessionDate: dateStringSchema,
+			sessionDetails: z.string().optional(),
+			sessionsConducted: optionalEnumArraySchema(AshSessionConductedOptions),
+			studentsInAttendance: z.array(z.uuid("Invalid ID.")).min(1, "Select at least one student."),
+			studentsMentored: z.array(z.uuid("Invalid ID.")).min(1, "Select at least one student."),
+			volunteersInAttendance: requiredStringSchema,
+		}),
+		data: withBaseSuccessResponse(z.unknown()),
+	},
+
+	"@post/forms/ash/exit": {
+		body: z.object({
+			academicImpactRating: stringWithNumberValidation(z.int().min(1).max(10)),
+			ageAtExit: stringWithNumberValidation(z.int().min(6).max(18)),
+			areasOfImprovement: optionalEnumArraySchema(AshAreasOfImprovementOptions),
+			classAtExit: requiredEnumSchema(ClassOptions),
+			courseOfStudy: z.string().optional(),
+			durationInProgram: requiredEnumSchema(AshExitDurationOptions),
+			enjoyedMost: z.string().optional(),
+			exitDate: dateStringSchema,
+			exitReason: requiredEnumSchema(AshExitReasonOptions),
+			facilitatorName: requiredStringSchema,
+			improvementSuggestions: z.string().optional(),
+			institutionName: z.string().optional(),
+			mentorshipImpactRating: stringWithNumberValidation(z.int().min(1).max(10)).optional(),
+			mentorshipReceived: requiredEnumSchema(AshMentorshipReceivedOptions),
+			postAshStatus: requiredEnumSchema(AshPostExitStatusOptions),
+			programImpact: z.string().optional(),
+			schoolName: requiredStringSchema,
+			studentId: z.uuid("Invalid ID."),
+			vocationalSkill: z.string().optional(),
+		}),
+		data: withBaseSuccessResponse(z.unknown()),
+	},
+
+	"@post/forms/ash/tracking": {
+		body: z.instanceof(FormData),
+		data: withBaseSuccessResponse(z.unknown()),
 	},
 
 	"@post/forms/capacity-building": {
@@ -688,6 +1021,47 @@ const protectedFormRoutes = defineSchemaRoutes({
 		}),
 		data: withBaseSuccessResponse(z.unknown()),
 	},
+
+	"@post/forms/outreaches": {
+		body: z.instanceof(FormData),
+		data: withBaseSuccessResponse(z.unknown()),
+	},
+
+	"@post/forms/tacots/exit": {
+		body: z.object({
+			additionalSituationInfo: z.string().optional(),
+			completedBy: requiredStringSchema,
+			completedSecondaryElsewhere: optionalEnumSchema(
+				TacotsExitCompletedSecondaryElsewhereOptions
+			),
+			currentStatus: requiredEnumSchema(TacotsExitCurrentStatusOptions),
+			employmentType: z.string().optional(),
+			exitReason: requiredEnumSchema(TacotsExitReasonOptions),
+			higherInstitutionCity: z.string().optional(),
+			higherInstitutionName: z.string().optional(),
+			higherInstitutionState: z.string().optional(),
+			highestEducationAttained: requiredEnumSchema(TacotsHighestEducationAttainedOptions),
+			newSchoolName: z.string().optional(),
+			programImpactDescription: z.string().optional(),
+			programImpactRating: stringWithNumberValidation(z.int().min(1).max(10)).optional(),
+			schoolAttendedDuringProgram: requiredStringSchema,
+			studentId: z.uuid("Invalid ID."),
+			submissionDate: dateStringSchema,
+			vocationalSkill: optionalEnumSchema(TacotsVocationalSkillOptions),
+			yearOfExit: stringWithNumberValidation(z.int("Enter a valid year.")),
+		}),
+		data: withBaseSuccessResponse(z.unknown()),
+	},
+
+	"@post/forms/tacots/onboarding": {
+		body: z.instanceof(FormData),
+		data: withBaseSuccessResponse(z.unknown()),
+	},
+
+	"@post/forms/tacots/tracking": {
+		body: z.instanceof(FormData),
+		data: withBaseSuccessResponse(z.unknown()),
+	},
 });
 
 export const backendApiSchema = defineSchema(
@@ -697,6 +1071,9 @@ export const backendApiSchema = defineSchema(
 		...adminRoutes,
 		...blogRoutes,
 		...clientSideRoutes,
+		...dashboardRoutes,
+		...generalRoutes,
+		...lookupRoutes,
 		...publicFormRoutes,
 		...protectedFormRoutes,
 	},

@@ -6,7 +6,7 @@ function DashboardLayout({ children }: LayoutProps<"/admin/dashboard">) {
 		<div className="flex grow bg-[hsl(210,17%,98%)]">
 			<DashboardSidebar />
 
-			<div className="flex grow flex-col">
+			<div className="flex min-w-0 grow flex-col">
 				<DashboardHeader />
 
 				{children}

@@ -60,7 +60,7 @@ function SidebarProvider(
 		open: openProp,
 		sidebarWidth = SIDEBAR_WIDTH,
 		sidebarWidthIcon = SIDEBAR_WIDTH_ICON,
-		sidebarWidthIconDesktop = SIDEBAR_WIDTH_ICON,
+		sidebarWidthIconDesktop = sidebarWidthIcon,
 		sidebarWidthMobile = SIDEBAR_WIDTH_MOBILE,
 		style,
 		withMobileBreakpoint = true,

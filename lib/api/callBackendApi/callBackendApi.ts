@@ -25,7 +25,7 @@ export const sharedBaseConfig = defineBaseConfig({
 
 	plugins: [
 		authErrorRedirectPlugin({
-			// redirectRoute: "/auth/signin",
+			redirectRoute: "/auth/admin/signin",
 		}),
 		toastPlugin({
 			// endpointsToSkip: [

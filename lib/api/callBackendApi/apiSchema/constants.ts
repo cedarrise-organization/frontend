@@ -9,6 +9,123 @@ export const YesMaybeNoOptions = defineEnum(["YES", "MAYBE", "NO"]);
 
 export const AshProgramTypeOptions = defineEnum(["ONLINE", "OFFLINE"]);
 
+export const AdminRoleActionOptions = defineEnum(["assign", "revoke"]);
+
+export const AdminRoleNameOptions = defineEnum(["admin", "superadmin"]);
+
+export const AdminDepartmentOptions = defineEnum(["TACOTS", "ASH", "CAPACITY BUILDING", "OUTREACHES"]);
+
+export const ReviewStatusOptions = defineEnum(["accepted", "rejected", "pending"]);
+
+export const AdminReviewStatusOptions = defineEnum(["NOT SELECTED", "KEEP IN VIEW", "SELECTED"]);
+
+export const ProjectStatusOptions = defineEnum(["ongoing", "completed"]);
+
+export const AcademicSessionOptions = defineEnum([
+	"2024/25",
+	"2025/26",
+	"2026/27",
+	"2027/28",
+	"2028/29",
+	"2029/30",
+]);
+
+export const AshTermOptions = defineEnum(["TERM 1", "TERM 2", "TERM 3"]);
+
+export const TacotsAcademicTermOptions = defineEnum(["1ST TERM", "2ND TERM", "3RD TERM"]);
+
+export const AshTrackingSortByOptions = defineEnum([
+	"firstName",
+	"surname",
+	"createdAt",
+	"schoolState",
+	"assignedMentor",
+	"currentClass",
+	"gender",
+]);
+
+export const TacotsRecommendationSortByOptions = defineEnum([
+	"firstName",
+	"surname",
+	"createdAt",
+	"stateOfOrigin",
+	"lga",
+	"schoolName",
+	"gender",
+	"lastClass",
+]);
+
+export const VolunteerSortByOptions = defineEnum([
+	"firstName",
+	"surname",
+	"emailAddress",
+	"phoneNumber",
+	"state",
+	"registrationDate",
+	"volunteerAreas",
+	"createdAt",
+]);
+
+export const AshSessionConductedOptions = defineEnum([
+	"PERFORMANCE ART",
+	"SKILLS TRAINING",
+	"FORMATIVE TALKS",
+]);
+
+export const AshExitDurationOptions = defineEnum([
+	"LESS THAN 6 MONTHS",
+	"6 MONTHS-1 YEAR",
+	"1 YEAR",
+	"2 YEARS",
+	"3 YEARS",
+	"4 YEARS",
+	"5 YEARS",
+	"6 YEARS",
+	"7 YEARS",
+	"8 YEARS",
+	"9 YEARS",
+	"10 YEARS",
+	"11 YEARS",
+	"12 YEARS",
+]);
+
+export const AshExitReasonOptions = defineEnum([
+	"COMPLETED",
+	"GRADUATED",
+	"MOVED",
+	"PERSONAL / FAMILY",
+	"COULD NOT ATTEND",
+	"DROPPED OUT",
+	"OTHER",
+]);
+
+export const AshMentorshipReceivedOptions = defineEnum([
+	"REGULARLY",
+	"OFTEN",
+	"OCCASIONALLY",
+	"RARELY",
+	"NEVER",
+]);
+
+export const AshPostExitStatusOptions = defineEnum([
+	"CONTINUING SCHOOL",
+	"COMPLETED SCHOOL",
+	"UNIVERSITY",
+	"VOCATIONAL",
+	"EMPLOYED",
+	"NOT IN TRAINING",
+]);
+
+export const AshAreasOfImprovementOptions = defineEnum([
+	"LITERACY",
+	"NUMERACY",
+	"VOCATIONAL",
+	"DIGITAL LITERACY",
+	"SOFT SKILLS",
+	"CHARACTER",
+	"OTHER",
+]);
+
 const NigeriaStatesAndLGAOptions = getNigeriaStatesAndLGA().map((item) => {
 	const state =
 		item.state === "Federal Capital Territory" ?
@@ -269,6 +386,49 @@ export const TacotsScholarshipReducedBurdenOptions = defineEnum([
 	"YES - SOMEWHAT",
 	"NOT REALLY",
 	"NOT SURE",
+]);
+
+export const TacotsExitCompletedSecondaryElsewhereOptions = defineEnum([
+	"YES",
+	"NO",
+	"CURRENTLY STUDYING",
+	"NOT SURE",
+]);
+
+export const TacotsExitCurrentStatusOptions = defineEnum([
+	"CONTINUING SECONDARY EDUCATION ELSEWHERE",
+	"ADMITTED INTO HIGHER INSTITUTION",
+	"LEARNING A TRADE / VOCATIONAL SKILL",
+	"EMPLOYED",
+	"NOT CURRENTLY STUDYING OR WORKING",
+	"OTHER",
+]);
+
+export const TacotsExitReasonOptions = defineEnum([
+	"COMPLETED SECONDARY EDUCATION (GRADUATED)",
+	"DID NOT MEET PROGRAM REQUIREMENTS",
+	"DROPPED OUT OF SCHOOL",
+	"WITHDREW FROM THE PROGRAM",
+	"RELOCATED / MOVED AWAY",
+	"PERSONAL OR FAMILY REASONS",
+	"OTHER",
+]);
+
+export const TacotsHighestEducationAttainedOptions = defineEnum([
+	"PRIMARY",
+	"JUNIOR SECONDARY",
+	"SENIOR SECONDARY",
+]);
+
+export const TacotsVocationalSkillOptions = defineEnum([
+	"TAILORING / FASHION DESIGN",
+	"HAIRDRESSING / BARBING",
+	"CARPENTRY",
+	"ELECTRICAL WORK",
+	"ICT / COMPUTER TRAINING",
+	"CATERING",
+	"AUTO MECHANIC",
+	"OTHER",
 ]);
 
 export const VolunteerHighestEducationOptions = defineEnum([

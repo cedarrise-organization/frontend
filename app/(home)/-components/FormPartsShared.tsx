@@ -1,5 +1,6 @@
 "use client";
 
+import { tw } from "@zayne-labs/toolkit-core";
 import type { InferProps } from "@zayne-labs/toolkit-react/utils";
 import type { DistributiveOmit, DistributivePick } from "@zayne-labs/toolkit-type-helpers";
 import type { FieldValues } from "react-hook-form";
@@ -12,7 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import * as Combobox from "@/components/ui/combobox";
 import { DateTimePicker } from "@/components/ui/datetime-picker";
 import { Form } from "@/components/ui/form";
-import { cnMerge } from "@/lib/utils/cn";
+import { cnJoin, cnMerge } from "@/lib/utils/cn";
 
 type SharedFieldProps<
 	TFieldValues extends FieldValues,
@@ -222,6 +223,9 @@ export function TextField<TFieldValues extends FieldValues, TTransformedValues =
 ) {
 	const { control, inputMode, max, min, name, placeholder, required, step, type = "text" } = props;
 
+	const inputClassName = tw`h-[54px] rounded-[12px] bg-cedar-grey px-9 text-[12px] text-cedar-black
+	placeholder:text-cedar-black/40 lg:h-[64px] lg:text-[14px]`;
+
 	return (
 		<Form.Field control={control} name={name}>
 			<FormRequiredIndicator required={required} />
@@ -233,8 +237,12 @@ export function TextField<TFieldValues extends FieldValues, TTransformedValues =
 				step={step}
 				type={type}
 				placeholder={placeholder}
-				className="h-[54px] rounded-[12px] bg-cedar-grey px-9 text-[12px] text-cedar-black
-					placeholder:text-cedar-black/40 lg:h-[64px] lg:text-[14px]"
+				classNames={{
+					input: cnJoin(
+						type === "password" ? "h-full placeholder:text-cedar-black/40" : inputClassName
+					),
+					inputGroup: cnJoin(type === "password" && inputClassName),
+				}}
 			/>
 			<FormErrorMessageShared />
 		</Form.Field>
