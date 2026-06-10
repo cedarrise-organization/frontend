@@ -42,8 +42,8 @@ import {
 	PrimaryLanguageOptions,
 	ProjectStatusOptions,
 	ReviewStatusOptions,
-	TacotsAnnualHouseholdIncomeOptions,
 	TacotsAcademicTermOptions,
+	TacotsAnnualHouseholdIncomeOptions,
 	TacotsCatholicSacramentOptions,
 	TacotsCurrentChallengeOptions,
 	TacotsExitCompletedSecondaryElsewhereOptions,
@@ -57,8 +57,8 @@ import {
 	TacotsIncomeSourceOptions,
 	TacotsLivesWithOptions,
 	TacotsMostHelpfulSupportOptions,
-	TacotsRecommendationSortByOptions,
 	TacotsRecommendationReligionOptions,
+	TacotsRecommendationSortByOptions,
 	TacotsResidenceTypeOptions,
 	TacotsScholarshipHelpedStayOptions,
 	TacotsScholarshipReducedBurdenOptions,
@@ -1031,9 +1031,7 @@ const protectedFormRoutes = defineSchemaRoutes({
 		body: z.object({
 			additionalSituationInfo: z.string().optional(),
 			completedBy: requiredStringSchema,
-			completedSecondaryElsewhere: optionalEnumSchema(
-				TacotsExitCompletedSecondaryElsewhereOptions
-			),
+			completedSecondaryElsewhere: optionalEnumSchema(TacotsExitCompletedSecondaryElsewhereOptions),
 			currentStatus: requiredEnumSchema(TacotsExitCurrentStatusOptions),
 			employmentType: z.string().optional(),
 			exitReason: requiredEnumSchema(TacotsExitReasonOptions),
