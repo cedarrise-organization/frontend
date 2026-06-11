@@ -2,7 +2,7 @@
 
 import { tw } from "@zayne-labs/toolkit-core";
 import type { InferProps } from "@zayne-labs/toolkit-react/utils";
-import type { DistributiveOmit, DistributivePick } from "@zayne-labs/toolkit-type-helpers";
+import { isString, type DistributiveOmit, type DistributivePick } from "@zayne-labs/toolkit-type-helpers";
 import type { FieldValues } from "react-hook-form";
 import { RadioGroupAnimated } from "@/components/animated/ui";
 import * as DropZoneInput from "@/components/common/DropZoneInput";
@@ -98,16 +98,17 @@ export function OptionQuestionField<TFieldValues extends FieldValues, TTransform
 	);
 }
 
-const ratingValues = ["1", "2", "3", "4", "5"];
-
 export function RatingQuestionField<TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
 	props: SharedFieldProps<TFieldValues, TTransformedValues> & {
 		leftLabel: string;
+		maxRating?: number;
 		question: string;
 		rightLabel: string;
 	}
 ) {
-	const { control, leftLabel, name, question, required, rightLabel } = props;
+	const { control, leftLabel, maxRating = 5, name, question, required, rightLabel } = props;
+
+	const ratingValues = [...Array(maxRating).keys()].map((index) => String(index + 1));
 
 	return (
 		<Form.Field control={control} name={name} className="text-[12px] text-cedar-black/64 lg:text-[14px]">
@@ -156,9 +157,15 @@ export function RatingQuestionField<TFieldValues extends FieldValues, TTransform
 	);
 }
 
+type SharedOption = string | { label: string; value: string };
+
+const getSharedOptionData = (option: SharedOption) => {
+	return isString(option) ? { label: option, value: option } : option;
+};
+
 export function CheckboxQuestionField<TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
 	props: SharedFieldProps<TFieldValues, TTransformedValues> & {
-		options: readonly string[];
+		options: readonly SharedOption[];
 		question: string;
 	}
 ) {
@@ -180,18 +187,21 @@ export function CheckboxQuestionField<TFieldValues extends FieldValues, TTransfo
 						name={name}
 						render={({ field, fieldContext, fieldProps }) => {
 							const selectedItems = (field.value as string[] | undefined) ?? [];
+							const optionData = getSharedOptionData(option);
 
 							return (
 								<li {...fieldProps} className="flex w-fit gap-3">
 									<Checkbox
 										id={fieldContext.formItemId}
 										name={name}
-										value={option}
-										checked={selectedItems.includes(option)}
+										value={optionData.value}
+										checked={selectedItems.includes(optionData.value)}
 										onCheckedChange={(isChecked) => {
 											isChecked ?
-												field.onChange([...selectedItems, option])
-											:	field.onChange(selectedItems.filter((item) => item !== option));
+												field.onChange([...selectedItems, optionData.value])
+											:	field.onChange(
+													selectedItems.filter((item) => item !== optionData.value)
+												);
 										}}
 										classNames={{
 											base: `mt-0.5 size-4 border-[1.5px] border-cedar-black/40 bg-transparent
@@ -201,7 +211,7 @@ export function CheckboxQuestionField<TFieldValues extends FieldValues, TTransfo
 										}}
 									/>
 
-									<Form.Label htmlFor={fieldContext.formItemId}>{option}</Form.Label>
+									<Form.Label htmlFor={fieldContext.formItemId}>{optionData.label}</Form.Label>
 								</li>
 							);
 						}}
@@ -274,7 +284,7 @@ export function TextAreaField<TFieldValues extends FieldValues, TTransformedValu
 export function SelectField<TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
 	props: SharedFieldProps<TFieldValues, TTransformedValues> & {
 		classNames?: { trigger?: string };
-		options: readonly string[];
+		options: readonly SharedOption[];
 		placeholder: string;
 	}
 ) {
@@ -302,11 +312,15 @@ export function SelectField<TFieldValues extends FieldValues, TTransformedValues
 							<Select.Group>
 								<For
 									each={options}
-									renderItem={(option) => (
-										<Select.Item key={option} value={option}>
-											{option}
-										</Select.Item>
-									)}
+									renderItem={(option) => {
+										const optionData = getSharedOptionData(option);
+
+										return (
+											<Select.Item key={optionData.value} value={optionData.value}>
+												{optionData.label}
+											</Select.Item>
+										);
+									}}
 								/>
 							</Select.Group>
 						</Select.Content>

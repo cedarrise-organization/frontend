@@ -35,6 +35,14 @@ declare namespace __next_route_internal_types__ {
     | `/`
     | `/about`
     | `/admin/dashboard`
+    | `/admin/dashboard/tracker-forms/ash/exit`
+    | `/admin/dashboard/tracker-forms/ash/termly-tracking`
+    | `/admin/dashboard/tracker-forms/ash/weekly-activity-attendance`
+    | `/admin/dashboard/tracker-forms/capacity-building/program-evaluation`
+    | `/admin/dashboard/tracker-forms/outreaches/tracker`
+    | `/admin/dashboard/tracker-forms/tacots/beneficiary-onboarding`
+    | `/admin/dashboard/tracker-forms/tacots/exit-completion`
+    | `/admin/dashboard/tracker-forms/tacots/student-tracking`
     | `/auth/admin/signin`
     | `/blog`
     | `/capacity-building`

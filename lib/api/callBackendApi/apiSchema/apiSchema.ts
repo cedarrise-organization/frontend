@@ -37,6 +37,7 @@ import {
 	GenderOptions,
 	LearningConditionStatusOptions,
 	NigeriaStateOptions,
+	OutreachTypeOptions,
 	ParentGuardianRelationshipOptions,
 	PositiveChangeNoticedOptions,
 	PrimaryLanguageOptions,
@@ -44,6 +45,7 @@ import {
 	ReviewStatusOptions,
 	TacotsAcademicTermOptions,
 	TacotsAnnualHouseholdIncomeOptions,
+	TacotsAssessmentPeriodOptions,
 	TacotsCatholicSacramentOptions,
 	TacotsCurrentChallengeOptions,
 	TacotsExitCompletedSecondaryElsewhereOptions,
@@ -56,6 +58,7 @@ import {
 	TacotsIncomeEarnerCountOptions,
 	TacotsIncomeSourceOptions,
 	TacotsLivesWithOptions,
+	TacotsMentorshipModeOptions,
 	TacotsMostHelpfulSupportOptions,
 	TacotsRecommendationReligionOptions,
 	TacotsRecommendationSortByOptions,
@@ -126,43 +129,42 @@ const stringWithNumberValidation = <TNumberSchema extends z.ZodNumber>(numberSch
 	return z.preprocess((value: string) => Number(value), numberSchema);
 };
 
-const ratingSchema = stringWithNumberValidation(
-	z
-		.int("Select a rating from 1 to 5.")
-		.min(1, "Select a rating from 1 to 5.")
-		.max(5, "Select a rating from 1 to 5.")
-);
+const getRatingSchema = (maxRating: 10 | 5 = 5) => {
+	const message = `Select a rating from 1 to ${maxRating}.`;
 
-const requiredStringSchema = z.string().min(1, "This field is required.");
+	return stringWithNumberValidation(z.int(message).min(1, message).max(maxRating, message));
+};
 
-const dateStringSchema = z.iso.date("Enter a valid date.");
+const RequiredStringSchema = z.string().min(1, "This field is required.");
 
-const requiredPhoneNumberSchema = z.union([
+const DateStringSchema = z.iso.date("Enter a valid date.");
+
+const RequiredPhoneNumberSchema = z.union([
 	z.e164("Enter a valid phone number."),
 	z.string().regex(/^0\d{10}$/, "Enter a valid phone number."),
 ]);
 
-const optionalPhoneNumberSchema = requiredPhoneNumberSchema.optional();
+const OptionalPhoneNumberSchema = RequiredPhoneNumberSchema.optional();
 
-const requiredFileSchema = z.file("Upload a file.");
+const RequiredFileSchema = z.file("Upload a file.");
 
-const requiredEnumSchema = <const TOptions extends readonly string[]>(options: TOptions) => {
+const getRequiredEnumSchema = <const TOptions extends readonly string[]>(options: TOptions) => {
 	return z.enum(options, "This field is required.");
 };
 
-const optionalEnumSchema = <const TOptions extends readonly string[]>(options: TOptions) => {
+const getOptionalEnumSchema = <const TOptions extends readonly string[]>(options: TOptions) => {
 	return z.enum(options, "Select a valid option.").optional();
 };
 
-const requiredEnumArraySchema = <const TOptions extends readonly string[]>(options: TOptions) => {
+const getRequiredEnumArraySchema = <const TOptions extends readonly string[]>(options: TOptions) => {
 	return z.array(z.enum(options, "Select a valid option.")).min(1, "Select at least one option.");
 };
 
-const optionalEnumArraySchema = <const TOptions extends readonly string[]>(options: TOptions) => {
+const getOptionalEnumArraySchema = <const TOptions extends readonly string[]>(options: TOptions) => {
 	return z.array(z.enum(options, "Select a valid option.")).optional();
 };
 
-const paginatedQuerySchema = z
+const PaginatedQuerySchema = z
 	.object({
 		limit: z.number("Enter a valid limit."),
 		page: z.number("Enter a valid page."),
@@ -170,28 +172,28 @@ const paginatedQuerySchema = z
 	})
 	.partial();
 
-const idParamsSchema = z.object({
+const IdParamsSchema = z.object({
 	id: z.uuid("Invalid ID."),
 });
 
-const userIdParamsSchema = z.object({
+const UserIdParamsSchema = z.object({
 	userId: z.uuid("Invalid ID."),
 });
 
-const reviewStatusQuerySchema = z.object({
-	status: requiredEnumSchema(ReviewStatusOptions),
+const ReviewStatusQuerySchema = z.object({
+	status: getRequiredEnumSchema(ReviewStatusOptions),
 });
 
-const adminReviewStatusQuerySchema = z.object({
-	status: requiredEnumSchema(AdminReviewStatusOptions),
+const AdminReviewStatusQuerySchema = z.object({
+	status: getRequiredEnumSchema(AdminReviewStatusOptions),
 });
 
-const galleryPhotoSchema = z.object({
+const GalleryPhotoSchema = z.object({
 	public_id: z.string(),
 	url: z.url("Enter a valid URL."),
 });
 
-const blogSchema = z.object({
+const BlogSchema = z.object({
 	date: z.string(),
 	description: z.string().nullable().optional(),
 	documentUrl: z.url("Enter a valid URL."),
@@ -200,7 +202,7 @@ const blogSchema = z.object({
 	title: z.string(),
 });
 
-const authUserSchema = z.object({
+const AuthUserSchema = z.object({
 	createdAt: z.string().optional(),
 	deletedAt: z.string().nullable().optional(),
 	department: z.string(),
@@ -211,31 +213,29 @@ const authUserSchema = z.object({
 	updatedAt: z.string().nullable().optional(),
 });
 
-const sessionUserSchema = authUserSchema
-	.pick({
-		department: true,
-		id: true,
-		name: true,
-	})
-	.partial({ department: true, name: true });
+const SessionUserSchema = AuthUserSchema.pick({
+	department: true,
+	id: true,
+	name: true,
+}).partial({ department: true, name: true });
 
-const loginBodySchema = z.object({
+const LoginSchema = z.object({
 	email: z.email("Enter a valid email address."),
 	password: z.string().min(8, "Password must be at least 8 characters."),
 });
 
-const lookupItemSchema = z.object({
+const LookupItemSchema = z.object({
 	id: z.string(),
 	name: z.string(),
 });
 
-const projectSchema = z.object({
+const ProjectSchema = z.object({
 	createdAt: z.string().optional(),
 	description: z.string().nullable().optional(),
 	id: z.uuid("Invalid ID."),
 	imagePublicId: z.string().nullable().optional(),
 	imageUrl: z.url("Enter a valid URL.").nullable().optional(),
-	status: requiredEnumSchema(ProjectStatusOptions),
+	status: getRequiredEnumSchema(ProjectStatusOptions),
 	title: z.string(),
 	updatedAt: z.string().nullable().optional(),
 });
@@ -248,12 +248,12 @@ const defaultSchemaRoute = defineSchemaRoutes({
 
 const authRoutes = defineSchemaRoutes({
 	"@get/auth/session": {
-		data: withBaseSuccessResponse(sessionUserSchema),
+		data: withBaseSuccessResponse(SessionUserSchema),
 	},
 
 	"@post/auth/login": {
-		body: loginBodySchema,
-		data: withBaseSuccessResponse(authUserSchema),
+		body: LoginSchema,
+		data: withBaseSuccessResponse(AuthUserSchema),
 	},
 
 	"@post/auth/logout": {
@@ -264,7 +264,7 @@ const authRoutes = defineSchemaRoutes({
 const adminRoutes = defineSchemaRoutes({
 	"@delete/admin/users/:userId": {
 		data: withBaseSuccessResponse(z.null()),
-		params: userIdParamsSchema,
+		params: UserIdParamsSchema,
 	},
 
 	"@get/admin/roles": {
@@ -273,78 +273,78 @@ const adminRoutes = defineSchemaRoutes({
 
 	"@get/admin/roles/:userId": {
 		data: withBaseSuccessResponse(z.array(z.unknown())),
-		params: userIdParamsSchema,
+		params: UserIdParamsSchema,
 	},
 
 	"@get/admin/users": {
-		data: withBaseSuccessResponse(z.array(authUserSchema)),
+		data: withBaseSuccessResponse(z.array(AuthUserSchema)),
 	},
 
 	"@patch/admin/roles/:userId/action": {
 		data: withBaseSuccessResponse(z.unknown()),
-		params: userIdParamsSchema,
+		params: UserIdParamsSchema,
 		query: z.object({
-			action: requiredEnumSchema(AdminRoleActionOptions),
-			rolename: requiredEnumSchema(AdminRoleNameOptions),
+			action: getRequiredEnumSchema(AdminRoleActionOptions),
+			rolename: getRequiredEnumSchema(AdminRoleNameOptions),
 		}),
 	},
 
 	"@post/admin/users": {
-		body: loginBodySchema.extend({
-			department: requiredEnumSchema(AdminDepartmentOptions),
+		body: LoginSchema.extend({
+			department: getRequiredEnumSchema(AdminDepartmentOptions),
 			name: z.string().min(3, "Enter at least 3 characters."),
 		}),
-		data: withBaseSuccessResponse(authUserSchema),
+		data: withBaseSuccessResponse(AuthUserSchema),
 	},
 });
 
 const blogRoutes = defineSchemaRoutes({
 	"@delete/blogs/:id": {
 		data: withBaseSuccessResponse(z.null()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@get/blogs": {
-		data: withBaseSuccessResponse(z.array(blogSchema)),
-		query: paginatedQuerySchema.pick({ limit: true, page: true }),
+		data: withBaseSuccessResponse(z.array(BlogSchema)),
+		query: PaginatedQuerySchema.pick({ limit: true, page: true }),
 	},
 
 	"@get/blogs/:id": {
-		data: withBaseSuccessResponse(blogSchema),
-		params: idParamsSchema,
+		data: withBaseSuccessResponse(BlogSchema),
+		params: IdParamsSchema,
 	},
 
 	"@patch/blogs/:id": {
 		body: z.instanceof(FormData),
 		data: withBaseSuccessResponse(z.null()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@post/blogs": {
 		body: z.instanceof(FormData),
-		data: withBaseSuccessResponse(blogSchema),
+		data: withBaseSuccessResponse(BlogSchema),
 	},
 });
 
 const clientSideRoutes = defineSchemaRoutes({
 	"@get/carousels/ash": {
-		data: withBaseSuccessResponse(z.array(galleryPhotoSchema)),
-		query: paginatedQuerySchema.pick({ limit: true }).optional(),
+		data: withBaseSuccessResponse(z.array(GalleryPhotoSchema)),
+		query: PaginatedQuerySchema.pick({ limit: true }).optional(),
 	},
 
 	"@get/carousels/capacity-building": {
-		data: withBaseSuccessResponse(z.array(galleryPhotoSchema)),
-		query: paginatedQuerySchema.pick({ limit: true }).optional(),
+		data: withBaseSuccessResponse(z.array(GalleryPhotoSchema)),
+		query: PaginatedQuerySchema.pick({ limit: true }).optional(),
 	},
 
 	"@get/carousels/outreaches": {
-		data: withBaseSuccessResponse(z.array(galleryPhotoSchema)),
-		query: paginatedQuerySchema.pick({ limit: true }).optional(),
+		data: withBaseSuccessResponse(z.array(GalleryPhotoSchema)),
+		query: PaginatedQuerySchema.pick({ limit: true }).optional(),
 	},
 
 	"@get/carousels/tacots": {
-		data: withBaseSuccessResponse(z.array(galleryPhotoSchema)),
-		query: paginatedQuerySchema.pick({ limit: true }).optional(),
+		data: withBaseSuccessResponse(z.array(GalleryPhotoSchema)),
+		query: PaginatedQuerySchema.pick({ limit: true }).optional(),
 	},
 
 	"@get/donate/callback": {
@@ -355,7 +355,7 @@ const clientSideRoutes = defineSchemaRoutes({
 				status: z.boolean("Invalid payment verification status."),
 			})
 		),
-		query: z.object({ reference: requiredStringSchema }),
+		query: z.object({ reference: RequiredStringSchema }),
 	},
 
 	"@post/donate": {
@@ -392,63 +392,149 @@ const clientSideRoutes = defineSchemaRoutes({
 	},
 });
 
+const dashboardChartDatasetSchema = z.object({
+	datasets: z.array(
+		z.object({
+			data: z.array(z.number()),
+			label: z.string().optional(),
+		})
+	),
+	labels: z.array(z.string()),
+	type: z.enum(["bar", "line", "doughnut", "pie"]),
+});
+
+const dashboardLineDataSchema = z.array(
+	z.object({
+		amount: z.number(),
+		title: z.string(),
+	})
+);
+
+const dashboardCardsSchema = z.object({
+	ash: z.object({
+		communitiesEngaged: z.number(),
+		currentBeneficiaries: z.number(),
+		dropOuts: z.number(),
+		graduated: z.number(),
+		improvedGrades: z.number(),
+		studentsEnrolled: z.number(),
+		volunteers: z.number(),
+	}),
+	capacityBuilding: z.object({
+		organizationsPartneredWith: z.number(),
+		participantsImpacted: z.number(),
+		volunteersEngaged: z.number(),
+		workshopsConducted: z.number(),
+	}),
+	outreaches: z.object({
+		beneficiariesReached: z.number(),
+		communitiesEngaged: z.number(),
+		outreachEvents: z.number(),
+		partners: z.number(),
+		volunteers: z.number(),
+	}),
+	tacots: z.object({
+		benefactors: z.number(),
+		currentlyInSchools: z.number(),
+		enrolled: z.number(),
+		graduated: z.number(),
+		partners: z.number(),
+		partnerSchools: z.number(),
+		sponsors: z.number(),
+	}),
+	volunteer: z.object({
+		accepted: z.number(),
+		applied: z.number(),
+		currentVolunteers: z.number(),
+		Partners: z.number(),
+		sponsors: z.number(),
+	}),
+});
+
+const studentPerformanceMetricsSchema = z.object({
+	c_attendanceTrend: dashboardChartDatasetSchema,
+	c_dropoutTrend: dashboardChartDatasetSchema,
+	c_graduationRate: dashboardChartDatasetSchema,
+	c_risk: dashboardChartDatasetSchema,
+	c_testScores: dashboardChartDatasetSchema,
+});
+
+const enrollmentMetricsSchema = z.object({
+	c_acceptanceRate: dashboardLineDataSchema,
+	c_applicationNumbers: dashboardChartDatasetSchema,
+	c_classDistribution: dashboardChartDatasetSchema,
+	c_genderDiversity: dashboardChartDatasetSchema,
+	c_geographicalDistribution: dashboardLineDataSchema,
+});
+
+const institutionalEffectivenessMetricsSchema = z.object({
+	c_averageMentorshipHours: dashboardChartDatasetSchema,
+	c_communityServiceHours: dashboardChartDatasetSchema,
+	c_spendPerstudent: dashboardChartDatasetSchema,
+	c_studentBenchMark: dashboardChartDatasetSchema,
+	c_totalAccHours: dashboardLineDataSchema,
+});
+
+export type DashboardChartDataset = z.infer<typeof dashboardChartDatasetSchema>;
+export type DashboardLineData = z.infer<typeof dashboardLineDataSchema>;
+
 const dashboardRoutes = defineSchemaRoutes({
 	"@get/dashboard/cards": {
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse(dashboardCardsSchema),
 	},
 
 	"@get/dashboard/enrollment": {
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse(enrollmentMetricsSchema),
 	},
 
 	"@get/dashboard/institutional-effectiveness": {
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse(institutionalEffectivenessMetricsSchema),
 	},
 
 	"@get/dashboard/student-performance": {
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse(studentPerformanceMetricsSchema),
 	},
 });
 
 const generalRoutes = defineSchemaRoutes({
 	"@delete/general/projects/:id": {
 		data: withBaseSuccessResponse(z.null()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@get/general/projects": {
-		data: withBaseSuccessResponse(z.array(projectSchema)),
+		data: withBaseSuccessResponse(z.array(ProjectSchema)),
 	},
 
 	"@patch/general/projects/:id": {
-		data: withBaseSuccessResponse(projectSchema),
-		params: idParamsSchema,
+		data: withBaseSuccessResponse(ProjectSchema),
+		params: IdParamsSchema,
 		query: z.object({
-			status: requiredEnumSchema(ProjectStatusOptions),
+			status: getRequiredEnumSchema(ProjectStatusOptions),
 		}),
 	},
 
 	"@post/general/projects": {
 		body: z.instanceof(FormData),
-		data: withBaseSuccessResponse(projectSchema),
+		data: withBaseSuccessResponse(ProjectSchema),
 	},
 });
 
 const lookupRoutes = defineSchemaRoutes({
 	"@get/lookup/ash-students": {
-		data: withBaseSuccessResponse(z.array(lookupItemSchema)),
+		data: withBaseSuccessResponse(z.array(LookupItemSchema)),
 	},
 
 	"@get/lookup/tacots-onboarded": {
-		data: withBaseSuccessResponse(z.array(lookupItemSchema)),
+		data: withBaseSuccessResponse(z.array(LookupItemSchema)),
 	},
 
 	"@get/lookup/tacots-recommended": {
-		data: withBaseSuccessResponse(z.array(lookupItemSchema)),
+		data: withBaseSuccessResponse(z.array(LookupItemSchema)),
 	},
 
 	"@get/lookup/volunteers": {
-		data: withBaseSuccessResponse(z.array(lookupItemSchema)),
+		data: withBaseSuccessResponse(z.array(LookupItemSchema)),
 	},
 });
 
@@ -457,136 +543,268 @@ export const AshRegisterFrontendSchema = z.object({
 		z.int("Enter a valid age.").min(6, "Age must be at least 6.").max(18, "Age must be 18 or below.")
 	),
 	assignedMentor: z.string().optional(),
-	classPositionLastTerm: requiredStringSchema,
-	currentClass: requiredEnumSchema(ClassOptions),
+	classPositionLastTerm: RequiredStringSchema,
+	currentClass: getRequiredEnumSchema(ClassOptions),
 	declarationConfirmed: z.boolean().refine(Boolean, "This field is required."),
-	dob: dateStringSchema,
-	fathersName: requiredStringSchema,
-	fathersOccupation: requiredStringSchema,
-	fathersPhone: optionalPhoneNumberSchema,
-	firstName: requiredStringSchema,
-	gender: requiredEnumSchema(GenderOptions),
+	dob: DateStringSchema,
+	fathersName: RequiredStringSchema,
+	fathersOccupation: RequiredStringSchema,
+	fathersPhone: OptionalPhoneNumberSchema,
+	firstName: RequiredStringSchema,
+	gender: getRequiredEnumSchema(GenderOptions),
 	guardianName: z.string().optional(),
 	guardianOccupation: z.string().optional(),
-	guardianPhone: optionalPhoneNumberSchema,
-	guardianRelationship: optionalEnumSchema(AshGuardianRelationshipOptions),
-	hasLearningCondition: requiredEnumSchema(LearningConditionStatusOptions),
-	homeAddress: requiredStringSchema,
-	householdIncomeRange: optionalEnumSchema(AshHouseholdIncomeRangeOptions),
-	lastResult: requiredFileSchema,
-	learningConditions: optionalEnumArraySchema(AshLearningConditionOptions),
+	guardianPhone: OptionalPhoneNumberSchema,
+	guardianRelationship: getOptionalEnumSchema(AshGuardianRelationshipOptions),
+	hasLearningCondition: getRequiredEnumSchema(LearningConditionStatusOptions),
+	homeAddress: RequiredStringSchema,
+	householdIncomeRange: getOptionalEnumSchema(AshHouseholdIncomeRangeOptions),
+	lastResult: RequiredFileSchema,
+	learningConditions: getOptionalEnumArraySchema(AshLearningConditionOptions),
 	middleName: z.string().optional(),
-	mothersName: requiredStringSchema,
+	mothersName: RequiredStringSchema,
 	mothersOccupation: z.string().optional(),
-	mothersPhone: requiredPhoneNumberSchema,
+	mothersPhone: RequiredPhoneNumberSchema,
 	parentConsent: z.boolean().refine(Boolean, "This field is required."),
-	parentSignature: requiredFileSchema,
-	passportPhoto: requiredFileSchema,
+	parentSignature: RequiredFileSchema,
+	passportPhoto: RequiredFileSchema,
 	pretestScore: z.string().optional(),
-	prevAfterschoolProgram: requiredEnumSchema(YesNoOptions),
-	primaryLanguage: requiredEnumSchema(PrimaryLanguageOptions),
-	programType: requiredEnumSchema(AshProgramTypeOptions),
-	reasonForJoining: requiredStringSchema,
-	schoolLga: requiredStringSchema,
-	schoolName: requiredStringSchema,
-	schoolState: requiredEnumSchema(NigeriaStateOptions),
-	schoolTown: requiredStringSchema,
-	studentPhone: optionalPhoneNumberSchema,
-	surname: requiredStringSchema,
+	prevAfterschoolProgram: getRequiredEnumSchema(YesNoOptions),
+	primaryLanguage: getRequiredEnumSchema(PrimaryLanguageOptions),
+	programType: getRequiredEnumSchema(AshProgramTypeOptions),
+	reasonForJoining: RequiredStringSchema,
+	schoolLga: RequiredStringSchema,
+	schoolName: RequiredStringSchema,
+	schoolState: getRequiredEnumSchema(NigeriaStateOptions),
+	schoolTown: RequiredStringSchema,
+	studentPhone: OptionalPhoneNumberSchema,
+	surname: RequiredStringSchema,
+});
+
+export const AshTermlyTrackingFrontendSchema = z.object({
+	academicSession: getRequiredEnumSchema(AcademicSessionOptions),
+	challengesObserved: z.string().optional(),
+	disciplineRating: getRatingSchema(),
+	file: z.unknown().refine(Boolean, "Required"),
+	leadershipRating: getRatingSchema(),
+	mentorName: RequiredStringSchema,
+	midtestAverage: z.string().optional(),
+	midtestLiteracyScore: z.string().optional(),
+	midtestNumeracyScore: z.string().optional(),
+	nextTermRecommendations: z.string().optional(),
+	notableAchievements: z.string().optional(),
+	posttestAverage: z.string().optional(),
+	posttestLiteracyScore: z.string().optional(),
+	posttestNumeracyScore: z.string().optional(),
+	pretestAverage: z.string().optional(),
+	pretestLiteracyScore: z.string().optional(),
+	pretestNumeracyScore: z.string().optional(),
+	responsibilityRating: getRatingSchema(),
+	schoolAverage: z.string().optional(),
+	schoolLiteracyScore: z.string().optional(),
+	schoolName: RequiredStringSchema,
+	schoolNumeracyScore: z.string().optional(),
+	schoolPosition: z.string().optional(),
+	studentId: z.uuid("Invalid ID."),
+	term: getRequiredEnumSchema(AshTermOptions),
+});
+
+export const OutreachTrackerFrontendSchema = z.object({
+	activityDescription: RequiredStringSchema,
+	challengesEncountered: z.string().optional(),
+	city: RequiredStringSchema,
+	community: RequiredStringSchema,
+	completedBy: RequiredStringSchema,
+	impactStories: z.string().optional(),
+	lga: RequiredStringSchema,
+	location: getRequiredEnumSchema(NigeriaStateOptions),
+	numberOfBeneficiariesReached: RequiredStringSchema,
+	numberOfVolunteers: RequiredStringSchema,
+	outreachEndDate: DateStringSchema,
+	outreachStartDate: DateStringSchema,
+	outreachTypes: getRequiredEnumArraySchema(OutreachTypeOptions),
+	recommendations: z.string().optional(),
+	submissionDate: DateStringSchema,
 });
 
 export const TacotsRecommendationFrontendSchema = z.object({
 	age: stringWithNumberValidation(z.int("Enter a valid age.").min(6, "Age must be at least 6.")),
-	annualHouseholdIncome: requiredEnumSchema(TacotsAnnualHouseholdIncomeOptions),
+	annualHouseholdIncome: getRequiredEnumSchema(TacotsAnnualHouseholdIncomeOptions),
 	avgMonthlyIncome: z.string().optional(),
-	careerGoal: requiredStringSchema,
-	catholicSacraments: optionalEnumArraySchema(TacotsCatholicSacramentOptions),
-	childBackgroundNotes: requiredStringSchema,
-	classPositionLastTerm: requiredStringSchema,
+	careerGoal: RequiredStringSchema,
+	catholicSacraments: getOptionalEnumArraySchema(TacotsCatholicSacramentOptions),
+	childBackgroundNotes: RequiredStringSchema,
+	classPositionLastTerm: RequiredStringSchema,
 	declarationConfirmed: z.boolean().refine(Boolean, "This field is required."),
 	diocese: z.string().optional(),
-	disciplineRating: ratingSchema,
-	dob: dateStringSchema,
-	familyPosition: requiredEnumSchema(TacotsFamilyPositionOptions),
-	fathersName: requiredStringSchema,
-	fathersOccupation: requiredStringSchema,
-	fathersPhone: requiredPhoneNumberSchema,
-	firstName: requiredStringSchema,
-	gender: requiredEnumSchema(GenderOptions),
+	disciplineRating: getRatingSchema(),
+	dob: DateStringSchema,
+	familyPosition: getRequiredEnumSchema(TacotsFamilyPositionOptions),
+	fathersName: RequiredStringSchema,
+	fathersOccupation: RequiredStringSchema,
+	fathersPhone: RequiredPhoneNumberSchema,
+	firstName: RequiredStringSchema,
+	gender: getRequiredEnumSchema(GenderOptions),
 	guardianAddress: z.string().optional(),
 	guardianName: z.string().optional(),
 	guardianOccupation: z.string().optional(),
-	guardianPhone: optionalPhoneNumberSchema,
-	guardianRelationship: optionalEnumSchema(TacotsGuardianRelationshipOptions),
-	hasElectricity: requiredEnumSchema(YesNoSometimesOptions),
-	homeAddress: requiredStringSchema,
+	guardianPhone: OptionalPhoneNumberSchema,
+	guardianRelationship: getOptionalEnumSchema(TacotsGuardianRelationshipOptions),
+	hasElectricity: getRequiredEnumSchema(YesNoSometimesOptions),
+	homeAddress: RequiredStringSchema,
 	householdSize: stringWithNumberValidation(
 		z.int("Enter a valid household size.").min(2, "Household size must be at least 2.")
 	),
-	incomeSources: requiredEnumArraySchema(TacotsIncomeSourceOptions),
-	lastClass: requiredEnumSchema(ClassOptions),
-	lastResult: requiredFileSchema,
+	incomeSources: getRequiredEnumArraySchema(TacotsIncomeSourceOptions),
+	lastClass: getRequiredEnumSchema(ClassOptions),
+	lastResult: RequiredFileSchema,
 	lastTermAverage: z.string().optional(),
 	lastYearAttended: stringWithNumberValidation(z.int("Enter a valid year.")),
-	lga: requiredStringSchema,
-	livesWith: requiredEnumSchema(TacotsLivesWithOptions),
+	lga: RequiredStringSchema,
+	livesWith: getRequiredEnumSchema(TacotsLivesWithOptions),
 	middleName: z.string().optional(),
-	mothersName: requiredStringSchema,
-	mothersOccupation: requiredStringSchema,
-	mothersPhone: requiredPhoneNumberSchema,
-	nationality: requiredStringSchema,
-	numIncomeEarners: requiredEnumSchema(TacotsIncomeEarnerCountOptions),
+	mothersName: RequiredStringSchema,
+	mothersOccupation: RequiredStringSchema,
+	mothersPhone: RequiredPhoneNumberSchema,
+	nationality: RequiredStringSchema,
+	numIncomeEarners: getRequiredEnumSchema(TacotsIncomeEarnerCountOptions),
 	numSiblings: stringWithNumberValidation(
 		z.int("Enter a valid number of siblings.").min(0, "Number of siblings cannot be negative.")
 	),
 	otherImportantInfo: z.string().optional(),
-	parentsAddress: requiredStringSchema,
+	parentsAddress: RequiredStringSchema,
 	parishAttended: z.string().optional(),
-	passportPhoto: requiredFileSchema,
-	phoneNumber: optionalPhoneNumberSchema,
-	primaryLanguage: requiredEnumSchema(PrimaryLanguageOptions),
-	recommenderAddress: requiredStringSchema,
-	recommenderFirstName: requiredStringSchema,
-	recommenderLastName: requiredStringSchema,
-	recommenderPhone: requiredPhoneNumberSchema,
-	religion: requiredEnumSchema(TacotsRecommendationReligionOptions),
-	residenceType: requiredEnumSchema(TacotsResidenceTypeOptions),
-	responsibilityRating: ratingSchema,
-	schoolName: requiredStringSchema,
-	schoolState: requiredEnumSchema(NigeriaStateOptions),
-	schoolTown: requiredStringSchema,
-	specialCircumstances: requiredEnumSchema(TacotsSpecialCircumstanceOptions),
-	stateOfOrigin: requiredEnumSchema(NigeriaStateOptions),
+	passportPhoto: RequiredFileSchema,
+	phoneNumber: OptionalPhoneNumberSchema,
+	primaryLanguage: getRequiredEnumSchema(PrimaryLanguageOptions),
+	recommenderAddress: RequiredStringSchema,
+	recommenderFirstName: RequiredStringSchema,
+	recommenderLastName: RequiredStringSchema,
+	recommenderPhone: RequiredPhoneNumberSchema,
+	religion: getRequiredEnumSchema(TacotsRecommendationReligionOptions),
+	residenceType: getRequiredEnumSchema(TacotsResidenceTypeOptions),
+	responsibilityRating: getRatingSchema(),
+	schoolName: RequiredStringSchema,
+	schoolState: getRequiredEnumSchema(NigeriaStateOptions),
+	schoolTown: RequiredStringSchema,
+	specialCircumstances: getRequiredEnumSchema(TacotsSpecialCircumstanceOptions),
+	stateOfOrigin: getRequiredEnumSchema(NigeriaStateOptions),
 	studentStatement: z.string().optional(),
-	supportTypesNeeded: requiredEnumArraySchema(TacotsSupportTypeOptions),
-	surname: requiredStringSchema,
+	supportTypesNeeded: getRequiredEnumArraySchema(TacotsSupportTypeOptions),
+	surname: RequiredStringSchema,
+});
+
+export const TacotsStudentTrackingFrontendSchema = z.object({
+	academicComment: z.string().optional(),
+	academicSession: RequiredStringSchema,
+	adherenceToSchoolRules: getRatingSchema(),
+	assessmentPeriod: getRequiredEnumSchema(TacotsAssessmentPeriodOptions),
+	briefMentoringSessionNotes: z.string().optional(),
+	communityServiceComment: z.string().optional(),
+	currentClass: getRequiredEnumSchema(ClassOptions),
+	currentSchool: RequiredStringSchema,
+	dateOfActivity: z.string().optional(),
+	dateOfSubmission: DateStringSchema,
+	descriptionOfActivity: z.string().optional(),
+	financialNotes: z.string().optional(),
+	highestSubjectScore: z.string().optional(),
+	locationOfActivity: z.string().optional(),
+	lowestSubjectScore: z.string().optional(),
+	mentorName: z.string().optional(),
+	mentorshipSessionDate: z.string().optional(),
+	modeOfMentorship: getOptionalEnumSchema(TacotsMentorshipModeOptions),
+	resourcesGiven: z.string().optional(),
+	resultSheet: z.unknown().optional(),
+	schoolFormationComment: z.string().optional(),
+	senseOfResponsibility: getRatingSchema(),
+	socialBehavior: getRatingSchema(),
+	studentId: z.uuid("Invalid ID."),
+	studentPositionInClass: z.string().optional(),
+	subjectsAverage: z.string().optional(),
+	sundries: z.string().optional(),
+	supervisorFacilitator: z.string().optional(),
+	term: getRequiredEnumSchema(TacotsAcademicTermOptions),
+	totalAmountSpentForTerm: z.string().optional(),
+	tuitionFeePaid: z.string().optional(),
+	typeOfServiceActivity: z.string().optional(),
+	uploadPaymentEvidence: z.unknown().optional(),
+});
+
+export const TacotsOnboardingFrontendSchema = z.object({
+	academicDifficulties: z.string().optional(),
+	acceptanceConfirmed: z.boolean(),
+	additionalNotes: z.string().optional(),
+	angerManagement: z.string().optional(),
+	attendanceRegularity: getRatingSchema(),
+	behavioralIssues: z.string().optional(),
+	chronicIllness: z.string().optional(),
+	currentClass: getRequiredEnumSchema(ClassOptions),
+	currentSchool: RequiredStringSchema,
+	dateOfOnboarding: DateStringSchema,
+	dentalProblem: z.string().optional(),
+	developmentalConcerns: z.string().optional(),
+	disabilityOrSpecialNeeds: z.string().optional(),
+	familyChallenges: z.string().optional(),
+	guardianSignature: z.unknown().optional(),
+	hearingProblem: z.string().optional(),
+	immunizationUpToDate: z.string().optional(),
+	learningDifficulties: z.string().optional(),
+	localGovernmentArea: RequiredStringSchema,
+	lowSelfEsteem: z.string().optional(),
+	mentalHealthNotes: z.string().optional(),
+	mentalHealthRating: getRatingSchema(10).optional(),
+	moodSwings: z.string().optional(),
+	nutritionStatus: z.string().optional(),
+	parentSignature: z.unknown().optional(),
+	passportPhoto: z.unknown().optional(),
+	physicalActivityLevel: z.string().optional(),
+	physicalConcernAffectsSchool: z.string().optional(),
+	physicalHealthNotes: z.string().optional(),
+	physicalHealthRating: getRatingSchema(10).optional(),
+	programOfficerName: RequiredStringSchema,
+	recentHospitalization: z.string().optional(),
+	recommendedStudentId: z.uuid("Invalid ID."),
+	referralRecommended: z.string().optional(),
+	schoolEnrollmentDate: DateStringSchema,
+	schoolFeeRange: z.string().optional(),
+	schoolFeesPaid: z.string().optional(),
+	socialChallenges: z.string().optional(),
+	sponsorName: z.string().optional(),
+	state: RequiredStringSchema,
+	studentCurrentSituation: z.string().optional(),
+	studentDeclarationAccepted: z.boolean(),
+	supportRequired: z.string().optional(),
+	supportType: z.string().optional(),
+	termsAccepted: z.boolean(),
+	uploadRecommendationLetter: z.unknown().optional(),
+	witnessName: z.string().optional(),
 });
 
 const publicFormRoutes = defineSchemaRoutes({
 	"@post/forms/ash/feedback": {
 		body: z.object({
-			academicImprovementNoticed: optionalEnumSchema(AcademicImprovementNoticedOptions),
+			academicImprovementNoticed: getOptionalEnumSchema(AcademicImprovementNoticedOptions),
 			additionalComments: z.string().optional(),
-			attendanceFrequency: requiredEnumSchema(AshAttendanceFrequencyOptions),
-			childBenefited: requiredEnumSchema(AshChildBenefitedOptions),
-			confidenceBehaviorChange: optionalEnumSchema(PositiveChangeNoticedOptions),
-			confidenceRating: ratingSchema,
-			currentClass: requiredEnumSchema(AshFeedbackClassOptions),
-			enjoyedParts: optionalEnumArraySchema(AshEnjoyedPartsOptions),
-			learningImprovementRating: ratingSchema,
-			mostValuableAspects: optionalEnumArraySchema(AshMostValuableAspectsOptions),
-			parentGuardianName: requiredStringSchema,
-			parentGuardianRelationship: requiredEnumSchema(ParentGuardianRelationshipOptions),
+			attendanceFrequency: getRequiredEnumSchema(AshAttendanceFrequencyOptions),
+			childBenefited: getRequiredEnumSchema(AshChildBenefitedOptions),
+			confidenceBehaviorChange: getOptionalEnumSchema(PositiveChangeNoticedOptions),
+			confidenceRating: getRatingSchema(),
+			currentClass: getRequiredEnumSchema(AshFeedbackClassOptions),
+			enjoyedParts: getOptionalEnumArraySchema(AshEnjoyedPartsOptions),
+			learningImprovementRating: getRatingSchema(),
+			mostValuableAspects: getOptionalEnumArraySchema(AshMostValuableAspectsOptions),
+			parentGuardianName: RequiredStringSchema,
+			parentGuardianRelationship: getRequiredEnumSchema(ParentGuardianRelationshipOptions),
 			parentImprovementSuggestions: z.string().optional(),
-			parentPhone: optionalPhoneNumberSchema,
-			parentSatisfactionRating: ratingSchema.optional(),
+			parentPhone: OptionalPhoneNumberSchema,
+			parentSatisfactionRating: getRatingSchema().optional(),
 			programImpactOnChild: z.string().optional(),
-			schoolName: requiredStringSchema,
+			schoolName: RequiredStringSchema,
 			studentEnjoyedMost: z.string().optional(),
-			studentFirstName: requiredStringSchema,
+			studentFirstName: RequiredStringSchema,
 			studentImprovementSuggestions: z.string().optional(),
-			studentSurname: requiredStringSchema,
-			volunteerSupportRating: ratingSchema,
+			studentSurname: RequiredStringSchema,
+			volunteerSupportRating: getRatingSchema(),
 		}),
 		data: withBaseSuccessResponse(z.unknown()),
 	},
@@ -598,27 +816,27 @@ const publicFormRoutes = defineSchemaRoutes({
 
 	"@post/forms/tacots/feedback": {
 		body: z.object({
-			academicImprovementNoticed: optionalEnumSchema(AcademicImprovementNoticedOptions),
+			academicImprovementNoticed: getOptionalEnumSchema(AcademicImprovementNoticedOptions),
 			additionalComments: z.string().optional(),
-			attitudeChangeNoticed: optionalEnumSchema(PositiveChangeNoticedOptions),
-			currentChallenges: optionalEnumArraySchema(TacotsCurrentChallengeOptions),
-			currentClass: requiredEnumSchema(TacotsFeedbackClassOptions),
-			currentSchool: requiredStringSchema,
+			attitudeChangeNoticed: getOptionalEnumSchema(PositiveChangeNoticedOptions),
+			currentChallenges: getOptionalEnumArraySchema(TacotsCurrentChallengeOptions),
+			currentClass: getRequiredEnumSchema(TacotsFeedbackClassOptions),
+			currentSchool: RequiredStringSchema,
 			likedMost: z.string().optional(),
-			mentorshipImpactRating: ratingSchema,
-			mostHelpfulSupport: optionalEnumArraySchema(TacotsMostHelpfulSupportOptions),
-			parentGuardianName: requiredStringSchema,
-			parentGuardianRelationship: requiredEnumSchema(ParentGuardianRelationshipOptions),
+			mentorshipImpactRating: getRatingSchema(),
+			mostHelpfulSupport: getOptionalEnumArraySchema(TacotsMostHelpfulSupportOptions),
+			parentGuardianName: RequiredStringSchema,
+			parentGuardianRelationship: getRequiredEnumSchema(ParentGuardianRelationshipOptions),
 			parentImprovementSuggestions: z.string().optional(),
-			parentPhone: optionalPhoneNumberSchema,
-			parentSatisfactionRating: ratingSchema.optional(),
+			parentPhone: OptionalPhoneNumberSchema,
+			parentSatisfactionRating: getRatingSchema().optional(),
 			programImpactOnFamily: z.string().optional(),
-			scholarshipHelpedStay: requiredEnumSchema(TacotsScholarshipHelpedStayOptions),
-			scholarshipReducedBurden: requiredEnumSchema(TacotsScholarshipReducedBurdenOptions),
-			studentFirstName: requiredStringSchema,
+			scholarshipHelpedStay: getRequiredEnumSchema(TacotsScholarshipHelpedStayOptions),
+			scholarshipReducedBurden: getRequiredEnumSchema(TacotsScholarshipReducedBurdenOptions),
+			studentFirstName: RequiredStringSchema,
 			studentImprovementSuggestions: z.string().optional(),
-			studentSurname: requiredStringSchema,
-			studyMotivationRating: ratingSchema,
+			studentSurname: RequiredStringSchema,
+			studyMotivationRating: getRatingSchema(),
 		}),
 		data: withBaseSuccessResponse(z.unknown()),
 	},
@@ -630,27 +848,27 @@ const publicFormRoutes = defineSchemaRoutes({
 
 	"@post/volunteer/feedback": {
 		body: z.object({
-			activitiesInvolvedIn: optionalEnumArraySchema(VolunteerActivityOptions),
+			activitiesInvolvedIn: getOptionalEnumArraySchema(VolunteerActivityOptions),
 			additionalComments: z.string().optional(),
 			challengesExperienced: z.string().optional(),
-			continueVolunteering: optionalEnumSchema(YesMaybeNoOptions),
+			continueVolunteering: getOptionalEnumSchema(YesMaybeNoOptions),
 			enjoyedMost: z.string().optional(),
-			firstName: requiredStringSchema,
+			firstName: RequiredStringSchema,
 			improvementSuggestions: z.string().optional(),
-			organizationRating: ratingSchema,
-			overallExperienceRating: ratingSchema,
-			programMadeImpact: optionalEnumSchema(VolunteerProgramImpactOptions),
-			programVolunteered: requiredEnumSchema(VolunteerFeedbackProgramOptions),
-			roleClarityRating: ratingSchema,
-			skillsDeveloped: optionalEnumSchema(VolunteerSkillDevelopedOptions),
-			skillsGained: optionalEnumArraySchema(VolunteerSkillGainedOptions),
+			organizationRating: getRatingSchema(),
+			overallExperienceRating: getRatingSchema(),
+			programMadeImpact: getOptionalEnumSchema(VolunteerProgramImpactOptions),
+			programVolunteered: getRequiredEnumSchema(VolunteerFeedbackProgramOptions),
+			roleClarityRating: getRatingSchema(),
+			skillsDeveloped: getOptionalEnumSchema(VolunteerSkillDevelopedOptions),
+			skillsGained: getOptionalEnumArraySchema(VolunteerSkillGainedOptions),
 			specificProgramDetails: z.string().optional(),
-			submissionDate: dateStringSchema,
-			surname: requiredStringSchema,
-			teamSupportRating: ratingSchema,
-			volunteerDuration: optionalEnumSchema(VolunteerFeedbackDurationOptions),
-			waysProgramHelped: optionalEnumArraySchema(VolunteerWaysProgramHelpedOptions),
-			wouldRecommend: optionalEnumSchema(YesMaybeNoOptions),
+			submissionDate: DateStringSchema,
+			surname: RequiredStringSchema,
+			teamSupportRating: getRatingSchema(),
+			volunteerDuration: getOptionalEnumSchema(VolunteerFeedbackDurationOptions),
+			waysProgramHelped: getOptionalEnumArraySchema(VolunteerWaysProgramHelpedOptions),
+			wouldRecommend: getOptionalEnumSchema(YesMaybeNoOptions),
 		}),
 		data: withBaseSuccessResponse(z.unknown()),
 	},
@@ -659,28 +877,28 @@ const publicFormRoutes = defineSchemaRoutes({
 		body: z.object({
 			additionalInfo: z.string().optional(),
 			age: stringWithNumberValidation(z.int("Enter a valid age.").min(16, "Age must be at least 16.")),
-			ashAcademicArea: optionalEnumSchema(VolunteerAshAcademicAreaOptions),
-			ashExtracurricular: optionalEnumArraySchema(VolunteerAshExtracurricularOptions),
-			ashSaturdayAvailability: optionalEnumSchema(VolunteerAshSaturdayAvailabilityOptions),
-			availability: requiredEnumArraySchema(VolunteerAvailabilityOptions),
-			city: requiredStringSchema,
-			commitmentDuration: optionalEnumSchema(VolunteerCommitmentDurationOptions),
-			dob: dateStringSchema,
+			ashAcademicArea: getOptionalEnumSchema(VolunteerAshAcademicAreaOptions),
+			ashExtracurricular: getOptionalEnumArraySchema(VolunteerAshExtracurricularOptions),
+			ashSaturdayAvailability: getOptionalEnumSchema(VolunteerAshSaturdayAvailabilityOptions),
+			availability: getRequiredEnumArraySchema(VolunteerAvailabilityOptions),
+			city: RequiredStringSchema,
+			commitmentDuration: getOptionalEnumSchema(VolunteerCommitmentDurationOptions),
+			dob: DateStringSchema,
 			emailAddress: z.email("Enter a valid email address."),
-			firstName: requiredStringSchema,
-			gender: requiredEnumSchema(GenderOptions),
-			highestEducation: optionalEnumSchema(VolunteerHighestEducationOptions),
-			homeAddress: requiredStringSchema,
+			firstName: RequiredStringSchema,
+			gender: getRequiredEnumSchema(GenderOptions),
+			highestEducation: getOptionalEnumSchema(VolunteerHighestEducationOptions),
+			homeAddress: RequiredStringSchema,
 			mediaConsent: z.boolean("Choose yes or no."),
 			middleName: z.string().optional(),
 			occupation: z.string().optional(),
-			phoneNumber: requiredPhoneNumberSchema,
-			reasonForVolunteering: requiredStringSchema,
-			safeguardingAgreement: requiredEnumSchema(YesNoOptions),
-			skillsToContribute: optionalEnumArraySchema(VolunteerSkillOptions),
-			state: requiredEnumSchema(NigeriaStateOptions),
-			surname: requiredStringSchema,
-			volunteerAreas: requiredEnumArraySchema(VolunteerAreaOptions),
+			phoneNumber: RequiredPhoneNumberSchema,
+			reasonForVolunteering: RequiredStringSchema,
+			safeguardingAgreement: getRequiredEnumSchema(YesNoOptions),
+			skillsToContribute: getOptionalEnumArraySchema(VolunteerSkillOptions),
+			state: getRequiredEnumSchema(NigeriaStateOptions),
+			surname: RequiredStringSchema,
+			volunteerAreas: getRequiredEnumArraySchema(VolunteerAreaOptions),
 		}),
 		data: withBaseSuccessResponse(z.unknown()),
 	},
@@ -689,222 +907,222 @@ const publicFormRoutes = defineSchemaRoutes({
 const protectedFormRoutes = defineSchemaRoutes({
 	"@delete/forms/ash/attendance/:id": {
 		data: withBaseSuccessResponse(z.null()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@delete/forms/ash/exit/:id": {
 		data: withBaseSuccessResponse(z.null()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@delete/forms/ash/registration/:id": {
 		data: withBaseSuccessResponse(z.null()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@delete/forms/ash/tracking/:id": {
 		data: withBaseSuccessResponse(z.null()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@delete/forms/capacity-building/:id": {
 		data: withBaseSuccessResponse(z.null()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@delete/forms/outreaches/:id": {
 		data: withBaseSuccessResponse(z.null()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@delete/forms/tacots/exit/:id": {
 		data: withBaseSuccessResponse(z.null()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@delete/forms/tacots/feedback/:id": {
 		data: withBaseSuccessResponse(z.null()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@delete/forms/tacots/onboarding/:id": {
 		data: withBaseSuccessResponse(z.null()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@delete/forms/tacots/recommendation/:id": {
 		data: withBaseSuccessResponse(z.null()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@delete/forms/tacots/tracking/:id": {
 		data: withBaseSuccessResponse(z.null()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@delete/volunteer/:id": {
 		data: withBaseSuccessResponse(z.null()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@delete/volunteer/feedback/:id": {
 		data: withBaseSuccessResponse(z.null()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@get/forms/ash/attendance": {
 		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: paginatedQuerySchema,
+		query: PaginatedQuerySchema,
 	},
 
 	"@get/forms/ash/attendance/:id": {
 		data: withBaseSuccessResponse(z.unknown()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@get/forms/ash/exit": {
 		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: paginatedQuerySchema,
+		query: PaginatedQuerySchema,
 	},
 
 	"@get/forms/ash/exit/:id": {
 		data: withBaseSuccessResponse(z.unknown()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@get/forms/ash/feedback": {
 		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: paginatedQuerySchema,
+		query: PaginatedQuerySchema,
 	},
 
 	"@get/forms/ash/feedback/:id": {
 		data: withBaseSuccessResponse(z.unknown()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@get/forms/ash/registration": {
 		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: paginatedQuerySchema.extend({
-			sortBy: optionalEnumSchema(AshTrackingSortByOptions),
-			status: optionalEnumSchema(ReviewStatusOptions),
+		query: PaginatedQuerySchema.extend({
+			sortBy: getOptionalEnumSchema(AshTrackingSortByOptions),
+			status: getOptionalEnumSchema(ReviewStatusOptions),
 		}),
 	},
 
 	"@get/forms/ash/registration/:id": {
 		data: withBaseSuccessResponse(z.unknown()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@get/forms/ash/tracking": {
 		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: paginatedQuerySchema.extend({
-			academicSession: optionalEnumSchema(AcademicSessionOptions),
-			term: optionalEnumSchema(AshTermOptions),
+		query: PaginatedQuerySchema.extend({
+			academicSession: getOptionalEnumSchema(AcademicSessionOptions),
+			term: getOptionalEnumSchema(AshTermOptions),
 		}),
 	},
 
 	"@get/forms/ash/tracking/:id": {
 		data: withBaseSuccessResponse(z.unknown()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@get/forms/capacity-building": {
 		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: paginatedQuerySchema,
+		query: PaginatedQuerySchema,
 	},
 
 	"@get/forms/capacity-building/:id": {
 		data: withBaseSuccessResponse(z.unknown()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@get/forms/outreaches": {
 		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: paginatedQuerySchema,
+		query: PaginatedQuerySchema,
 	},
 
 	"@get/forms/outreaches/:id": {
 		data: withBaseSuccessResponse(z.unknown()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@get/forms/tacots/exit": {
 		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: paginatedQuerySchema,
+		query: PaginatedQuerySchema,
 	},
 
 	"@get/forms/tacots/exit/:id": {
 		data: withBaseSuccessResponse(z.unknown()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@get/forms/tacots/feedback": {
 		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: paginatedQuerySchema,
+		query: PaginatedQuerySchema,
 	},
 
 	"@get/forms/tacots/feedback/:id": {
 		data: withBaseSuccessResponse(z.unknown()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@get/forms/tacots/onboarding": {
 		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: paginatedQuerySchema,
+		query: PaginatedQuerySchema,
 	},
 
 	"@get/forms/tacots/onboarding/:id": {
 		data: withBaseSuccessResponse(z.unknown()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@get/forms/tacots/recommendation": {
 		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: paginatedQuerySchema.extend({
-			sortBy: optionalEnumSchema(TacotsRecommendationSortByOptions),
-			status: optionalEnumSchema(AdminReviewStatusOptions),
+		query: PaginatedQuerySchema.extend({
+			sortBy: getOptionalEnumSchema(TacotsRecommendationSortByOptions),
+			status: getOptionalEnumSchema(AdminReviewStatusOptions),
 		}),
 	},
 
 	"@get/forms/tacots/recommendation/:id": {
 		data: withBaseSuccessResponse(z.unknown()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@get/forms/tacots/tracking": {
 		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: paginatedQuerySchema.extend({
-			academicSession: optionalEnumSchema(AcademicSessionOptions),
-			term: optionalEnumSchema(TacotsAcademicTermOptions),
+		query: PaginatedQuerySchema.extend({
+			academicSession: getOptionalEnumSchema(AcademicSessionOptions),
+			term: getOptionalEnumSchema(TacotsAcademicTermOptions),
 		}),
 	},
 
 	"@get/forms/tacots/tracking/:id": {
 		data: withBaseSuccessResponse(z.unknown()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@get/volunteer": {
 		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: paginatedQuerySchema.extend({
-			sortBy: optionalEnumSchema(VolunteerSortByOptions),
-			status: optionalEnumSchema(ReviewStatusOptions),
+		query: PaginatedQuerySchema.extend({
+			sortBy: getOptionalEnumSchema(VolunteerSortByOptions),
+			status: getOptionalEnumSchema(ReviewStatusOptions),
 		}),
 	},
 
 	"@get/volunteer/:id": {
 		data: withBaseSuccessResponse(z.unknown()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@get/volunteer/all/feedback": {
 		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: paginatedQuerySchema,
+		query: PaginatedQuerySchema,
 	},
 
 	"@get/volunteer/feedback/:id": {
 		data: withBaseSuccessResponse(z.unknown()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@patch/forms/ash/registration/:id/assign-mentor": {
@@ -912,59 +1130,59 @@ const protectedFormRoutes = defineSchemaRoutes({
 			mentor: z.string().min(3, "Enter at least 3 characters."),
 		}),
 		data: withBaseSuccessResponse(z.unknown()),
-		params: idParamsSchema,
+		params: IdParamsSchema,
 	},
 
 	"@patch/forms/ash/registration/:id/status": {
 		data: withBaseSuccessResponse(z.unknown()),
-		params: idParamsSchema,
-		query: reviewStatusQuerySchema,
+		params: IdParamsSchema,
+		query: ReviewStatusQuerySchema,
 	},
 
 	"@patch/forms/tacots/recommendation/:id/status": {
 		data: withBaseSuccessResponse(z.unknown()),
-		params: idParamsSchema,
-		query: adminReviewStatusQuerySchema,
+		params: IdParamsSchema,
+		query: AdminReviewStatusQuerySchema,
 	},
 
 	"@patch/volunteer/:id/status": {
 		data: withBaseSuccessResponse(z.unknown()),
-		params: idParamsSchema,
-		query: reviewStatusQuerySchema,
+		params: IdParamsSchema,
+		query: ReviewStatusQuerySchema,
 	},
 
 	"@post/forms/ash/attendance": {
 		body: z.object({
 			programReview: z.string().optional(),
-			sessionDate: dateStringSchema,
+			sessionDate: DateStringSchema,
 			sessionDetails: z.string().optional(),
-			sessionsConducted: optionalEnumArraySchema(AshSessionConductedOptions),
+			sessionsConducted: getOptionalEnumArraySchema(AshSessionConductedOptions),
 			studentsInAttendance: z.array(z.uuid("Invalid ID.")).min(1, "Select at least one student."),
 			studentsMentored: z.array(z.uuid("Invalid ID.")).min(1, "Select at least one student."),
-			volunteersInAttendance: requiredStringSchema,
+			volunteersInAttendance: RequiredStringSchema,
 		}),
 		data: withBaseSuccessResponse(z.unknown()),
 	},
 
 	"@post/forms/ash/exit": {
 		body: z.object({
-			academicImpactRating: stringWithNumberValidation(z.int().min(1).max(10)),
+			academicImpactRating: getRatingSchema(10),
 			ageAtExit: stringWithNumberValidation(z.int().min(6).max(18)),
-			areasOfImprovement: optionalEnumArraySchema(AshAreasOfImprovementOptions),
-			classAtExit: requiredEnumSchema(ClassOptions),
+			areasOfImprovement: getOptionalEnumArraySchema(AshAreasOfImprovementOptions),
+			classAtExit: getRequiredEnumSchema(ClassOptions),
 			courseOfStudy: z.string().optional(),
-			durationInProgram: requiredEnumSchema(AshExitDurationOptions),
+			durationInProgram: getRequiredEnumSchema(AshExitDurationOptions),
 			enjoyedMost: z.string().optional(),
-			exitDate: dateStringSchema,
-			exitReason: requiredEnumSchema(AshExitReasonOptions),
-			facilitatorName: requiredStringSchema,
+			exitDate: DateStringSchema,
+			exitReason: getRequiredEnumSchema(AshExitReasonOptions),
+			facilitatorName: RequiredStringSchema,
 			improvementSuggestions: z.string().optional(),
 			institutionName: z.string().optional(),
-			mentorshipImpactRating: stringWithNumberValidation(z.int().min(1).max(10)).optional(),
-			mentorshipReceived: requiredEnumSchema(AshMentorshipReceivedOptions),
-			postAshStatus: requiredEnumSchema(AshPostExitStatusOptions),
+			mentorshipImpactRating: getRatingSchema(10).optional(),
+			mentorshipReceived: getRequiredEnumSchema(AshMentorshipReceivedOptions),
+			postAshStatus: getRequiredEnumSchema(AshPostExitStatusOptions),
 			programImpact: z.string().optional(),
-			schoolName: requiredStringSchema,
+			schoolName: RequiredStringSchema,
 			studentId: z.uuid("Invalid ID."),
 			vocationalSkill: z.string().optional(),
 		}),
@@ -982,42 +1200,42 @@ const protectedFormRoutes = defineSchemaRoutes({
 			budgetUtilized: z.string().optional(),
 			challengesAddressed: z.string().optional(),
 			challengesEncountered: z.string().optional(),
-			communicationAndCoordination: ratingSchema,
-			dateSubmitted: dateStringSchema,
+			communicationAndCoordination: getRatingSchema(),
+			dateSubmitted: DateStringSchema,
 			effectiveActivities: z.string().optional(),
 			improvementSuggestions: z.string().optional(),
 			inadequateResourcesExplanation: z.string().optional(),
 			lessonsLearned: z.string().optional(),
-			listOfSponsors: requiredStringSchema,
-			location: requiredStringSchema,
+			listOfSponsors: RequiredStringSchema,
+			location: RequiredStringSchema,
 			majorActivities: z.string().optional(),
-			name: requiredStringSchema,
+			name: RequiredStringSchema,
 			numberOfFacilitators: stringWithNumberValidation(z.int("Enter a whole number.")),
 			numberOfParticipants: stringWithNumberValidation(z.int("Enter a whole number.")),
 			numberOfSponsors: stringWithNumberValidation(z.int("Enter a whole number.")),
 			numberOfVolunteers: stringWithNumberValidation(z.int("Enter a whole number.")),
-			objectiveAchievement: requiredEnumSchema(CapacityObjectiveAchievementOptions),
-			overallSuccess: optionalEnumSchema(CapacityOverallSuccessOptions),
-			participantEngagementLevel: requiredEnumSchema(CapacityEngagementLevelOptions),
+			objectiveAchievement: getRequiredEnumSchema(CapacityObjectiveAchievementOptions),
+			overallSuccess: getOptionalEnumSchema(CapacityOverallSuccessOptions),
+			participantEngagementLevel: getRequiredEnumSchema(CapacityEngagementLevelOptions),
 			partnerOrganizations: z.string().optional(),
-			partnershipLevel: requiredEnumSchema(CapacityPartnershipLevelOptions),
-			programCoordinator: requiredStringSchema,
-			programDate: dateStringSchema,
+			partnershipLevel: getRequiredEnumSchema(CapacityPartnershipLevelOptions),
+			programCoordinator: RequiredStringSchema,
+			programDate: DateStringSchema,
 			programImpact: z.string().optional(),
-			programName: requiredStringSchema,
+			programName: RequiredStringSchema,
 			programObjectives: z.string().optional(),
 			programOutcome: z.string().optional(),
-			programType: requiredEnumSchema(CapacityProgramTypeOptions),
+			programType: getRequiredEnumSchema(CapacityProgramTypeOptions),
 			recommendFuturePrograms: z.string().optional(),
-			recommendTheProgram: optionalEnumSchema(CapacityYesNoOptions),
-			resourceAvailability: ratingSchema,
-			role: requiredStringSchema,
-			sponsorshipType: requiredEnumSchema(CapacitySponsorshipTypeOptions),
-			targetAudience: requiredStringSchema,
-			teamworkAmongOrganizers: ratingSchema,
-			timeManagement: ratingSchema,
-			venueSuitability: ratingSchema,
-			wereResourcesAdequate: optionalEnumSchema(CapacityYesNoOptions),
+			recommendTheProgram: getOptionalEnumSchema(CapacityYesNoOptions),
+			resourceAvailability: getRatingSchema(),
+			role: RequiredStringSchema,
+			sponsorshipType: getRequiredEnumSchema(CapacitySponsorshipTypeOptions),
+			targetAudience: RequiredStringSchema,
+			teamworkAmongOrganizers: getRatingSchema(),
+			timeManagement: getRatingSchema(),
+			venueSuitability: getRatingSchema(),
+			wereResourcesAdequate: getOptionalEnumSchema(CapacityYesNoOptions),
 		}),
 		data: withBaseSuccessResponse(z.unknown()),
 	},
@@ -1030,22 +1248,22 @@ const protectedFormRoutes = defineSchemaRoutes({
 	"@post/forms/tacots/exit": {
 		body: z.object({
 			additionalSituationInfo: z.string().optional(),
-			completedBy: requiredStringSchema,
-			completedSecondaryElsewhere: optionalEnumSchema(TacotsExitCompletedSecondaryElsewhereOptions),
-			currentStatus: requiredEnumSchema(TacotsExitCurrentStatusOptions),
+			completedBy: RequiredStringSchema,
+			completedSecondaryElsewhere: getOptionalEnumSchema(TacotsExitCompletedSecondaryElsewhereOptions),
+			currentStatus: getRequiredEnumSchema(TacotsExitCurrentStatusOptions),
 			employmentType: z.string().optional(),
-			exitReason: requiredEnumSchema(TacotsExitReasonOptions),
+			exitReason: getRequiredEnumSchema(TacotsExitReasonOptions),
 			higherInstitutionCity: z.string().optional(),
 			higherInstitutionName: z.string().optional(),
 			higherInstitutionState: z.string().optional(),
-			highestEducationAttained: requiredEnumSchema(TacotsHighestEducationAttainedOptions),
+			highestEducationAttained: getRequiredEnumSchema(TacotsHighestEducationAttainedOptions),
 			newSchoolName: z.string().optional(),
 			programImpactDescription: z.string().optional(),
-			programImpactRating: stringWithNumberValidation(z.int().min(1).max(10)).optional(),
-			schoolAttendedDuringProgram: requiredStringSchema,
+			programImpactRating: getRatingSchema(10).optional(),
+			schoolAttendedDuringProgram: RequiredStringSchema,
 			studentId: z.uuid("Invalid ID."),
-			submissionDate: dateStringSchema,
-			vocationalSkill: optionalEnumSchema(TacotsVocationalSkillOptions),
+			submissionDate: DateStringSchema,
+			vocationalSkill: getOptionalEnumSchema(TacotsVocationalSkillOptions),
 			yearOfExit: stringWithNumberValidation(z.int("Enter a valid year.")),
 		}),
 		data: withBaseSuccessResponse(z.unknown()),

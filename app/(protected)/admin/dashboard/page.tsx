@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { tw } from "@zayne-labs/toolkit-core";
 import Image from "next/image";
 import {
 	Area,
@@ -20,19 +21,18 @@ import {
 	type BarShapeProps,
 	type PieSectorDataItem,
 } from "recharts";
-import { ForWithWrapper } from "@/components/common/for";
+import { For, ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
 import { Carousel, Chart, Skeleton } from "@/components/ui";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import type { DashboardChartDataset, DashboardLineData } from "@/lib/api/callBackendApi/apiSchema";
 import {
 	dashboardCardsQuery,
 	dashboardEnrollmentQuery,
 	dashboardInstitutionalEffectivenessQuery,
 	dashboardProjectsQuery,
 	dashboardStudentPerformanceQuery,
-	type DashboardChartDataset,
-	type DashboardLineData,
 } from "@/lib/react-query/queryOptions";
 import { cnJoin, cnMerge } from "@/lib/utils/cn";
 import { Main } from "./-components/Main";
@@ -60,9 +60,26 @@ const chartColorsByTitle = {
 	"Graduation Rate Trend": chartColorGroups.yellowRed,
 	"Pre/Mid/Post-test Scores by Term": chartColorGroups.blackRedYellow,
 	"Students Meeting Benchmark": ["hsl(350, 43%, 68%)", "hsl(350, 43%, 56%)", "var(--color-cedar-red)"],
-	"Total Community Service Hours": chartColorGroups.yellowRed,
+	"Total Community Service Hours": chartColorGroups.redYellow,
 	"Total Spend per TACOTS Student": chartColorGroups.blackRedYellow,
 } as const satisfies Record<string, readonly string[]>;
+
+const chartScopesByTitle = {
+	"Application Numbers Over Time": "ASH + TACOTS",
+	"At-risk vs Low-risk Students": "ASH",
+	"Attendance Trend - Monthly Sessions": "ASH",
+	"Average Mentorship Hours": "TACOTS",
+	"Class/Age Distribution": "ASH",
+	"Dropout Trend - Monthly": "ASH",
+	"Gender Diversity": "ASH + TACOTS",
+	"Geographic Distribution - Top States": "ASH",
+	"Graduation Rate Trend": "ASH",
+	"Pre/Mid/Post-test Scores by Term": "ASH",
+	"Students Meeting Benchmark": "TACOTS",
+	"Total Accumulated Mentorship Hours": "TACOTS",
+	"Total Community Service Hours": "TACOTS",
+	"Total Spend per TACOTS Student": "TACOTS",
+} as const satisfies Record<string, "ASH" | "ASH + TACOTS" | "TACOTS">;
 
 function DashboardPage() {
 	const cardsQueryResult = useQuery(dashboardCardsQuery());
@@ -158,17 +175,15 @@ function DashboardPage() {
 						action="View more"
 					/>
 
-					<Carousel.Root className="" options={{ align: "start", loop: false }}>
-						<Carousel.Content className="-mr-3 gap-3 select-none lg:mr-0">
-							<ForWithWrapper
-								as="div"
-								className="contents"
+					<Carousel.Root options={{ align: "start", loop: false }}>
+						<Carousel.Content className="-mr-3 gap-3 select-none lg:-mr-5 lg:gap-5">
+							<For
 								each={(projectsQueryResult.data ?? []).slice(0, 2)}
 								renderItem={(project, index, array) => (
 									<Carousel.Item
 										key={project.id}
 										className={cnJoin(
-											"w-[88%] cursor-grab active:cursor-grabbing lg:w-full lg:max-w-[528px]",
+											"w-1/2 cursor-grab active:cursor-grabbing lg:w-full lg:max-w-[528px]",
 											index === array.length - 1 && "pr-3 lg:pr-0"
 										)}
 									>
@@ -193,11 +208,13 @@ function DashboardPage() {
 							dataset={studentPerformance?.c_attendanceTrend}
 						/>
 					</div>
+
 					<DashboardChartCard
 						title="Pre/Mid/Post-test Scores by Term"
 						description="Average test performance by term"
 						dataset={studentPerformance?.c_testScores}
 					/>
+
 					<div className="flex w-full flex-col gap-3 lg:flex-row">
 						<DashboardChartCard
 							title="Dropout Trend - Monthly"
@@ -235,7 +252,7 @@ function DashboardPage() {
 						<DashboardChartCard
 							title="Class/Age Distribution"
 							description="Student spread by education band"
-							dataset={enrollment?.c_classAgeDistribution}
+							dataset={enrollment?.c_classDistribution}
 						/>
 						<LineDataCard
 							title="Geographic Distribution - Top States"
@@ -248,7 +265,7 @@ function DashboardPage() {
 				<MetricsSection title="Institutional Effectiveness">
 					<DashboardChartCard
 						title="Total Community Service Hours"
-						description="Community service hours and average per student"
+						description="Community service hours (TACOTS)"
 						dataset={institutionalEffectiveness?.c_communityServiceHours}
 					/>
 					<div className="flex w-full flex-col gap-3 lg:flex-row">
@@ -280,6 +297,8 @@ function DashboardPage() {
 		</Main>
 	);
 }
+
+export default DashboardPage;
 
 function SectionHeader(props: { action?: string; description?: string; title: string }) {
 	const { action, description, title } = props;
@@ -456,7 +475,7 @@ function DashboardChartCard(props: {
 					<p className="mt-1 text-[10px] text-cedar-black/48">{description}</p>
 				</div>
 				<Badge className="border-0 bg-cedar-yellow/16 px-2 py-1 text-[9px] text-cedar-yellow">
-					Live data
+					{getChartScope(title)}
 				</Badge>
 			</header>
 
@@ -527,11 +546,11 @@ function GenderDiversityChart(props: { dataset: DashboardChartDataset }) {
 function renderChart(dataset: DashboardChartDataset, title: string) {
 	const colors = getChartColors(title);
 	const chartData = toChartData(dataset, colors);
-	const config = toChartConfig(dataset, colors);
+	const config = toChartConfig(dataset, colors, title);
 	const pieData = toPieData(dataset, colors);
 
 	if (title === "Total Community Service Hours") {
-		return renderCommunityServiceChart({ chartData, colors, config, dataset });
+		return renderCommunityServiceChart({ chartData, config, dataset });
 	}
 
 	if (title === "Average Mentorship Hours") {
@@ -546,15 +565,18 @@ function renderChart(dataset: DashboardChartDataset, title: string) {
 					<XAxis dataKey="label" tickLine={false} axisLine={false} tickMargin={8} />
 					<YAxis tickLine={false} axisLine={false} width={30} />
 					<Chart.Tooltip content={<Chart.TooltipContent />} />
-					{dataset.datasets.map((dataItem, index) => (
-						<Bar
-							key={dataItem.label ?? index}
-							dataKey={dataItem.label ?? `value-${index}`}
-							fill={colors[index % colors.length]}
-							radius={[6, 6, 0, 0]}
-							shape={dataset.datasets.length === 1 ? ChartBarShape : undefined}
-						/>
-					))}
+					<For
+						each={dataset.datasets}
+						renderItem={(dataItem, index) => (
+							<Bar
+								key={dataItem.label ?? index}
+								dataKey={dataItem.label ?? `value-${index}`}
+								fill={getSeriesColor({ colors, index, label: dataItem.label, title })}
+								radius={[6, 6, 0, 0]}
+								shape={dataset.datasets.length === 1 ? ChartBarShape : undefined}
+							/>
+						)}
+					/>
 					{dataset.datasets.length > 1 && (
 						<Chart.Legend
 							content={<Chart.LegendContent />}
@@ -572,16 +594,19 @@ function renderChart(dataset: DashboardChartDataset, title: string) {
 					<XAxis dataKey="label" tickLine={false} axisLine={false} tickMargin={8} />
 					<YAxis tickLine={false} axisLine={false} width={30} />
 					<Chart.Tooltip content={<Chart.TooltipContent />} />
-					{dataset.datasets.map((dataItem, index) => (
-						<Line
-							key={dataItem.label ?? index}
-							type="monotone"
-							dataKey={dataItem.label ?? `value-${index}`}
-							stroke={colors[index % colors.length]}
-							strokeWidth={2}
-							dot={false}
-						/>
-					))}
+					<For
+						each={dataset.datasets}
+						renderItem={(dataItem, index) => (
+							<Line
+								key={dataItem.label ?? index}
+								type="monotone"
+								dataKey={dataItem.label ?? `value-${index}`}
+								stroke={getSeriesColor({ colors, index, label: dataItem.label, title })}
+								strokeWidth={2}
+								dot={false}
+							/>
+						)}
+					/>
 					{dataset.datasets.length > 1 && (
 						<Chart.Legend
 							content={<Chart.LegendContent />}
@@ -613,27 +638,63 @@ function renderChart(dataset: DashboardChartDataset, title: string) {
 
 function renderCommunityServiceChart(props: {
 	chartData: Array<Record<string, number | string>>;
-	colors: readonly string[];
 	config: Chart.ChartConfig;
 	dataset: DashboardChartDataset;
 }) {
-	const { chartData, colors, config, dataset } = props;
-	const [barDataset, lineDataset] = dataset.datasets;
-	const barKey = barDataset?.label ?? "value-0";
-	const lineKey = lineDataset?.label ?? "value-1";
-	const lineColor = colors[1] ?? "var(--color-cedar-red)";
+	const { chartData, config, dataset } = props;
+
+	const totalDatasetIndex = dataset.datasets.findIndex((dataItem) => !isAverageSeries(dataItem.label));
+	const averageDatasetIndex = dataset.datasets.findIndex((dataItem) => isAverageSeries(dataItem.label));
+	const totalDataset = dataset.datasets[totalDatasetIndex] ?? dataset.datasets[0];
+	const averageDataset = dataset.datasets[averageDatasetIndex] ?? dataset.datasets[1];
+
+	const barKey = totalDataset?.label ?? `value-${Math.max(totalDatasetIndex, 0)}`;
+	const lineKey = averageDataset?.label ?? `value-${Math.max(averageDatasetIndex, 1)}`;
+
+	const barColor = "var(--color-cedar-yellow)";
+	const lineColor = "var(--color-cedar-red)";
+
+	const communityServiceConfig = {
+		...config,
+		[barKey]: { color: barColor, label: "Total services hrs (all students)" },
+		[lineKey]: { color: lineColor, label: "Average per student" },
+	} satisfies Chart.ChartConfig;
 
 	return (
-		<Chart.Container config={config} className="h-[260px] w-[760px] max-w-none lg:w-full">
+		<Chart.Container
+			config={communityServiceConfig}
+			className="h-[260px] w-[760px] max-w-none lg:w-full"
+		>
 			<ComposedChart data={chartData}>
 				<CartesianGrid vertical={true} strokeDasharray="3 3" />
 				<XAxis dataKey="label" tickLine={false} axisLine={false} tickMargin={8} />
-				<YAxis tickLine={false} axisLine={false} width={36} />
+				<YAxis
+					yAxisId="hours"
+					tickFormatter={(value: string) => `${value}h`}
+					tickLine={false}
+					axisLine={false}
+					width={36}
+				/>
+				<YAxis
+					yAxisId="average"
+					orientation="right"
+					tickFormatter={(value: string) => `${value}h/s`}
+					tickLine={false}
+					axisLine={false}
+					width={42}
+				/>
 				<Chart.Tooltip content={<Chart.TooltipContent />} />
 				<Chart.Legend content={<Chart.LegendContent />} verticalAlign="top" align="right" />
-				<Bar dataKey={barKey} fill={colors[0]} radius={[6, 6, 0, 0]} />
-				{lineDataset && (
+				<Bar
+					yAxisId="hours"
+					dataKey={barKey}
+					fill={barColor}
+					radius={[6, 6, 0, 0]}
+					shape={CommunityServiceBarShape}
+				/>
+				{averageDataset && (
 					<Line
+						yAxisId="average"
 						type="monotone"
 						dataKey={lineKey}
 						stroke={lineColor}
@@ -646,6 +707,16 @@ function renderCommunityServiceChart(props: {
 	);
 }
 
+function CommunityServiceBarShape(props: BarShapeProps) {
+	return <Rectangle {...props} fill="var(--color-cedar-yellow)" radius={[6, 6, 0, 0]} />;
+}
+
+function isAverageSeries(label: string | undefined) {
+	const normalizedLabel = label?.toLowerCase() ?? "";
+
+	return normalizedLabel.includes("avg") || normalizedLabel.includes("average");
+}
+
 function renderMentorshipAreaChart(props: {
 	chartData: Array<Record<string, number | string>>;
 	colors: readonly string[];
@@ -653,6 +724,7 @@ function renderMentorshipAreaChart(props: {
 	dataset: DashboardChartDataset;
 }) {
 	const { chartData, colors, config, dataset } = props;
+
 	const [dataItem] = dataset.datasets;
 	const dataKey = dataItem?.label ?? "value-0";
 	const color = colors[0] ?? "var(--color-cedar-red)";
@@ -697,6 +769,7 @@ function LineDataCard(props: {
 	variant?: "programmes";
 }) {
 	const { description, items, title, variant } = props;
+
 	const maxAmount = Math.max(...(items ?? []).map((item) => item.amount), 1);
 
 	return (
@@ -707,7 +780,7 @@ function LineDataCard(props: {
 					<p className="mt-1 text-[10px] text-cedar-black/48">{description}</p>
 				</div>
 				<Badge className="border-0 bg-cedar-yellow/16 px-2 py-1 text-[9px] text-cedar-yellow">
-					Live data
+					{getChartScope(title)}
 				</Badge>
 			</header>
 
@@ -725,10 +798,14 @@ function LineDataCard(props: {
 						>
 							<div
 								className={cnJoin(
-									"h-full rounded-full",
+									"h-full w-(--width) rounded-full",
 									variant === "programmes" ? getProgrammeBarClassName(index) : "bg-cedar-red"
 								)}
-								style={{ width: `${Math.max((item.amount / maxAmount) * 100, 4)}%` }}
+								style={
+									{
+										"--width": `${Math.max((item.amount / maxAmount) * 100, 4)}%`,
+									} as React.CSSProperties
+								}
 							/>
 						</div>
 						<p className="text-right text-[11px] font-medium">{formatNumber(item.amount)}</p>
@@ -740,30 +817,32 @@ function LineDataCard(props: {
 }
 
 function getProgrammeBarClassName(index: number) {
-	return ["bg-cedar-red", "bg-cedar-yellow", "bg-cedar-black"][index] ?? "bg-cedar-red";
+	return [tw`bg-cedar-red`, tw`bg-cedar-yellow`, tw`bg-cedar-black`][index] ?? tw`bg-cedar-red`;
 }
 
 function getProgrammeBarTrackClassName(index: number) {
-	return ["bg-cedar-red/12", "bg-cedar-yellow/16", "bg-cedar-black/12"][index] ?? "bg-cedar-red/12";
+	return (
+		[tw`bg-cedar-red/12`, tw`bg-cedar-yellow/16`, tw`bg-cedar-black/12`][index] ?? tw`bg-cedar-red/12`
+	);
 }
 
 function toChartData(dataset: DashboardChartDataset, colors: readonly string[]) {
 	return dataset.labels.map((label, labelIndex) => {
 		const dataPoint: Record<string, number | string> = {
-			fill: colors[labelIndex % colors.length] ?? colors[0] ?? "var(--color-cedar-yellow)",
+			fill: colors[labelIndex % colors.length] ?? "var(--color-cedar-yellow)",
 			label,
 		};
 
-		dataset.datasets.forEach((dataItem, dataItemIndex) => {
+		for (const [dataItemIndex, dataItem] of dataset.datasets.entries()) {
 			dataPoint[dataItem.label ?? `value-${dataItemIndex}`] = dataItem.data[labelIndex] ?? 0;
-		});
+		}
 
 		return dataPoint;
 	});
 }
 
 function toPieData(dataset: DashboardChartDataset, colors: readonly string[]) {
-	const [firstDataSet] = dataset.datasets;
+	const firstDataSet = dataset.datasets[0];
 
 	return dataset.labels.map((label, index) => ({
 		fill: colors[index % colors.length],
@@ -772,12 +851,12 @@ function toPieData(dataset: DashboardChartDataset, colors: readonly string[]) {
 	}));
 }
 
-function toChartConfig(dataset: DashboardChartDataset, colors: readonly string[]) {
+function toChartConfig(dataset: DashboardChartDataset, colors: readonly string[], title?: string) {
 	return Object.fromEntries(
 		dataset.datasets.map((dataItem, index) => [
 			dataItem.label ?? `value-${index}`,
 			{
-				color: colors[index % colors.length],
+				color: getSeriesColor({ colors, index, label: dataItem.label, title }),
 				label: dataItem.label ?? `Series ${index + 1}`,
 			},
 		])
@@ -788,6 +867,30 @@ function getChartColors(title: string) {
 	const colors = chartColorsByTitle[title as keyof typeof chartColorsByTitle];
 
 	return colors;
+}
+
+function getChartScope(title: string) {
+	return chartScopesByTitle[title as keyof typeof chartScopesByTitle];
+}
+
+function getSeriesColor(context: {
+	colors: readonly string[];
+	index: number;
+	label?: string;
+	title?: string;
+}) {
+	const { colors, index, label, title } = context;
+	const normalizedLabel = label?.toLowerCase();
+
+	if (title === "Graduation Rate Trend" && normalizedLabel?.includes("drop")) {
+		return "var(--color-cedar-red)";
+	}
+
+	if (title === "Graduation Rate Trend" && normalizedLabel?.includes("graduat")) {
+		return "var(--color-cedar-yellow)";
+	}
+
+	return colors[index % colors.length] ?? chartColorGroups.default[0];
 }
 
 const formatNumber = (value: number | undefined) => {
@@ -805,5 +908,3 @@ const formatPercent = (value: number, total: number) => {
 
 	return `${Math.round((value / total) * 100)}%`;
 };
-
-export default DashboardPage;

@@ -84,90 +84,88 @@ const onScrollToTop = () => {
 	window.scrollTo({ top: 0 });
 };
 
+type FormStepFooterProps = {
+	onError?: (ctx: Pick<UseFormStateReturn<Record<string, unknown>>, "errors">) => void;
+	onGoToNextStep?: () => void;
+	onGoToPrevStep?: () => void;
+};
+
 // eslint-disable-next-line react-refresh/only-export-components
 export const FormStepFooter = dynamic(
 	() =>
-		Promise.resolve(
-			(props?: {
-				onError?: (ctx: Pick<UseFormStateReturn<Record<string, unknown>>, "errors">) => void;
-				onGoToNextStep?: () => void;
-				onGoToPrevStep?: () => void;
-			}) => {
-				const { onError, onGoToNextStep, onGoToPrevStep } = props ?? {};
+		Promise.resolve((props?: FormStepFooterProps) => {
+			const { onError, onGoToNextStep, onGoToPrevStep } = props ?? {};
 
-				const btnClassName = tw`text-[12px]`;
+			const btnClassName = tw`text-[12px]`;
 
-				return (
-					<Steps.Context>
-						{(context) => (
-							<div className="flex justify-end gap-3">
-								{context.hasPrevStep && (
-									<Steps.PrevTrigger asChild={true}>
+			return (
+				<Steps.Context>
+					{(context) => (
+						<div className="flex justify-end gap-3">
+							{context.hasPrevStep && (
+								<Steps.PrevTrigger asChild={true}>
+									<Button
+										className={btnClassName}
+										onClick={() => {
+											onGoToPrevStep?.();
+											onScrollToTop();
+										}}
+									>
+										Back
+									</Button>
+								</Steps.PrevTrigger>
+							)}
+
+							{context.hasNextStep && (
+								<Form.Submit asChild={true}>
+									{({ errors, isValid }) => (
 										<Button
 											className={btnClassName}
 											onClick={() => {
-												onGoToPrevStep?.();
+												if (!isValid) {
+													onError?.({ errors });
+													return;
+												}
+
+												context.goToNextStep();
+												onGoToNextStep?.();
 												onScrollToTop();
 											}}
 										>
-											Back
+											Next
 										</Button>
-									</Steps.PrevTrigger>
-								)}
+									)}
+								</Form.Submit>
+							)}
 
-								{context.hasNextStep && (
-									<Form.Submit asChild={true}>
-										{({ errors, isValid }) => (
-											<Button
-												className={btnClassName}
-												onClick={() => {
-													if (!isValid) {
-														onError?.({ errors });
-														return;
-													}
-
-													context.goToNextStep();
-													onGoToNextStep?.();
-													onScrollToTop();
-												}}
-											>
-												Next
-											</Button>
-										)}
-									</Form.Submit>
-								)}
-
-								{context.isCompleted && (
-									<Form.Submit asChild={true}>
-										{(formState) => (
-											<Button
-												className={btnClassName}
-												isLoading={formState.isSubmitting}
-												isDisabled={formState.isSubmitting}
-											>
-												Submit
-											</Button>
-										)}
-									</Form.Submit>
-								)}
-							</div>
-						)}
-					</Steps.Context>
-				);
-			}
-		),
+							{context.isCompleted && (
+								<Form.Submit asChild={true}>
+									{(formState) => (
+										<Button
+											className={btnClassName}
+											isLoading={formState.isSubmitting}
+											isDisabled={formState.isSubmitting}
+										>
+											Submit
+										</Button>
+									)}
+								</Form.Submit>
+							)}
+						</div>
+					)}
+				</Steps.Context>
+			);
+		}),
 	{ ssr: false }
 );
 
-export function FormStepComponentSectionHeader(props: { title: string }) {
-	const { title } = props;
+export function FormStepComponentSectionHeader(props: { note?: string; title: string }) {
+	const { note = "*Please fill information correctly according to field tag", title } = props;
 
 	return (
 		<header className="flex items-center justify-between gap-6">
 			<h2 className="shrink-0 leading-[1.2] lg:text-[24px]">{title}</h2>
-			<p className="text-[8px]/3 text-cedar-black/64 max-lg:max-w-[132px] lg:text-[12px]/4">
-				*Please fill information correctly according to field tag
-			</p>
+			<p className="text-[8px]/3 text-cedar-black/64 max-lg:max-w-[132px] lg:text-[12px]/4">{note}</p>
 		</header>
 	);
 }

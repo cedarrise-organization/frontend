@@ -21,6 +21,8 @@ export const AdminReviewStatusOptions = defineEnum(["NOT SELECTED", "KEEP IN VIE
 
 export const ProjectStatusOptions = defineEnum(["ongoing", "completed"]);
 
+export const OutreachTypeOptions = defineEnum(["SOFT SKILLS", "VOCATIONAL SKILLS", "MEDICAL", "EDUCATIONAL"]);
+
 export const AcademicSessionOptions = defineEnum([
 	"2024/25",
 	"2025/26",
@@ -33,6 +35,10 @@ export const AcademicSessionOptions = defineEnum([
 export const AshTermOptions = defineEnum(["TERM 1", "TERM 2", "TERM 3"]);
 
 export const TacotsAcademicTermOptions = defineEnum(["1ST TERM", "2ND TERM", "3RD TERM"]);
+
+export const TacotsAssessmentPeriodOptions = defineEnum(["MID TERM", "END OF TERM"]);
+
+export const TacotsMentorshipModeOptions = defineEnum(["PHYSICAL", "PHONE"]);
 
 export const AshTrackingSortByOptions = defineEnum([
 	"firstName",

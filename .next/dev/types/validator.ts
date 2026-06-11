@@ -189,6 +189,78 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
   type __Unused = __Check
 }
 
+// Validate ../../../app/(protected)/admin/dashboard/tracker-forms/ash/exit/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/admin/dashboard/tracker-forms/ash/exit">> = Specific
+  const handler = {} as typeof import("../../../app/(protected)/admin/dashboard/tracker-forms/ash/exit/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/(protected)/admin/dashboard/tracker-forms/ash/termly-tracking/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/admin/dashboard/tracker-forms/ash/termly-tracking">> = Specific
+  const handler = {} as typeof import("../../../app/(protected)/admin/dashboard/tracker-forms/ash/termly-tracking/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/(protected)/admin/dashboard/tracker-forms/ash/weekly-activity-attendance/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/admin/dashboard/tracker-forms/ash/weekly-activity-attendance">> = Specific
+  const handler = {} as typeof import("../../../app/(protected)/admin/dashboard/tracker-forms/ash/weekly-activity-attendance/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/(protected)/admin/dashboard/tracker-forms/capacity-building/program-evaluation/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/admin/dashboard/tracker-forms/capacity-building/program-evaluation">> = Specific
+  const handler = {} as typeof import("../../../app/(protected)/admin/dashboard/tracker-forms/capacity-building/program-evaluation/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/(protected)/admin/dashboard/tracker-forms/outreaches/tracker/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/admin/dashboard/tracker-forms/outreaches/tracker">> = Specific
+  const handler = {} as typeof import("../../../app/(protected)/admin/dashboard/tracker-forms/outreaches/tracker/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/(protected)/admin/dashboard/tracker-forms/tacots/beneficiary-onboarding/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/admin/dashboard/tracker-forms/tacots/beneficiary-onboarding">> = Specific
+  const handler = {} as typeof import("../../../app/(protected)/admin/dashboard/tracker-forms/tacots/beneficiary-onboarding/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/(protected)/admin/dashboard/tracker-forms/tacots/exit-completion/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/admin/dashboard/tracker-forms/tacots/exit-completion">> = Specific
+  const handler = {} as typeof import("../../../app/(protected)/admin/dashboard/tracker-forms/tacots/exit-completion/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/(protected)/admin/dashboard/tracker-forms/tacots/student-tracking/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/admin/dashboard/tracker-forms/tacots/student-tracking">> = Specific
+  const handler = {} as typeof import("../../../app/(protected)/admin/dashboard/tracker-forms/tacots/student-tracking/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../../app/auth/admin/signin/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/auth/admin/signin">> = Specific

@@ -1,6 +1,7 @@
 "use client";
 
 import type { UrlObject } from "node:url";
+import type { InferProps } from "@zayne-labs/toolkit-react/utils";
 import { isFunction, isString } from "@zayne-labs/toolkit-type-helpers";
 import type { Route } from "next";
 import Link, { type LinkProps } from "next/link";
@@ -12,7 +13,7 @@ import { cnMerge } from "@/lib/utils/cn";
 export type MainAppRoutes<TRouteType extends string = AppRoutes> = Route<TRouteType>;
 
 export function NavLink<TRouteType extends string = AppRoutes>(
-	props: Omit<LinkProps<TRouteType>, "children" | "href"> & {
+	props: Omit<InferProps<typeof Link> & LinkProps<TRouteType>, "children" | "href"> & {
 		children: React.ReactNode | ((ctx: { isActive: boolean }) => React.ReactNode);
 		href:
 			| (Omit<UrlObject, "pathname"> & { pathname: MainAppRoutes<TRouteType> })
