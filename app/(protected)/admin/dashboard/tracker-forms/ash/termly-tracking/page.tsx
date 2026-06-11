@@ -2,9 +2,9 @@
 
 import { Steps } from "@ark-ui/react/steps";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
 import { toFormData } from "@zayne-labs/callapi/utils";
 import { createUseStorageState } from "@zayne-labs/toolkit-react";
-import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -127,7 +127,9 @@ function AshTermlyTrackingForm() {
 	const [storeValues, storeActions] = useAshTermlyTrackingStorageState();
 
 	const form = useForm({
-		resolver: zodResolver(stepItems[storeValues.currentStep]?.validator ?? AshTermlyTrackingFrontendSchema),
+		resolver: zodResolver(
+			stepItems[storeValues.currentStep]?.validator ?? AshTermlyTrackingFrontendSchema
+		),
 		values: storeValues.formStepData as never,
 	});
 
@@ -276,14 +278,23 @@ function PersonalDevelopmentStep() {
 			<section className="flex flex-col gap-4 lg:gap-5">
 				<h2 className="text-[14px]/[1.2] lg:text-[18px]">Mentor&apos;s Comments</h2>
 
-				<TextAreaField control={form.control} name="notableAchievements" label="Notable Achievements" />
+				<TextAreaField
+					control={form.control}
+					name="notableAchievements"
+					label="Notable Achievements"
+				/>
 				<TextAreaField control={form.control} name="challengesObserved" label="Challenges Observed" />
 				<TextAreaField
 					control={form.control}
 					name="nextTermRecommendations"
 					label="Recommendations for Next Term"
 				/>
-				<TextField control={form.control} name="mentorName" placeholder="Mentor's Name" required={true} />
+				<TextField
+					control={form.control}
+					name="mentorName"
+					placeholder="Mentor's Name"
+					required={true}
+				/>
 			</section>
 		</>
 	);

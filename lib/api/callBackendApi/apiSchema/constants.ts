@@ -21,7 +21,12 @@ export const AdminReviewStatusOptions = defineEnum(["NOT SELECTED", "KEEP IN VIE
 
 export const ProjectStatusOptions = defineEnum(["ongoing", "completed"]);
 
-export const OutreachTypeOptions = defineEnum(["SOFT SKILLS", "VOCATIONAL SKILLS", "MEDICAL", "EDUCATIONAL"]);
+export const OutreachTypeOptions = defineEnum([
+	"SOFT SKILLS",
+	"VOCATIONAL SKILLS",
+	"MEDICAL",
+	"EDUCATIONAL",
+]);
 
 export const AcademicSessionOptions = defineEnum([
 	"2024/25",

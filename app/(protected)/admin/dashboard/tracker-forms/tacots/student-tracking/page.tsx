@@ -2,9 +2,9 @@
 
 import { Steps } from "@ark-ui/react/steps";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
 import { toFormData } from "@zayne-labs/callapi/utils";
 import { createUseStorageState } from "@zayne-labs/toolkit-react";
-import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -72,49 +72,49 @@ const stepItemsCount = stepItems.length - 1;
 
 type FormStepDataType = z.infer<typeof TacotsStudentTrackingFrontendSchema>;
 
-const useTacotsStudentTrackingStorageState = createUseStorageState<
-	GetFormStepStoreType<FormStepDataType>
->({
-	defaultValue: {
-		currentStep: 0,
-		formStepData: {
-			academicComment: "",
-			academicSession: "",
-			adherenceToSchoolRules: 0,
-			assessmentPeriod: undefined,
-			briefMentoringSessionNotes: "",
-			communityServiceComment: "",
-			currentClass: undefined,
-			currentSchool: "",
-			dateOfActivity: "",
-			dateOfSubmission: "",
-			descriptionOfActivity: "",
-			financialNotes: "",
-			highestSubjectScore: "",
-			locationOfActivity: "",
-			lowestSubjectScore: "",
-			mentorName: "",
-			mentorshipSessionDate: "",
-			modeOfMentorship: undefined,
-			resourcesGiven: "",
-			resultSheet: undefined,
-			schoolFormationComment: "",
-			senseOfResponsibility: 0,
-			socialBehavior: 0,
-			studentId: "",
-			studentPositionInClass: "",
-			subjectsAverage: "",
-			sundries: "",
-			supervisorFacilitator: "",
-			term: undefined,
-			totalAmountSpentForTerm: "",
-			tuitionFeePaid: "",
-			typeOfServiceActivity: "",
-			uploadPaymentEvidence: undefined,
-		} satisfies WithUndefined<FormStepDataType> as unknown as FormStepDataType,
-	},
-	key: "admin-tacots-student-tracking-form-data",
-});
+const useTacotsStudentTrackingStorageState = createUseStorageState<GetFormStepStoreType<FormStepDataType>>(
+	{
+		defaultValue: {
+			currentStep: 0,
+			formStepData: {
+				academicComment: "",
+				academicSession: "",
+				adherenceToSchoolRules: 0,
+				assessmentPeriod: undefined,
+				briefMentoringSessionNotes: "",
+				communityServiceComment: "",
+				currentClass: undefined,
+				currentSchool: "",
+				dateOfActivity: "",
+				dateOfSubmission: "",
+				descriptionOfActivity: "",
+				financialNotes: "",
+				highestSubjectScore: "",
+				locationOfActivity: "",
+				lowestSubjectScore: "",
+				mentorName: "",
+				mentorshipSessionDate: "",
+				modeOfMentorship: undefined,
+				resourcesGiven: "",
+				resultSheet: undefined,
+				schoolFormationComment: "",
+				senseOfResponsibility: 0,
+				socialBehavior: 0,
+				studentId: "",
+				studentPositionInClass: "",
+				subjectsAverage: "",
+				sundries: "",
+				supervisorFacilitator: "",
+				term: undefined,
+				totalAmountSpentForTerm: "",
+				tuitionFeePaid: "",
+				typeOfServiceActivity: "",
+				uploadPaymentEvidence: undefined,
+			} satisfies WithUndefined<FormStepDataType> as unknown as FormStepDataType,
+		},
+		key: "admin-tacots-student-tracking-form-data",
+	}
+);
 
 function TacotsStudentTrackingPage() {
 	return (
@@ -192,10 +192,33 @@ function StudentInformationStep() {
 				options={studentOptions}
 				required={true}
 			/>
-			<TextField control={form.control} name="currentSchool" placeholder="School Name" required={true} />
-			<SelectField control={form.control} name="term" placeholder="Term" options={TacotsAcademicTermOptions} required={true} />
-			<SelectField control={form.control} name="academicSession" placeholder="Academic Session" options={AcademicSessionOptions} required={true} />
-			<SelectField control={form.control} name="currentClass" placeholder="Academic Term" options={ClassOptions} required={true} />
+			<TextField
+				control={form.control}
+				name="currentSchool"
+				placeholder="School Name"
+				required={true}
+			/>
+			<SelectField
+				control={form.control}
+				name="term"
+				placeholder="Term"
+				options={TacotsAcademicTermOptions}
+				required={true}
+			/>
+			<SelectField
+				control={form.control}
+				name="academicSession"
+				placeholder="Academic Session"
+				options={AcademicSessionOptions}
+				required={true}
+			/>
+			<SelectField
+				control={form.control}
+				name="currentClass"
+				placeholder="Academic Term"
+				options={ClassOptions}
+				required={true}
+			/>
 
 			<OptionQuestionField
 				control={form.control}
@@ -205,7 +228,12 @@ function StudentInformationStep() {
 				required={true}
 			/>
 
-			<DateField control={form.control} name="dateOfSubmission" placeholder="Date of Submission" required={true} />
+			<DateField
+				control={form.control}
+				name="dateOfSubmission"
+				placeholder="Date of Submission"
+				required={true}
+			/>
 		</>
 	);
 }
@@ -218,34 +246,92 @@ function TrackingDetailsStep() {
 		<>
 			<FormStepComponentSectionHeader title="Academic Performance" note="Filled by School Teacher" />
 
-			<TextField control={form.control} name="highestSubjectScore" placeholder="Highest Subject Score" />
+			<TextField
+				control={form.control}
+				name="highestSubjectScore"
+				placeholder="Highest Subject Score"
+			/>
 			<TextField control={form.control} name="lowestSubjectScore" placeholder="Lowest Subject Score" />
 			<TextField control={form.control} name="subjectsAverage" placeholder="Student's Average (%)" />
-			<TextField control={form.control} name="studentPositionInClass" placeholder="Student's Position in Class" />
+			<TextField
+				control={form.control}
+				name="studentPositionInClass"
+				placeholder="Student's Position in Class"
+			/>
 			<FileUploadField control={form.control} name="resultSheet" label="Upload Copy of Result Sheet" />
 			<TextAreaField control={form.control} name="academicComment" label="Academic Comment" />
 
 			<FormStepComponentSectionHeader title="School Formation" note="Filled by School Teacher" />
 
-			<RatingQuestionField control={form.control} name="socialBehavior" question="Social Behavior" leftLabel="1" rightLabel="5" required={true} />
-			<RatingQuestionField control={form.control} name="adherenceToSchoolRules" question="Adherence to School Rules/Punctuality" leftLabel="1" rightLabel="5" required={true} />
-			<RatingQuestionField control={form.control} name="senseOfResponsibility" question="Sense of Responsibility" leftLabel="1" rightLabel="5" required={true} />
-			<TextAreaField control={form.control} name="schoolFormationComment" label="Other Comments on Student Formation" />
+			<RatingQuestionField
+				control={form.control}
+				name="socialBehavior"
+				question="Social Behavior"
+				leftLabel="1"
+				rightLabel="5"
+				required={true}
+			/>
+			<RatingQuestionField
+				control={form.control}
+				name="adherenceToSchoolRules"
+				question="Adherence to School Rules/Punctuality"
+				leftLabel="1"
+				rightLabel="5"
+				required={true}
+			/>
+			<RatingQuestionField
+				control={form.control}
+				name="senseOfResponsibility"
+				question="Sense of Responsibility"
+				leftLabel="1"
+				rightLabel="5"
+				required={true}
+			/>
+			<TextAreaField
+				control={form.control}
+				name="schoolFormationComment"
+				label="Other Comments on Student Formation"
+			/>
 
 			<FormStepComponentSectionHeader title="Mentorship" note="Filled by Facilitator" />
 
 			<TextField control={form.control} name="mentorName" placeholder="Mentor's Name" />
-			<DateField control={form.control} name="mentorshipSessionDate" placeholder="Mentorship Session Date" />
-			<OptionQuestionField control={form.control} name="modeOfMentorship" question="Mode of Mentorship" options={TacotsMentorshipModeOptions} />
-			<TextAreaField control={form.control} name="briefMentoringSessionNotes" label="Brief Mentoring Session Notes" />
+			<DateField
+				control={form.control}
+				name="mentorshipSessionDate"
+				placeholder="Mentorship Session Date"
+			/>
+			<OptionQuestionField
+				control={form.control}
+				name="modeOfMentorship"
+				question="Mode of Mentorship"
+				options={TacotsMentorshipModeOptions}
+			/>
+			<TextAreaField
+				control={form.control}
+				name="briefMentoringSessionNotes"
+				label="Brief Mentoring Session Notes"
+			/>
 
 			<FormStepComponentSectionHeader title="Community Service" note="Filled by Beneficiary" />
 
-			<TextField control={form.control} name="typeOfServiceActivity" placeholder="Type of Service Activity" />
+			<TextField
+				control={form.control}
+				name="typeOfServiceActivity"
+				placeholder="Type of Service Activity"
+			/>
 			<DateField control={form.control} name="dateOfActivity" placeholder="Date of Activity" />
 			<TextField control={form.control} name="locationOfActivity" placeholder="Location of Activity" />
-			<TextAreaField control={form.control} name="descriptionOfActivity" label="Description of Activity" />
-			<TextField control={form.control} name="supervisorFacilitator" placeholder="Supervisor / Facilitator" />
+			<TextAreaField
+				control={form.control}
+				name="descriptionOfActivity"
+				label="Description of Activity"
+			/>
+			<TextField
+				control={form.control}
+				name="supervisorFacilitator"
+				placeholder="Supervisor / Facilitator"
+			/>
 			<TextAreaField control={form.control} name="communityServiceComment" label="Comments" />
 
 			<FormStepComponentSectionHeader title="Financial Support Tracking" note="Filled by Coordinator" />
@@ -253,8 +339,16 @@ function TrackingDetailsStep() {
 			<TextField control={form.control} name="tuitionFeePaid" placeholder="Tuition Fee Paid" />
 			<TextField control={form.control} name="resourcesGiven" placeholder="Resources Given" />
 			<TextField control={form.control} name="sundries" placeholder="Sundries" />
-			<TextField control={form.control} name="totalAmountSpentForTerm" placeholder="Total Amount Spent for the Term" />
-			<FileUploadField control={form.control} name="uploadPaymentEvidence" label="Upload Payment Evidence" />
+			<TextField
+				control={form.control}
+				name="totalAmountSpentForTerm"
+				placeholder="Total Amount Spent for the Term"
+			/>
+			<FileUploadField
+				control={form.control}
+				name="uploadPaymentEvidence"
+				label="Upload Payment Evidence"
+			/>
 			<TextAreaField control={form.control} name="financialNotes" label="Financial Notes" />
 		</>
 	);

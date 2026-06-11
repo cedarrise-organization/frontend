@@ -10,7 +10,10 @@ import {
 	TextAreaField,
 	TextField,
 } from "@/app/(home)/-components/FormPartsShared";
-import { FormPageHeader, FormStepComponentSectionHeader } from "@/app/(home)/-components/FormStepPartsShared";
+import {
+	FormPageHeader,
+	FormStepComponentSectionHeader,
+} from "@/app/(home)/-components/FormStepPartsShared";
 import { Main } from "@/app/(protected)/admin/dashboard/-components/Main";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -66,7 +69,12 @@ function AshWeeklyActivityAttendanceForm() {
 		>
 			<FormStepComponentSectionHeader title="Weekly Session" />
 
-			<DateField control={form.control} name="sessionDate" placeholder="Date of Session" required={true} />
+			<DateField
+				control={form.control}
+				name="sessionDate"
+				placeholder="Date of Session"
+				required={true}
+			/>
 
 			<CheckboxQuestionField
 				control={form.control}
