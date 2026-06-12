@@ -120,7 +120,7 @@ const useVolunteerRegisterStorageState = createUseStorageState<GetFormStepStoreT
 			gender: undefined,
 			highestEducation: undefined,
 			homeAddress: "",
-			mediaConsent: false,
+			mediaConsent: undefined,
 			middleName: "",
 			occupation: "",
 			phoneNumber: "",

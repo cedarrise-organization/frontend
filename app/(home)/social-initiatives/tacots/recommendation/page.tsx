@@ -171,7 +171,7 @@ const useTacotsRecommendationStorageState = createUseStorageState<GetFormStepSto
 			catholicSacraments: [],
 			childBackgroundNotes: "",
 			classPositionLastTerm: "",
-			declarationConfirmed: false,
+			declarationConfirmed: undefined,
 			diocese: "",
 			disciplineRating: 0,
 			dob: "",

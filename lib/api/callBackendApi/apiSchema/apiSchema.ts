@@ -217,7 +217,10 @@ const SessionUserSchema = AuthUserSchema.pick({
 	department: true,
 	id: true,
 	name: true,
-}).partial({ department: true, name: true });
+}).partial({
+	department: true,
+	name: true,
+});
 
 const LoginSchema = z.object({
 	email: z.email("Enter a valid email address."),
@@ -347,17 +350,6 @@ const clientSideRoutes = defineSchemaRoutes({
 		query: PaginatedQuerySchema.pick({ limit: true }).optional(),
 	},
 
-	"@get/donate/callback": {
-		data: withBaseSuccessResponse(
-			z.object({
-				data: z.unknown(),
-				message: z.string(),
-				status: z.boolean("Invalid payment verification status."),
-			})
-		),
-		query: z.object({ reference: RequiredStringSchema }),
-	},
-
 	"@post/donate": {
 		body: z.object({
 			amount: stringWithNumberValidation(
@@ -392,7 +384,7 @@ const clientSideRoutes = defineSchemaRoutes({
 	},
 });
 
-const dashboardChartDatasetSchema = z.object({
+const DashboardChartDatasetSchema = z.object({
 	datasets: z.array(
 		z.object({
 			data: z.array(z.number()),
@@ -403,14 +395,14 @@ const dashboardChartDatasetSchema = z.object({
 	type: z.enum(["bar", "line", "doughnut", "pie"]),
 });
 
-const dashboardLineDataSchema = z.array(
+const DashboardLineDataSchema = z.array(
 	z.object({
 		amount: z.number(),
 		title: z.string(),
 	})
 );
 
-const dashboardCardsSchema = z.object({
+const DashboardCardsSchema = z.object({
 	ash: z.object({
 		communitiesEngaged: z.number(),
 		currentBeneficiaries: z.number(),
@@ -451,48 +443,48 @@ const dashboardCardsSchema = z.object({
 	}),
 });
 
-const studentPerformanceMetricsSchema = z.object({
-	c_attendanceTrend: dashboardChartDatasetSchema,
-	c_dropoutTrend: dashboardChartDatasetSchema,
-	c_graduationRate: dashboardChartDatasetSchema,
-	c_risk: dashboardChartDatasetSchema,
-	c_testScores: dashboardChartDatasetSchema,
+const StudentPerformanceMetricsSchema = z.object({
+	c_attendanceTrend: DashboardChartDatasetSchema,
+	c_dropoutTrend: DashboardChartDatasetSchema,
+	c_graduationRate: DashboardChartDatasetSchema,
+	c_risk: DashboardChartDatasetSchema,
+	c_testScores: DashboardChartDatasetSchema,
 });
 
-const enrollmentMetricsSchema = z.object({
-	c_acceptanceRate: dashboardLineDataSchema,
-	c_applicationNumbers: dashboardChartDatasetSchema,
-	c_classDistribution: dashboardChartDatasetSchema,
-	c_genderDiversity: dashboardChartDatasetSchema,
-	c_geographicalDistribution: dashboardLineDataSchema,
+const EnrollmentMetricsSchema = z.object({
+	c_acceptanceRate: DashboardLineDataSchema,
+	c_applicationNumbers: DashboardChartDatasetSchema,
+	c_classDistribution: DashboardChartDatasetSchema,
+	c_genderDiversity: DashboardChartDatasetSchema,
+	c_geographicalDistribution: DashboardLineDataSchema,
 });
 
-const institutionalEffectivenessMetricsSchema = z.object({
-	c_averageMentorshipHours: dashboardChartDatasetSchema,
-	c_communityServiceHours: dashboardChartDatasetSchema,
-	c_spendPerstudent: dashboardChartDatasetSchema,
-	c_studentBenchMark: dashboardChartDatasetSchema,
-	c_totalAccHours: dashboardLineDataSchema,
+const InstitutionalEffectivenessMetricsSchema = z.object({
+	c_averageMentorshipHours: DashboardChartDatasetSchema,
+	c_communityServiceHours: DashboardChartDatasetSchema,
+	c_spendPerstudent: DashboardChartDatasetSchema,
+	c_studentBenchMark: DashboardChartDatasetSchema,
+	c_totalAccHours: DashboardLineDataSchema,
 });
 
-export type DashboardChartDataset = z.infer<typeof dashboardChartDatasetSchema>;
-export type DashboardLineData = z.infer<typeof dashboardLineDataSchema>;
+export type DashboardChartDataset = z.infer<typeof DashboardChartDatasetSchema>;
+export type DashboardLineData = z.infer<typeof DashboardLineDataSchema>;
 
 const dashboardRoutes = defineSchemaRoutes({
 	"@get/dashboard/cards": {
-		data: withBaseSuccessResponse(dashboardCardsSchema),
+		data: withBaseSuccessResponse(DashboardCardsSchema),
 	},
 
 	"@get/dashboard/enrollment": {
-		data: withBaseSuccessResponse(enrollmentMetricsSchema),
+		data: withBaseSuccessResponse(EnrollmentMetricsSchema),
 	},
 
 	"@get/dashboard/institutional-effectiveness": {
-		data: withBaseSuccessResponse(institutionalEffectivenessMetricsSchema),
+		data: withBaseSuccessResponse(InstitutionalEffectivenessMetricsSchema),
 	},
 
 	"@get/dashboard/student-performance": {
-		data: withBaseSuccessResponse(studentPerformanceMetricsSchema),
+		data: withBaseSuccessResponse(StudentPerformanceMetricsSchema),
 	},
 });
 
@@ -545,7 +537,7 @@ export const AshRegisterFrontendSchema = z.object({
 	assignedMentor: z.string().optional(),
 	classPositionLastTerm: RequiredStringSchema,
 	currentClass: getRequiredEnumSchema(ClassOptions),
-	declarationConfirmed: z.boolean().refine(Boolean, "This field is required."),
+	declarationConfirmed: z.literal(true, "This field is required"),
 	dob: DateStringSchema,
 	fathersName: RequiredStringSchema,
 	fathersOccupation: RequiredStringSchema,
@@ -565,7 +557,7 @@ export const AshRegisterFrontendSchema = z.object({
 	mothersName: RequiredStringSchema,
 	mothersOccupation: z.string().optional(),
 	mothersPhone: RequiredPhoneNumberSchema,
-	parentConsent: z.boolean().refine(Boolean, "This field is required."),
+	parentConsent: z.literal(true, "This field is required"),
 	parentSignature: RequiredFileSchema,
 	passportPhoto: RequiredFileSchema,
 	pretestScore: z.string().optional(),
@@ -635,7 +627,7 @@ export const TacotsRecommendationFrontendSchema = z.object({
 	catholicSacraments: getOptionalEnumArraySchema(TacotsCatholicSacramentOptions),
 	childBackgroundNotes: RequiredStringSchema,
 	classPositionLastTerm: RequiredStringSchema,
-	declarationConfirmed: z.boolean().refine(Boolean, "This field is required."),
+	declarationConfirmed: z.literal(true, "This field is required"),
 	diocese: z.string().optional(),
 	disciplineRating: getRatingSchema(),
 	dob: DateStringSchema,
@@ -732,7 +724,7 @@ export const TacotsStudentTrackingFrontendSchema = z.object({
 
 export const TacotsOnboardingFrontendSchema = z.object({
 	academicDifficulties: z.string().optional(),
-	acceptanceConfirmed: z.boolean(),
+	acceptanceConfirmed: z.boolean("Choose yes or no"),
 	additionalNotes: z.string().optional(),
 	angerManagement: z.string().optional(),
 	attendanceRegularity: getRatingSchema(),
@@ -772,10 +764,10 @@ export const TacotsOnboardingFrontendSchema = z.object({
 	sponsorName: z.string().optional(),
 	state: RequiredStringSchema,
 	studentCurrentSituation: z.string().optional(),
-	studentDeclarationAccepted: z.boolean(),
+	studentDeclarationAccepted: z.boolean("Choose yes or no."),
 	supportRequired: z.string().optional(),
 	supportType: z.string().optional(),
-	termsAccepted: z.boolean(),
+	termsAccepted: z.boolean("Choose yes or no."),
 	uploadRecommendationLetter: z.unknown().optional(),
 	witnessName: z.string().optional(),
 });
