@@ -12,7 +12,7 @@ type DataTableSkeletonProps = React.ComponentProps<"div"> & {
 	shrinkZero?: boolean;
 	withPagination?: boolean;
 	withViewOptions?: boolean;
-}
+};
 
 export function DataTableSkeleton({
 	cellWidths = DEFAULT_CELL_WIDTHS,
@@ -52,15 +52,15 @@ export function DataTableSkeleton({
 					<Table.Header>
 						<Table.Row className="hover:bg-transparent">
 							{columnKeys.map((columnKey, columnIndex) => (
-									<Table.Head
-										key={columnKey}
-										style={{
-											minWidth: shrinkZero ? cozyCellWidths[columnIndex] : "auto",
-											width: cozyCellWidths[columnIndex],
-										}}
-									>
-										<Skeleton className="h-6 w-full" />
-									</Table.Head>
+								<Table.Head
+									key={columnKey}
+									style={{
+										minWidth: shrinkZero ? cozyCellWidths[columnIndex] : "auto",
+										width: cozyCellWidths[columnIndex],
+									}}
+								>
+									<Skeleton className="h-6 w-full" />
+								</Table.Head>
 							))}
 						</Table.Row>
 					</Table.Header>

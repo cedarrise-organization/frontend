@@ -54,7 +54,8 @@ export function DataTable<TData>({
 							</Table.Row>
 						)}
 
-						{!isLoading && rows.length > 0
+						{!isLoading
+							&& rows.length > 0
 							&& rows.map((row) => (
 								<Table.Row key={row.id} data-state={row.getIsSelected() && "selected"}>
 									{row.getVisibleCells().map((cell) => (
