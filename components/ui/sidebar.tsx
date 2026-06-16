@@ -28,6 +28,7 @@ type SidebarContextType = {
 	setOpen: (open: boolean) => void;
 	setOpenMobile: (open: boolean) => void;
 	sidebarWidth?: string;
+	sidebarWidthDesktop?: string;
 	sidebarWidthIcon?: string;
 	sidebarWidthIconDesktop?: string;
 	sidebarWidthMobile?: string;
@@ -43,7 +44,11 @@ const [SidebarContextProvider, useSidebarContext] = createCustomContext({
 function SidebarProvider(
 	props: Pick<
 		SidebarContextType,
-		"sidebarWidth" | "sidebarWidthIcon" | "sidebarWidthIconDesktop" | "sidebarWidthMobile"
+		| "sidebarWidth"
+		| "sidebarWidthDesktop"
+		| "sidebarWidthIcon"
+		| "sidebarWidthIconDesktop"
+		| "sidebarWidthMobile"
 	>
 		& React.ComponentProps<"div"> & {
 			defaultOpen?: boolean;
@@ -59,6 +64,7 @@ function SidebarProvider(
 		onOpenChange: onOpenChangeProp,
 		open: openProp,
 		sidebarWidth = SIDEBAR_WIDTH,
+		sidebarWidthDesktop = sidebarWidth,
 		sidebarWidthIcon = SIDEBAR_WIDTH_ICON,
 		sidebarWidthIconDesktop = sidebarWidthIcon,
 		sidebarWidthMobile = SIDEBAR_WIDTH_MOBILE,
@@ -156,7 +162,7 @@ function SidebarProvider(
 				)}
 				style={
 					{
-						"--sidebar-width": sidebarWidth,
+						"--sidebar-width": isMobileOrTabletWindow ? sidebarWidth : sidebarWidthDesktop,
 						"--sidebar-width-icon":
 							isMobileOrTabletWindow ? sidebarWidthIcon : sidebarWidthIconDesktop,
 						...style,

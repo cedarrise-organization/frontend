@@ -26,7 +26,7 @@ const dashboardNavSections = [
 			{
 				icon: "streamline-ultimate:layers-stacked",
 				label: "Form Data",
-				link: placeholderHref,
+				link: "/admin/dashboard/form-data",
 			},
 			{
 				icon: "material-symbols:subtitles-outline-rounded",

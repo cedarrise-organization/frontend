@@ -3,7 +3,7 @@
 	"type": "module",
 	"version": "0.1.0",
 	"private": true,
-	"packageManager": "pnpm@10.33.3",
+	"packageManager": "pnpm@10.33.4",
 	"scripts": {
 		"build": "next build",
 		"dev": "next dev --port=3002",
@@ -21,6 +21,7 @@
 		"@hookform/resolvers": "^5.4.0",
 		"@iconify/react": "6.0.2",
 		"@tanstack/react-query": "5.101.0",
+		"@tanstack/react-table": "^8.21.3",
 		"@zayne-labs/callapi": "1.13.0",
 		"@zayne-labs/callapi-plugins": "^6.0.0",
 		"@zayne-labs/toolkit-core": "0.12.56",

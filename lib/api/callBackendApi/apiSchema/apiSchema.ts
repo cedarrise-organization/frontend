@@ -37,6 +37,7 @@ import {
 	GenderOptions,
 	LearningConditionStatusOptions,
 	NigeriaStateOptions,
+	OrderByOptions,
 	OutreachTypeOptions,
 	ParentGuardianRelationshipOptions,
 	PositiveChangeNoticedOptions,
@@ -90,16 +91,16 @@ import {
 } from "./constants";
 
 const BaseSuccessResponseSchema = z.object({
-	data: z.unknown().nullable(),
+	data: z.null().optional(),
 	message: z.string(),
-	meta: z.unknown().optional(),
+	meta: z.record(z.string(), z.unknown()).optional(),
 	success: z.literal(true),
 });
 
 const BaseErrorResponseSchema = z.object({
 	error: z.object({
 		code: z.union([z.string(), z.number()]),
-		details: z.unknown().optional(),
+		details: z.record(z.string(), z.unknown()).optional(),
 		message: z.string(),
 	}),
 	status: z.literal(false),
@@ -109,19 +110,34 @@ export type BaseApiSuccessResponse = z.infer<typeof BaseSuccessResponseSchema>;
 
 export type BaseApiErrorResponse = z.infer<typeof BaseErrorResponseSchema>;
 
-const withBaseSuccessResponse = <TDataSchema extends z.ZodType>(dataSchema: TDataSchema) => {
+const withBaseSuccessResponse = <TDataSchema extends z.ZodType>(schemas: { data: TDataSchema }) => {
 	return BaseSuccessResponseSchema.extend({
-		data: dataSchema,
+		data: schemas.data,
 	});
 };
 
-const withBaseErrorResponse = <
-	TErrorSchema extends z.ZodType = typeof BaseErrorResponseSchema.shape.error,
->(
-	errorSchema?: TErrorSchema
-) => {
+const withBaseSuccessResponseAndMeta = <
+	TDataSchema extends z.ZodType,
+	TMetaSchema extends z.ZodType,
+>(schemas: {
+	data: TDataSchema;
+	meta: TMetaSchema;
+}) => {
+	return BaseSuccessResponseSchema.extend({
+		data: schemas.data,
+		meta: schemas.meta,
+	});
+};
+
+const withBaseErrorResponse = <TErrorSchema extends z.ZodType>(errorSchema?: TErrorSchema) => {
+	if (errorSchema) {
+		return BaseErrorResponseSchema.extend({
+			error: errorSchema,
+		});
+	}
+
 	return BaseErrorResponseSchema.extend({
-		error: (errorSchema ?? BaseErrorResponseSchema.shape.error) as NonNullable<TErrorSchema>,
+		error: BaseErrorResponseSchema.shape.error,
 	});
 };
 
@@ -167,6 +183,7 @@ const getOptionalEnumArraySchema = <const TOptions extends readonly string[]>(op
 const PaginatedQuerySchema = z
 	.object({
 		limit: z.number("Enter a valid limit."),
+		orderBy: getOptionalEnumSchema(OrderByOptions),
 		page: z.number("Enter a valid page."),
 		search: z.string(),
 	})
@@ -232,6 +249,25 @@ const LookupItemSchema = z.object({
 	name: z.string(),
 });
 
+const RoleSchema = z.object({
+	createdAt: z.string(),
+	deletedAt: z.string().nullable().optional(),
+	description: z.string().nullable().optional(),
+	id: z.uuid("Invalid ID."),
+	isDefault: z.boolean(),
+	name: z.string(),
+	updatedAt: z.string().nullable().optional(),
+});
+
+const UserRoleSchema = z.object({
+	createdAt: z.string().optional(),
+	deletedAt: z.string().nullable().optional(),
+	id: z.uuid("Invalid ID."),
+	roleId: z.uuid("Invalid ID.").optional(),
+	updatedAt: z.string().nullable().optional(),
+	userId: z.uuid("Invalid ID.").optional(),
+});
+
 const ProjectSchema = z.object({
 	createdAt: z.string().optional(),
 	description: z.string().nullable().optional(),
@@ -243,6 +279,112 @@ const ProjectSchema = z.object({
 	updatedAt: z.string().nullable().optional(),
 });
 
+const TimestampSchema = z.object({
+	createdAt: z.string(),
+	deletedAt: z.string().nullable().optional(),
+	updatedAt: z.string().nullable().optional(),
+});
+
+const FormRecordSchema = TimestampSchema.extend({
+	id: z.uuid("Invalid ID."),
+});
+
+const AshRegistrationRecordSchema = FormRecordSchema.extend({
+	age: z.number(),
+	assignedMentor: z.string().nullable().optional(),
+	classPositionLastTerm: z.string(),
+	currentClass: z.string(),
+	declarationConfirmed: z.boolean(),
+	dob: z.string(),
+	fathersName: z.string(),
+	fathersOccupation: z.string(),
+	fathersPhone: z.string().nullable().optional(),
+	firstName: z.string(),
+	gender: z.string(),
+	guardianName: z.string().nullable().optional(),
+	guardianOccupation: z.string().nullable().optional(),
+	guardianPhone: z.string().nullable().optional(),
+	guardianRelationship: z.string().nullable().optional(),
+	hasLearningCondition: z.string(),
+	homeAddress: z.string(),
+	householdIncomeRange: z.string().nullable().optional(),
+	lastResultPublicId: z.string().nullable().optional(),
+	lastResultUrl: z.string().nullable().optional(),
+	learningConditions: z.array(z.string()).nullable().optional(),
+	middleName: z.string().nullable().optional(),
+	mothersName: z.string(),
+	mothersOccupation: z.string().nullable().optional(),
+	mothersPhone: z.string(),
+	parentConsent: z.boolean(),
+	parentSignaturePublicId: z.string(),
+	parentSignatureUrl: z.string(),
+	passportPhotoPublicId: z.string(),
+	passportPhotoUrl: z.string(),
+	pretestScore: z.number().nullable().optional(),
+	prevAfterschoolProgram: z.string(),
+	primaryLanguage: z.string(),
+	programType: z.string(),
+	reasonForJoining: z.string(),
+	schoolLga: z.string(),
+	schoolName: z.string(),
+	schoolState: z.string(),
+	schoolTown: z.string(),
+	status: getRequiredEnumSchema(ReviewStatusOptions),
+	studentPhone: z.string().nullable().optional(),
+	surname: z.string(),
+});
+
+const AshFeedbackRecordSchema = FormRecordSchema.extend({
+	academicImprovementNoticed: z.string().nullable().optional(),
+	additionalComments: z.string().nullable().optional(),
+	attendanceFrequency: z.string(),
+	childBenefited: z.string(),
+	confidenceBehaviorChange: z.string().nullable().optional(),
+	confidenceRating: z.number(),
+	currentClass: z.string(),
+	enjoyedParts: z.array(z.string()).nullable().optional(),
+	learningImprovementRating: z.number(),
+	mostValuableAspects: z.array(z.string()).nullable().optional(),
+	parentGuardianName: z.string(),
+	parentGuardianRelationship: z.string(),
+	parentImprovementSuggestions: z.string().nullable().optional(),
+	parentPhone: z.string().nullable().optional(),
+	parentSatisfactionRating: z.number().nullable().optional(),
+	programImpactOnChild: z.string().nullable().optional(),
+	schoolName: z.string(),
+	studentEnjoyedMost: z.string().nullable().optional(),
+	studentFirstName: z.string(),
+	studentImprovementSuggestions: z.string().nullable().optional(),
+	studentSurname: z.string(),
+	volunteerSupportRating: z.number(),
+});
+
+const StatusRecordSchema = z.object({
+	id: z.uuid("Invalid ID."),
+	status: z.string(),
+});
+
+const PaginationMetaSchema = z.object({
+	limit: z.number(),
+	page: z.number(),
+	totalPages: z.number(),
+});
+
+const PaginatedMetaSchema = z.object({
+	pagination: PaginationMetaSchema,
+});
+
+const FormDataReviewMetadataSchema = z.object({
+	acceptedStudents: z.number(),
+	pendingStudents: z.number(),
+	rejectedStudents: z.number(),
+	totalSubmissions: z.number(),
+});
+
+const FormDataReviewPaginatedMetaSchema = PaginatedMetaSchema.extend({
+	metadata: FormDataReviewMetadataSchema.optional(),
+});
+
 const defaultSchemaRoute = defineSchemaRoutes({
 	[fallBackRouteSchemaKey]: {
 		errorData: withBaseErrorResponse(),
@@ -251,40 +393,40 @@ const defaultSchemaRoute = defineSchemaRoutes({
 
 const authRoutes = defineSchemaRoutes({
 	"@get/auth/session": {
-		data: withBaseSuccessResponse(SessionUserSchema),
+		data: withBaseSuccessResponse({ data: SessionUserSchema }),
 	},
 
 	"@post/auth/login": {
 		body: LoginSchema,
-		data: withBaseSuccessResponse(AuthUserSchema),
+		data: withBaseSuccessResponse({ data: AuthUserSchema }),
 	},
 
 	"@post/auth/logout": {
-		data: withBaseSuccessResponse(z.null()),
+		data: withBaseSuccessResponse({ data: z.null() }),
 	},
 });
 
 const adminRoutes = defineSchemaRoutes({
 	"@delete/admin/users/:userId": {
-		data: withBaseSuccessResponse(z.null()),
+		data: withBaseSuccessResponse({ data: z.null() }),
 		params: UserIdParamsSchema,
 	},
 
 	"@get/admin/roles": {
-		data: withBaseSuccessResponse(z.array(z.unknown())),
+		data: withBaseSuccessResponse({ data: z.array(RoleSchema) }),
 	},
 
 	"@get/admin/roles/:userId": {
-		data: withBaseSuccessResponse(z.array(z.unknown())),
+		data: withBaseSuccessResponse({ data: z.array(RoleSchema) }),
 		params: UserIdParamsSchema,
 	},
 
 	"@get/admin/users": {
-		data: withBaseSuccessResponse(z.array(AuthUserSchema)),
+		data: withBaseSuccessResponse({ data: z.array(AuthUserSchema) }),
 	},
 
 	"@patch/admin/roles/:userId/action": {
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: z.array(UserRoleSchema).nullable() }),
 		params: UserIdParamsSchema,
 		query: z.object({
 			action: getRequiredEnumSchema(AdminRoleActionOptions),
@@ -297,56 +439,56 @@ const adminRoutes = defineSchemaRoutes({
 			department: getRequiredEnumSchema(AdminDepartmentOptions),
 			name: z.string().min(3, "Enter at least 3 characters."),
 		}),
-		data: withBaseSuccessResponse(AuthUserSchema),
+		data: withBaseSuccessResponse({ data: AuthUserSchema }),
 	},
 });
 
 const blogRoutes = defineSchemaRoutes({
 	"@delete/blogs/:id": {
-		data: withBaseSuccessResponse(z.null()),
+		data: withBaseSuccessResponse({ data: z.null() }),
 		params: IdParamsSchema,
 	},
 
 	"@get/blogs": {
-		data: withBaseSuccessResponse(z.array(BlogSchema)),
-		query: PaginatedQuerySchema.pick({ limit: true, page: true }),
+		data: withBaseSuccessResponse({ data: z.array(BlogSchema) }),
+		query: PaginatedQuerySchema.pick({ limit: true, page: true }).optional(),
 	},
 
 	"@get/blogs/:id": {
-		data: withBaseSuccessResponse(BlogSchema),
+		data: withBaseSuccessResponse({ data: BlogSchema }),
 		params: IdParamsSchema,
 	},
 
 	"@patch/blogs/:id": {
 		body: z.instanceof(FormData),
-		data: withBaseSuccessResponse(z.null()),
+		data: withBaseSuccessResponse({ data: z.null() }),
 		params: IdParamsSchema,
 	},
 
 	"@post/blogs": {
 		body: z.instanceof(FormData),
-		data: withBaseSuccessResponse(BlogSchema),
+		data: withBaseSuccessResponse({ data: BlogSchema }),
 	},
 });
 
 const clientSideRoutes = defineSchemaRoutes({
 	"@get/carousels/ash": {
-		data: withBaseSuccessResponse(z.array(GalleryPhotoSchema)),
+		data: withBaseSuccessResponse({ data: z.array(GalleryPhotoSchema) }),
 		query: PaginatedQuerySchema.pick({ limit: true }).optional(),
 	},
 
 	"@get/carousels/capacity-building": {
-		data: withBaseSuccessResponse(z.array(GalleryPhotoSchema)),
+		data: withBaseSuccessResponse({ data: z.array(GalleryPhotoSchema) }),
 		query: PaginatedQuerySchema.pick({ limit: true }).optional(),
 	},
 
 	"@get/carousels/outreaches": {
-		data: withBaseSuccessResponse(z.array(GalleryPhotoSchema)),
+		data: withBaseSuccessResponse({ data: z.array(GalleryPhotoSchema) }),
 		query: PaginatedQuerySchema.pick({ limit: true }).optional(),
 	},
 
 	"@get/carousels/tacots": {
-		data: withBaseSuccessResponse(z.array(GalleryPhotoSchema)),
+		data: withBaseSuccessResponse({ data: z.array(GalleryPhotoSchema) }),
 		query: PaginatedQuerySchema.pick({ limit: true }).optional(),
 	},
 
@@ -359,8 +501,8 @@ const clientSideRoutes = defineSchemaRoutes({
 			email: z.email("Enter a valid email address."),
 			name: z.string().min(3, "Enter at least 3 characters."),
 		}),
-		data: withBaseSuccessResponse(
-			z.object({
+		data: withBaseSuccessResponse({
+			data: z.object({
 				data: z.object({
 					access_code: z.string(),
 					authorization_url: z.url("Enter a valid URL."),
@@ -368,8 +510,8 @@ const clientSideRoutes = defineSchemaRoutes({
 				}),
 				message: z.string(),
 				status: z.boolean(),
-			})
-		),
+			}),
+		}),
 	},
 
 	"@post/feedback/home": {
@@ -380,7 +522,7 @@ const clientSideRoutes = defineSchemaRoutes({
 				.min(10, "Enter at least 10 characters.")
 				.max(500, "Keep this under 500 characters."),
 		}),
-		data: withBaseSuccessResponse(z.null()),
+		data: withBaseSuccessResponse({ data: z.null() }),
 	},
 });
 
@@ -472,34 +614,34 @@ export type DashboardLineData = z.infer<typeof DashboardLineDataSchema>;
 
 const dashboardRoutes = defineSchemaRoutes({
 	"@get/dashboard/cards": {
-		data: withBaseSuccessResponse(DashboardCardsSchema),
+		data: withBaseSuccessResponse({ data: DashboardCardsSchema }),
 	},
 
 	"@get/dashboard/enrollment": {
-		data: withBaseSuccessResponse(EnrollmentMetricsSchema),
+		data: withBaseSuccessResponse({ data: EnrollmentMetricsSchema }),
 	},
 
 	"@get/dashboard/institutional-effectiveness": {
-		data: withBaseSuccessResponse(InstitutionalEffectivenessMetricsSchema),
+		data: withBaseSuccessResponse({ data: InstitutionalEffectivenessMetricsSchema }),
 	},
 
 	"@get/dashboard/student-performance": {
-		data: withBaseSuccessResponse(StudentPerformanceMetricsSchema),
+		data: withBaseSuccessResponse({ data: StudentPerformanceMetricsSchema }),
 	},
 });
 
 const generalRoutes = defineSchemaRoutes({
 	"@delete/general/projects/:id": {
-		data: withBaseSuccessResponse(z.null()),
+		data: withBaseSuccessResponse({ data: z.null() }),
 		params: IdParamsSchema,
 	},
 
 	"@get/general/projects": {
-		data: withBaseSuccessResponse(z.array(ProjectSchema)),
+		data: withBaseSuccessResponse({ data: z.array(ProjectSchema) }),
 	},
 
 	"@patch/general/projects/:id": {
-		data: withBaseSuccessResponse(ProjectSchema),
+		data: withBaseSuccessResponse({ data: ProjectSchema }),
 		params: IdParamsSchema,
 		query: z.object({
 			status: getRequiredEnumSchema(ProjectStatusOptions),
@@ -508,25 +650,25 @@ const generalRoutes = defineSchemaRoutes({
 
 	"@post/general/projects": {
 		body: z.instanceof(FormData),
-		data: withBaseSuccessResponse(ProjectSchema),
+		data: withBaseSuccessResponse({ data: ProjectSchema }),
 	},
 });
 
 const lookupRoutes = defineSchemaRoutes({
 	"@get/lookup/ash-students": {
-		data: withBaseSuccessResponse(z.array(LookupItemSchema)),
+		data: withBaseSuccessResponse({ data: z.array(LookupItemSchema) }),
 	},
 
 	"@get/lookup/tacots-onboarded": {
-		data: withBaseSuccessResponse(z.array(LookupItemSchema)),
+		data: withBaseSuccessResponse({ data: z.array(LookupItemSchema) }),
 	},
 
 	"@get/lookup/tacots-recommended": {
-		data: withBaseSuccessResponse(z.array(LookupItemSchema)),
+		data: withBaseSuccessResponse({ data: z.array(LookupItemSchema) }),
 	},
 
 	"@get/lookup/volunteers": {
-		data: withBaseSuccessResponse(z.array(LookupItemSchema)),
+		data: withBaseSuccessResponse({ data: z.array(LookupItemSchema) }),
 	},
 });
 
@@ -577,7 +719,7 @@ export const AshTermlyTrackingFrontendSchema = z.object({
 	academicSession: getRequiredEnumSchema(AcademicSessionOptions),
 	challengesObserved: z.string().optional(),
 	disciplineRating: getRatingSchema(),
-	file: z.unknown().refine(Boolean, "Required"),
+	file: RequiredFileSchema,
 	leadershipRating: getRatingSchema(),
 	mentorName: RequiredStringSchema,
 	midtestAverage: z.string().optional(),
@@ -706,7 +848,7 @@ export const TacotsStudentTrackingFrontendSchema = z.object({
 	mentorshipSessionDate: z.string().optional(),
 	modeOfMentorship: getOptionalEnumSchema(TacotsMentorshipModeOptions),
 	resourcesGiven: z.string().optional(),
-	resultSheet: z.unknown().optional(),
+	resultSheet: z.file().optional(),
 	schoolFormationComment: z.string().optional(),
 	senseOfResponsibility: getRatingSchema(),
 	socialBehavior: getRatingSchema(),
@@ -719,7 +861,7 @@ export const TacotsStudentTrackingFrontendSchema = z.object({
 	totalAmountSpentForTerm: z.string().optional(),
 	tuitionFeePaid: z.string().optional(),
 	typeOfServiceActivity: z.string().optional(),
-	uploadPaymentEvidence: z.unknown().optional(),
+	uploadPaymentEvidence: z.file().optional(),
 });
 
 export const TacotsOnboardingFrontendSchema = z.object({
@@ -737,7 +879,7 @@ export const TacotsOnboardingFrontendSchema = z.object({
 	developmentalConcerns: z.string().optional(),
 	disabilityOrSpecialNeeds: z.string().optional(),
 	familyChallenges: z.string().optional(),
-	guardianSignature: z.unknown().optional(),
+	guardianSignature: z.file().optional(),
 	hearingProblem: z.string().optional(),
 	immunizationUpToDate: z.string().optional(),
 	learningDifficulties: z.string().optional(),
@@ -747,8 +889,8 @@ export const TacotsOnboardingFrontendSchema = z.object({
 	mentalHealthRating: getRatingSchema(10).optional(),
 	moodSwings: z.string().optional(),
 	nutritionStatus: z.string().optional(),
-	parentSignature: z.unknown().optional(),
-	passportPhoto: z.unknown().optional(),
+	parentSignature: z.file().optional(),
+	passportPhoto: z.file().optional(),
 	physicalActivityLevel: z.string().optional(),
 	physicalConcernAffectsSchool: z.string().optional(),
 	physicalHealthNotes: z.string().optional(),
@@ -768,7 +910,7 @@ export const TacotsOnboardingFrontendSchema = z.object({
 	supportRequired: z.string().optional(),
 	supportType: z.string().optional(),
 	termsAccepted: z.boolean("Choose yes or no."),
-	uploadRecommendationLetter: z.unknown().optional(),
+	uploadRecommendationLetter: z.file().optional(),
 	witnessName: z.string().optional(),
 });
 
@@ -798,12 +940,12 @@ const publicFormRoutes = defineSchemaRoutes({
 			studentSurname: RequiredStringSchema,
 			volunteerSupportRating: getRatingSchema(),
 		}),
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: AshFeedbackRecordSchema }),
 	},
 
 	"@post/forms/ash/registration": {
 		body: z.instanceof(FormData),
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: AshRegistrationRecordSchema }),
 	},
 
 	"@post/forms/tacots/feedback": {
@@ -830,12 +972,36 @@ const publicFormRoutes = defineSchemaRoutes({
 			studentSurname: RequiredStringSchema,
 			studyMotivationRating: getRatingSchema(),
 		}),
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({
+			data: FormRecordSchema.extend({
+				academicImprovementNoticed: z.string().nullable().optional(),
+				additionalComments: z.string().nullable().optional(),
+				attitudeChangeNoticed: z.string().nullable().optional(),
+				currentChallenges: z.array(z.string()).nullable().optional(),
+				currentClass: z.string(),
+				currentSchool: z.string(),
+				likedMost: z.string().nullable().optional(),
+				mentorshipImpactRating: z.number(),
+				mostHelpfulSupport: z.array(z.string()).nullable().optional(),
+				parentGuardianName: z.string(),
+				parentGuardianRelationship: z.string(),
+				parentImprovementSuggestions: z.string().nullable().optional(),
+				parentPhone: z.string().nullable().optional(),
+				parentSatisfactionRating: z.number().nullable().optional(),
+				programImpactOnFamily: z.string().nullable().optional(),
+				scholarshipHelpedStay: z.string(),
+				scholarshipReducedBurden: z.string(),
+				studentFirstName: z.string(),
+				studentImprovementSuggestions: z.string().nullable().optional(),
+				studentSurname: z.string(),
+				studyMotivationRating: z.number(),
+			}),
+		}),
 	},
 
 	"@post/forms/tacots/recommendation": {
 		body: z.instanceof(FormData),
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: FormRecordSchema }),
 	},
 
 	"@post/volunteer/feedback": {
@@ -862,7 +1028,31 @@ const publicFormRoutes = defineSchemaRoutes({
 			waysProgramHelped: getOptionalEnumArraySchema(VolunteerWaysProgramHelpedOptions),
 			wouldRecommend: getOptionalEnumSchema(YesMaybeNoOptions),
 		}),
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({
+			data: FormRecordSchema.extend({
+				activitiesInvolvedIn: z.array(z.string()).nullable().optional(),
+				additionalComments: z.string().nullable().optional(),
+				challengesExperienced: z.string().nullable().optional(),
+				continueVolunteering: z.string().nullable().optional(),
+				enjoyedMost: z.string().nullable().optional(),
+				firstName: z.string(),
+				improvementSuggestions: z.string().nullable().optional(),
+				organizationRating: z.number(),
+				overallExperienceRating: z.number(),
+				programMadeImpact: z.string().nullable().optional(),
+				programVolunteered: z.string(),
+				roleClarityRating: z.number(),
+				skillsDeveloped: z.string().nullable().optional(),
+				skillsGained: z.array(z.string()).nullable().optional(),
+				specificProgramDetails: z.string().nullable().optional(),
+				submissionDate: z.string(),
+				surname: z.string(),
+				teamSupportRating: z.number(),
+				volunteerDuration: z.string().nullable().optional(),
+				waysProgramHelped: z.array(z.string()).nullable().optional(),
+				wouldRecommend: z.string().nullable().optional(),
+			}),
+		}),
 	},
 
 	"@post/volunteer/register": {
@@ -892,228 +1082,614 @@ const publicFormRoutes = defineSchemaRoutes({
 			surname: RequiredStringSchema,
 			volunteerAreas: getRequiredEnumArraySchema(VolunteerAreaOptions),
 		}),
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({
+			data: FormRecordSchema.extend({
+				additionalInfo: z.string().nullable().optional(),
+				age: z.number(),
+				ashAcademicArea: z.string().nullable().optional(),
+				ashExtracurricular: z.array(z.string()).nullable().optional(),
+				ashSaturdayAvailability: z.string().nullable().optional(),
+				availability: z.array(z.string()),
+				city: z.string(),
+				commitmentDuration: z.string().nullable().optional(),
+				dob: z.string(),
+				emailAddress: z.string(),
+				firstName: z.string(),
+				gender: z.string(),
+				highestEducation: z.string().nullable().optional(),
+				homeAddress: z.string(),
+				mediaConsent: z.boolean(),
+				middleName: z.string().nullable().optional(),
+				occupation: z.string().nullable().optional(),
+				phoneNumber: z.string(),
+				reasonForVolunteering: z.string(),
+				safeguardingAgreement: z.string(),
+				skillsToContribute: z.array(z.string()).nullable().optional(),
+				state: z.string(),
+				status: getRequiredEnumSchema(ReviewStatusOptions),
+				surname: z.string(),
+				volunteerAreas: z.array(z.string()),
+			}),
+		}),
 	},
 });
 
 const protectedFormRoutes = defineSchemaRoutes({
 	"@delete/forms/ash/attendance/:id": {
-		data: withBaseSuccessResponse(z.null()),
+		data: withBaseSuccessResponse({ data: z.null() }),
 		params: IdParamsSchema,
 	},
 
 	"@delete/forms/ash/exit/:id": {
-		data: withBaseSuccessResponse(z.null()),
+		data: withBaseSuccessResponse({ data: z.null() }),
 		params: IdParamsSchema,
 	},
 
 	"@delete/forms/ash/registration/:id": {
-		data: withBaseSuccessResponse(z.null()),
+		data: withBaseSuccessResponse({ data: z.null() }),
 		params: IdParamsSchema,
 	},
 
 	"@delete/forms/ash/tracking/:id": {
-		data: withBaseSuccessResponse(z.null()),
+		data: withBaseSuccessResponse({ data: z.null() }),
 		params: IdParamsSchema,
 	},
 
 	"@delete/forms/capacity-building/:id": {
-		data: withBaseSuccessResponse(z.null()),
+		data: withBaseSuccessResponse({ data: z.null() }),
 		params: IdParamsSchema,
 	},
 
 	"@delete/forms/outreaches/:id": {
-		data: withBaseSuccessResponse(z.null()),
+		data: withBaseSuccessResponse({ data: z.null() }),
 		params: IdParamsSchema,
 	},
 
 	"@delete/forms/tacots/exit/:id": {
-		data: withBaseSuccessResponse(z.null()),
+		data: withBaseSuccessResponse({ data: z.null() }),
 		params: IdParamsSchema,
 	},
 
 	"@delete/forms/tacots/feedback/:id": {
-		data: withBaseSuccessResponse(z.null()),
+		data: withBaseSuccessResponse({ data: z.null() }),
 		params: IdParamsSchema,
 	},
 
 	"@delete/forms/tacots/onboarding/:id": {
-		data: withBaseSuccessResponse(z.null()),
+		data: withBaseSuccessResponse({ data: z.null() }),
 		params: IdParamsSchema,
 	},
 
 	"@delete/forms/tacots/recommendation/:id": {
-		data: withBaseSuccessResponse(z.null()),
+		data: withBaseSuccessResponse({ data: z.null() }),
 		params: IdParamsSchema,
 	},
 
 	"@delete/forms/tacots/tracking/:id": {
-		data: withBaseSuccessResponse(z.null()),
+		data: withBaseSuccessResponse({ data: z.null() }),
 		params: IdParamsSchema,
 	},
 
-	"@delete/volunteer/:id": {
-		data: withBaseSuccessResponse(z.null()),
+	"@delete/forms/volunteer/:id": {
+		data: withBaseSuccessResponse({ data: z.null() }),
 		params: IdParamsSchema,
 	},
 
-	"@delete/volunteer/feedback/:id": {
-		data: withBaseSuccessResponse(z.null()),
+	"@delete/forms/volunteer/feedback/:id": {
+		data: withBaseSuccessResponse({ data: z.null() }),
 		params: IdParamsSchema,
 	},
 
 	"@get/forms/ash/attendance": {
-		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: PaginatedQuerySchema,
+		data: withBaseSuccessResponseAndMeta({ data: z.array(FormRecordSchema), meta: PaginatedMetaSchema }),
+		query: PaginatedQuerySchema.optional(),
 	},
 
 	"@get/forms/ash/attendance/:id": {
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: FormRecordSchema }),
 		params: IdParamsSchema,
 	},
 
+	"@get/forms/ash/download/ashattendance": {
+		data: z.string(),
+	},
+
+	"@get/forms/ash/download/ashexit": {
+		data: z.string(),
+	},
+
+	"@get/forms/ash/download/ashfeedback": {
+		data: z.string(),
+	},
+
+	"@get/forms/ash/download/ashstudent": {
+		data: z.string(),
+	},
+
+	"@get/forms/ash/download/ashtracking": {
+		data: z.string(),
+	},
+
 	"@get/forms/ash/exit": {
-		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: PaginatedQuerySchema,
+		data: withBaseSuccessResponseAndMeta({ data: z.array(FormRecordSchema), meta: PaginatedMetaSchema }),
+		query: PaginatedQuerySchema.optional(),
 	},
 
 	"@get/forms/ash/exit/:id": {
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: FormRecordSchema }),
 		params: IdParamsSchema,
 	},
 
 	"@get/forms/ash/feedback": {
-		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: PaginatedQuerySchema,
+		data: withBaseSuccessResponseAndMeta({
+			data: z.array(AshFeedbackRecordSchema),
+			meta: PaginatedMetaSchema,
+		}),
+		query: PaginatedQuerySchema.optional(),
 	},
 
 	"@get/forms/ash/feedback/:id": {
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: AshFeedbackRecordSchema }),
 		params: IdParamsSchema,
 	},
 
 	"@get/forms/ash/registration": {
-		data: withBaseSuccessResponse(z.array(z.unknown())),
+		data: withBaseSuccessResponseAndMeta({
+			data: z.array(AshRegistrationRecordSchema),
+			meta: FormDataReviewPaginatedMetaSchema,
+		}),
 		query: PaginatedQuerySchema.extend({
 			sortBy: getOptionalEnumSchema(AshTrackingSortByOptions),
 			status: getOptionalEnumSchema(ReviewStatusOptions),
-		}),
+		}).optional(),
 	},
 
 	"@get/forms/ash/registration/:id": {
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: AshRegistrationRecordSchema }),
 		params: IdParamsSchema,
 	},
 
 	"@get/forms/ash/tracking": {
-		data: withBaseSuccessResponse(z.array(z.unknown())),
+		data: withBaseSuccessResponseAndMeta({ data: z.array(FormRecordSchema), meta: PaginatedMetaSchema }),
 		query: PaginatedQuerySchema.extend({
 			academicSession: getOptionalEnumSchema(AcademicSessionOptions),
 			term: getOptionalEnumSchema(AshTermOptions),
-		}),
+		}).optional(),
 	},
 
 	"@get/forms/ash/tracking/:id": {
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: FormRecordSchema }),
 		params: IdParamsSchema,
 	},
 
 	"@get/forms/capacity-building": {
-		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: PaginatedQuerySchema,
+		data: withBaseSuccessResponseAndMeta({ data: z.array(FormRecordSchema), meta: PaginatedMetaSchema }),
+		query: PaginatedQuerySchema.optional(),
 	},
 
 	"@get/forms/capacity-building/:id": {
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: FormRecordSchema }),
 		params: IdParamsSchema,
+	},
+
+	"@get/forms/capacity-building/download/capacityevaluation": {
+		data: z.string(),
 	},
 
 	"@get/forms/outreaches": {
-		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: PaginatedQuerySchema,
+		data: withBaseSuccessResponseAndMeta({ data: z.array(FormRecordSchema), meta: PaginatedMetaSchema }),
+		query: PaginatedQuerySchema.optional(),
 	},
 
 	"@get/forms/outreaches/:id": {
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: FormRecordSchema }),
 		params: IdParamsSchema,
 	},
 
+	"@get/forms/outreaches/download/outreachtracker": {
+		data: z.string(),
+	},
+
+	"@get/forms/tacots/download/tacotsexit": {
+		data: z.string(),
+	},
+
+	"@get/forms/tacots/download/tacotsfeedback": {
+		data: z.string(),
+	},
+
+	"@get/forms/tacots/download/tacotsonboarding": {
+		data: z.string(),
+	},
+
+	"@get/forms/tacots/download/tacotsrecommendation": {
+		data: z.string(),
+	},
+
+	"@get/forms/tacots/download/tacotstracking": {
+		data: z.string(),
+	},
+
 	"@get/forms/tacots/exit": {
-		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: PaginatedQuerySchema,
+		data: withBaseSuccessResponseAndMeta({ data: z.array(FormRecordSchema), meta: PaginatedMetaSchema }),
+		query: PaginatedQuerySchema.optional(),
 	},
 
 	"@get/forms/tacots/exit/:id": {
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: FormRecordSchema }),
 		params: IdParamsSchema,
 	},
 
 	"@get/forms/tacots/feedback": {
-		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: PaginatedQuerySchema,
+		data: withBaseSuccessResponseAndMeta({
+			data: z.array(
+				FormRecordSchema.extend({
+					academicImprovementNoticed: z.string().nullable().optional(),
+					additionalComments: z.string().nullable().optional(),
+					attitudeChangeNoticed: z.string().nullable().optional(),
+					currentChallenges: z.array(z.string()).nullable().optional(),
+					currentClass: z.string(),
+					currentSchool: z.string(),
+					likedMost: z.string().nullable().optional(),
+					mentorshipImpactRating: z.number(),
+					mostHelpfulSupport: z.array(z.string()).nullable().optional(),
+					parentGuardianName: z.string(),
+					parentGuardianRelationship: z.string(),
+					parentImprovementSuggestions: z.string().nullable().optional(),
+					parentPhone: z.string().nullable().optional(),
+					parentSatisfactionRating: z.number().nullable().optional(),
+					programImpactOnFamily: z.string().nullable().optional(),
+					scholarshipHelpedStay: z.string(),
+					scholarshipReducedBurden: z.string(),
+					studentFirstName: z.string(),
+					studentImprovementSuggestions: z.string().nullable().optional(),
+					studentSurname: z.string(),
+					studyMotivationRating: z.number(),
+				})
+			),
+			meta: PaginatedMetaSchema,
+		}),
+		query: PaginatedQuerySchema.optional(),
 	},
 
 	"@get/forms/tacots/feedback/:id": {
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({
+			data: FormRecordSchema.extend({
+				academicImprovementNoticed: z.string().nullable().optional(),
+				additionalComments: z.string().nullable().optional(),
+				attitudeChangeNoticed: z.string().nullable().optional(),
+				currentChallenges: z.array(z.string()).nullable().optional(),
+				currentClass: z.string(),
+				currentSchool: z.string(),
+				likedMost: z.string().nullable().optional(),
+				mentorshipImpactRating: z.number(),
+				mostHelpfulSupport: z.array(z.string()).nullable().optional(),
+				parentGuardianName: z.string(),
+				parentGuardianRelationship: z.string(),
+				parentImprovementSuggestions: z.string().nullable().optional(),
+				parentPhone: z.string().nullable().optional(),
+				parentSatisfactionRating: z.number().nullable().optional(),
+				programImpactOnFamily: z.string().nullable().optional(),
+				scholarshipHelpedStay: z.string(),
+				scholarshipReducedBurden: z.string(),
+				studentFirstName: z.string(),
+				studentImprovementSuggestions: z.string().nullable().optional(),
+				studentSurname: z.string(),
+				studyMotivationRating: z.number(),
+			}),
+		}),
 		params: IdParamsSchema,
 	},
 
 	"@get/forms/tacots/onboarding": {
-		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: PaginatedQuerySchema,
+		data: withBaseSuccessResponseAndMeta({ data: z.array(FormRecordSchema), meta: PaginatedMetaSchema }),
+		query: PaginatedQuerySchema.optional(),
 	},
 
 	"@get/forms/tacots/onboarding/:id": {
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: FormRecordSchema }),
 		params: IdParamsSchema,
 	},
 
 	"@get/forms/tacots/recommendation": {
-		data: withBaseSuccessResponse(z.array(z.unknown())),
+		data: withBaseSuccessResponseAndMeta({
+			data: z.array(
+				FormRecordSchema.extend({
+					adminStatus: getRequiredEnumSchema(AdminReviewStatusOptions),
+					age: z.number(),
+					annualHouseholdIncome: z.string(),
+					avgMonthlyIncome: z.number().nullable().optional(),
+					careerGoal: z.string(),
+					catholicSacraments: z.array(z.string()).nullable().optional(),
+					childBackgroundNotes: z.string(),
+					classPositionLastTerm: z.string(),
+					declarationConfirmed: z.boolean(),
+					diocese: z.string().nullable().optional(),
+					disciplineRating: z.number(),
+					dob: z.string(),
+					familyPosition: z.string(),
+					fathersName: z.string(),
+					fathersOccupation: z.string(),
+					fathersPhone: z.string(),
+					firstName: z.string(),
+					gender: z.string(),
+					guardianAddress: z.string().nullable().optional(),
+					guardianName: z.string().nullable().optional(),
+					guardianOccupation: z.string().nullable().optional(),
+					guardianPhone: z.string().nullable().optional(),
+					guardianRelationship: z.string().nullable().optional(),
+					hasElectricity: z.string(),
+					homeAddress: z.string(),
+					householdSize: z.number(),
+					incomeSources: z.array(z.string()),
+					lastClass: z.string(),
+					lastResultPublicId: z.string(),
+					lastResultUrl: z.string(),
+					lastTermAverage: z.number().nullable().optional(),
+					lastYearAttended: z.number(),
+					lga: z.string(),
+					livesWith: z.string(),
+					middleName: z.string().nullable().optional(),
+					mothersName: z.string(),
+					mothersOccupation: z.string(),
+					mothersPhone: z.string(),
+					nationality: z.string(),
+					numIncomeEarners: z.string(),
+					numSiblings: z.number(),
+					otherImportantInfo: z.string().nullable().optional(),
+					parentsAddress: z.string(),
+					parishAttended: z.string().nullable().optional(),
+					passportPhotoPublicId: z.string(),
+					passportPhotoUrl: z.string(),
+					phoneNumber: z.string().nullable().optional(),
+					primaryLanguage: z.string(),
+					recommenderAddress: z.string(),
+					recommenderFirstName: z.string(),
+					recommenderLastName: z.string(),
+					recommenderPhone: z.string(),
+					religion: z.string(),
+					residenceType: z.string(),
+					responsibilityRating: z.number(),
+					schoolName: z.string(),
+					schoolState: z.string(),
+					schoolTown: z.string(),
+					specialCircumstances: z.string(),
+					stateOfOrigin: z.string(),
+					studentStatement: z.string().nullable().optional(),
+					supportTypesNeeded: z.array(z.string()),
+					surname: z.string(),
+				})
+			),
+			meta: FormDataReviewPaginatedMetaSchema,
+		}),
 		query: PaginatedQuerySchema.extend({
 			sortBy: getOptionalEnumSchema(TacotsRecommendationSortByOptions),
 			status: getOptionalEnumSchema(AdminReviewStatusOptions),
-		}),
+		}).optional(),
 	},
 
 	"@get/forms/tacots/recommendation/:id": {
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({
+			data: FormRecordSchema.extend({
+				adminStatus: getRequiredEnumSchema(AdminReviewStatusOptions),
+				age: z.number(),
+				annualHouseholdIncome: z.string(),
+				avgMonthlyIncome: z.number().nullable().optional(),
+				careerGoal: z.string(),
+				catholicSacraments: z.array(z.string()).nullable().optional(),
+				childBackgroundNotes: z.string(),
+				classPositionLastTerm: z.string(),
+				declarationConfirmed: z.boolean(),
+				diocese: z.string().nullable().optional(),
+				disciplineRating: z.number(),
+				dob: z.string(),
+				familyPosition: z.string(),
+				fathersName: z.string(),
+				fathersOccupation: z.string(),
+				fathersPhone: z.string(),
+				firstName: z.string(),
+				gender: z.string(),
+				guardianAddress: z.string().nullable().optional(),
+				guardianName: z.string().nullable().optional(),
+				guardianOccupation: z.string().nullable().optional(),
+				guardianPhone: z.string().nullable().optional(),
+				guardianRelationship: z.string().nullable().optional(),
+				hasElectricity: z.string(),
+				homeAddress: z.string(),
+				householdSize: z.number(),
+				incomeSources: z.array(z.string()),
+				lastClass: z.string(),
+				lastResultPublicId: z.string(),
+				lastResultUrl: z.string(),
+				lastTermAverage: z.number().nullable().optional(),
+				lastYearAttended: z.number(),
+				lga: z.string(),
+				livesWith: z.string(),
+				middleName: z.string().nullable().optional(),
+				mothersName: z.string(),
+				mothersOccupation: z.string(),
+				mothersPhone: z.string(),
+				nationality: z.string(),
+				numIncomeEarners: z.string(),
+				numSiblings: z.number(),
+				otherImportantInfo: z.string().nullable().optional(),
+				parentsAddress: z.string(),
+				parishAttended: z.string().nullable().optional(),
+				passportPhotoPublicId: z.string(),
+				passportPhotoUrl: z.string(),
+				phoneNumber: z.string().nullable().optional(),
+				primaryLanguage: z.string(),
+				recommenderAddress: z.string(),
+				recommenderFirstName: z.string(),
+				recommenderLastName: z.string(),
+				recommenderPhone: z.string(),
+				religion: z.string(),
+				residenceType: z.string(),
+				responsibilityRating: z.number(),
+				schoolName: z.string(),
+				schoolState: z.string(),
+				schoolTown: z.string(),
+				specialCircumstances: z.string(),
+				stateOfOrigin: z.string(),
+				studentStatement: z.string().nullable().optional(),
+				supportTypesNeeded: z.array(z.string()),
+				surname: z.string(),
+			}),
+		}),
 		params: IdParamsSchema,
 	},
 
 	"@get/forms/tacots/tracking": {
-		data: withBaseSuccessResponse(z.array(z.unknown())),
+		data: withBaseSuccessResponseAndMeta({ data: z.array(FormRecordSchema), meta: PaginatedMetaSchema }),
 		query: PaginatedQuerySchema.extend({
 			academicSession: getOptionalEnumSchema(AcademicSessionOptions),
 			term: getOptionalEnumSchema(TacotsAcademicTermOptions),
-		}),
+		}).optional(),
 	},
 
 	"@get/forms/tacots/tracking/:id": {
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: FormRecordSchema }),
 		params: IdParamsSchema,
 	},
 
 	"@get/volunteer": {
-		data: withBaseSuccessResponse(z.array(z.unknown())),
+		data: withBaseSuccessResponseAndMeta({
+			data: z.array(
+				FormRecordSchema.extend({
+					additionalInfo: z.string().nullable().optional(),
+					age: z.number(),
+					ashAcademicArea: z.string().nullable().optional(),
+					ashExtracurricular: z.array(z.string()).nullable().optional(),
+					ashSaturdayAvailability: z.string().nullable().optional(),
+					availability: z.array(z.string()),
+					city: z.string(),
+					commitmentDuration: z.string().nullable().optional(),
+					dob: z.string(),
+					emailAddress: z.string(),
+					firstName: z.string(),
+					gender: z.string(),
+					highestEducation: z.string().nullable().optional(),
+					homeAddress: z.string(),
+					mediaConsent: z.boolean(),
+					middleName: z.string().nullable().optional(),
+					occupation: z.string().nullable().optional(),
+					phoneNumber: z.string(),
+					reasonForVolunteering: z.string(),
+					safeguardingAgreement: z.string(),
+					skillsToContribute: z.array(z.string()).nullable().optional(),
+					state: z.string(),
+					status: getRequiredEnumSchema(ReviewStatusOptions),
+					surname: z.string(),
+					volunteerAreas: z.array(z.string()),
+				})
+			),
+			meta: FormDataReviewPaginatedMetaSchema,
+		}),
 		query: PaginatedQuerySchema.extend({
 			sortBy: getOptionalEnumSchema(VolunteerSortByOptions),
 			status: getOptionalEnumSchema(ReviewStatusOptions),
-		}),
+		}).optional(),
 	},
 
 	"@get/volunteer/:id": {
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({
+			data: FormRecordSchema.extend({
+				additionalInfo: z.string().nullable().optional(),
+				age: z.number(),
+				ashAcademicArea: z.string().nullable().optional(),
+				ashExtracurricular: z.array(z.string()).nullable().optional(),
+				ashSaturdayAvailability: z.string().nullable().optional(),
+				availability: z.array(z.string()),
+				city: z.string(),
+				commitmentDuration: z.string().nullable().optional(),
+				dob: z.string(),
+				emailAddress: z.string(),
+				firstName: z.string(),
+				gender: z.string(),
+				highestEducation: z.string().nullable().optional(),
+				homeAddress: z.string(),
+				mediaConsent: z.boolean(),
+				middleName: z.string().nullable().optional(),
+				occupation: z.string().nullable().optional(),
+				phoneNumber: z.string(),
+				reasonForVolunteering: z.string(),
+				safeguardingAgreement: z.string(),
+				skillsToContribute: z.array(z.string()).nullable().optional(),
+				state: z.string(),
+				status: getRequiredEnumSchema(ReviewStatusOptions),
+				surname: z.string(),
+				volunteerAreas: z.array(z.string()),
+			}),
+		}),
 		params: IdParamsSchema,
 	},
 
 	"@get/volunteer/all/feedback": {
-		data: withBaseSuccessResponse(z.array(z.unknown())),
-		query: PaginatedQuerySchema,
+		data: withBaseSuccessResponseAndMeta({
+			data: z.array(
+				FormRecordSchema.extend({
+					activitiesInvolvedIn: z.array(z.string()).nullable().optional(),
+					additionalComments: z.string().nullable().optional(),
+					challengesExperienced: z.string().nullable().optional(),
+					continueVolunteering: z.string().nullable().optional(),
+					enjoyedMost: z.string().nullable().optional(),
+					firstName: z.string(),
+					improvementSuggestions: z.string().nullable().optional(),
+					organizationRating: z.number(),
+					overallExperienceRating: z.number(),
+					programMadeImpact: z.string().nullable().optional(),
+					programVolunteered: z.string(),
+					roleClarityRating: z.number(),
+					skillsDeveloped: z.string().nullable().optional(),
+					skillsGained: z.array(z.string()).nullable().optional(),
+					specificProgramDetails: z.string().nullable().optional(),
+					submissionDate: z.string(),
+					surname: z.string(),
+					teamSupportRating: z.number(),
+					volunteerDuration: z.string().nullable().optional(),
+					waysProgramHelped: z.array(z.string()).nullable().optional(),
+					wouldRecommend: z.string().nullable().optional(),
+				})
+			),
+			meta: PaginatedMetaSchema,
+		}),
+		query: PaginatedQuerySchema.optional(),
+	},
+
+	"@get/volunteer/download/volunteerfeedback": {
+		data: z.string(),
+	},
+
+	"@get/volunteer/download/volunteerregistration": {
+		data: z.string(),
 	},
 
 	"@get/volunteer/feedback/:id": {
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({
+			data: FormRecordSchema.extend({
+				activitiesInvolvedIn: z.array(z.string()).nullable().optional(),
+				additionalComments: z.string().nullable().optional(),
+				challengesExperienced: z.string().nullable().optional(),
+				continueVolunteering: z.string().nullable().optional(),
+				enjoyedMost: z.string().nullable().optional(),
+				firstName: z.string(),
+				improvementSuggestions: z.string().nullable().optional(),
+				organizationRating: z.number(),
+				overallExperienceRating: z.number(),
+				programMadeImpact: z.string().nullable().optional(),
+				programVolunteered: z.string(),
+				roleClarityRating: z.number(),
+				skillsDeveloped: z.string().nullable().optional(),
+				skillsGained: z.array(z.string()).nullable().optional(),
+				specificProgramDetails: z.string().nullable().optional(),
+				submissionDate: z.string(),
+				surname: z.string(),
+				teamSupportRating: z.number(),
+				volunteerDuration: z.string().nullable().optional(),
+				waysProgramHelped: z.array(z.string()).nullable().optional(),
+				wouldRecommend: z.string().nullable().optional(),
+			}),
+		}),
 		params: IdParamsSchema,
 	},
 
@@ -1121,24 +1697,24 @@ const protectedFormRoutes = defineSchemaRoutes({
 		body: z.object({
 			mentor: z.string().min(3, "Enter at least 3 characters."),
 		}),
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: FormRecordSchema }),
 		params: IdParamsSchema,
 	},
 
 	"@patch/forms/ash/registration/:id/status": {
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: StatusRecordSchema }),
 		params: IdParamsSchema,
 		query: ReviewStatusQuerySchema,
 	},
 
 	"@patch/forms/tacots/recommendation/:id/status": {
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: StatusRecordSchema }),
 		params: IdParamsSchema,
 		query: AdminReviewStatusQuerySchema,
 	},
 
-	"@patch/volunteer/:id/status": {
-		data: withBaseSuccessResponse(z.unknown()),
+	"@patch/forms/volunteer/:id/status": {
+		data: withBaseSuccessResponse({ data: StatusRecordSchema }),
 		params: IdParamsSchema,
 		query: ReviewStatusQuerySchema,
 	},
@@ -1153,7 +1729,7 @@ const protectedFormRoutes = defineSchemaRoutes({
 			studentsMentored: z.array(z.uuid("Invalid ID.")).min(1, "Select at least one student."),
 			volunteersInAttendance: RequiredStringSchema,
 		}),
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: FormRecordSchema }),
 	},
 
 	"@post/forms/ash/exit": {
@@ -1178,12 +1754,12 @@ const protectedFormRoutes = defineSchemaRoutes({
 			studentId: z.uuid("Invalid ID."),
 			vocationalSkill: z.string().optional(),
 		}),
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: FormRecordSchema }),
 	},
 
 	"@post/forms/ash/tracking": {
 		body: z.instanceof(FormData),
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: FormRecordSchema }),
 	},
 
 	"@post/forms/capacity-building": {
@@ -1229,12 +1805,12 @@ const protectedFormRoutes = defineSchemaRoutes({
 			venueSuitability: getRatingSchema(),
 			wereResourcesAdequate: getOptionalEnumSchema(CapacityYesNoOptions),
 		}),
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: FormRecordSchema }),
 	},
 
 	"@post/forms/outreaches": {
 		body: z.instanceof(FormData),
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: FormRecordSchema }),
 	},
 
 	"@post/forms/tacots/exit": {
@@ -1258,17 +1834,17 @@ const protectedFormRoutes = defineSchemaRoutes({
 			vocationalSkill: getOptionalEnumSchema(TacotsVocationalSkillOptions),
 			yearOfExit: stringWithNumberValidation(z.int("Enter a valid year.")),
 		}),
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: FormRecordSchema }),
 	},
 
 	"@post/forms/tacots/onboarding": {
 		body: z.instanceof(FormData),
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: FormRecordSchema }),
 	},
 
 	"@post/forms/tacots/tracking": {
 		body: z.instanceof(FormData),
-		data: withBaseSuccessResponse(z.unknown()),
+		data: withBaseSuccessResponse({ data: FormRecordSchema }),
 	},
 });
 

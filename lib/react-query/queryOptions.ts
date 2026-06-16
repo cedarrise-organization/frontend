@@ -1,6 +1,32 @@
 import { queryOptions } from "@tanstack/react-query";
+import type { z } from "zod";
 import { callBackendApiForQuery } from "../api/callBackendApi";
+import { backendApiSchemaRoutes } from "../api/callBackendApi/apiSchema";
 import { checkUserSessionForQuery } from "../api/callBackendApi/plugins/utils/session";
+
+export type AshRegistrationFormDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/ash/registration"]["query"]
+>;
+
+export type AshFeedbackFormDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/ash/feedback"]["query"]
+>;
+
+export type TacotsRecommendationFormDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/tacots/recommendation"]["query"]
+>;
+
+export type TacotsFeedbackFormDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/tacots/feedback"]["query"]
+>;
+
+export type VolunteerRegistrationFormDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/volunteer"]["query"]
+>;
+
+export type VolunteerFeedbackFormDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/volunteer/all/feedback"]["query"]
+>;
 
 export const sessionQuery = () => {
 	return queryOptions({
@@ -10,6 +36,134 @@ export const sessionQuery = () => {
 		staleTime: Infinity,
 	});
 };
+
+export const ashRegistrationFormDataQuery = (query?: AshRegistrationFormDataListQuery) => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/forms/ash/registration", { query }),
+		queryKey: ["form-data", "ash", "registration", query],
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
+export const ashFeedbackFormDataQuery = (query?: AshFeedbackFormDataListQuery) => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/forms/ash/feedback", { query }),
+		queryKey: ["form-data", "ash", "feedback", query],
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
+export const ashRegistrationFormDetailQuery = (id: string) => {
+	return queryOptions({
+		enabled: Boolean(id),
+		queryFn: () => callBackendApiForQuery("@get/forms/ash/registration/:id", { params: { id } }),
+		queryKey: ["form-data", "ash", "registration", id],
+	});
+};
+
+export const ashFeedbackFormDetailQuery = (id: string) => {
+	return queryOptions({
+		enabled: Boolean(id),
+		queryFn: () => callBackendApiForQuery("@get/forms/ash/feedback/:id", { params: { id } }),
+		queryKey: ["form-data", "ash", "feedback", id],
+	});
+};
+
+export type AshRegistrationFormDataQueryResult = Awaited<
+	ReturnType<NonNullable<ReturnType<typeof ashRegistrationFormDataQuery>["queryFn"]>>
+>;
+
+export type AshFeedbackFormDataQueryResult = Awaited<
+	ReturnType<NonNullable<ReturnType<typeof ashFeedbackFormDataQuery>["queryFn"]>>
+>;
+
+export type AshRegistrationFormDetailQueryResult = Awaited<
+	ReturnType<NonNullable<ReturnType<typeof ashRegistrationFormDetailQuery>["queryFn"]>>
+>;
+
+export type AshFeedbackFormDetailQueryResult = Awaited<
+	ReturnType<NonNullable<ReturnType<typeof ashFeedbackFormDetailQuery>["queryFn"]>>
+>;
+
+export const tacotsRecommendationFormDataQuery = (query?: TacotsRecommendationFormDataListQuery) => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/forms/tacots/recommendation", { query }),
+		queryKey: ["form-data", "tacots", "recommendation", query],
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
+export const tacotsFeedbackFormDataQuery = (query?: TacotsFeedbackFormDataListQuery) => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/forms/tacots/feedback", { query }),
+		queryKey: ["form-data", "tacots", "feedback", query],
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
+export const tacotsRecommendationFormDetailQuery = (id: string) => {
+	return queryOptions({
+		enabled: Boolean(id),
+		queryFn: () => callBackendApiForQuery("@get/forms/tacots/recommendation/:id", { params: { id } }),
+		queryKey: ["form-data", "tacots", "recommendation", id],
+	});
+};
+
+export const tacotsFeedbackFormDetailQuery = (id: string) => {
+	return queryOptions({
+		enabled: Boolean(id),
+		queryFn: () => callBackendApiForQuery("@get/forms/tacots/feedback/:id", { params: { id } }),
+		queryKey: ["form-data", "tacots", "feedback", id],
+	});
+};
+
+export type TacotsRecommendationFormDataQueryResult = Awaited<
+	ReturnType<NonNullable<ReturnType<typeof tacotsRecommendationFormDataQuery>["queryFn"]>>
+>;
+
+export type TacotsFeedbackFormDataQueryResult = Awaited<
+	ReturnType<NonNullable<ReturnType<typeof tacotsFeedbackFormDataQuery>["queryFn"]>>
+>;
+
+export const volunteerRegistrationFormDataQuery = (query?: VolunteerRegistrationFormDataListQuery) => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/volunteer", { query }),
+		queryKey: ["form-data", "volunteer", "registration", query],
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
+export const volunteerFeedbackFormDataQuery = (query?: VolunteerFeedbackFormDataListQuery) => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/volunteer/all/feedback", { query }),
+		queryKey: ["form-data", "volunteer", "feedback", query],
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
+export const volunteerRegistrationFormDetailQuery = (id: string) => {
+	return queryOptions({
+		enabled: Boolean(id),
+		queryFn: () => callBackendApiForQuery("@get/volunteer/:id", { params: { id } }),
+		queryKey: ["form-data", "volunteer", "registration", id],
+	});
+};
+
+export const volunteerFeedbackFormDetailQuery = (id: string) => {
+	return queryOptions({
+		enabled: Boolean(id),
+		queryFn: () => callBackendApiForQuery("@get/volunteer/feedback/:id", { params: { id } }),
+		queryKey: ["form-data", "volunteer", "feedback", id],
+	});
+};
+
+export type VolunteerRegistrationFormDataQueryResult = Awaited<
+	ReturnType<NonNullable<ReturnType<typeof volunteerRegistrationFormDataQuery>["queryFn"]>>
+>;
+
+export type VolunteerFeedbackFormDataQueryResult = Awaited<
+	ReturnType<NonNullable<ReturnType<typeof volunteerFeedbackFormDataQuery>["queryFn"]>>
+>;
 
 export const dashboardCardsQuery = () => {
 	return queryOptions({

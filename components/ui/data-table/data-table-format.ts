@@ -1,0 +1,19 @@
+export const formatDate = (
+	date: number | string | Date | undefined,
+	opts: Intl.DateTimeFormatOptions = {}
+) => {
+	if (!date) {
+		return "";
+	}
+
+	try {
+		return new Intl.DateTimeFormat("en-US", {
+			day: opts.day ?? "numeric",
+			month: opts.month ?? "long",
+			year: opts.year ?? "numeric",
+			...opts,
+		}).format(new Date(date));
+	} catch {
+		return "";
+	}
+};
