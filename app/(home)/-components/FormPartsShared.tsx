@@ -119,7 +119,7 @@ export function RatingQuestionField<TFieldValues extends FieldValues, TTransform
 			<Form.FieldBoundController
 				render={({ field, fieldContext }) => (
 					<Form.InputGroup className="mt-3 items-start justify-start gap-4">
-						<Form.InputLeftItem className="mt-0.5 shrink-0">{leftLabel}</Form.InputLeftItem>
+						<Form.InputGroupAddon className="mt-0.5 shrink-0">{leftLabel}</Form.InputGroupAddon>
 
 						<RadioGroupAnimated.Root
 							value={field.value}
@@ -147,7 +147,7 @@ export function RatingQuestionField<TFieldValues extends FieldValues, TTransform
 							/>
 						</RadioGroupAnimated.Root>
 
-						<Form.InputRightItem className="mt-0.5 shrink-0">{rightLabel}</Form.InputRightItem>
+						<Form.InputGroupAddon className="mt-0.5 shrink-0">{rightLabel}</Form.InputGroupAddon>
 					</Form.InputGroup>
 				)}
 			/>
@@ -248,9 +248,7 @@ export function TextField<TFieldValues extends FieldValues, TTransformedValues =
 				type={type}
 				placeholder={placeholder}
 				classNames={{
-					input: cnJoin(
-						type === "password" ? "h-full placeholder:text-cedar-black/40" : inputClassName
-					),
+					input: cnJoin(type === "password" ? "placeholder:text-cedar-black/40" : inputClassName),
 					inputGroup: cnJoin(type === "password" && inputClassName),
 				}}
 			/>

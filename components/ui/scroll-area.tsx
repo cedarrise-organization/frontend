@@ -40,11 +40,13 @@ function ScrollAreaScrollBar(
 	return (
 		<ScrollAreaPrimitive.ScrollAreaScrollbar
 			data-slot="scroll-area-scrollbar"
+			data-orientation={orientation}
 			orientation={orientation}
 			className={cnMerge(
-				"flex touch-none p-px transition-colors select-none",
-				orientation === "vertical" && "h-full w-2.5 border-l border-l-transparent",
-				orientation === "horizontal" && "h-2.5 flex-col border-t border-t-transparent",
+				`flex touch-none p-px transition-colors select-none data-[state=hidden]:animate-fade-out
+				data-horizontal:h-2.5 data-horizontal:flex-col data-horizontal:border-t
+				data-horizontal:border-t-transparent data-vertical:h-full data-vertical:w-2.5
+				data-vertical:border-l data-vertical:border-l-transparent`,
 				className,
 				classNames?.base
 			)}
@@ -52,7 +54,7 @@ function ScrollAreaScrollBar(
 		>
 			<ScrollAreaPrimitive.ScrollAreaThumb
 				data-slot="scroll-area-thumb"
-				className={cnMerge("relative flex-1 rounded-full bg-shadcn-border", classNames?.thumb)}
+				className={cnMerge("relative grow rounded-full bg-shadcn-border", classNames?.thumb)}
 			/>
 		</ScrollAreaPrimitive.ScrollAreaScrollbar>
 	);

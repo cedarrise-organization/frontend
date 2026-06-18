@@ -33,7 +33,7 @@ import { ashStudentsLookupQuery } from "@/lib/react-query/queryOptions";
 
 function AshExitPage() {
 	return (
-		<Main className="items-center gap-10 lg:gap-[64px]">
+		<Main bg="transparent" className="items-center gap-10 lg:gap-[64px]">
 			<FormPageHeader title="ASH Exit Form" href="/admin/dashboard" />
 			<AshExitForm />
 		</Main>

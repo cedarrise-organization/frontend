@@ -26,6 +26,7 @@ import { IconBox } from "@/components/common/IconBox";
 import { Carousel, Chart, Skeleton } from "@/components/ui";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import type { DashboardChartDataset, DashboardLineData } from "@/lib/api/callBackendApi/apiSchema";
 import {
 	dashboardCardsQuery,
@@ -60,6 +61,7 @@ const chartColorsByTitle = {
 	"Graduation Rate Trend": chartColorGroups.yellowRed,
 	"Pre/Mid/Post-test Scores by Term": chartColorGroups.blackRedYellow,
 	"Students Meeting Benchmark": ["hsl(350, 43%, 68%)", "hsl(350, 43%, 56%)", "var(--color-cedar-red)"],
+	"TACOTS Mid-term & End-of-term Scores": chartColorGroups.redYellow,
 	"Total Community Service Hours": chartColorGroups.redYellow,
 	"Total Spend per TACOTS Student": chartColorGroups.blackRedYellow,
 } as const satisfies Record<string, readonly string[]>;
@@ -76,6 +78,7 @@ const chartScopesByTitle = {
 	"Graduation Rate Trend": "ASH",
 	"Pre/Mid/Post-test Scores by Term": "ASH",
 	"Students Meeting Benchmark": "TACOTS",
+	"TACOTS Mid-term & End-of-term Scores": "TACOTS",
 	"Total Accumulated Mentorship Hours": "TACOTS",
 	"Total Community Service Hours": "TACOTS",
 	"Total Spend per TACOTS Student": "TACOTS",
@@ -94,206 +97,209 @@ function DashboardPage() {
 	const institutionalEffectiveness = institutionalEffectivenessQueryResult.data;
 
 	return (
-		<Main>
-			<div className="flex flex-col gap-6 lg:gap-8">
-				<section className="grid gap-4 lg:grid-cols-[1fr_300px] xl:grid-cols-[1fr_330px]">
-					<div className="grid gap-3 lg:grid-cols-2 xl:grid-cols-3">
-						<DashboardStatCard
-							icon="solar:user-check-rounded-outline"
-							title="Volunteers"
-							stats={[
-								{ label: "Applied", value: cards?.volunteer.applied },
-								{ label: "Accepted", value: cards?.volunteer.accepted },
-								{ label: "Partners", value: cards?.volunteer.Partners },
-								{ label: "Current volunteers", value: cards?.volunteer.currentVolunteers },
-								{ label: "Sponsors", value: cards?.volunteer.sponsors },
-							]}
-						/>
-
-						<DashboardStatCard
-							icon="solar:document-add-outline"
-							title="Capacity Building"
-							stats={[
-								{ label: "Impacted", value: cards?.capacityBuilding.participantsImpacted },
-								{
-									label: "Organizations",
-									value: cards?.capacityBuilding.organizationsPartneredWith,
-								},
-								{ label: "Volunteers", value: cards?.capacityBuilding.volunteersEngaged },
-								{ label: "Workshops", value: cards?.capacityBuilding.workshopsConducted },
-							]}
-						/>
-
-						<DashboardStatCard
-							icon="solar:map-point-wave-outline"
-							title="Outreaches"
-							stats={[
-								{ label: "Communities", value: cards?.outreaches.communitiesEngaged },
-								{ label: "Beneficiaries", value: cards?.outreaches.beneficiariesReached },
-								{ label: "Partners", value: cards?.outreaches.partners },
-								{ label: "Volunteers", value: cards?.outreaches.volunteers },
-								{ label: "Events", value: cards?.outreaches.outreachEvents },
-							]}
-						/>
-
-						<DashboardStatCard
-							icon="solar:book-bookmark-outline"
-							title="ASH"
-							stats={[
-								{ label: "Students", value: cards?.ash.studentsEnrolled },
-								{ label: "Volunteers", value: cards?.ash.volunteers },
-								{ label: "Communities", value: cards?.ash.communitiesEngaged },
-								{ label: "Improved grades", suffix: "%", value: cards?.ash.improvedGrades },
-								{ label: "Beneficiaries", value: cards?.ash.currentBeneficiaries },
-								{ label: "Graduated", value: cards?.ash.graduated },
-								{ label: "Drop outs", value: cards?.ash.dropOuts },
-							]}
-						/>
-
-						<DashboardStatCard
-							icon="solar:shield-star-outline"
-							title="TACOTS"
-							stats={[
-								{ label: "Enrolled", value: cards?.tacots.enrolled },
-								{ label: "In schools", value: cards?.tacots.currentlyInSchools },
-								{ label: "Partner schools", value: cards?.tacots.partnerSchools },
-								{ label: "Benefactors", value: cards?.tacots.benefactors },
-								{ label: "Sponsors", value: cards?.tacots.sponsors },
-								{ label: "Partners", value: cards?.tacots.partners },
-								{ label: "Graduated", value: cards?.tacots.graduated },
-							]}
-						/>
-					</div>
-
-					<AlertsPanel />
-				</section>
-
-				<section className="flex flex-col gap-3">
-					<SectionHeader
-						title="Ongoing Projects"
-						description={`${projectsQueryResult.data?.length ?? 0} active community initiatives`}
-						action="View more"
+		<Main className="gap-6 lg:gap-8">
+			<section className="grid gap-4 lg:grid-cols-[1fr_300px] xl:grid-cols-[1fr_330px]">
+				<div className="grid gap-3 lg:grid-cols-2 xl:grid-cols-3">
+					<DashboardStatCard
+						icon="solar:user-check-rounded-outline"
+						title="Volunteers"
+						stats={[
+							{ label: "Applied", value: cards?.volunteer.applied },
+							{ label: "Accepted", value: cards?.volunteer.accepted },
+							{ label: "Partners", value: cards?.volunteer.Partners },
+							{ label: "Current volunteers", value: cards?.volunteer.currentVolunteers },
+							{ label: "Sponsors", value: cards?.volunteer.sponsors },
+						]}
 					/>
 
-					<Carousel.Root options={{ align: "start", loop: false }}>
-						<Carousel.Content className="-mr-3 gap-3 select-none lg:-mr-5 lg:gap-5">
-							<For
-								each={(projectsQueryResult.data ?? []).slice(0, 2)}
-								renderItem={(project, index, array) => (
-									<Carousel.Item
-										key={project.id}
-										className={cnJoin(
-											"w-1/2 cursor-grab active:cursor-grabbing lg:w-full lg:max-w-[528px]",
-											index === array.length - 1 && "pr-3 lg:pr-0"
-										)}
-									>
-										<ProjectCard project={project} />
-									</Carousel.Item>
-								)}
-							/>
-						</Carousel.Content>
-					</Carousel.Root>
-				</section>
+					<DashboardStatCard
+						icon="solar:document-add-outline"
+						title="Capacity Building"
+						stats={[
+							{ label: "Impacted", value: cards?.capacityBuilding.participantsImpacted },
+							{
+								label: "Organizations",
+								value: cards?.capacityBuilding.organizationsPartneredWith,
+							},
+							{ label: "Volunteers", value: cards?.capacityBuilding.volunteersEngaged },
+							{ label: "Workshops", value: cards?.capacityBuilding.workshopsConducted },
+						]}
+					/>
 
-				<MetricsSection title="Student Performance & Success Metrics">
-					<div className="flex w-full flex-col gap-3 lg:flex-row">
-						<DashboardChartCard
-							title="Graduation Rate Trend"
-							description="ASH beneficiary completion against drop-outs"
-							dataset={studentPerformance?.c_graduationRate}
-						/>
-						<DashboardChartCard
-							title="Attendance Trend - Monthly Sessions"
-							description="Total student attendance across sessions"
-							dataset={studentPerformance?.c_attendanceTrend}
-						/>
-					</div>
+					<DashboardStatCard
+						icon="solar:map-point-wave-outline"
+						title="Outreaches"
+						stats={[
+							{ label: "Communities", value: cards?.outreaches.communitiesEngaged },
+							{ label: "Beneficiaries", value: cards?.outreaches.beneficiariesReached },
+							{ label: "Partners", value: cards?.outreaches.partners },
+							{ label: "Volunteers", value: cards?.outreaches.volunteers },
+							{ label: "Events", value: cards?.outreaches.outreachEvents },
+						]}
+					/>
 
+					<DashboardStatCard
+						icon="solar:book-bookmark-outline"
+						title="ASH"
+						stats={[
+							{ label: "Students", value: cards?.ash.studentsEnrolled },
+							{ label: "Volunteers", value: cards?.ash.volunteers },
+							{ label: "Communities", value: cards?.ash.communitiesEngaged },
+							{ label: "Improved grades", suffix: "%", value: cards?.ash.improvedGrades },
+							{ label: "Beneficiaries", value: cards?.ash.currentBeneficiaries },
+							{ label: "Graduated", value: cards?.ash.graduated },
+							{ label: "Drop outs", value: cards?.ash.dropOuts },
+						]}
+					/>
+
+					<DashboardStatCard
+						icon="solar:shield-star-outline"
+						title="TACOTS"
+						stats={[
+							{ label: "Enrolled", value: cards?.tacots.enrolled },
+							{ label: "In schools", value: cards?.tacots.currentlyInSchools },
+							{ label: "Partner schools", value: cards?.tacots.partnerSchools },
+							{ label: "Benefactors", value: cards?.tacots.benefactors },
+							{ label: "Sponsors", value: cards?.tacots.sponsors },
+							{ label: "Partners", value: cards?.tacots.partners },
+							{ label: "Graduated", value: cards?.tacots.graduated },
+						]}
+					/>
+				</div>
+
+				<AlertsPanel />
+			</section>
+
+			<section className="flex flex-col gap-3">
+				<SectionHeader
+					title="Ongoing Projects"
+					description={`${projectsQueryResult.data?.length ?? 0} active community initiatives`}
+					action="View more"
+				/>
+
+				<Carousel.Root options={{ align: "start", loop: false }}>
+					<Carousel.Content className="-mr-3 gap-3 select-none lg:-mr-5 lg:gap-5">
+						<For
+							each={(projectsQueryResult.data ?? []).slice(0, 2)}
+							renderItem={(project, index, array) => (
+								<Carousel.Item
+									key={project.id}
+									className={cnJoin(
+										"w-1/2 cursor-grab active:cursor-grabbing lg:w-full lg:max-w-[528px]",
+										index === array.length - 1 && "pr-3 lg:pr-0"
+									)}
+								>
+									<ProjectCard project={project} />
+								</Carousel.Item>
+							)}
+						/>
+					</Carousel.Content>
+				</Carousel.Root>
+			</section>
+
+			<MetricsSection title="Student Performance & Success Metrics">
+				<div className="flex w-full flex-col gap-3 lg:flex-row">
 					<DashboardChartCard
-						title="Pre/Mid/Post-test Scores by Term"
-						description="Average test performance by term"
-						dataset={studentPerformance?.c_testScores}
+						title="Graduation Rate Trend"
+						description="ASH beneficiary completion against drop-outs"
+						dataset={studentPerformance?.c_graduationRate}
 					/>
-
-					<div className="flex w-full flex-col gap-3 lg:flex-row">
-						<DashboardChartCard
-							title="Dropout Trend - Monthly"
-							description="Dropouts captured by month"
-							dataset={studentPerformance?.c_dropoutTrend}
-						/>
-						<DashboardChartCard
-							title="At-risk vs Low-risk Students"
-							description="Risk split from latest post-test average"
-							dataset={studentPerformance?.c_risk}
-						/>
-					</div>
-				</MetricsSection>
-
-				<MetricsSection title="Enrollment & Recruitment">
 					<DashboardChartCard
-						title="Application Numbers Over Time"
-						description="ASH and TACOTS application trend"
-						dataset={enrollment?.c_applicationNumbers}
+						title="Attendance Trend - Monthly Sessions"
+						description="Total student attendance across sessions"
+						dataset={studentPerformance?.c_attendanceTrend}
 					/>
-					<div className="flex w-full flex-col gap-3 lg:flex-row">
-						<LineDataCard
-							title="Acceptance Rate - by Programme"
-							description="Current application conversion"
-							items={enrollment?.c_acceptanceRate}
-							variant="programmes"
-						/>
-						<DashboardChartCard
-							title="Gender Diversity"
-							description="Current gender split"
-							dataset={enrollment?.c_genderDiversity}
-						/>
-					</div>
-					<div className="flex w-full flex-col gap-3 lg:flex-row">
-						<DashboardChartCard
-							title="Class/Age Distribution"
-							description="Student spread by education band"
-							dataset={enrollment?.c_classDistribution}
-						/>
-						<LineDataCard
-							title="Geographic Distribution - Top States"
-							description="Student concentration by state"
-							items={enrollment?.c_geographicalDistribution}
-						/>
-					</div>
-				</MetricsSection>
+				</div>
 
-				<MetricsSection title="Institutional Effectiveness">
+				<DashboardChartCard
+					title="Pre/Mid/Post-test Scores by Term"
+					description="Average test performance by term"
+					dataset={studentPerformance?.c_testScores}
+				/>
+				<DashboardChartCard
+					title="TACOTS Mid-term & End-of-term Scores"
+					description="Average TACOTS student score by assessment period"
+					dataset={studentPerformance?.c_tacots_scores}
+				/>
+
+				<div className="flex w-full flex-col gap-3 lg:flex-row">
 					<DashboardChartCard
-						title="Total Community Service Hours"
-						description="Community service hours (TACOTS)"
-						dataset={institutionalEffectiveness?.c_communityServiceHours}
+						title="Dropout Trend - Monthly"
+						description="Dropouts captured by month"
+						dataset={studentPerformance?.c_dropoutTrend}
 					/>
-					<div className="flex w-full flex-col gap-3 lg:flex-row">
-						<DashboardChartCard
-							title="Average Mentorship Hours"
-							description="Mentorship time per beneficiary"
-							dataset={institutionalEffectiveness?.c_averageMentorshipHours}
-						/>
-						<LineDataCard
-							title="Total Accumulated Mentorship Hours"
-							description="Session-level recorded mentorship"
-							items={institutionalEffectiveness?.c_totalAccHours}
-						/>
-					</div>
-					<div className="flex w-full flex-col gap-3 lg:flex-row">
-						<DashboardChartCard
-							title="Students Meeting Benchmark"
-							description="Academic benchmark progress"
-							dataset={institutionalEffectiveness?.c_studentBenchMark}
-						/>
-						<DashboardChartCard
-							title="Total Spend per TACOTS Student"
-							description="Average programme spend by category"
-							dataset={institutionalEffectiveness?.c_spendPerstudent}
-						/>
-					</div>
-				</MetricsSection>
-			</div>
+					<DashboardChartCard
+						title="At-risk vs Low-risk Students"
+						description="Risk split from latest post-test average"
+						dataset={studentPerformance?.c_risk}
+					/>
+				</div>
+			</MetricsSection>
+
+			<MetricsSection title="Enrollment & Recruitment">
+				<DashboardChartCard
+					title="Application Numbers Over Time"
+					description="ASH and TACOTS application trend"
+					dataset={enrollment?.c_applicationNumbers}
+				/>
+				<div className="flex w-full flex-col gap-3 lg:flex-row">
+					<LineDataCard
+						title="Acceptance Rate - by Programme"
+						description="Current application conversion"
+						items={enrollment?.c_acceptanceRate}
+						variant="programmes"
+					/>
+					<DashboardChartCard
+						title="Gender Diversity"
+						description="Current gender split"
+						dataset={enrollment?.c_genderDiversity}
+					/>
+				</div>
+				<div className="flex w-full flex-col gap-3 lg:flex-row">
+					<DashboardChartCard
+						title="Class/Age Distribution"
+						description="Student spread by education band"
+						dataset={enrollment?.c_classDistribution}
+					/>
+					<LineDataCard
+						title="Geographic Distribution - Top States"
+						description="Student concentration by state"
+						items={enrollment?.c_geographicalDistribution}
+					/>
+				</div>
+			</MetricsSection>
+
+			<MetricsSection title="Institutional Effectiveness">
+				<DashboardChartCard
+					title="Total Community Service Hours"
+					description="Community service hours (TACOTS)"
+					dataset={institutionalEffectiveness?.c_communityServiceHours}
+				/>
+				<div className="flex w-full flex-col gap-3 lg:flex-row">
+					<DashboardChartCard
+						title="Average Mentorship Hours"
+						description="Mentorship time per beneficiary"
+						dataset={institutionalEffectiveness?.c_averageMentorshipHours}
+					/>
+					<LineDataCard
+						title="Total Accumulated Mentorship Hours"
+						description="Session-level recorded mentorship"
+						items={institutionalEffectiveness?.c_totalAccHours}
+					/>
+				</div>
+				<div className="flex w-full flex-col gap-3 lg:flex-row">
+					<DashboardChartCard
+						title="Students Meeting Benchmark"
+						description="Academic benchmark progress"
+						dataset={institutionalEffectiveness?.c_studentBenchMark}
+					/>
+					<DashboardChartCard
+						title="Total Spend per TACOTS Student"
+						description="Average programme spend by category"
+						dataset={institutionalEffectiveness?.c_spendPerstudent}
+					/>
+				</div>
+			</MetricsSection>
 		</Main>
 	);
 }
@@ -343,29 +349,31 @@ function DashboardStatCard(props: {
 	const { icon, stats, title } = props;
 
 	return (
-		<article className="rounded-[20px] bg-cedar-white p-4 shadow-[0_1px_0_hsl(0,0%,0%,0.04)]">
-			<header
+		<Card.Root className="rounded-[20px] bg-cedar-white p-4 shadow-[0_1px_0_hsl(0,0%,0%,0.04)]">
+			<Card.Header
 				className="mb-5 inline-flex items-center gap-2 rounded-[8px] bg-cedar-yellow/20 px-2.5 py-1
 					text-cedar-yellow"
 			>
 				<IconBox icon={icon} className="size-4" />
-				<h3 className="text-[13px]/[1.2]">{title}</h3>
-			</header>
+				<Card.Title className="text-[13px]/[1.2]">{title}</Card.Title>
+			</Card.Header>
 
-			<ForWithWrapper
-				className="grid grid-cols-3 gap-x-4 gap-y-5"
-				each={stats}
-				renderItem={(stat) => (
-					<li key={stat.label} className="">
-						<p className="text-[22px]/[1] font-medium tracking-tight">
-							{formatNumber(stat.value)}
-							{stat.suffix}
-						</p>
-						<p className="mt-1 text-[9px]/[1.2] text-cedar-black/48">{stat.label}</p>
-					</li>
-				)}
-			/>
-		</article>
+			<Card.Content>
+				<ForWithWrapper
+					className="grid grid-cols-3 gap-x-4 gap-y-5"
+					each={stats}
+					renderItem={(stat) => (
+						<li key={stat.label}>
+							<p className="text-[22px]/[1] font-medium tracking-tight">
+								{formatNumber(stat.value)}
+								{stat.suffix}
+							</p>
+							<p className="mt-1 text-[9px]/[1.2] text-cedar-black/48">{stat.label}</p>
+						</li>
+					)}
+				/>
+			</Card.Content>
+		</Card.Root>
 	);
 }
 
@@ -378,27 +386,29 @@ function AlertsPanel() {
 	];
 
 	return (
-		<article className="rounded-[20px] bg-cedar-white p-4 shadow-[0_1px_0_hsl(0,0%,0%,0.04)]">
-			<header className="rounded-[14px] bg-cedar-red px-4 py-3 text-cedar-white">
-				<h3 className="text-center text-[14px]/[1.2]">Alerts & Notifications</h3>
-			</header>
+		<Card.Root className="rounded-[20px] bg-cedar-white p-4 shadow-[0_1px_0_hsl(0,0%,0%,0.04)]">
+			<Card.Header className="rounded-[14px] bg-cedar-red px-4 py-3 text-cedar-white">
+				<Card.Title className="text-center text-[14px]/[1.2]">Alerts & Notifications</Card.Title>
+			</Card.Header>
 
-			<ForWithWrapper
-				className="mt-4 flex flex-col gap-3"
-				each={alerts}
-				renderItem={(alert, index) => (
-					<li
-						key={alert}
-						className="border-b border-dashed border-cedar-black/10 pb-3 last:border-b-0"
-					>
-						<p className="text-[11px]/[1.35] text-cedar-black">{alert}</p>
-						<p className="mt-1 text-[9px] text-cedar-black/40">
-							{index + 1} day{index === 0 ? "" : "s"} ago
-						</p>
-					</li>
-				)}
-			/>
-		</article>
+			<Card.Content>
+				<ForWithWrapper
+					className="mt-4 flex flex-col gap-3"
+					each={alerts}
+					renderItem={(alert, index) => (
+						<li
+							key={alert}
+							className="border-b border-dashed border-cedar-black/10 pb-3 last:border-b-0"
+						>
+							<p className="text-[11px]/[1.35] text-cedar-black">{alert}</p>
+							<p className="mt-1 text-[9px] text-cedar-black/40">
+								{index + 1} day{index === 0 ? "" : "s"} ago
+							</p>
+						</li>
+					)}
+				/>
+			</Card.Content>
+		</Card.Root>
 	);
 }
 
@@ -414,7 +424,7 @@ function ProjectCard(props: {
 	const { project } = props;
 
 	return (
-		<article
+		<Card.Root
 			className="flex w-full gap-3 rounded-[18px] bg-cedar-white p-3 shadow-[0_1px_0_hsl(0,0%,0%,0.04)]"
 		>
 			<div
@@ -432,13 +442,13 @@ function ProjectCard(props: {
 				:	<IconBox icon="solar:gallery-outline" className="size-8 text-cedar-black/32" />}
 			</div>
 
-			<div className="flex grow flex-col">
-				<h3 className="truncate text-[13px]/[1.2]">{project.title}</h3>
-				<p className="mt-1 line-clamp-2 text-[10px]/[1.5] text-cedar-black/56">
+			<Card.Content className="flex grow flex-col">
+				<Card.Title className="truncate text-[13px]/[1.2]">{project.title}</Card.Title>
+				<Card.Description className="mt-1 line-clamp-2 text-[10px]/[1.5] text-cedar-black/56">
 					{project.description ?? "No project description has been added yet."}
-				</p>
+				</Card.Description>
 
-				<div className="mt-auto flex items-center gap-2">
+				<Card.Footer className="mt-auto flex items-center gap-2">
 					<p className="text-[9px] text-cedar-black/56">Dec 2025</p>
 					<Badge
 						className={cnJoin(
@@ -448,9 +458,9 @@ function ProjectCard(props: {
 					>
 						{project.status}
 					</Badge>
-				</div>
-			</div>
-		</article>
+				</Card.Footer>
+			</Card.Content>
+		</Card.Root>
 	);
 }
 
@@ -463,24 +473,26 @@ function DashboardChartCard(props: {
 	const { className, dataset, description, title } = props;
 
 	return (
-		<article
+		<Card.Root
 			className={cnMerge(
 				"w-full rounded-[18px] bg-cedar-white p-4 shadow-[0_1px_0_hsl(0,0%,0%,0.04)]",
 				className
 			)}
 		>
-			<header className="mb-3 flex items-start justify-between gap-3">
+			<Card.Header className="mb-3 flex flex-row items-start justify-between gap-3">
 				<div>
-					<h3 className="text-[13px]/[1.2] lg:text-[14px]">{title}</h3>
-					<p className="mt-1 text-[10px] text-cedar-black/48">{description}</p>
+					<Card.Title className="text-[13px]/[1.2] lg:text-[14px]">{title}</Card.Title>
+					<Card.Description className="mt-1 text-[10px] text-cedar-black/48">
+						{description}
+					</Card.Description>
 				</div>
 				<Badge className="border-0 bg-cedar-yellow/16 px-2 py-1 text-[9px] text-cedar-yellow">
 					{getChartScope(title)}
 				</Badge>
-			</header>
+			</Card.Header>
 
-			{renderChartContent({ dataset, title })}
-		</article>
+			<Card.Content>{renderChartContent({ dataset, title })}</Card.Content>
+		</Card.Root>
 	);
 }
 
@@ -555,6 +567,10 @@ function renderChart(dataset: DashboardChartDataset, title: string) {
 
 	if (title === "Average Mentorship Hours") {
 		return renderMentorshipAreaChart({ chartData, colors, config, dataset });
+	}
+
+	if (title === "TACOTS Mid-term & End-of-term Scores") {
+		return renderTacotsScoresChart({ chartData, config, dataset });
 	}
 
 	return (
@@ -632,6 +648,49 @@ function renderChart(dataset: DashboardChartDataset, title: string) {
 					/>
 				</PieChart>
 			)}
+		</Chart.Container>
+	);
+}
+
+function renderTacotsScoresChart(props: {
+	chartData: Array<Record<string, number | string>>;
+	config: Chart.ChartConfig;
+	dataset: DashboardChartDataset;
+}) {
+	const { chartData, config, dataset } = props;
+	const colors = chartColorsByTitle["TACOTS Mid-term & End-of-term Scores"];
+
+	return (
+		<Chart.Container config={config} className="h-[220px] w-[760px] max-w-none lg:h-[240px] lg:w-full">
+			<BarChart data={chartData}>
+				<CartesianGrid vertical={true} strokeDasharray="3 3" />
+				<XAxis dataKey="label" tickLine={false} axisLine={false} tickMargin={8} />
+				<YAxis
+					domain={[0, 100]}
+					tickFormatter={(value: string) => `${value}%`}
+					tickLine={false}
+					axisLine={false}
+					width={36}
+				/>
+				<Chart.Tooltip content={<Chart.TooltipContent />} />
+				<Chart.Legend content={<Chart.LegendContent />} verticalAlign="top" align="right" />
+				<For
+					each={dataset.datasets}
+					renderItem={(dataItem, index) => (
+						<Bar
+							key={dataItem.label ?? index}
+							dataKey={dataItem.label ?? `value-${index}`}
+							fill={getSeriesColor({
+								colors,
+								index,
+								label: dataItem.label,
+								title: "TACOTS Mid-term & End-of-term Scores",
+							})}
+							radius={[6, 6, 0, 0]}
+						/>
+					)}
+				/>
+			</BarChart>
 		</Chart.Container>
 	);
 }
@@ -773,46 +832,52 @@ function LineDataCard(props: {
 	const maxAmount = Math.max(...(items ?? []).map((item) => item.amount), 1);
 
 	return (
-		<article className="w-full rounded-[18px] bg-cedar-white p-4 shadow-[0_1px_0_hsl(0,0%,0%,0.04)]">
-			<header className="mb-3 flex items-start justify-between gap-3">
+		<Card.Root className="w-full rounded-[18px] bg-cedar-white p-4 shadow-[0_1px_0_hsl(0,0%,0%,0.04)]">
+			<Card.Header className="mb-3 flex flex-row items-start justify-between gap-3">
 				<div>
-					<h3 className="text-[13px]/[1.2] lg:text-[14px]">{title}</h3>
-					<p className="mt-1 text-[10px] text-cedar-black/48">{description}</p>
+					<Card.Title className="text-[13px]/[1.2] lg:text-[14px]">{title}</Card.Title>
+					<Card.Description className="mt-1 text-[10px] text-cedar-black/48">
+						{description}
+					</Card.Description>
 				</div>
 				<Badge className="border-0 bg-cedar-yellow/16 px-2 py-1 text-[9px] text-cedar-yellow">
 					{getChartScope(title)}
 				</Badge>
-			</header>
+			</Card.Header>
 
-			<ForWithWrapper
-				className="mt-5 flex flex-col gap-3"
-				each={items ?? []}
-				renderItem={(item, index) => (
-					<li key={item.title} className="grid grid-cols-[76px_1fr_36px] items-center gap-3">
-						<p className="text-[10px] text-cedar-black/64">{item.title}</p>
-						<div
-							className={cnJoin(
-								"h-2 overflow-hidden rounded-full",
-								variant === "programmes" ? getProgrammeBarTrackClassName(index) : "bg-cedar-red/12"
-							)}
-						>
+			<Card.Content>
+				<ForWithWrapper
+					className="mt-5 flex flex-col gap-3"
+					each={items ?? []}
+					renderItem={(item, index) => (
+						<li key={item.title} className="grid grid-cols-[76px_1fr_36px] items-center gap-3">
+							<p className="text-[10px] text-cedar-black/64">{item.title}</p>
 							<div
 								className={cnJoin(
-									"h-full w-(--width) rounded-full",
-									variant === "programmes" ? getProgrammeBarClassName(index) : "bg-cedar-red"
+									"h-2 overflow-hidden rounded-full",
+									variant === "programmes" ?
+										getProgrammeBarTrackClassName(index)
+									:	"bg-cedar-red/12"
 								)}
-								style={
-									{
-										"--width": `${Math.max((item.amount / maxAmount) * 100, 4)}%`,
-									} as React.CSSProperties
-								}
-							/>
-						</div>
-						<p className="text-right text-[11px] font-medium">{formatNumber(item.amount)}</p>
-					</li>
-				)}
-			/>
-		</article>
+							>
+								<div
+									className={cnJoin(
+										"h-full w-(--width) rounded-full",
+										variant === "programmes" ? getProgrammeBarClassName(index) : "bg-cedar-red"
+									)}
+									style={
+										{
+											"--width": `${Math.max((item.amount / maxAmount) * 100, 4)}%`,
+										} as React.CSSProperties
+									}
+								/>
+							</div>
+							<p className="text-right text-[11px] font-medium">{formatNumber(item.amount)}</p>
+						</li>
+					)}
+				/>
+			</Card.Content>
+		</Card.Root>
 	);
 }
 

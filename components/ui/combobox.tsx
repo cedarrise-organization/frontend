@@ -19,7 +19,6 @@ type ComboboxMode = "multiple" | "single";
 type ComboboxValue = string | string[];
 
 type ComboboxContextType = {
-	closeOnSelect?: boolean;
 	data: ComboboxData[];
 	inputValue: string;
 	mode: ComboboxMode;
@@ -28,6 +27,7 @@ type ComboboxContextType = {
 	open: boolean;
 	setInputValue: (value: string) => void;
 	setWidth: (width: number) => void;
+	shouldCloseOnSelect?: boolean;
 	type: string;
 	value: ComboboxValue;
 	width: number;
@@ -37,13 +37,23 @@ const [ComboboxContextProvider, useComboboxContext] = createCustomContext<Combob
 	name: "ComboboxContext",
 });
 
-type ComboboxBaseProps = React.ComponentProps<typeof Popover.Root> & {
-	closeOnSelect?: boolean;
-	data: ComboboxData[];
-	onOpenChange?: (open: boolean) => void;
-	open?: boolean;
-	type: string;
+const getDerivedContextValues = (options: Pick<ComboboxContextType, "data" | "value">) => {
+	const { data, value } = options;
+
+	const selectedValues = toArray(value || []);
+	const selectedOptions = data.filter((item) => selectedValues.includes(item.value));
+
+	return {
+		selectedOptions,
+		selectedValues,
+	};
 };
+
+type ComboboxBaseProps = Pick<ComboboxContextType, "data" | "shouldCloseOnSelect" | "type">
+	& React.ComponentProps<typeof Popover.Root> & {
+		onOpenChange?: (open: boolean) => void;
+		open?: boolean;
+	};
 
 type ComboboxSingleProps = ComboboxBaseProps & {
 	defaultValue?: string;
@@ -61,35 +71,8 @@ type ComboboxMultipleProps = ComboboxBaseProps & {
 
 type ComboboxProps = ComboboxMultipleProps | ComboboxSingleProps;
 
-function getComboboxValues(value: ComboboxValue) {
-	return toArray(value || []);
-}
-
-function getNextMultipleValue(values: string[], selectedValue: string) {
-	if (values.includes(selectedValue)) {
-		return values.filter((value) => value !== selectedValue);
-	}
-
-	return [...values, selectedValue];
-}
-
-function getNextComboboxValue(params: {
-	mode: ComboboxMode;
-	selectedValue: string;
-	value: ComboboxValue;
-}) {
-	const { mode, selectedValue, value } = params;
-
-	if (mode === "multiple") {
-		return getNextMultipleValue(toArray(value || []), selectedValue);
-	}
-
-	return selectedValue;
-}
-
 function ComboboxRoot(props: ComboboxProps) {
 	const {
-		closeOnSelect,
 		data,
 		defaultOpen = false,
 		defaultValue,
@@ -97,6 +80,7 @@ function ComboboxRoot(props: ComboboxProps) {
 		onOpenChange: onOpenChangeProp,
 		onValueChange: onValueChangeProp,
 		open: openProp,
+		shouldCloseOnSelect,
 		type,
 		value: valueProp,
 		...restOfProps
@@ -105,8 +89,9 @@ function ComboboxRoot(props: ComboboxProps) {
 	const [value, onValueChange] = useControllableState<ComboboxValue>({
 		defaultProp: defaultValue ?? (mode === "multiple" ? [] : ""),
 		onChange: (newValue) => {
+			const resolvedValues = toArray(newValue);
 			if (mode === "multiple") {
-				onValueChangeProp?.(toArray(newValue) as never);
+				onValueChangeProp?.(resolvedValues as never);
 				return;
 			}
 
@@ -127,7 +112,6 @@ function ComboboxRoot(props: ComboboxProps) {
 
 	const contextValue = useMemo(
 		() => ({
-			closeOnSelect,
 			data,
 			inputValue,
 			mode,
@@ -136,11 +120,12 @@ function ComboboxRoot(props: ComboboxProps) {
 			open,
 			setInputValue,
 			setWidth,
+			shouldCloseOnSelect: shouldCloseOnSelect ?? mode === "single",
 			type,
 			value,
 			width,
 		}),
-		[closeOnSelect, data, inputValue, mode, onOpenChange, onValueChange, open, type, value, width]
+		[shouldCloseOnSelect, data, inputValue, mode, onOpenChange, onValueChange, open, type, value, width]
 	);
 
 	return (
@@ -150,16 +135,28 @@ function ComboboxRoot(props: ComboboxProps) {
 	);
 }
 
+function ComboboxContext(props: {
+	children: (
+		ctx: ComboboxContextType & {
+			selectedOptions: ComboboxData[];
+			selectedValues: string[];
+		}
+	) => React.ReactNode;
+}) {
+	const { children } = props;
+
+	const contextValues = useComboboxContext();
+
+	const derivedContextValues = getDerivedContextValues(contextValues);
+
+	return children({
+		...contextValues,
+		...derivedContextValues,
+	});
+}
+
 function ComboboxTrigger(
-	props: Omit<ShadcnButtonProps, "children"> & {
-		children?:
-			| React.ReactNode
-			| ((ctx: {
-					resolvedValue: string | undefined;
-					selectedOption: ComboboxData | undefined;
-					selectedOptions: ComboboxData[];
-					selectedValues: string[];
-			  }) => React.ReactNode);
+	props: ShadcnButtonProps & {
 		classNames?: { base?: string; icon?: string };
 		icon?: string;
 		placeholder?: string | ((ctx: Pick<ComboboxContextType, "type">) => string);
@@ -168,6 +165,8 @@ function ComboboxTrigger(
 	const { children, className, classNames, icon, placeholder, ...restOfProps } = props;
 
 	const { data, setWidth, type, value } = useComboboxContext();
+
+	const { selectedOptions, selectedValues } = getDerivedContextValues({ data, value });
 
 	const elementRef = useRef<HTMLButtonElement>(null);
 
@@ -193,19 +192,10 @@ function ComboboxTrigger(
 		};
 	}, [setWidth]);
 
-	const selectedValues = getComboboxValues(value);
-	const selectedOption = data.find((item) => item.value === selectedValues[0]);
-	const selectedOptions = data.filter((item) => selectedValues.includes(item.value));
-
 	const resolvedPlaceholder =
 		isFunction(placeholder) ? placeholder({ type }) : (placeholder ?? `Select ${type}...`);
 
-	const resolvedValue = selectedValues.length > 0 ? selectedOption?.label : resolvedPlaceholder;
-
-	const resolvedChildren =
-		isFunction(children) ?
-			children({ resolvedValue, selectedOption, selectedOptions, selectedValues })
-		:	children;
+	const resolvedValue = selectedValues.length > 0 ? selectedOptions[0]?.label : resolvedPlaceholder;
 
 	return (
 		<Popover.Trigger asChild={true}>
@@ -216,7 +206,7 @@ function ComboboxTrigger(
 				className={cnMerge(shadcnButtonVariants({ className, variant: "outline" }), classNames?.base)}
 				ref={elementRef}
 			>
-				{resolvedChildren ?? (
+				{children ?? (
 					<>
 						<p>{resolvedValue}</p>
 
@@ -309,29 +299,49 @@ function ComboboxGroup(props: React.ComponentProps<typeof Command.Group>) {
 	return <Command.Group {...props} />;
 }
 
+function getNextComboboxValue(
+	params: Pick<ComboboxContextType, "data" | "mode" | "value"> & {
+		selectedValue: string;
+	}
+) {
+	const { data, mode, selectedValue, value } = params;
+
+	if (mode === "multiple") {
+		const { selectedValues } = getDerivedContextValues({ data, value });
+
+		const resolvedValues =
+			selectedValues.includes(selectedValue) ?
+				selectedValues.filter((v) => v !== selectedValue)
+			:	[...selectedValues, selectedValue];
+
+		return resolvedValues;
+	}
+
+	return selectedValue;
+}
+
 function ComboboxItem(props: React.ComponentProps<typeof Command.Item> & { shouldSetValue?: boolean }) {
 	const { onSelect, shouldSetValue = true, ...restOfProps } = props;
 
-	const { closeOnSelect, mode, onOpenChange, onValueChange, value } = useComboboxContext();
+	const { data, mode, onOpenChange, onValueChange, shouldCloseOnSelect, value } = useComboboxContext();
 
 	return (
 		<Command.Item
-			onSelect={(currentValue) => {
+			onSelect={(selectedValue) => {
 				if (!shouldSetValue) {
-					onSelect?.(currentValue);
+					onSelect?.(selectedValue);
 					return;
 				}
 
-				const nextValue = getNextComboboxValue({ mode, selectedValue: currentValue, value });
-				const shouldClose = closeOnSelect ?? mode === "single";
+				const nextValue = getNextComboboxValue({ data, mode, selectedValue, value });
 
 				onValueChange(nextValue);
 
-				if (shouldClose) {
+				if (shouldCloseOnSelect) {
 					onOpenChange(false);
 				}
 
-				onSelect?.(currentValue);
+				onSelect?.(selectedValue);
 			}}
 			{...restOfProps}
 		/>
@@ -387,14 +397,15 @@ function ComboboxCreateNew(props: ComboboxCreateNewProps) {
 }
 
 export {
-	ComboboxRoot as Root,
-	ComboboxTrigger as Trigger,
 	ComboboxContent as Content,
-	ComboboxInput as Input,
-	ComboboxList as List,
+	ComboboxContext as Context,
+	ComboboxCreateNew as CreateNew,
 	ComboboxEmpty as Empty,
 	ComboboxGroup as Group,
+	ComboboxInput as Input,
 	ComboboxItem as Item,
+	ComboboxList as List,
+	ComboboxRoot as Root,
 	ComboboxSeparator as Separator,
-	ComboboxCreateNew as CreateNew,
+	ComboboxTrigger as Trigger,
 };

@@ -114,7 +114,7 @@ const useAshTermlyTrackingStorageState = createUseStorageState<GetFormStepStoreT
 
 function AshTermlyTrackingPage() {
 	return (
-		<Main className="items-center gap-10 lg:gap-[64px]">
+		<Main bg="transparent" className="items-center gap-10 lg:gap-[64px]">
 			<FormPageHeader title="ASH Termly Tracking Form" href="/admin/dashboard" />
 			<AshTermlyTrackingForm />
 		</Main>

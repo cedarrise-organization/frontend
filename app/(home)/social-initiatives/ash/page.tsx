@@ -4,6 +4,7 @@ import { ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
 import { NavLink, NavLinkEphemeral, type MainAppRoutes } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { FinalCTASection } from "../../-components/FinalCTASectionShared";
 import { Main } from "../../-components/Main";
 import { AshMomentsCarousel, AshStoriesCarousel } from "./-components/AshCarousels";
@@ -75,7 +76,7 @@ const impactStats = [
 function AshOverviewSection() {
 	return (
 		<section className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5">
-			<article className="flex flex-col gap-5 rounded-[24px] bg-cedar-grey p-5 lg:rounded-[32px]">
+			<Card.Root className="flex flex-col gap-5 rounded-[24px] bg-cedar-grey p-5 lg:rounded-[32px]">
 				<h2
 					className="w-fit rounded-[12px] bg-cedar-black px-7 py-3 text-cedar-yellow lg:rounded-[20px]
 						lg:text-[24px]"
@@ -99,7 +100,7 @@ function AshOverviewSection() {
 					alt="ASH classroom session"
 					className="h-[251px] rounded-[16px] object-cover lg:mt-6 lg:rounded-[20px]"
 				/>
-			</article>
+			</Card.Root>
 
 			<div className="flex flex-col justify-between gap-4">
 				<article

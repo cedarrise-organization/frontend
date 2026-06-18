@@ -156,7 +156,7 @@ const useCapacityBuildingEvaluationStorageState = createUseStorageState<
 
 function CapacityBuildingProgramEvaluationPage() {
 	return (
-		<Main className="items-center gap-10 lg:gap-[64px]">
+		<Main bg="transparent" className="items-center gap-10 lg:gap-[64px]">
 			<FormPageHeader title="Capacity Building Program Evaluation Form" href="/admin/dashboard" />
 			<CapacityBuildingProgramEvaluationForm />
 		</Main>

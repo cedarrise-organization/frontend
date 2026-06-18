@@ -31,12 +31,12 @@ const dashboardNavSections = [
 			{
 				icon: "material-symbols:subtitles-outline-rounded",
 				label: "Tracker Forms",
-				link: placeholderHref,
+				link: "/admin/dashboard/tracker-forms",
 			},
 			{
 				icon: "hugeicons:wallet-05",
 				label: "Tracker Data",
-				link: placeholderHref,
+				link: "/admin/dashboard/tracker-data",
 			},
 		],
 		label: "Forms & Tracking",

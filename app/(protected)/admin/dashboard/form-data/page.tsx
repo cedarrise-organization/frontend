@@ -6,9 +6,9 @@ import { parseAsArrayOf, parseAsInteger, parseAsString, parseAsStringLiteral, us
 import { useMemo, useState } from "react";
 import { DialogAnimated, TabsAnimated } from "@/components/animated/ui";
 import { For, ForWithWrapper } from "@/components/common/for";
-import { IconBox } from "@/components/common/IconBox";
 import { DropdownMenu, Select } from "@/components/ui";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 import { getSortingStateParser } from "@/components/ui/data-table/data-table-parsers";
@@ -229,13 +229,13 @@ function FormDataPage() {
 	const [selectedRecord, setSelectedRecord] = useState<SelectedRecord | null>(null);
 
 	return (
-		<Main className="flex w-full max-w-[1510px] flex-col gap-6 self-center lg:gap-8">
+		<Main className="gap-6 lg:gap-8">
 			<header>
 				<h1 className="text-[24px] font-semibold text-cedar-black lg:text-[40px]">Forms & Tracking</h1>
 			</header>
 
 			<TabsAnimated.Root defaultValue="ash">
-				<div className="rounded-[20px] bg-cedar-white p-4 lg:p-5">
+				<Card.Root className="rounded-[20px] bg-cedar-white p-4 lg:p-5">
 					<TabsAnimated.List
 						classNames={{
 							highlight: "rounded-[12px] bg-cedar-red shadow-none",
@@ -255,7 +255,7 @@ function FormDataPage() {
 							)}
 						/>
 					</TabsAnimated.List>
-				</div>
+				</Card.Root>
 
 				<TabsAnimated.ContentList>
 					<TabsAnimated.Content value="ash" className="flex flex-col gap-6">
@@ -358,7 +358,7 @@ function AshFormDataTab(props: { onViewMore: (record: SelectedRecord) => void })
 	return (
 		<>
 			<FormDataStats stats={dashboardStats} />
-			<FormDataSection
+			<FormDataTableSection
 				color="yellow"
 				count={registrationRecords.length}
 				isLoading={registrationQueryResult.isPending}
@@ -369,28 +369,16 @@ function AshFormDataTab(props: { onViewMore: (record: SelectedRecord) => void })
 				statusQueryKey="ashFormDataStatus"
 				statusOptions={ASH_STATUS_OPTIONS}
 				table={registrationTable.table}
-				onDownload={() =>
-					registrationDownloadMutation.mutate(undefined, {
-						onSuccess: (url) => {
-							window.open(url, "_blank", "noopener,noreferrer");
-						},
-					})
-				}
+				onDownload={() => registrationDownloadMutation.mutate()}
 			/>
-			<FormDataSection
+			<FormDataTableSection
 				color="red"
 				count={feedbackRecords.length}
 				isLoading={feedbackQueryResult.isPending}
 				label="ASH - Program Feedback"
 				searchQueryKey="ashFormDataSearch"
 				table={feedbackTable.table}
-				onDownload={() =>
-					feedbackDownloadMutation.mutate(undefined, {
-						onSuccess: (url) => {
-							window.open(url, "_blank", "noopener,noreferrer");
-						},
-					})
-				}
+				onDownload={() => feedbackDownloadMutation.mutate()}
 			/>
 		</>
 	);
@@ -477,7 +465,7 @@ function TacotsFormDataTab(props: { onViewMore: (record: SelectedRecord) => void
 	return (
 		<>
 			<FormDataStats stats={dashboardStats} />
-			<FormDataSection
+			<FormDataTableSection
 				color="yellow"
 				count={recommendationRecords.length}
 				isLoading={recommendationQueryResult.isPending}
@@ -488,28 +476,16 @@ function TacotsFormDataTab(props: { onViewMore: (record: SelectedRecord) => void
 				statusQueryKey="tacotsRecommendationStatus"
 				statusOptions={TACOTS_RECOMMENDATION_STATUS_OPTIONS}
 				table={recommendationTable.table}
-				onDownload={() =>
-					recommendationDownloadMutation.mutate(undefined, {
-						onSuccess: (url) => {
-							window.open(url, "_blank", "noopener,noreferrer");
-						},
-					})
-				}
+				onDownload={() => recommendationDownloadMutation.mutate()}
 			/>
-			<FormDataSection
+			<FormDataTableSection
 				color="red"
 				count={feedbackRecords.length}
 				isLoading={feedbackQueryResult.isPending}
 				label="TACOTS - Program Feedback"
 				searchQueryKey="tacotsFormDataSearch"
 				table={feedbackTable.table}
-				onDownload={() =>
-					feedbackDownloadMutation.mutate(undefined, {
-						onSuccess: (url) => {
-							window.open(url, "_blank", "noopener,noreferrer");
-						},
-					})
-				}
+				onDownload={() => feedbackDownloadMutation.mutate()}
 			/>
 		</>
 	);
@@ -596,7 +572,7 @@ function VolunteerFormDataTab(props: { onViewMore: (record: SelectedRecord) => v
 	return (
 		<>
 			<FormDataStats stats={dashboardStats} />
-			<FormDataSection
+			<FormDataTableSection
 				color="yellow"
 				count={registrationRecords.length}
 				isLoading={registrationQueryResult.isPending}
@@ -607,28 +583,16 @@ function VolunteerFormDataTab(props: { onViewMore: (record: SelectedRecord) => v
 				statusQueryKey="volunteerRegistrationStatus"
 				statusOptions={ASH_STATUS_OPTIONS}
 				table={registrationTable.table}
-				onDownload={() =>
-					registrationDownloadMutation.mutate(undefined, {
-						onSuccess: (url) => {
-							window.open(url, "_blank", "noopener,noreferrer");
-						},
-					})
-				}
+				onDownload={() => registrationDownloadMutation.mutate()}
 			/>
-			<FormDataSection
+			<FormDataTableSection
 				color="red"
 				count={feedbackRecords.length}
 				isLoading={feedbackQueryResult.isPending}
 				label="Volunteer - Feedback"
 				searchQueryKey="volunteerFormDataSearch"
 				table={feedbackTable.table}
-				onDownload={() =>
-					feedbackDownloadMutation.mutate(undefined, {
-						onSuccess: (url) => {
-							window.open(url, "_blank", "noopener,noreferrer");
-						},
-					})
-				}
+				onDownload={() => feedbackDownloadMutation.mutate()}
 			/>
 		</>
 	);
@@ -642,16 +606,20 @@ function FormDataStats(props: { stats: ReadonlyArray<{ label: string; value: num
 			<For
 				each={stats}
 				renderItem={(stat) => (
-					<article
+					<Card.Root
 						key={stat.label}
 						className="rounded-[18px] border border-cedar-black/10 bg-cedar-white p-7
 							lg:min-h-[140px] lg:px-8 lg:py-9"
 					>
-						<h2 className="text-[30px] font-semibold text-cedar-black lg:text-[40px]">
-							{stat.value}
-						</h2>
-						<p className="mt-2 text-[14px] text-cedar-black/64 lg:text-[18px]">{stat.label}</p>
-					</article>
+						<Card.Content>
+							<Card.Title className="text-[30px] font-semibold text-cedar-black lg:text-[40px]">
+								{stat.value}
+							</Card.Title>
+							<Card.Description className="mt-2 text-[14px] text-cedar-black/64 lg:text-[18px]">
+								{stat.label}
+							</Card.Description>
+						</Card.Content>
+					</Card.Root>
 				)}
 			/>
 		</section>
@@ -695,7 +663,7 @@ const getOrderBy = (sort: { desc: boolean } | undefined): FormDataOrderBy => {
 	return sort.desc ? "desc" : "asc";
 };
 
-function FormDataSection<TRecord extends FormRecord>(props: {
+function FormDataTableSection<TRecord extends FormRecord>(props: {
 	color: "red" | "yellow";
 	count: number;
 	isLoading: boolean;
@@ -723,8 +691,8 @@ function FormDataSection<TRecord extends FormRecord>(props: {
 	} = props;
 
 	return (
-		<section className="overflow-hidden rounded-[20px] bg-cedar-white">
-			<header className="flex items-center justify-between gap-4 px-5 pt-5 pb-4 lg:px-7">
+		<Card.Root as="section" className="overflow-hidden rounded-[20px] bg-cedar-white">
+			<Card.Header className="flex flex-row items-center justify-between gap-4 px-5 pt-5 pb-4 lg:px-7">
 				<div className="flex items-center gap-4">
 					<span
 						className={cnMerge(
@@ -732,11 +700,13 @@ function FormDataSection<TRecord extends FormRecord>(props: {
 							color === "yellow" ? "bg-cedar-yellow" : "bg-cedar-red"
 						)}
 					/>
-					<div>
-						<h2 className="text-[16px] font-semibold text-cedar-black lg:text-[18px]">{label}</h2>
-						<p className="mt-1 text-[12px] text-cedar-black/64 lg:text-[14px]">
+					<div className="min-w-0">
+						<Card.Title className="text-[16px] font-semibold text-cedar-black lg:text-[18px]">
+							{label}
+						</Card.Title>
+						<Card.Description className="mt-1 text-[12px] text-cedar-black/64 lg:text-[14px]">
 							{count} {count === 1 ? "Submission" : "Submissions"}
-						</p>
+						</Card.Description>
 					</div>
 				</div>
 
@@ -756,9 +726,9 @@ function FormDataSection<TRecord extends FormRecord>(props: {
 						{count}
 					</span>
 				</div>
-			</header>
+			</Card.Header>
 
-			<div className="border-y border-cedar-black/8 bg-cedar-grey p-5 lg:px-7">
+			<Card.Content className="border-y border-cedar-black/8 bg-cedar-grey p-5 lg:px-7">
 				<FormDataTableToolbar
 					searchQueryKey={searchQueryKey}
 					sortOptions={sortOptions}
@@ -767,22 +737,25 @@ function FormDataSection<TRecord extends FormRecord>(props: {
 					statusOptions={statusOptions}
 					table={table}
 				/>
-			</div>
+			</Card.Content>
 
-			<DataTable
-				isLoading={isLoading}
-				table={table}
-				className="gap-0 overflow-x-auto rounded-none border-0 text-[13px]
-					**:data-[slot=table-cell]:px-5 **:data-[slot=table-cell]:py-4
-					**:data-[slot=table-container]:min-w-[900px] **:data-[slot=table-container]:overflow-x-auto
-					**:data-[slot=table-head]:h-12 **:data-[slot=table-head]:px-5
-					**:data-[slot=table-head]:text-[12px] **:data-[slot=table-head]:font-semibold
-					**:data-[slot=table-head]:text-cedar-black/80 **:data-[slot=table-row]:border-cedar-black/10
-					**:data-[slot=table-row]:hover:bg-transparent [&_table]:border-0
-					[&>div:first-child]:rounded-none [&>div:first-child]:border-0 [&>div:last-child]:px-1
-					[&>div:last-child]:py-3 lg:[&>div:last-child]:px-5"
-			/>
-		</section>
+			<Card.Footer className="block p-0">
+				<DataTable
+					isLoading={isLoading}
+					table={table}
+					className="gap-0 overflow-x-auto rounded-none border-0 text-[13px]
+						**:data-[slot=table-cell]:px-5 **:data-[slot=table-cell]:py-4
+						**:data-[slot=table-container]:min-w-[900px]
+						**:data-[slot=table-container]:overflow-x-auto **:data-[slot=table-head]:h-12
+						**:data-[slot=table-head]:px-5 **:data-[slot=table-head]:text-[12px]
+						**:data-[slot=table-head]:font-semibold **:data-[slot=table-head]:text-cedar-black/80
+						**:data-[slot=table-row]:border-cedar-black/10
+						**:data-[slot=table-row]:hover:bg-transparent [&_table]:border-0
+						[&>div:first-child]:rounded-none [&>div:first-child]:border-0 [&>div:last-child]:px-1
+						[&>div:last-child]:py-3 lg:[&>div:last-child]:px-5"
+				/>
+			</Card.Footer>
+		</Card.Root>
 	);
 }
 
@@ -821,7 +794,7 @@ function FormDataTableToolbar<TRecord extends FormRecord>(props: {
 		:	"";
 	const sortBy = sorting?.id ?? "";
 	const orderBy = getOrderBy(sorting) ?? "";
-	const searchFilterValue = searchColumn?.getFilterValue();
+	const searchFilterValue = searchColumn?.getFilterValue() as string | undefined;
 	const hasSortControls = sortOptions.length > 0;
 
 	const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -856,20 +829,18 @@ function FormDataTableToolbar<TRecord extends FormRecord>(props: {
 		void setSearch(null);
 		void setStatus(null);
 		void setSort(null);
-		void setPage(1);
 	};
 
 	return (
-		<div className="flex flex-wrap items-center gap-4">
+		<div className="flex flex-wrap items-center gap-3 lg:gap-4">
 			<label
-				className="flex h-[62px] w-full max-w-[430px] items-center gap-4 rounded-[18px] bg-cedar-white
-					px-7 text-[18px] text-cedar-black/64"
+				className="flex h-[40px] w-full max-w-[430px] items-center gap-3 rounded-[12px] bg-cedar-white
+					px-4 text-[12px] text-cedar-black/64 lg:h-[40px] lg:max-w-[220px]"
 			>
-				<IconBox icon="solar:magnifer-linear" className="size-6 text-cedar-black/36" />
 				<input
-					value={typeof searchFilterValue === "string" ? searchFilterValue : ""}
 					placeholder="search this section"
-					className="min-w-0 flex-1 bg-transparent outline-none placeholder:text-cedar-black/36"
+					className="w-full bg-transparent outline-none placeholder:text-cedar-black/36"
+					value={searchFilterValue}
 					onChange={handleSearchChange}
 				/>
 			</label>
@@ -904,8 +875,8 @@ function FormDataTableToolbar<TRecord extends FormRecord>(props: {
 			<Button
 				size="medium"
 				type="button"
-				className="h-[62px] rounded-[14px] border border-cedar-black/10 bg-cedar-white px-7 text-[18px]
-					text-cedar-black/64 lg:h-[62px] lg:px-7 lg:text-[18px]"
+				className="h-[40px] rounded-[12px] border border-cedar-black/10 bg-cedar-white px-4 text-[12px]
+					text-cedar-black/64 lg:h-[40px] lg:px-4 lg:text-[12px]"
 				onClick={handleResetFilters}
 			>
 				Reset Filters
@@ -925,9 +896,9 @@ function ToolbarSelect(props: {
 	return (
 		<Select.Root value={value} onValueChange={onValueChange}>
 			<Select.Trigger
-				className="h-[62px] w-[220px] rounded-[14px] border border-cedar-black/10 bg-cedar-white px-7
-					text-[18px] text-cedar-black/64 shadow-none"
-				classNames={{ icon: "size-6 text-cedar-black" }}
+				className="h-[40px] w-[110px] rounded-[12px] border border-cedar-black/10 bg-cedar-white px-4
+					text-[12px] text-cedar-black/64 shadow-none"
+				classNames={{ icon: "size-4 text-cedar-black" }}
 			>
 				<Select.Value placeholder={placeholder} />
 			</Select.Trigger>
@@ -1224,7 +1195,6 @@ function RowActions(props: { onViewMore: () => void; record: FormRecord; target:
 				<DropdownMenu.Item className="justify-center" onClick={onViewMore}>
 					View More
 				</DropdownMenu.Item>
-				<DropdownMenu.Item className="justify-center">Edit</DropdownMenu.Item>
 				{canReview && (
 					<DropdownMenu.Item
 						className="justify-center text-cedar-yellow focus:text-cedar-yellow"
@@ -1360,12 +1330,6 @@ function FormDataDetailsDialog(props: {
 											lg:text-[15px]"
 									>
 										Accept
-									</Button>
-									<Button
-										className="h-12 rounded-[12px] bg-cedar-black px-6 text-[15px] lg:h-12
-											lg:px-6 lg:text-[15px]"
-									>
-										Edit
 									</Button>
 									<Button
 										theme="secondary"

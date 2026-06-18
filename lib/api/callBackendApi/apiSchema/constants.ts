@@ -68,6 +68,56 @@ export const TacotsRecommendationSortByOptions = defineEnum([
 	"lastClass",
 ]);
 
+export const AshExitSortByOptions = defineEnum(["schoolName", "classAtExit", "exitDate", "createdAt"]);
+
+export const AshTrackingRecordSortByOptions = defineEnum([
+	"academicSession",
+	"term",
+	"schoolName",
+	"mentorName",
+	"createdAt",
+]);
+
+export const CapacityEvaluationSortByOptions = defineEnum([
+	"programName",
+	"programType",
+	"programDate",
+	"location",
+	"programCoordinator",
+	"createdAt",
+]);
+
+export const OutreachSortByOptions = defineEnum([
+	"outreachStartDate",
+	"outreachEndDate",
+	"outreachState",
+	"outreachType",
+	"createdAt",
+]);
+
+export const TacotsExitSortByOptions = defineEnum([
+	"schoolAttendedDuringProgram",
+	"yearOfExit",
+	"exitReason",
+	"createdAt",
+]);
+
+export const TacotsOnboardingSortByOptions = defineEnum([
+	"onboardingDate",
+	"generalHealthStatus",
+	"enrolledSchoolName",
+	"enrolledSchoolState",
+	"enrolledClass",
+	"createdAt",
+]);
+
+export const TacotsTrackingRecordSortByOptions = defineEnum([
+	"academicSession",
+	"academicTerm",
+	"assessmentPeriod",
+	"createdAt",
+]);
+
 export const VolunteerSortByOptions = defineEnum([
 	"firstName",
 	"surname",

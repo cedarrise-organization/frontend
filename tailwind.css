@@ -43,6 +43,7 @@
 
 	/*--- Animations ---*/
 	--animate-slide-from-left: slideFromLeft 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+	--animate-fade-out: fade-out 300ms ease;
 
 	@keyframes slideFromLeft {
 		from {
@@ -50,6 +51,15 @@
 		}
 		to {
 			transform: translate3d(0, 0, 0);
+		}
+	}
+
+	@keyframes fade-out {
+		from {
+			opacity: 1;
+		}
+		to {
+			opacity: 0;
 		}
 	}
 }

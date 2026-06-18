@@ -15,6 +15,7 @@ import {
 	AshEnjoyedPartsOptions,
 	AshExitDurationOptions,
 	AshExitReasonOptions,
+	AshExitSortByOptions,
 	AshFeedbackClassOptions,
 	AshGuardianRelationshipOptions,
 	AshHouseholdIncomeRangeOptions,
@@ -25,8 +26,10 @@ import {
 	AshProgramTypeOptions,
 	AshSessionConductedOptions,
 	AshTermOptions,
+	AshTrackingRecordSortByOptions,
 	AshTrackingSortByOptions,
 	CapacityEngagementLevelOptions,
+	CapacityEvaluationSortByOptions,
 	CapacityObjectiveAchievementOptions,
 	CapacityOverallSuccessOptions,
 	CapacityPartnershipLevelOptions,
@@ -38,6 +41,7 @@ import {
 	LearningConditionStatusOptions,
 	NigeriaStateOptions,
 	OrderByOptions,
+	OutreachSortByOptions,
 	OutreachTypeOptions,
 	ParentGuardianRelationshipOptions,
 	PositiveChangeNoticedOptions,
@@ -52,6 +56,7 @@ import {
 	TacotsExitCompletedSecondaryElsewhereOptions,
 	TacotsExitCurrentStatusOptions,
 	TacotsExitReasonOptions,
+	TacotsExitSortByOptions,
 	TacotsFamilyPositionOptions,
 	TacotsFeedbackClassOptions,
 	TacotsGuardianRelationshipOptions,
@@ -61,6 +66,7 @@ import {
 	TacotsLivesWithOptions,
 	TacotsMentorshipModeOptions,
 	TacotsMostHelpfulSupportOptions,
+	TacotsOnboardingSortByOptions,
 	TacotsRecommendationReligionOptions,
 	TacotsRecommendationSortByOptions,
 	TacotsResidenceTypeOptions,
@@ -68,6 +74,7 @@ import {
 	TacotsScholarshipReducedBurdenOptions,
 	TacotsSpecialCircumstanceOptions,
 	TacotsSupportTypeOptions,
+	TacotsTrackingRecordSortByOptions,
 	TacotsVocationalSkillOptions,
 	VolunteerActivityOptions,
 	VolunteerAreaOptions,
@@ -145,12 +152,6 @@ const stringWithNumberValidation = <TNumberSchema extends z.ZodNumber>(numberSch
 	return z.preprocess((value: string) => Number(value), numberSchema);
 };
 
-const getRatingSchema = (maxRating: 10 | 5 = 5) => {
-	const message = `Select a rating from 1 to ${maxRating}.`;
-
-	return stringWithNumberValidation(z.int(message).min(1, message).max(maxRating, message));
-};
-
 const RequiredStringSchema = z.string().min(1, "This field is required.");
 
 const DateStringSchema = z.iso.date("Enter a valid date.");
@@ -163,6 +164,12 @@ const RequiredPhoneNumberSchema = z.union([
 const OptionalPhoneNumberSchema = RequiredPhoneNumberSchema.optional();
 
 const RequiredFileSchema = z.file("Upload a file.");
+
+const getRatingSchema = (maxRating: 10 | 5 = 5) => {
+	const message = `Select a rating from 1 to ${maxRating}.`;
+
+	return stringWithNumberValidation(z.int(message).min(1, message).max(maxRating, message));
+};
 
 const getRequiredEnumSchema = <const TOptions extends readonly string[]>(options: TOptions) => {
 	return z.enum(options, "This field is required.");
@@ -207,14 +214,14 @@ const AdminReviewStatusQuerySchema = z.object({
 
 const GalleryPhotoSchema = z.object({
 	public_id: z.string(),
-	url: z.url("Enter a valid URL."),
+	url: z.url(),
 });
 
 const BlogSchema = z.object({
 	date: z.string(),
 	description: z.string().nullable().optional(),
-	documentUrl: z.url("Enter a valid URL."),
-	id: z.uuid("Invalid ID."),
+	documentUrl: z.url(),
+	id: z.uuid(),
 	publicId: z.string(),
 	title: z.string(),
 });
@@ -223,8 +230,8 @@ const AuthUserSchema = z.object({
 	createdAt: z.string().optional(),
 	deletedAt: z.string().nullable().optional(),
 	department: z.string(),
-	email: z.email("Enter a valid email address."),
-	id: z.uuid("Invalid ID."),
+	email: z.email(),
+	id: z.uuid(),
 	name: z.string(),
 	password: z.string().optional(),
 	updatedAt: z.string().nullable().optional(),
@@ -253,7 +260,7 @@ const RoleSchema = z.object({
 	createdAt: z.string(),
 	deletedAt: z.string().nullable().optional(),
 	description: z.string().nullable().optional(),
-	id: z.uuid("Invalid ID."),
+	id: z.uuid(),
 	isDefault: z.boolean(),
 	name: z.string(),
 	updatedAt: z.string().nullable().optional(),
@@ -262,19 +269,19 @@ const RoleSchema = z.object({
 const UserRoleSchema = z.object({
 	createdAt: z.string().optional(),
 	deletedAt: z.string().nullable().optional(),
-	id: z.uuid("Invalid ID."),
-	roleId: z.uuid("Invalid ID.").optional(),
+	id: z.uuid(),
+	roleId: z.uuid().optional(),
 	updatedAt: z.string().nullable().optional(),
-	userId: z.uuid("Invalid ID.").optional(),
+	userId: z.uuid().optional(),
 });
 
 const ProjectSchema = z.object({
 	createdAt: z.string().optional(),
 	description: z.string().nullable().optional(),
-	id: z.uuid("Invalid ID."),
+	id: z.uuid(),
 	imagePublicId: z.string().nullable().optional(),
-	imageUrl: z.url("Enter a valid URL.").nullable().optional(),
-	status: getRequiredEnumSchema(ProjectStatusOptions),
+	imageUrl: z.url().nullable().optional(),
+	status: z.enum(ProjectStatusOptions),
 	title: z.string(),
 	updatedAt: z.string().nullable().optional(),
 });
@@ -286,7 +293,240 @@ const TimestampSchema = z.object({
 });
 
 const FormRecordSchema = TimestampSchema.extend({
-	id: z.uuid("Invalid ID."),
+	id: z.uuid(),
+});
+
+const AshAttendanceTrackerRecordSchema = FormRecordSchema.extend({
+	programReview: z.string().nullable().optional(),
+	sessionDate: z.string(),
+	sessionDetails: z.string().nullable().optional(),
+	sessionsConducted: z.array(z.string()).nullable().optional(),
+	studentsInAttendance: z.array(z.string()),
+	studentsMentored: z.array(z.string()),
+	volunteersInAttendance: z.string(),
+});
+
+const AshTermlyTrackingRecordSchema = FormRecordSchema.extend({
+	academicSession: z.string(),
+	challengesObserved: z.string().nullable().optional(),
+	disciplineRating: z.number(),
+	firstName: z.string(),
+	leadershipRating: z.number(),
+	mentorName: z.string(),
+	midtestAverage: z.number().nullable().optional(),
+	midtestLiteracyScore: z.number().nullable().optional(),
+	midtestNumeracyScore: z.number().nullable().optional(),
+	nextTermRecommendations: z.string().nullable().optional(),
+	notableAchievements: z.string().nullable().optional(),
+	posttestAverage: z.number().nullable().optional(),
+	posttestLiteracyScore: z.number().nullable().optional(),
+	posttestNumeracyScore: z.number().nullable().optional(),
+	pretestAverage: z.number().nullable().optional(),
+	pretestLiteracyScore: z.number().nullable().optional(),
+	pretestNumeracyScore: z.number().nullable().optional(),
+	responsibilityRating: z.number(),
+	schoolAverage: z.number().nullable().optional(),
+	schoolLiteracyScore: z.number().nullable().optional(),
+	schoolName: z.string(),
+	schoolNumeracyScore: z.number().nullable().optional(),
+	schoolPosition: z.string().nullable().optional(),
+	studentId: z.uuid(),
+	surname: z.string(),
+	term: z.string(),
+	termResultPublicId: z.string(),
+	termResultUrl: z.string(),
+});
+
+const AshExitTrackerRecordSchema = FormRecordSchema.extend({
+	academicImpactRating: z.number(),
+	ageAtExit: z.number(),
+	areasOfImprovement: z.array(z.string()).nullable().optional(),
+	classAtExit: z.string(),
+	courseOfStudy: z.string().nullable().optional(),
+	durationInProgram: z.string(),
+	enjoyedMost: z.string().nullable().optional(),
+	exitDate: z.string(),
+	exitReason: z.string(),
+	facilitatorName: z.string(),
+	firstName: z.string(),
+	improvementSuggestions: z.string().nullable().optional(),
+	institutionName: z.string().nullable().optional(),
+	mentorshipImpactRating: z.number().nullable().optional(),
+	mentorshipReceived: z.string(),
+	postAshStatus: z.string(),
+	programImpact: z.string().nullable().optional(),
+	schoolName: z.string(),
+	studentId: z.uuid(),
+	surname: z.string(),
+	vocationalSkill: z.string().nullable().optional(),
+});
+
+const OutreachTrackerRecordSchema = FormRecordSchema.extend({
+	activityDescription: z.string(),
+	challengesEncountered: z.string().nullable().optional(),
+	impactStories: z.string().nullable().optional(),
+	numBeneficiaries: z.number(),
+	numVolunteers: z.number(),
+	outreachCity: z.string(),
+	outreachCommunity: z.string(),
+	outreachEndDate: z.string(),
+	outreachLga: z.string(),
+	outreachStartDate: z.string(),
+	outreachState: z.string(),
+	outreachType: z.array(z.string()),
+	recommendations: z.string().nullable().optional(),
+	submissionDate: z.string(),
+	submittedBy: z.string(),
+});
+
+const CapacityEvaluationRecordSchema = FormRecordSchema.extend({
+	budgetAllocated: z.string().nullable().optional(),
+	budgetUtilized: z.string().nullable().optional(),
+	challengesAddressed: z.string().nullable().optional(),
+	challengesEncountered: z.string().nullable().optional(),
+	communicationAndCoordination: z.number(),
+	dateSubmitted: z.string(),
+	effectiveActivities: z.string().nullable().optional(),
+	improvementSuggestions: z.string().nullable().optional(),
+	inadequateResourcesExplanation: z.string().nullable().optional(),
+	lessonsLearned: z.string().nullable().optional(),
+	listOfSponsors: z.string(),
+	location: z.string(),
+	majorActivities: z.string().nullable().optional(),
+	name: z.string(),
+	numberOfFacilitators: z.number(),
+	numberOfParticipants: z.number(),
+	numberOfSponsors: z.number(),
+	numberOfVolunteers: z.number(),
+	objectiveAchievement: z.string(),
+	overallSuccess: z.string().nullable().optional(),
+	participantEngagementLevel: z.string(),
+	partnerOrganizations: z.string().nullable().optional(),
+	partnershipLevel: z.string(),
+	programCoordinator: z.string(),
+	programDate: z.string(),
+	programImpact: z.string().nullable().optional(),
+	programName: z.string(),
+	programObjectives: z.string().nullable().optional(),
+	programOutcome: z.string().nullable().optional(),
+	programType: z.string(),
+	recommendFuturePrograms: z.string().nullable().optional(),
+	recommendTheProgram: z.string().nullable().optional(),
+	resourceAvailability: z.number(),
+	role: z.string(),
+	sponsorshipType: z.string(),
+	targetAudience: z.string(),
+	teamworkAmongOrganizers: z.number(),
+	timeManagement: z.number(),
+	venueSuitability: z.number(),
+	wereResourcesAdequate: z.string().nullable().optional(),
+});
+
+const TacotsOnboardingTrackerRecordSchema = FormRecordSchema.extend({
+	additionalHealthNotes: z.string().nullable().optional(),
+	additionalInfo: z.string().nullable().optional(),
+	admissionLetterPublicId: z.string().nullable().optional(),
+	admissionLetterUrl: z.string().nullable().optional(),
+	allergies: z.array(z.string()).nullable().optional(),
+	behavioralIndicators: z.array(z.string()),
+	chronicConditions: z.array(z.string()).nullable().optional(),
+	diagnosedConditions: z.array(z.string()).nullable().optional(),
+	emotionalStabilityRating: z.number(),
+	enrolledClass: z.string(),
+	enrolledSchoolLga: z.string(),
+	enrolledSchoolName: z.string(),
+	enrolledSchoolState: z.string(),
+	enrolledSchoolTown: z.string(),
+	firstName: z.string(),
+	focusAbilityRating: z.number(),
+	generalHealthStatus: z.string(),
+	hasChronicCondition: z.string(),
+	hasMentalHealthDiagnosis: z.string(),
+	immunizationStatus: z.string(),
+	mentalHealthNotes: z.string().nullable().optional(),
+	mentorName: z.string().nullable().optional(),
+	needsSpecialSupport: z.string(),
+	onboardingDate: z.string(),
+	parentGuardianCommitment: z.boolean(),
+	parentSignaturePublicId: z.string().nullable().optional(),
+	parentSignatureUrl: z.string().nullable().optional(),
+	peerInteractionRating: z.number(),
+	physicalActivityLevel: z.number(),
+	physicalLimitations: z.string(),
+	programOfficerNotes: z.string().nullable().optional(),
+	receivedCounseling: z.string(),
+	requiresMedication: z.string(),
+	schoolFeesPerTerm: z.number().nullable().optional(),
+	sponsorName: z.string().nullable().optional(),
+	studentCommitment: z.boolean().nullable().optional(),
+	studentId: z.uuid(),
+	supportTypesApproved: z.array(z.string()).nullable().optional(),
+	surname: z.string(),
+	termResumptionDate: z.string(),
+});
+
+const TacotsTrackingRecordSchema = z.object({
+	academicComment: z.string().nullable().optional(),
+	academicSession: z.string(),
+	academicTerm: z.string(),
+	assessmentPeriod: z.string(),
+	financialNotes: z.string().nullable().optional(),
+	firstName: z.string(),
+	formationComments: z.string().nullable().optional(),
+	highestSubjectScore: z.string(),
+	id: z.uuid(),
+	lowestSubjectScore: z.string(),
+	mentorName: z.string(),
+	mentorshipDuration: z.string(),
+	mentorshipMode: z.string(),
+	mentorshipNotes: z.string(),
+	mentorshipSessionDate: z.string(),
+	paymentEvidencePublicId: z.string().nullable().optional(),
+	paymentEvidenceUrl: z.string().nullable().optional(),
+	region: z.string(),
+	resourcesSpent: z.number(),
+	responsibilityRating: z.number(),
+	schoolId: z.uuid(),
+	schoolRulesRating: z.number(),
+	serviceActivityType: z.string(),
+	serviceDate: z.string(),
+	serviceDescription: z.string(),
+	serviceDuration: z.string(),
+	serviceSupervisor: z.string(),
+	socialBehaviorRating: z.number(),
+	studentAveragePct: z.number(),
+	studentId: z.uuid(),
+	studentPositionInClass: z.string(),
+	submissionDate: z.string(),
+	sundriesSpent: z.number(),
+	surname: z.string(),
+	termResultPublicId: z.string(),
+	termResultUrl: z.string(),
+	totalAmountSpent: z.number(),
+	tuitionFeePaid: z.number(),
+});
+
+const TacotsExitTrackerRecordSchema = FormRecordSchema.extend({
+	additionalSituationInfo: z.string().nullable().optional(),
+	completedBy: z.string(),
+	completedSecondaryElsewhere: z.string().nullable().optional(),
+	currentStatus: z.string(),
+	employmentType: z.string().nullable().optional(),
+	exitReason: z.string(),
+	firstName: z.string(),
+	higherInstitutionCity: z.string().nullable().optional(),
+	higherInstitutionName: z.string().nullable().optional(),
+	higherInstitutionState: z.string().nullable().optional(),
+	highestEducationAttained: z.string(),
+	newSchoolName: z.string().nullable().optional(),
+	programImpactDescription: z.string().nullable().optional(),
+	programImpactRating: z.number().nullable().optional(),
+	schoolAttendedDuringProgram: z.string(),
+	studentId: z.uuid(),
+	submissionDate: z.string(),
+	surname: z.string(),
+	vocationalSkill: z.string().nullable().optional(),
+	yearOfExit: z.number(),
 });
 
 const AshRegistrationRecordSchema = FormRecordSchema.extend({
@@ -329,7 +569,7 @@ const AshRegistrationRecordSchema = FormRecordSchema.extend({
 	schoolName: z.string(),
 	schoolState: z.string(),
 	schoolTown: z.string(),
-	status: getRequiredEnumSchema(ReviewStatusOptions),
+	status: z.enum(ReviewStatusOptions),
 	studentPhone: z.string().nullable().optional(),
 	surname: z.string(),
 });
@@ -360,7 +600,7 @@ const AshFeedbackRecordSchema = FormRecordSchema.extend({
 });
 
 const StatusRecordSchema = z.object({
-	id: z.uuid("Invalid ID."),
+	id: z.uuid(),
 	status: z.string(),
 });
 
@@ -383,6 +623,50 @@ const FormDataReviewMetadataSchema = z.object({
 
 const FormDataReviewPaginatedMetaSchema = PaginatedMetaSchema.extend({
 	metadata: FormDataReviewMetadataSchema.optional(),
+});
+
+const AshTrackerDataMetadataSchema = z.object({
+	avgAttendanceRate: z.number(),
+	completed: z.number(),
+	highRiskStudents: z.number(),
+	totalRecords: z.number(),
+});
+
+const AshTrackerDataPaginatedMetaSchema = PaginatedMetaSchema.extend({
+	metadata: AshTrackerDataMetadataSchema.optional(),
+});
+
+const OutreachTrackerDataMetadataSchema = z.object({
+	beneficiariesReached: z.number(),
+	communitiesEngaged: z.number(),
+	outreachEvents: z.number(),
+	volunteers: z.number(),
+});
+
+const OutreachTrackerDataPaginatedMetaSchema = PaginatedMetaSchema.extend({
+	metadata: OutreachTrackerDataMetadataSchema.optional(),
+});
+
+const CapacityTrackerDataMetadataSchema = z.object({
+	organizationsPartneredWith: z.number(),
+	participantsImpacted: z.number(),
+	volunteersEngaged: z.number(),
+	workshopsConducted: z.number(),
+});
+
+const CapacityTrackerDataPaginatedMetaSchema = PaginatedMetaSchema.extend({
+	metadata: CapacityTrackerDataMetadataSchema.optional(),
+});
+
+const TacotsTrackerDataMetadataSchema = z.object({
+	completed: z.number(),
+	highRiskStudents: z.number(),
+	onboardingRate: z.number(),
+	totalRecords: z.number(),
+});
+
+const TacotsTrackerDataPaginatedMetaSchema = PaginatedMetaSchema.extend({
+	metadata: TacotsTrackerDataMetadataSchema.optional(),
 });
 
 const defaultSchemaRoute = defineSchemaRoutes({
@@ -492,6 +776,28 @@ const clientSideRoutes = defineSchemaRoutes({
 		query: PaginatedQuerySchema.pick({ limit: true }).optional(),
 	},
 
+	"@get/donate/callback": {
+		data: withBaseSuccessResponse({
+			data: z.object({
+				data: z.object({
+					amount: z.number(),
+					customer: z
+						.object({
+							email: z.email().optional(),
+						})
+						.optional(),
+					reference: z.string(),
+					status: z.string(),
+				}),
+				message: z.string(),
+				status: z.boolean(),
+			}),
+		}),
+		query: z.object({
+			reference: RequiredStringSchema,
+		}),
+	},
+
 	"@post/donate": {
 		body: z.object({
 			amount: stringWithNumberValidation(
@@ -505,13 +811,36 @@ const clientSideRoutes = defineSchemaRoutes({
 			data: z.object({
 				data: z.object({
 					access_code: z.string(),
-					authorization_url: z.url("Enter a valid URL."),
+					authorization_url: z.url(),
 					reference: z.string(),
 				}),
 				message: z.string(),
 				status: z.boolean(),
 			}),
 		}),
+	},
+
+	"@post/donate/webhook": {
+		body: z.object({
+			data: z.object({
+				amount: z.number(),
+				customer: z
+					.object({
+						email: z.email().optional(),
+					})
+					.optional(),
+				metadata: z
+					.object({
+						comment: z.string().optional(),
+						name: z.string().optional(),
+					})
+					.optional(),
+				reference: z.string(),
+				status: z.string(),
+			}),
+			event: z.string(),
+		}),
+		data: withBaseSuccessResponse({ data: z.null() }),
 	},
 
 	"@post/feedback/home": {
@@ -529,7 +858,7 @@ const clientSideRoutes = defineSchemaRoutes({
 const DashboardChartDatasetSchema = z.object({
 	datasets: z.array(
 		z.object({
-			data: z.array(z.number()),
+			data: z.array(z.number().nullable()),
 			label: z.string().optional(),
 		})
 	),
@@ -590,6 +919,7 @@ const StudentPerformanceMetricsSchema = z.object({
 	c_dropoutTrend: DashboardChartDatasetSchema,
 	c_graduationRate: DashboardChartDatasetSchema,
 	c_risk: DashboardChartDatasetSchema,
+	c_tacots_scores: DashboardChartDatasetSchema,
 	c_testScores: DashboardChartDatasetSchema,
 });
 
@@ -1181,42 +1511,40 @@ const protectedFormRoutes = defineSchemaRoutes({
 	},
 
 	"@get/forms/ash/attendance": {
-		data: withBaseSuccessResponseAndMeta({ data: z.array(FormRecordSchema), meta: PaginatedMetaSchema }),
+		data: withBaseSuccessResponseAndMeta({
+			data: z.array(AshAttendanceTrackerRecordSchema),
+			meta: PaginatedMetaSchema,
+		}),
 		query: PaginatedQuerySchema.optional(),
 	},
 
 	"@get/forms/ash/attendance/:id": {
-		data: withBaseSuccessResponse({ data: FormRecordSchema }),
+		data: withBaseSuccessResponse({ data: AshAttendanceTrackerRecordSchema }),
 		params: IdParamsSchema,
 	},
 
-	"@get/forms/ash/download/ashattendance": {
-		data: z.string(),
-	},
+	"@get/forms/ash/download/ashattendance": {},
 
-	"@get/forms/ash/download/ashexit": {
-		data: z.string(),
-	},
+	"@get/forms/ash/download/ashexit": {},
 
-	"@get/forms/ash/download/ashfeedback": {
-		data: z.string(),
-	},
+	"@get/forms/ash/download/ashfeedback": {},
 
-	"@get/forms/ash/download/ashstudent": {
-		data: z.string(),
-	},
+	"@get/forms/ash/download/ashstudent": {},
 
-	"@get/forms/ash/download/ashtracking": {
-		data: z.string(),
-	},
+	"@get/forms/ash/download/ashtracking": {},
 
 	"@get/forms/ash/exit": {
-		data: withBaseSuccessResponseAndMeta({ data: z.array(FormRecordSchema), meta: PaginatedMetaSchema }),
-		query: PaginatedQuerySchema.optional(),
+		data: withBaseSuccessResponseAndMeta({
+			data: z.array(AshExitTrackerRecordSchema),
+			meta: PaginatedMetaSchema,
+		}),
+		query: PaginatedQuerySchema.extend({
+			sortBy: getOptionalEnumSchema(AshExitSortByOptions),
+		}).optional(),
 	},
 
 	"@get/forms/ash/exit/:id": {
-		data: withBaseSuccessResponse({ data: FormRecordSchema }),
+		data: withBaseSuccessResponse({ data: AshExitTrackerRecordSchema }),
 		params: IdParamsSchema,
 	},
 
@@ -1250,73 +1578,76 @@ const protectedFormRoutes = defineSchemaRoutes({
 	},
 
 	"@get/forms/ash/tracking": {
-		data: withBaseSuccessResponseAndMeta({ data: z.array(FormRecordSchema), meta: PaginatedMetaSchema }),
+		data: withBaseSuccessResponseAndMeta({
+			data: z.array(AshTermlyTrackingRecordSchema),
+			meta: AshTrackerDataPaginatedMetaSchema,
+		}),
 		query: PaginatedQuerySchema.extend({
-			academicSession: getOptionalEnumSchema(AcademicSessionOptions),
-			term: getOptionalEnumSchema(AshTermOptions),
+			sortBy: getOptionalEnumSchema(AshTrackingRecordSortByOptions),
 		}).optional(),
 	},
 
 	"@get/forms/ash/tracking/:id": {
-		data: withBaseSuccessResponse({ data: FormRecordSchema }),
+		data: withBaseSuccessResponse({ data: AshTermlyTrackingRecordSchema }),
 		params: IdParamsSchema,
 	},
 
 	"@get/forms/capacity-building": {
-		data: withBaseSuccessResponseAndMeta({ data: z.array(FormRecordSchema), meta: PaginatedMetaSchema }),
-		query: PaginatedQuerySchema.optional(),
+		data: withBaseSuccessResponseAndMeta({
+			data: z.array(CapacityEvaluationRecordSchema),
+			meta: CapacityTrackerDataPaginatedMetaSchema,
+		}),
+		query: PaginatedQuerySchema.extend({
+			sortBy: getOptionalEnumSchema(CapacityEvaluationSortByOptions),
+		}).optional(),
 	},
 
 	"@get/forms/capacity-building/:id": {
-		data: withBaseSuccessResponse({ data: FormRecordSchema }),
+		data: withBaseSuccessResponse({ data: CapacityEvaluationRecordSchema }),
 		params: IdParamsSchema,
 	},
 
-	"@get/forms/capacity-building/download/capacityevaluation": {
-		data: z.string(),
-	},
+	"@get/forms/capacity-building/download/capacityevaluation": {},
 
 	"@get/forms/outreaches": {
-		data: withBaseSuccessResponseAndMeta({ data: z.array(FormRecordSchema), meta: PaginatedMetaSchema }),
-		query: PaginatedQuerySchema.optional(),
+		data: withBaseSuccessResponseAndMeta({
+			data: z.array(OutreachTrackerRecordSchema),
+			meta: OutreachTrackerDataPaginatedMetaSchema,
+		}),
+		query: PaginatedQuerySchema.extend({
+			sortBy: getOptionalEnumSchema(OutreachSortByOptions),
+		}).optional(),
 	},
 
 	"@get/forms/outreaches/:id": {
-		data: withBaseSuccessResponse({ data: FormRecordSchema }),
+		data: withBaseSuccessResponse({ data: OutreachTrackerRecordSchema }),
 		params: IdParamsSchema,
 	},
 
-	"@get/forms/outreaches/download/outreachtracker": {
-		data: z.string(),
-	},
+	"@get/forms/outreaches/download/outreachtracker": {},
 
-	"@get/forms/tacots/download/tacotsexit": {
-		data: z.string(),
-	},
+	"@get/forms/tacots/download/tacotsexit": {},
 
-	"@get/forms/tacots/download/tacotsfeedback": {
-		data: z.string(),
-	},
+	"@get/forms/tacots/download/tacotsfeedback": {},
 
-	"@get/forms/tacots/download/tacotsonboarding": {
-		data: z.string(),
-	},
+	"@get/forms/tacots/download/tacotsonboarding": {},
 
-	"@get/forms/tacots/download/tacotsrecommendation": {
-		data: z.string(),
-	},
+	"@get/forms/tacots/download/tacotsrecommendation": {},
 
-	"@get/forms/tacots/download/tacotstracking": {
-		data: z.string(),
-	},
+	"@get/forms/tacots/download/tacotstracking": {},
 
 	"@get/forms/tacots/exit": {
-		data: withBaseSuccessResponseAndMeta({ data: z.array(FormRecordSchema), meta: PaginatedMetaSchema }),
-		query: PaginatedQuerySchema.optional(),
+		data: withBaseSuccessResponseAndMeta({
+			data: z.array(TacotsExitTrackerRecordSchema),
+			meta: PaginatedMetaSchema,
+		}),
+		query: PaginatedQuerySchema.extend({
+			sortBy: getOptionalEnumSchema(TacotsExitSortByOptions),
+		}).optional(),
 	},
 
 	"@get/forms/tacots/exit/:id": {
-		data: withBaseSuccessResponse({ data: FormRecordSchema }),
+		data: withBaseSuccessResponse({ data: TacotsExitTrackerRecordSchema }),
 		params: IdParamsSchema,
 	},
 
@@ -1382,12 +1713,17 @@ const protectedFormRoutes = defineSchemaRoutes({
 	},
 
 	"@get/forms/tacots/onboarding": {
-		data: withBaseSuccessResponseAndMeta({ data: z.array(FormRecordSchema), meta: PaginatedMetaSchema }),
-		query: PaginatedQuerySchema.optional(),
+		data: withBaseSuccessResponseAndMeta({
+			data: z.array(TacotsOnboardingTrackerRecordSchema),
+			meta: PaginatedMetaSchema,
+		}),
+		query: PaginatedQuerySchema.extend({
+			sortBy: getOptionalEnumSchema(TacotsOnboardingSortByOptions),
+		}).optional(),
 	},
 
 	"@get/forms/tacots/onboarding/:id": {
-		data: withBaseSuccessResponse({ data: FormRecordSchema }),
+		data: withBaseSuccessResponse({ data: TacotsOnboardingTrackerRecordSchema }),
 		params: IdParamsSchema,
 	},
 
@@ -1395,7 +1731,7 @@ const protectedFormRoutes = defineSchemaRoutes({
 		data: withBaseSuccessResponseAndMeta({
 			data: z.array(
 				FormRecordSchema.extend({
-					adminStatus: getRequiredEnumSchema(AdminReviewStatusOptions),
+					adminStatus: z.enum(AdminReviewStatusOptions),
 					age: z.number(),
 					annualHouseholdIncome: z.string(),
 					avgMonthlyIncome: z.number().nullable().optional(),
@@ -1471,7 +1807,7 @@ const protectedFormRoutes = defineSchemaRoutes({
 	"@get/forms/tacots/recommendation/:id": {
 		data: withBaseSuccessResponse({
 			data: FormRecordSchema.extend({
-				adminStatus: getRequiredEnumSchema(AdminReviewStatusOptions),
+				adminStatus: z.enum(AdminReviewStatusOptions),
 				age: z.number(),
 				annualHouseholdIncome: z.string(),
 				avgMonthlyIncome: z.number().nullable().optional(),
@@ -1540,15 +1876,17 @@ const protectedFormRoutes = defineSchemaRoutes({
 	},
 
 	"@get/forms/tacots/tracking": {
-		data: withBaseSuccessResponseAndMeta({ data: z.array(FormRecordSchema), meta: PaginatedMetaSchema }),
+		data: withBaseSuccessResponseAndMeta({
+			data: z.array(TacotsTrackingRecordSchema),
+			meta: TacotsTrackerDataPaginatedMetaSchema,
+		}),
 		query: PaginatedQuerySchema.extend({
-			academicSession: getOptionalEnumSchema(AcademicSessionOptions),
-			term: getOptionalEnumSchema(TacotsAcademicTermOptions),
+			sortBy: getOptionalEnumSchema(TacotsTrackingRecordSortByOptions),
 		}).optional(),
 	},
 
 	"@get/forms/tacots/tracking/:id": {
-		data: withBaseSuccessResponse({ data: FormRecordSchema }),
+		data: withBaseSuccessResponse({ data: TacotsTrackingRecordSchema }),
 		params: IdParamsSchema,
 	},
 
@@ -1578,7 +1916,7 @@ const protectedFormRoutes = defineSchemaRoutes({
 					safeguardingAgreement: z.string(),
 					skillsToContribute: z.array(z.string()).nullable().optional(),
 					state: z.string(),
-					status: getRequiredEnumSchema(ReviewStatusOptions),
+					status: z.enum(ReviewStatusOptions),
 					surname: z.string(),
 					volunteerAreas: z.array(z.string()),
 				})
@@ -1616,7 +1954,7 @@ const protectedFormRoutes = defineSchemaRoutes({
 				safeguardingAgreement: z.string(),
 				skillsToContribute: z.array(z.string()).nullable().optional(),
 				state: z.string(),
-				status: getRequiredEnumSchema(ReviewStatusOptions),
+				status: z.enum(ReviewStatusOptions),
 				surname: z.string(),
 				volunteerAreas: z.array(z.string()),
 			}),
@@ -1656,13 +1994,9 @@ const protectedFormRoutes = defineSchemaRoutes({
 		query: PaginatedQuerySchema.optional(),
 	},
 
-	"@get/volunteer/download/volunteerfeedback": {
-		data: z.string(),
-	},
+	"@get/volunteer/download/volunteerfeedback": {},
 
-	"@get/volunteer/download/volunteerregistration": {
-		data: z.string(),
-	},
+	"@get/volunteer/download/volunteerregistration": {},
 
 	"@get/volunteer/feedback/:id": {
 		data: withBaseSuccessResponse({

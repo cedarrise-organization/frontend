@@ -59,50 +59,53 @@ export function DataTableFacetedFilter<TData, TValue>({
 	const content = (
 		<>
 			<Combobox.Trigger className="border-dashed font-normal" size="sm">
-				{({ selectedOptions }) => (
-					<>
-						{selectedValues.size > 0 ?
-							<div
-								role="button"
-								aria-label={`Clear ${title} filter`}
-								tabIndex={0}
-								className="rounded-sm opacity-70 transition-opacity hover:opacity-100
-									focus-visible:ring-1 focus-visible:ring-shadcn-ring focus-visible:outline-none"
-								onClick={onReset}
-							>
-								<IconBox icon="lucide:x-circle" />
-							</div>
-						:	<IconBox icon="lucide:plus-circle" />}
-						{title}
-						{selectedValues.size > 0 && (
-							<>
-								<Separator
-									orientation="vertical"
-									className="mx-0.5 data-[orientation=vertical]:h-4"
-								/>
-								<Badge variant="secondary" className="rounded-sm px-1 font-normal lg:hidden">
-									{selectedValues.size}
-								</Badge>
-								<div className="hidden items-center gap-1 lg:flex">
-									{selectedValues.size > 2 ?
-										<Badge variant="secondary" className="rounded-sm px-1 font-normal">
-											{selectedValues.size} selected
-										</Badge>
-									:	selectedOptions.map((option) => (
-											<Badge
-												variant="secondary"
-												key={option.value}
-												className="rounded-sm px-1 font-normal"
-											>
-												{option.label}
-											</Badge>
-										))
-									}
+				<Combobox.Context>
+					{(ctx) => (
+						<>
+							{selectedValues.size > 0 ?
+								<div
+									role="button"
+									aria-label={`Clear ${title} filter`}
+									tabIndex={0}
+									className="rounded-sm opacity-70 transition-opacity hover:opacity-100
+										focus-visible:ring-1 focus-visible:ring-shadcn-ring
+										focus-visible:outline-none"
+									onClick={onReset}
+								>
+									<IconBox icon="lucide:x-circle" />
 								</div>
-							</>
-						)}
-					</>
-				)}
+							:	<IconBox icon="lucide:plus-circle" />}
+							{title}
+							{selectedValues.size > 0 && (
+								<>
+									<Separator
+										orientation="vertical"
+										className="mx-0.5 data-[orientation=vertical]:h-4"
+									/>
+									<Badge variant="secondary" className="rounded-sm px-1 font-normal lg:hidden">
+										{selectedValues.size}
+									</Badge>
+									<div className="hidden items-center gap-1 lg:flex">
+										{selectedValues.size > 2 ?
+											<Badge variant="secondary" className="rounded-sm px-1 font-normal">
+												{selectedValues.size} selected
+											</Badge>
+										:	ctx.selectedOptions.map((option) => (
+												<Badge
+													variant="secondary"
+													key={option.value}
+													className="rounded-sm px-1 font-normal"
+												>
+													{option.label}
+												</Badge>
+											))
+										}
+									</div>
+								</>
+							)}
+						</>
+					)}
+				</Combobox.Context>
 			</Combobox.Trigger>
 			<Combobox.Content className="w-50 p-0" popoverOptions={{ align: "start" }}>
 				<Combobox.Input placeholder={title} />

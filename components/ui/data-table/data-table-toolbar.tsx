@@ -5,6 +5,7 @@ import { useCallback, useMemo } from "react";
 import { IconBox } from "@/components/common/IconBox";
 import { cnMerge } from "@/lib/utils/cn";
 import { shadcnButtonVariants } from "../constants";
+import { Form } from "../form";
 import { DataTableDateFilter } from "./data-table-date-filter";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 import { DataTableSliderFilter } from "./data-table-slider-filter";
@@ -98,7 +99,7 @@ function DataTableToolbarFilter<TData>({ column }: DataTableToolbarFilterProps<T
 			case "number": {
 				return (
 					<div className="relative">
-						<input
+						<Form.InputPrimitive
 							type="number"
 							inputMode="numeric"
 							placeholder={columnMeta.placeholder ?? columnMeta.label}
@@ -123,7 +124,7 @@ function DataTableToolbarFilter<TData>({ column }: DataTableToolbarFilterProps<T
 			}
 			case "text": {
 				return (
-					<input
+					<Form.InputPrimitive
 						placeholder={columnMeta.placeholder ?? columnMeta.label}
 						value={(column.getFilterValue() as string | undefined) ?? ""}
 						onChange={(event) => column.setFilterValue(event.target.value)}

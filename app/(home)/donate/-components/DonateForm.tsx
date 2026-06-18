@@ -66,12 +66,12 @@ function DonateFormImpl() {
 						placeholder="Input Amount you wish to donate"
 					/>
 
-					<Form.InputRightItem
+					<Form.InputGroupAddon
 						className="size-[54px] shrink-0 rounded-[12px] bg-cedar-grey text-[10px] text-cedar-black
 							lg:size-[64px] lg:text-[14px]"
 					>
 						NGN
-					</Form.InputRightItem>
+					</Form.InputGroupAddon>
 				</Form.InputGroup>
 			</Form.Field>
 

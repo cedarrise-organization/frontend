@@ -28,6 +28,38 @@ export type VolunteerFeedbackFormDataListQuery = z.infer<
 	(typeof backendApiSchemaRoutes)["@get/volunteer/all/feedback"]["query"]
 >;
 
+export type AshAttendanceTrackerDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/ash/attendance"]["query"]
+>;
+
+export type AshExitTrackerDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/ash/exit"]["query"]
+>;
+
+export type AshTrackingTrackerDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/ash/tracking"]["query"]
+>;
+
+export type CapacityBuildingTrackerDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/capacity-building"]["query"]
+>;
+
+export type OutreachTrackerDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/outreaches"]["query"]
+>;
+
+export type TacotsExitTrackerDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/tacots/exit"]["query"]
+>;
+
+export type TacotsOnboardingTrackerDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/tacots/onboarding"]["query"]
+>;
+
+export type TacotsTrackingTrackerDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/tacots/tracking"]["query"]
+>;
+
 export const sessionQuery = () => {
 	return queryOptions({
 		queryFn: () => checkUserSessionForQuery(),
@@ -163,6 +195,166 @@ export type VolunteerRegistrationFormDataQueryResult = Awaited<
 
 export type VolunteerFeedbackFormDataQueryResult = Awaited<
 	ReturnType<NonNullable<ReturnType<typeof volunteerFeedbackFormDataQuery>["queryFn"]>>
+>;
+
+export const ashAttendanceTrackerDataQuery = (query?: AshAttendanceTrackerDataListQuery) => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/forms/ash/attendance", { query }),
+		queryKey: ["tracker-data", "ash", "attendance", query],
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
+export const ashAttendanceTrackerDataDetailQuery = (id: string) => {
+	return queryOptions({
+		enabled: Boolean(id),
+		queryFn: () => callBackendApiForQuery("@get/forms/ash/attendance/:id", { params: { id } }),
+		queryKey: ["tracker-data", "ash", "attendance", id],
+	});
+};
+
+export const ashExitTrackerDataQuery = (query?: AshExitTrackerDataListQuery) => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/forms/ash/exit", { query }),
+		queryKey: ["tracker-data", "ash", "exit", query],
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
+export const ashExitTrackerDataDetailQuery = (id: string) => {
+	return queryOptions({
+		enabled: Boolean(id),
+		queryFn: () => callBackendApiForQuery("@get/forms/ash/exit/:id", { params: { id } }),
+		queryKey: ["tracker-data", "ash", "exit", id],
+	});
+};
+
+export const ashTrackingTrackerDataQuery = (query?: AshTrackingTrackerDataListQuery) => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/forms/ash/tracking", { query }),
+		queryKey: ["tracker-data", "ash", "tracking", query],
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
+export const ashTrackingTrackerDataDetailQuery = (id: string) => {
+	return queryOptions({
+		enabled: Boolean(id),
+		queryFn: () => callBackendApiForQuery("@get/forms/ash/tracking/:id", { params: { id } }),
+		queryKey: ["tracker-data", "ash", "tracking", id],
+	});
+};
+
+export const capacityBuildingTrackerDataQuery = (query?: CapacityBuildingTrackerDataListQuery) => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/forms/capacity-building", { query }),
+		queryKey: ["tracker-data", "capacity-building", query],
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
+export const capacityBuildingTrackerDataDetailQuery = (id: string) => {
+	return queryOptions({
+		enabled: Boolean(id),
+		queryFn: () => callBackendApiForQuery("@get/forms/capacity-building/:id", { params: { id } }),
+		queryKey: ["tracker-data", "capacity-building", id],
+	});
+};
+
+export const outreachTrackerDataQuery = (query?: OutreachTrackerDataListQuery) => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/forms/outreaches", { query }),
+		queryKey: ["tracker-data", "outreaches", query],
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
+export const outreachTrackerDataDetailQuery = (id: string) => {
+	return queryOptions({
+		enabled: Boolean(id),
+		queryFn: () => callBackendApiForQuery("@get/forms/outreaches/:id", { params: { id } }),
+		queryKey: ["tracker-data", "outreaches", id],
+	});
+};
+
+export const tacotsExitTrackerDataQuery = (query?: TacotsExitTrackerDataListQuery) => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/forms/tacots/exit", { query }),
+		queryKey: ["tracker-data", "tacots", "exit", query],
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
+export const tacotsExitTrackerDataDetailQuery = (id: string) => {
+	return queryOptions({
+		enabled: Boolean(id),
+		queryFn: () => callBackendApiForQuery("@get/forms/tacots/exit/:id", { params: { id } }),
+		queryKey: ["tracker-data", "tacots", "exit", id],
+	});
+};
+
+export const tacotsOnboardingTrackerDataQuery = (query?: TacotsOnboardingTrackerDataListQuery) => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/forms/tacots/onboarding", { query }),
+		queryKey: ["tracker-data", "tacots", "onboarding", query],
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
+export const tacotsOnboardingTrackerDataDetailQuery = (id: string) => {
+	return queryOptions({
+		enabled: Boolean(id),
+		queryFn: () => callBackendApiForQuery("@get/forms/tacots/onboarding/:id", { params: { id } }),
+		queryKey: ["tracker-data", "tacots", "onboarding", id],
+	});
+};
+
+export const tacotsTrackingTrackerDataQuery = (query?: TacotsTrackingTrackerDataListQuery) => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/forms/tacots/tracking", { query }),
+		queryKey: ["tracker-data", "tacots", "tracking", query],
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
+export const tacotsTrackingTrackerDataDetailQuery = (id: string) => {
+	return queryOptions({
+		enabled: Boolean(id),
+		queryFn: () => callBackendApiForQuery("@get/forms/tacots/tracking/:id", { params: { id } }),
+		queryKey: ["tracker-data", "tacots", "tracking", id],
+	});
+};
+
+export type AshAttendanceTrackerDataQueryResult = Awaited<
+	ReturnType<NonNullable<ReturnType<typeof ashAttendanceTrackerDataQuery>["queryFn"]>>
+>;
+
+export type AshExitTrackerDataQueryResult = Awaited<
+	ReturnType<NonNullable<ReturnType<typeof ashExitTrackerDataQuery>["queryFn"]>>
+>;
+
+export type AshTrackingTrackerDataQueryResult = Awaited<
+	ReturnType<NonNullable<ReturnType<typeof ashTrackingTrackerDataQuery>["queryFn"]>>
+>;
+
+export type CapacityBuildingTrackerDataQueryResult = Awaited<
+	ReturnType<NonNullable<ReturnType<typeof capacityBuildingTrackerDataQuery>["queryFn"]>>
+>;
+
+export type OutreachTrackerDataQueryResult = Awaited<
+	ReturnType<NonNullable<ReturnType<typeof outreachTrackerDataQuery>["queryFn"]>>
+>;
+
+export type TacotsExitTrackerDataQueryResult = Awaited<
+	ReturnType<NonNullable<ReturnType<typeof tacotsExitTrackerDataQuery>["queryFn"]>>
+>;
+
+export type TacotsOnboardingTrackerDataQueryResult = Awaited<
+	ReturnType<NonNullable<ReturnType<typeof tacotsOnboardingTrackerDataQuery>["queryFn"]>>
+>;
+
+export type TacotsTrackingTrackerDataQueryResult = Awaited<
+	ReturnType<NonNullable<ReturnType<typeof tacotsTrackingTrackerDataQuery>["queryFn"]>>
 >;
 
 export const dashboardCardsQuery = () => {
