@@ -753,7 +753,11 @@ const useFormDataQueryState = <const TSortBy extends string>(props: {
 
 	const activeSort = sorting[0];
 	const orderBy =
-		activeSort ? (activeSort.desc ? OrderByOptions[1] : OrderByOptions[0]) : undefined;
+		activeSort ?
+			activeSort.desc ?
+				OrderByOptions[1]
+			:	OrderByOptions[0]
+		:	undefined;
 
 	return useMemo(() => {
 		return {
