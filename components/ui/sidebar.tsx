@@ -57,10 +57,12 @@ function SidebarProvider(
 			withMobileBreakpoint?: boolean;
 		}
 ) {
+	const isMobileOrTabletWindow = useIsMobile({ mobileBreakpoint: 1000 });
+
 	const {
 		children,
 		className,
-		defaultOpen: defaultOpenProp = true,
+		defaultOpen: defaultOpenProp = !isMobileOrTabletWindow,
 		onOpenChange: onOpenChangeProp,
 		open: openProp,
 		sidebarWidth = SIDEBAR_WIDTH,
@@ -118,10 +120,6 @@ function SidebarProvider(
 	// We add a state so that we can do data-state="expanded" or "collapsed".
 	// This makes it easier to style the sidebar with Tailwind classes.
 	const sidebarState = open ? "expanded" : "collapsed";
-
-	const isMobileOrTabletWindow = useIsMobile({
-		mobileBreakpoint: 1000,
-	});
 
 	const contextValue = useMemo<SidebarContextType>(
 		() => ({

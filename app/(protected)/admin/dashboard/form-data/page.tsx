@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
-import { parseAsArrayOf, parseAsInteger, parseAsString, parseAsStringLiteral, useQueryState } from "nuqs";
+import { parseAsArrayOf, parseAsString, parseAsStringLiteral, useQueryState } from "nuqs";
 import { useMemo, useState } from "react";
 import { DialogAnimated, TabsAnimated } from "@/components/animated/ui";
 import { For, ForWithWrapper } from "@/components/common/for";
@@ -10,13 +10,11 @@ import { DropdownMenu } from "@/components/ui";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
-import { getSortingStateParser } from "@/components/ui/data-table/data-table-parsers";
 import type { QueryKeys } from "@/components/ui/data-table/data-table-types";
 import { useDataTable } from "@/components/ui/data-table/use-data-table";
 import {
 	AdminReviewStatusOptions,
 	AshTrackingSortByOptions,
-	OrderByOptions,
 	ReviewStatusOptions,
 	TacotsRecommendationSortByOptions,
 	VolunteerSortByOptions,
@@ -58,7 +56,10 @@ import {
 } from "@/lib/react-query/queryOptions";
 import { cnMerge } from "@/lib/utils/cn";
 import { EMPTY_VALUE_PLACEHOLDER } from "../-components/constants";
-import { DashboardDataTableSection } from "../-components/DashboardDataTableShared";
+import {
+	DashboardDataTableSection,
+	useDashboardDataTableQueryState,
+} from "../-components/DashboardDataTableShared";
 import { Main } from "../-components/Main";
 
 const FORM_DATA_TABLE_INITIAL_STATE = {
@@ -317,14 +318,14 @@ function AshFormDataTab(props: { onViewMore: (record: SelectedRecord) => void })
 		];
 	}, [onViewMore]);
 
-	const registrationQuery = useFormDataQueryState({
+	const registrationQuery = useDashboardDataTableQueryState({
 		pageKey: ASH_FORM_DATA_QUERY_KEYS.registration.page,
 		perPageKey: ASH_FORM_DATA_QUERY_KEYS.registration.perPage,
 		sortableColumnIds: AshTrackingSortByOptions,
 		sortKey: ASH_FORM_DATA_QUERY_KEYS.registration.sort,
 	});
 
-	const feedbackQuery = useFormDataQueryState({
+	const feedbackQuery = useDashboardDataTableQueryState({
 		pageKey: ASH_FORM_DATA_QUERY_KEYS.feedback.page,
 		perPageKey: ASH_FORM_DATA_QUERY_KEYS.feedback.perPage,
 		sortableColumnIds: [],
@@ -340,8 +341,8 @@ function AshFormDataTab(props: { onViewMore: (record: SelectedRecord) => void })
 	const registrationQueryResult = useQuery(
 		ashRegistrationFormDataQuery({
 			limit: registrationQuery.limit,
+			orderBy: registrationQuery.orderBy,
 			page: registrationQuery.page,
-			...(registrationQuery.orderBy && { orderBy: registrationQuery.orderBy }),
 			...(search && { search }),
 			...(registrationQuery.sortBy && { sortBy: registrationQuery.sortBy }),
 			...(statusFilter[0] && { status: statusFilter[0] }),
@@ -377,16 +378,17 @@ function AshFormDataTab(props: { onViewMore: (record: SelectedRecord) => void })
 		initialState: FORM_DATA_TABLE_INITIAL_STATE,
 		pageCount: registrationQueryResult.data?.meta.pagination.totalPages ?? 1,
 		queryKeys: ASH_FORM_DATA_QUERY_KEYS.registration,
+		sortableColumnIds: AshTrackingSortByOptions,
 	});
 
 	const feedbackTable = useDataTable<AshFeedbackFormRecord>({
 		columns: feedbackColumns,
 		data: feedbackRecords,
-		enableSorting: false,
 		getRowId: (row) => row.id,
 		initialState: FORM_DATA_TABLE_INITIAL_STATE,
 		pageCount: feedbackQueryResult.data?.meta.pagination.totalPages ?? 1,
 		queryKeys: ASH_FORM_DATA_QUERY_KEYS.feedback,
+		sortableColumnIds: [],
 	});
 
 	return (
@@ -454,14 +456,14 @@ function TacotsFormDataTab(props: { onViewMore: (record: SelectedRecord) => void
 		];
 	}, [onViewMore]);
 
-	const recommendationQuery = useFormDataQueryState({
+	const recommendationQuery = useDashboardDataTableQueryState({
 		pageKey: TACOTS_FORM_DATA_QUERY_KEYS.recommendation.page,
 		perPageKey: TACOTS_FORM_DATA_QUERY_KEYS.recommendation.perPage,
 		sortableColumnIds: TacotsRecommendationSortByOptions,
 		sortKey: TACOTS_FORM_DATA_QUERY_KEYS.recommendation.sort,
 	});
 
-	const feedbackQuery = useFormDataQueryState({
+	const feedbackQuery = useDashboardDataTableQueryState({
 		pageKey: TACOTS_FORM_DATA_QUERY_KEYS.feedback.page,
 		perPageKey: TACOTS_FORM_DATA_QUERY_KEYS.feedback.perPage,
 		sortableColumnIds: [],
@@ -477,8 +479,8 @@ function TacotsFormDataTab(props: { onViewMore: (record: SelectedRecord) => void
 	const recommendationQueryResult = useQuery(
 		tacotsRecommendationFormDataQuery({
 			limit: recommendationQuery.limit,
+			orderBy: recommendationQuery.orderBy,
 			page: recommendationQuery.page,
-			...(recommendationQuery.orderBy && { orderBy: recommendationQuery.orderBy }),
 			...(search && { search }),
 			...(recommendationQuery.sortBy && { sortBy: recommendationQuery.sortBy }),
 			...(statusFilter[0] && { status: statusFilter[0] }),
@@ -514,16 +516,17 @@ function TacotsFormDataTab(props: { onViewMore: (record: SelectedRecord) => void
 		initialState: FORM_DATA_TABLE_INITIAL_STATE,
 		pageCount: recommendationQueryResult.data?.meta.pagination.totalPages ?? 1,
 		queryKeys: TACOTS_FORM_DATA_QUERY_KEYS.recommendation,
+		sortableColumnIds: TacotsRecommendationSortByOptions,
 	});
 
 	const feedbackTable = useDataTable<TacotsFeedbackFormRecord>({
 		columns: feedbackColumns,
 		data: feedbackRecords,
-		enableSorting: false,
 		getRowId: (row) => row.id,
 		initialState: FORM_DATA_TABLE_INITIAL_STATE,
 		pageCount: feedbackQueryResult.data?.meta.pagination.totalPages ?? 1,
 		queryKeys: TACOTS_FORM_DATA_QUERY_KEYS.feedback,
+		sortableColumnIds: [],
 	});
 
 	return (
@@ -604,14 +607,14 @@ function VolunteerFormDataTab(props: { onViewMore: (record: SelectedRecord) => v
 		];
 	}, [onViewMore]);
 
-	const registrationQuery = useFormDataQueryState({
+	const registrationQuery = useDashboardDataTableQueryState({
 		pageKey: VOLUNTEER_FORM_DATA_QUERY_KEYS.registration.page,
 		perPageKey: VOLUNTEER_FORM_DATA_QUERY_KEYS.registration.perPage,
 		sortableColumnIds: VolunteerSortByOptions,
 		sortKey: VOLUNTEER_FORM_DATA_QUERY_KEYS.registration.sort,
 	});
 
-	const feedbackQuery = useFormDataQueryState({
+	const feedbackQuery = useDashboardDataTableQueryState({
 		pageKey: VOLUNTEER_FORM_DATA_QUERY_KEYS.feedback.page,
 		perPageKey: VOLUNTEER_FORM_DATA_QUERY_KEYS.feedback.perPage,
 		sortableColumnIds: [],
@@ -627,8 +630,8 @@ function VolunteerFormDataTab(props: { onViewMore: (record: SelectedRecord) => v
 	const registrationQueryResult = useQuery(
 		volunteerRegistrationFormDataQuery({
 			limit: registrationQuery.limit,
+			orderBy: registrationQuery.orderBy,
 			page: registrationQuery.page,
-			...(registrationQuery.orderBy && { orderBy: registrationQuery.orderBy }),
 			...(search && { search }),
 			...(registrationQuery.sortBy && { sortBy: registrationQuery.sortBy }),
 			...(statusFilter[0] && { status: statusFilter[0] }),
@@ -664,16 +667,17 @@ function VolunteerFormDataTab(props: { onViewMore: (record: SelectedRecord) => v
 		initialState: FORM_DATA_TABLE_INITIAL_STATE,
 		pageCount: registrationQueryResult.data?.meta.pagination.totalPages ?? 1,
 		queryKeys: VOLUNTEER_FORM_DATA_QUERY_KEYS.registration,
+		sortableColumnIds: VolunteerSortByOptions,
 	});
 
 	const feedbackTable = useDataTable<VolunteerFeedbackFormRecord>({
 		columns: feedbackColumns,
 		data: feedbackRecords,
-		enableSorting: false,
 		getRowId: (row) => row.id,
 		initialState: FORM_DATA_TABLE_INITIAL_STATE,
 		pageCount: feedbackQueryResult.data?.meta.pagination.totalPages ?? 1,
 		queryKeys: VOLUNTEER_FORM_DATA_QUERY_KEYS.feedback,
+		sortableColumnIds: [],
 	});
 
 	return (
@@ -731,43 +735,6 @@ function FormDataStats(props: { stats: ReadonlyArray<{ label: string; value: num
 		</section>
 	);
 }
-
-const useFormDataQueryState = <const TSortBy extends string>(props: {
-	pageKey: string;
-	perPageKey: string;
-	sortableColumnIds: readonly TSortBy[];
-	sortKey: string;
-}) => {
-	const { pageKey, perPageKey, sortableColumnIds, sortKey } = props;
-
-	const sortableColumnIdSet = useMemo(() => {
-		return new Set<string>(sortableColumnIds);
-	}, [sortableColumnIds]);
-
-	const [page] = useQueryState(pageKey, parseAsInteger.withDefault(1));
-	const [limit] = useQueryState(perPageKey, parseAsInteger.withDefault(10));
-	const [sorting] = useQueryState(
-		sortKey,
-		getSortingStateParser<Record<TSortBy, unknown>>(sortableColumnIdSet).withDefault([])
-	);
-
-	const activeSort = sorting[0];
-	const orderBy =
-		activeSort ?
-			activeSort.desc ?
-				OrderByOptions[1]
-			:	OrderByOptions[0]
-		:	undefined;
-
-	return useMemo(() => {
-		return {
-			limit,
-			orderBy,
-			page,
-			sortBy: activeSort?.id,
-		};
-	}, [activeSort, limit, orderBy, page]);
-};
 
 const getTextColumn = <TRecord extends FormRecord>(
 	id: string,

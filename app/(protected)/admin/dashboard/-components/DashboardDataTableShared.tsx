@@ -6,10 +6,10 @@ import { For } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
 import { Select } from "@/components/ui";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { getSortingStateParser } from "@/components/ui/data-table/data-table-parsers";
 import { Form } from "@/components/ui/form";
+import { OrderByOptions } from "@/lib/api/callBackendApi/apiSchema";
 import { cnMerge } from "@/lib/utils/cn";
 
 const DASHBOARD_TABLE_ORDER_OPTIONS = [
@@ -43,8 +43,8 @@ export function DashboardDataTableSection<TRecord>(props: {
 	} = props;
 
 	return (
-		<Card.Root as="section" className="overflow-hidden rounded-[20px] bg-cedar-white">
-			<Card.Header className="flex flex-row items-center justify-between gap-4 px-5 pt-5 pb-4 lg:px-7">
+		<section className="overflow-hidden rounded-[20px] bg-cedar-white">
+			<article className="flex flex-row items-center justify-between gap-4 px-5 pt-5 pb-4 lg:px-7">
 				<div className="flex items-center gap-4">
 					<span
 						className={cnMerge(
@@ -52,13 +52,11 @@ export function DashboardDataTableSection<TRecord>(props: {
 							color === "yellow" ? "bg-cedar-yellow" : "bg-cedar-red"
 						)}
 					/>
-					<div className="min-w-0">
-						<Card.Title className="text-[16px] font-semibold text-cedar-black lg:text-[18px]">
-							{label}
-						</Card.Title>
-						<Card.Description className="mt-1 text-[12px] text-cedar-black/64 lg:text-[14px]">
+					<div className="flex min-w-0 flex-col gap-1">
+						<h3 className="text-[16px] font-semibold text-cedar-black lg:text-[18px]">{label}</h3>
+						<p className="text-[12px] text-cedar-black/64 lg:text-[14px]">
 							{count} {count === 1 ? "Submission" : "Submissions"}
-						</Card.Description>
+						</p>
 					</div>
 				</div>
 
@@ -78,35 +76,32 @@ export function DashboardDataTableSection<TRecord>(props: {
 						{count}
 					</span>
 				</div>
-			</Card.Header>
+			</article>
 
-			<Card.Content className="border-y border-cedar-black/8 bg-cedar-grey p-5 lg:px-7">
-				<DashboardDataTableToolbar
-					searchQueryKey={searchQueryKey}
-					sortOptions={sortOptions ?? []}
-					statusQueryKey={statusQueryKey}
-					statusOptions={statusOptions}
-					table={table}
-				/>
-			</Card.Content>
-
-			<Card.Footer className="block p-0">
-				<DataTable
-					isLoading={isLoading}
-					table={table}
-					className="gap-0 overflow-x-auto rounded-none border-0 text-[13px]
-						**:data-[slot=table-cell]:px-5 **:data-[slot=table-cell]:py-4
-						**:data-[slot=table-container]:min-w-[900px]
-						**:data-[slot=table-container]:overflow-x-auto **:data-[slot=table-head]:h-12
-						**:data-[slot=table-head]:px-5 **:data-[slot=table-head]:text-[12px]
-						**:data-[slot=table-head]:font-semibold **:data-[slot=table-head]:text-cedar-black/80
-						**:data-[slot=table-row]:border-cedar-black/10
-						**:data-[slot=table-row]:hover:bg-transparent [&_table]:border-0
-						[&>div:first-child]:rounded-none [&>div:first-child]:border-0 [&>div:last-child]:px-1
-						[&>div:last-child]:py-3 lg:[&>div:last-child]:px-5"
-				/>
-			</Card.Footer>
-		</Card.Root>
+			<DataTable
+				isLoading={isLoading}
+				table={table}
+				className="gap-0 overflow-x-auto rounded-none border-0 text-[13px]
+					**:data-[slot=table-cell]:px-5 **:data-[slot=table-cell]:py-4
+					**:data-[slot=table-container]:min-w-[900px] **:data-[slot=table-container]:overflow-x-auto
+					**:data-[slot=table-head]:h-12 **:data-[slot=table-head]:px-5
+					**:data-[slot=table-head]:text-[12px] **:data-[slot=table-head]:font-semibold
+					**:data-[slot=table-head]:text-cedar-black/80 **:data-[slot=table-row]:border-cedar-black/10
+					**:data-[slot=table-row]:hover:bg-transparent [&_table]:border-0
+					[&>div:first-child]:rounded-none [&>div:first-child]:border-0 [&>div:last-child]:px-1
+					[&>div:last-child]:py-3 lg:[&>div:last-child]:px-5"
+			>
+				<div className="border-y border-cedar-black/8 bg-cedar-grey p-5 lg:px-7">
+					<DashboardDataTableToolbar
+						searchQueryKey={searchQueryKey}
+						sortOptions={sortOptions ?? []}
+						statusQueryKey={statusQueryKey}
+						statusOptions={statusOptions}
+						table={table}
+					/>
+				</div>
+			</DataTable>
+		</section>
 	);
 }
 
@@ -121,6 +116,7 @@ function DashboardDataTableToolbar<TRecord>(props: {
 
 	const queryKeys = table.options.meta?.queryKeys;
 	const pageQueryKey = queryKeys?.page ?? "page";
+	const perPageQueryKey = queryKeys?.perPage ?? "perPage";
 	const sortQueryKey = queryKeys?.sort ?? "sort";
 	const resolvedStatusQueryKey = statusQueryKey ?? "unusedStatusFilter";
 
@@ -130,6 +126,7 @@ function DashboardDataTableToolbar<TRecord>(props: {
 		parseAsArrayOf(parseAsString).withDefault([])
 	);
 	const [, setPage] = useQueryState(pageQueryKey, parseAsInteger.withDefault(1));
+	const [, setPerPage] = useQueryState(perPageQueryKey, parseAsInteger.withDefault(10));
 	const [, setSort] = useQueryState(sortQueryKey, getSortingStateParser<TRecord>().withDefault([]));
 
 	const currentSort = table.getState().sorting[0];
@@ -163,13 +160,11 @@ function DashboardDataTableToolbar<TRecord>(props: {
 	};
 
 	const handleResetFilters = () => {
-		table.setSorting([]);
-		table.setColumnFilters([]);
-		table.setPageIndex(0);
 		void setSearch(null);
 		void setStatus(null);
 		void setSort(null);
 		void setPage(null);
+		void setPerPage(null);
 	};
 
 	return (
@@ -261,3 +256,29 @@ function DashboardToolbarSelect(props: {
 		</Select.Root>
 	);
 }
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const useDashboardDataTableQueryState = <const TSortBy extends string>(props: {
+	pageKey: string;
+	perPageKey: string;
+	sortableColumnIds: TSortBy[];
+	sortKey: string;
+}) => {
+	const { pageKey, perPageKey, sortableColumnIds, sortKey } = props;
+
+	const [page] = useQueryState(pageKey, parseAsInteger.withDefault(1));
+	const [limit] = useQueryState(perPageKey, parseAsInteger.withDefault(10));
+	const [sorting] = useQueryState(
+		sortKey,
+		getSortingStateParser<Record<TSortBy, unknown>>(sortableColumnIds).withDefault([])
+	);
+
+	const activeSort = sorting[0];
+
+	return {
+		limit,
+		orderBy: activeSort?.desc ? OrderByOptions[1] : OrderByOptions[0],
+		page,
+		sortBy: activeSort?.id,
+	};
+};

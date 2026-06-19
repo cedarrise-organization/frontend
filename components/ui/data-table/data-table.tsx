@@ -4,27 +4,23 @@ import * as Table from "../table";
 import { DataTablePagination } from "./data-table-pagination";
 import { getColumnPinningStyle } from "./data-table-utils";
 
-type DataTableProps<TData> = React.ComponentProps<"div"> & {
-	actionBar?: React.ReactNode;
-	isLoading?: boolean;
-	table: TanstackTable<TData>;
-};
+export function DataTable<TData>(
+	props: React.ComponentProps<"div"> & {
+		actionBar?: React.ReactNode;
+		isLoading?: boolean;
+		table: TanstackTable<TData>;
+	}
+) {
+	const { actionBar, children, className, isLoading = false, table, ...restOfProps } = props;
 
-export function DataTable<TData>({
-	actionBar,
-	children,
-	className,
-	isLoading = false,
-	table,
-	...props
-}: DataTableProps<TData>) {
 	const rows = table.getRowModel().rows;
 	const columnCount = table.getAllColumns().length;
 
 	return (
-		<div className={cnMerge("flex w-full flex-col gap-2.5 overflow-auto", className)} {...props}>
+		<div className={cnMerge("flex w-full flex-col gap-2.5 overflow-auto", className)} {...restOfProps}>
 			{children}
-			<div className="overflow-hidden rounded-md border">
+
+			<div className="overflow-hidden rounded-md">
 				<Table.Root>
 					<Table.Header>
 						{table.getHeaderGroups().map((headerGroup) => (
@@ -33,13 +29,10 @@ export function DataTable<TData>({
 									<Table.Head
 										key={header.id}
 										colSpan={header.colSpan}
-										style={{
-											...getColumnPinningStyle({ column: header.column }),
-										}}
+										style={getColumnPinningStyle({ column: header.column })}
 									>
-										{header.isPlaceholder ? null : (
-											flexRender(header.column.columnDef.header, header.getContext())
-										)}
+										{!header.isPlaceholder
+											&& flexRender(header.column.columnDef.header, header.getContext())}
 									</Table.Head>
 								))}
 							</Table.Row>
@@ -81,6 +74,7 @@ export function DataTable<TData>({
 					</Table.Body>
 				</Table.Root>
 			</div>
+
 			<div className="flex flex-col gap-2.5">
 				<DataTablePagination table={table} />
 				{Boolean(actionBar && table.getFilteredSelectedRowModel().rows.length > 0) && actionBar}

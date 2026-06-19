@@ -54,6 +54,7 @@ type UseDataTableProps<TData> = Omit<
 		queryKeys?: Partial<QueryKeys>;
 		scroll?: boolean;
 		shallow?: boolean;
+		sortableColumnIds?: readonly string[];
 		startTransition?: React.TransitionStartFunction;
 		throttleMs?: number;
 	};
@@ -64,12 +65,14 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
 		columns,
 		debounceMs = DEBOUNCE_MS,
 		enableAdvancedFilter = false,
+		enableSorting,
 		history = "replace",
 		initialState,
 		pageCount,
 		queryKeys,
 		scroll = false,
 		shallow = true,
+		sortableColumnIds,
 		startTransition,
 		throttleMs = THROTTLE_MS,
 		...tableProps
@@ -129,8 +132,16 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
 	);
 
 	const columnIds = useMemo(() => {
-		return new Set(columns.map((column) => column.id).filter(Boolean));
-	}, [columns]);
+		return new Set(sortableColumnIds ?? columns.map((column) => column.id).filter(Boolean));
+	}, [columns, sortableColumnIds]);
+	const resolvedColumns = useMemo(() => {
+		if (!sortableColumnIds) return columns;
+
+		return columns.map((column) => ({
+			...column,
+			enableSorting: Boolean(column.id && sortableColumnIds.includes(column.id)),
+		}));
+	}, [columns, sortableColumnIds]);
 
 	const [sorting, setSorting] = useQueryState(
 		sortKey,
@@ -235,12 +246,13 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
 	// eslint-disable-next-line react-hooks/incompatible-library
 	const table = useTable({
 		...tableProps,
-		columns,
+		columns: resolvedColumns,
 		defaultColumn: {
 			...tableProps.defaultColumn,
 			enableColumnFilter: false,
 		},
 		enableRowSelection: true,
+		enableSorting: enableSorting ?? (sortableColumnIds ? sortableColumnIds.length > 0 : undefined),
 		getCoreRowModel: getCoreRowModel(),
 		getFacetedMinMaxValues: getFacetedMinMaxValues(),
 		getFacetedRowModel: getFacetedRowModel(),

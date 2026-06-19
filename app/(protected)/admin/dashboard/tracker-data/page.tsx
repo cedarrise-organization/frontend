@@ -2,21 +2,19 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
-import { parseAsInteger, parseAsString, useQueryState } from "nuqs";
+import { parseAsString, useQueryState } from "nuqs";
 import { useMemo, useState } from "react";
 import { DialogAnimated, TabsAnimated } from "@/components/animated/ui";
 import { For, ForWithWrapper } from "@/components/common/for";
 import { DropdownMenu } from "@/components/ui";
 import { Card } from "@/components/ui/card";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
-import { getSortingStateParser } from "@/components/ui/data-table/data-table-parsers";
 import type { QueryKeys } from "@/components/ui/data-table/data-table-types";
 import { useDataTable } from "@/components/ui/data-table/use-data-table";
 import {
 	AshExitSortByOptions,
 	AshTrackingRecordSortByOptions,
 	CapacityEvaluationSortByOptions,
-	OrderByOptions,
 	OutreachSortByOptions,
 	TacotsExitSortByOptions,
 	TacotsOnboardingSortByOptions,
@@ -66,7 +64,10 @@ import {
 } from "@/lib/react-query/queryOptions";
 import { cnMerge } from "@/lib/utils/cn";
 import { EMPTY_VALUE_PLACEHOLDER } from "../-components/constants";
-import { DashboardDataTableSection } from "../-components/DashboardDataTableShared";
+import {
+	DashboardDataTableSection,
+	useDashboardDataTableQueryState,
+} from "../-components/DashboardDataTableShared";
 import { Main } from "../-components/Main";
 
 const TRACKER_DATA_TABLE_INITIAL_STATE = {
@@ -372,21 +373,21 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 		];
 	}, [onViewMore]);
 
-	const trackingQuery = useTrackerDataQueryState({
+	const trackingQuery = useDashboardDataTableQueryState({
 		pageKey: ASH_TRACKER_DATA_QUERY_KEYS.tracking.page,
 		perPageKey: ASH_TRACKER_DATA_QUERY_KEYS.tracking.perPage,
 		sortableColumnIds: AshTrackingRecordSortByOptions,
 		sortKey: ASH_TRACKER_DATA_QUERY_KEYS.tracking.sort,
 	});
 
-	const attendanceQuery = useTrackerDataQueryState({
+	const attendanceQuery = useDashboardDataTableQueryState({
 		pageKey: ASH_TRACKER_DATA_QUERY_KEYS.attendance.page,
 		perPageKey: ASH_TRACKER_DATA_QUERY_KEYS.attendance.perPage,
 		sortableColumnIds: [],
 		sortKey: ASH_TRACKER_DATA_QUERY_KEYS.attendance.sort,
 	});
 
-	const exitQuery = useTrackerDataQueryState({
+	const exitQuery = useDashboardDataTableQueryState({
 		pageKey: ASH_TRACKER_DATA_QUERY_KEYS.exit.page,
 		perPageKey: ASH_TRACKER_DATA_QUERY_KEYS.exit.perPage,
 		sortableColumnIds: AshExitSortByOptions,
@@ -398,8 +399,8 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 	const trackingQueryResult = useQuery(
 		ashTrackingTrackerDataQuery({
 			limit: trackingQuery.limit,
+			orderBy: trackingQuery.orderBy,
 			page: trackingQuery.page,
-			...(trackingQuery.orderBy && { orderBy: trackingQuery.orderBy }),
 			...(search && { search }),
 			...(trackingQuery.sortBy && { sortBy: trackingQuery.sortBy }),
 		})
@@ -416,8 +417,8 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 	const exitQueryResult = useQuery(
 		ashExitTrackerDataQuery({
 			limit: exitQuery.limit,
+			orderBy: exitQuery.orderBy,
 			page: exitQuery.page,
-			...(exitQuery.orderBy && { orderBy: exitQuery.orderBy }),
 			...(search && { search }),
 			...(exitQuery.sortBy && { sortBy: exitQuery.sortBy }),
 		})
@@ -454,16 +455,17 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 		initialState: TRACKER_DATA_TABLE_INITIAL_STATE,
 		pageCount: trackingQueryResult.data?.meta.pagination.totalPages ?? 1,
 		queryKeys: ASH_TRACKER_DATA_QUERY_KEYS.tracking,
+		sortableColumnIds: AshTrackingRecordSortByOptions,
 	});
 
 	const attendanceTable = useDataTable<AshAttendanceRecord>({
 		columns: attendanceColumns,
 		data: attendanceRecords,
-		enableSorting: false,
 		getRowId: (row) => row.id,
 		initialState: TRACKER_DATA_TABLE_INITIAL_STATE,
 		pageCount: attendanceQueryResult.data?.meta.pagination.totalPages ?? 1,
 		queryKeys: ASH_TRACKER_DATA_QUERY_KEYS.attendance,
+		sortableColumnIds: [],
 	});
 
 	const exitTable = useDataTable<AshExitRecord>({
@@ -473,6 +475,7 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 		initialState: TRACKER_DATA_TABLE_INITIAL_STATE,
 		pageCount: exitQueryResult.data?.meta.pagination.totalPages ?? 1,
 		queryKeys: ASH_TRACKER_DATA_QUERY_KEYS.exit,
+		sortableColumnIds: AshExitSortByOptions,
 	});
 
 	const trackingDownloadMutation = useMutation(ashTrackerDataDownloadMutation("tracking"));
@@ -593,21 +596,21 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 		];
 	}, [onViewMore]);
 
-	const trackingQuery = useTrackerDataQueryState({
+	const trackingQuery = useDashboardDataTableQueryState({
 		pageKey: TACOTS_TRACKER_DATA_QUERY_KEYS.tracking.page,
 		perPageKey: TACOTS_TRACKER_DATA_QUERY_KEYS.tracking.perPage,
 		sortableColumnIds: TacotsTrackingRecordSortByOptions,
 		sortKey: TACOTS_TRACKER_DATA_QUERY_KEYS.tracking.sort,
 	});
 
-	const onboardingQuery = useTrackerDataQueryState({
+	const onboardingQuery = useDashboardDataTableQueryState({
 		pageKey: TACOTS_TRACKER_DATA_QUERY_KEYS.onboarding.page,
 		perPageKey: TACOTS_TRACKER_DATA_QUERY_KEYS.onboarding.perPage,
 		sortableColumnIds: TacotsOnboardingSortByOptions,
 		sortKey: TACOTS_TRACKER_DATA_QUERY_KEYS.onboarding.sort,
 	});
 
-	const exitQuery = useTrackerDataQueryState({
+	const exitQuery = useDashboardDataTableQueryState({
 		pageKey: TACOTS_TRACKER_DATA_QUERY_KEYS.exit.page,
 		perPageKey: TACOTS_TRACKER_DATA_QUERY_KEYS.exit.perPage,
 		sortableColumnIds: TacotsExitSortByOptions,
@@ -619,8 +622,8 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 	const trackingQueryResult = useQuery(
 		tacotsTrackingTrackerDataQuery({
 			limit: trackingQuery.limit,
+			orderBy: trackingQuery.orderBy,
 			page: trackingQuery.page,
-			...(trackingQuery.orderBy && { orderBy: trackingQuery.orderBy }),
 			...(search && { search }),
 			...(trackingQuery.sortBy && { sortBy: trackingQuery.sortBy }),
 		})
@@ -629,8 +632,8 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 	const onboardingQueryResult = useQuery(
 		tacotsOnboardingTrackerDataQuery({
 			limit: onboardingQuery.limit,
+			orderBy: onboardingQuery.orderBy,
 			page: onboardingQuery.page,
-			...(onboardingQuery.orderBy && { orderBy: onboardingQuery.orderBy }),
 			...(search && { search }),
 			...(onboardingQuery.sortBy && { sortBy: onboardingQuery.sortBy }),
 		})
@@ -639,8 +642,8 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 	const exitQueryResult = useQuery(
 		tacotsExitTrackerDataQuery({
 			limit: exitQuery.limit,
+			orderBy: exitQuery.orderBy,
 			page: exitQuery.page,
-			...(exitQuery.orderBy && { orderBy: exitQuery.orderBy }),
 			...(search && { search }),
 			...(exitQuery.sortBy && { sortBy: exitQuery.sortBy }),
 		})
@@ -677,6 +680,7 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 		initialState: TRACKER_DATA_TABLE_INITIAL_STATE,
 		pageCount: trackingQueryResult.data?.meta.pagination.totalPages ?? 1,
 		queryKeys: TACOTS_TRACKER_DATA_QUERY_KEYS.tracking,
+		sortableColumnIds: TacotsTrackingRecordSortByOptions,
 	});
 
 	const onboardingTable = useDataTable<TacotsOnboardingRecord>({
@@ -686,6 +690,7 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 		initialState: TRACKER_DATA_TABLE_INITIAL_STATE,
 		pageCount: onboardingQueryResult.data?.meta.pagination.totalPages ?? 1,
 		queryKeys: TACOTS_TRACKER_DATA_QUERY_KEYS.onboarding,
+		sortableColumnIds: TacotsOnboardingSortByOptions,
 	});
 
 	const exitTable = useDataTable<TacotsExitRecord>({
@@ -695,6 +700,7 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 		initialState: TRACKER_DATA_TABLE_INITIAL_STATE,
 		pageCount: exitQueryResult.data?.meta.pagination.totalPages ?? 1,
 		queryKeys: TACOTS_TRACKER_DATA_QUERY_KEYS.exit,
+		sortableColumnIds: TacotsExitSortByOptions,
 	});
 
 	const trackingDownloadMutation = useMutation(tacotsTrackerDataDownloadMutation("tracking"));
@@ -762,7 +768,7 @@ function OutreachTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRec
 			),
 		];
 	}, [onViewMore]);
-	const queryState = useTrackerDataQueryState({
+	const queryState = useDashboardDataTableQueryState({
 		pageKey: OUTREACH_TRACKER_DATA_QUERY_KEYS.page,
 		perPageKey: OUTREACH_TRACKER_DATA_QUERY_KEYS.perPage,
 		sortableColumnIds: OutreachSortByOptions,
@@ -774,8 +780,8 @@ function OutreachTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRec
 	const queryResult = useQuery(
 		outreachTrackerDataQuery({
 			limit: queryState.limit,
+			orderBy: queryState.orderBy,
 			page: queryState.page,
-			...(queryState.orderBy && { orderBy: queryState.orderBy }),
 			...(search && { search }),
 			...(queryState.sortBy && { sortBy: queryState.sortBy }),
 		})
@@ -808,6 +814,7 @@ function OutreachTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRec
 		initialState: TRACKER_DATA_TABLE_INITIAL_STATE,
 		pageCount: queryResult.data?.meta.pagination.totalPages ?? 1,
 		queryKeys: OUTREACH_TRACKER_DATA_QUERY_KEYS,
+		sortableColumnIds: OutreachSortByOptions,
 	});
 
 	const downloadMutation = useMutation(outreachTrackerDataDownloadMutation());
@@ -853,7 +860,7 @@ function CapacityBuildingTrackerDataTab(props: { onViewMore: (record: SelectedTr
 			),
 		];
 	}, [onViewMore]);
-	const queryState = useTrackerDataQueryState({
+	const queryState = useDashboardDataTableQueryState({
 		pageKey: CAPACITY_TRACKER_DATA_QUERY_KEYS.page,
 		perPageKey: CAPACITY_TRACKER_DATA_QUERY_KEYS.perPage,
 		sortableColumnIds: CapacityEvaluationSortByOptions,
@@ -865,8 +872,8 @@ function CapacityBuildingTrackerDataTab(props: { onViewMore: (record: SelectedTr
 	const queryResult = useQuery(
 		capacityBuildingTrackerDataQuery({
 			limit: queryState.limit,
+			orderBy: queryState.orderBy,
 			page: queryState.page,
-			...(queryState.orderBy && { orderBy: queryState.orderBy }),
 			...(search && { search }),
 			...(queryState.sortBy && { sortBy: queryState.sortBy }),
 		})
@@ -900,6 +907,7 @@ function CapacityBuildingTrackerDataTab(props: { onViewMore: (record: SelectedTr
 		initialState: TRACKER_DATA_TABLE_INITIAL_STATE,
 		pageCount: queryResult.data?.meta.pagination.totalPages ?? 1,
 		queryKeys: CAPACITY_TRACKER_DATA_QUERY_KEYS,
+		sortableColumnIds: CapacityEvaluationSortByOptions,
 	});
 
 	const downloadMutation = useMutation(capacityBuildingTrackerDataDownloadMutation());
@@ -949,43 +957,6 @@ function TrackerDataStats(props: { stats: ReadonlyArray<{ label: string; value: 
 	);
 }
 
-const useTrackerDataQueryState = <const TSortBy extends string>(props: {
-	pageKey: string;
-	perPageKey: string;
-	sortableColumnIds: readonly TSortBy[];
-	sortKey: string;
-}) => {
-	const { pageKey, perPageKey, sortableColumnIds, sortKey } = props;
-
-	const sortableColumnIdSet = useMemo(() => {
-		return new Set<string>(sortableColumnIds);
-	}, [sortableColumnIds]);
-
-	const [page] = useQueryState(pageKey, parseAsInteger.withDefault(1));
-	const [limit] = useQueryState(perPageKey, parseAsInteger.withDefault(10));
-	const [sorting] = useQueryState(
-		sortKey,
-		getSortingStateParser<Record<TSortBy, unknown>>(sortableColumnIdSet).withDefault([])
-	);
-
-	const activeSort = sorting[0];
-	const orderBy =
-		activeSort ?
-			activeSort.desc ?
-				OrderByOptions[1]
-			:	OrderByOptions[0]
-		:	undefined;
-
-	return useMemo(() => {
-		return {
-			limit,
-			orderBy,
-			page,
-			sortBy: activeSort?.id,
-		};
-	}, [activeSort, limit, orderBy, page]);
-};
-
 const getTextColumn = <TRecord extends TrackerRecord>(
 	id: string,
 	label: string,
@@ -1032,20 +1003,23 @@ const getActionsColumn = <TRecord extends TrackerRecord>(
 
 					const title = `${dialogTitle}${recordTitle ? ` - ${recordTitle}` : ""}`;
 
-					const ashKind: AshTrackerDataKind = target.program === "ash" ? target.kind : "tracking";
-					const tacotsKind: TacotsTrackerDataKind =
-						target.program === "tacots" ? target.kind : "tracking";
+					const id = row.original.id;
 
 					const selectedRecordByProgram = {
-						ash: { id: row.original.id, kind: ashKind, program: "ash", title },
-						"capacity-building": {
-							id: row.original.id,
-							kind: "evaluation",
-							program: "capacity-building",
+						ash: {
+							id,
+							kind: target.program === "ash" ? target.kind : "tracking",
+							program: "ash",
 							title,
 						},
-						outreaches: { id: row.original.id, kind: "tracker", program: "outreaches", title },
-						tacots: { id: row.original.id, kind: tacotsKind, program: "tacots", title },
+						"capacity-building": { id, kind: "evaluation", program: "capacity-building", title },
+						outreaches: { id, kind: "tracker", program: "outreaches", title },
+						tacots: {
+							id,
+							kind: target.program === "tacots" ? target.kind : "tracking",
+							program: "tacots",
+							title,
+						},
 					} satisfies Record<SelectedTrackerRecord["program"], SelectedTrackerRecord>;
 
 					onViewMore(selectedRecordByProgram[target.program]);
