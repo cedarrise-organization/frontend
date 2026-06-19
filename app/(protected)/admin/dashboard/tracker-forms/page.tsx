@@ -100,7 +100,7 @@ function TrackerFormsPage() {
 			</header>
 
 			<TabsAnimated.Root defaultValue="ash">
-				<Card.Root className="overflow-x-auto rounded-[20px] bg-cedar-white p-4 lg:p-5">
+				<div className="overflow-x-auto rounded-[20px] bg-cedar-white p-4 lg:p-5">
 					<TabsAnimated.List
 						classNames={{
 							highlight: "rounded-[12px] bg-cedar-red shadow-none",
@@ -121,7 +121,7 @@ function TrackerFormsPage() {
 							)}
 						/>
 					</TabsAnimated.List>
-				</Card.Root>
+				</div>
 
 				<TabsAnimated.ContentList className="mt-4 lg:mt-6">
 					<TabsAnimated.Content value={TRACKER_FORM_TABS[0].value}>

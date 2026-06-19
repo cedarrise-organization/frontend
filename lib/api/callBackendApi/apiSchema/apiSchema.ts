@@ -37,6 +37,7 @@ import {
 	CapacitySponsorshipTypeOptions,
 	CapacityYesNoOptions,
 	ClassOptions,
+	GalleryFolderOptions,
 	GenderOptions,
 	LearningConditionStatusOptions,
 	NigeriaStateOptions,
@@ -47,6 +48,7 @@ import {
 	PositiveChangeNoticedOptions,
 	PrimaryLanguageOptions,
 	ProjectStatusOptions,
+	ReceiptSortByOptions,
 	ReviewStatusOptions,
 	TacotsAcademicTermOptions,
 	TacotsAnnualHouseholdIncomeOptions,
@@ -284,6 +286,28 @@ const ProjectSchema = z.object({
 	status: z.enum(ProjectStatusOptions),
 	title: z.string(),
 	updatedAt: z.string().nullable().optional(),
+});
+
+const ReceiptSchema = z.object({
+	amount: z.number(),
+	createdAt: z.string(),
+	deletedAt: z.string().nullable().optional(),
+	description: z.string().nullable().optional(),
+	id: z.uuid(),
+	imagePublicId: z.string(),
+	imageUrl: z.url(),
+	name: z.string(),
+	updatedAt: z.string().nullable().optional(),
+	uploadedBy: z.string(),
+});
+
+const GoogleFormSchema = z.object({
+	createdAt: z.string().optional(),
+	deadline: z.string().optional(),
+	description: z.string().nullable().optional(),
+	id: z.uuid().optional(),
+	src: z.string(),
+	title: z.string(),
 });
 
 const TimestampSchema = z.object({
@@ -612,6 +636,10 @@ const PaginationMetaSchema = z.object({
 
 const PaginatedMetaSchema = z.object({
 	pagination: PaginationMetaSchema,
+});
+
+const ProjectListMetaSchema = z.object({
+	ongoingProjectCount: z.number(),
 });
 
 const FormDataReviewMetadataSchema = z.object({
@@ -966,8 +994,43 @@ const generalRoutes = defineSchemaRoutes({
 		params: IdParamsSchema,
 	},
 
+	"@delete/general/receipts/:id": {
+		data: withBaseSuccessResponse({ data: z.null() }),
+		params: IdParamsSchema,
+	},
+
+	"@get/general/download/receipts": {},
+
+	"@get/general/google-forms": {
+		data: withBaseSuccessResponse({ data: GoogleFormSchema }),
+	},
+
+	"@get/general/metadata": {
+		data: withBaseSuccessResponse({
+			data: z.object({
+				activeProjects: z.number(),
+				photosUploaded: z.number(),
+				receiptsLogged: z.number(),
+				systemUsers: z.number(),
+			}),
+		}),
+	},
+
 	"@get/general/projects": {
-		data: withBaseSuccessResponse({ data: z.array(ProjectSchema) }),
+		data: withBaseSuccessResponseAndMeta({
+			data: z.array(ProjectSchema),
+			meta: ProjectListMetaSchema,
+		}),
+	},
+
+	"@get/general/receipts": {
+		data: withBaseSuccessResponseAndMeta({
+			data: z.array(ReceiptSchema),
+			meta: PaginatedMetaSchema,
+		}),
+		query: PaginatedQuerySchema.extend({
+			sortBy: getOptionalEnumSchema(ReceiptSortByOptions),
+		}).optional(),
 	},
 
 	"@patch/general/projects/:id": {
@@ -978,9 +1041,34 @@ const generalRoutes = defineSchemaRoutes({
 		}),
 	},
 
+	"@post/general/gallery": {
+		body: z.instanceof(FormData),
+		data: withBaseSuccessResponse({ data: z.null() }),
+		query: z
+			.object({
+				folder: getOptionalEnumSchema(GalleryFolderOptions),
+			})
+			.optional(),
+	},
+
+	"@post/general/google-forms": {
+		body: z.object({
+			deadline: DateStringSchema,
+			description: z.string().optional(),
+			title: z.string().min(3).max(100),
+			url: z.string(),
+		}),
+		data: withBaseSuccessResponse({ data: GoogleFormSchema }),
+	},
+
 	"@post/general/projects": {
 		body: z.instanceof(FormData),
 		data: withBaseSuccessResponse({ data: ProjectSchema }),
+	},
+
+	"@post/general/receipts": {
+		body: z.instanceof(FormData),
+		data: withBaseSuccessResponse({ data: ReceiptSchema }),
 	},
 });
 
@@ -1089,6 +1177,48 @@ export const OutreachTrackerFrontendSchema = z.object({
 	outreachTypes: getRequiredEnumArraySchema(OutreachTypeOptions),
 	recommendations: z.string().optional(),
 	submissionDate: DateStringSchema,
+});
+
+export const GeneralGalleryFrontendSchema = z.object({
+	folder: z.enum(GalleryFolderOptions),
+	photos: z.array(z.file()).min(1).max(3),
+});
+
+export const GeneralProjectFrontendSchema = z.object({
+	description: z.string().optional(),
+	file: z.file().optional(),
+	status: z.enum(ProjectStatusOptions),
+	title: z.string().min(3).max(150),
+});
+
+export const GeneralReceiptFrontendSchema = z.object({
+	amount: stringWithNumberValidation(z.int().min(1000)),
+	description: z.string().optional(),
+	file: RequiredFileSchema,
+	name: z.string().min(3).max(150),
+});
+
+export const GoogleFormFrontendSchema = z.object({
+	deadline: DateStringSchema,
+	description: z.string().optional(),
+	title: z.string().min(3).max(100),
+	url: z.string(),
+});
+
+export const AdminCreateUserFrontendSchema = z.object({
+	department: z.enum(AdminDepartmentOptions),
+	email: z.email(),
+	name: z.string().min(3),
+	password: z.string().min(8),
+});
+
+export const AdminUserRoleFrontendSchema = z.object({
+	roleName: z.enum(AdminRoleNameOptions),
+	userId: z.uuid(),
+});
+
+export const AdminDeleteUserFrontendSchema = z.object({
+	userId: z.uuid(),
 });
 
 export const TacotsRecommendationFrontendSchema = z.object({
@@ -1515,7 +1645,7 @@ const protectedFormRoutes = defineSchemaRoutes({
 			data: z.array(AshAttendanceTrackerRecordSchema),
 			meta: PaginatedMetaSchema,
 		}),
-		query: PaginatedQuerySchema.optional(),
+		query: PaginatedQuerySchema.omit({ orderBy: true }).optional(),
 	},
 
 	"@get/forms/ash/attendance/:id": {
@@ -1553,7 +1683,7 @@ const protectedFormRoutes = defineSchemaRoutes({
 			data: z.array(AshFeedbackRecordSchema),
 			meta: PaginatedMetaSchema,
 		}),
-		query: PaginatedQuerySchema.optional(),
+		query: PaginatedQuerySchema.omit({ orderBy: true }).optional(),
 	},
 
 	"@get/forms/ash/feedback/:id": {
@@ -1680,7 +1810,7 @@ const protectedFormRoutes = defineSchemaRoutes({
 			),
 			meta: PaginatedMetaSchema,
 		}),
-		query: PaginatedQuerySchema.optional(),
+		query: PaginatedQuerySchema.omit({ orderBy: true }).optional(),
 	},
 
 	"@get/forms/tacots/feedback/:id": {
@@ -1991,7 +2121,7 @@ const protectedFormRoutes = defineSchemaRoutes({
 			),
 			meta: PaginatedMetaSchema,
 		}),
-		query: PaginatedQuerySchema.optional(),
+		query: PaginatedQuerySchema.omit({ orderBy: true }).optional(),
 	},
 
 	"@get/volunteer/download/volunteerfeedback": {},

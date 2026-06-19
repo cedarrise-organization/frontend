@@ -51,7 +51,7 @@ const dashboardNavSections = [
 			{
 				icon: "hugeicons:share-03",
 				label: "General Uploads",
-				link: placeholderHref,
+				link: "/admin/dashboard/general-uploads",
 			},
 		],
 		label: "Content Management",

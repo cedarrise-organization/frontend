@@ -13,7 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import * as Combobox from "@/components/ui/combobox";
 import { DateTimePicker } from "@/components/ui/datetime-picker";
 import { Form } from "@/components/ui/form";
-import { cnJoin, cnMerge } from "@/lib/utils/cn";
+import { cnMerge } from "@/lib/utils/cn";
 
 type SharedFieldProps<
 	TFieldValues extends FieldValues,
@@ -229,16 +229,39 @@ export function TextField<TFieldValues extends FieldValues, TTransformedValues =
 		InferProps<typeof Form.InputPrimitive>,
 		"inputMode" | "max" | "min" | "placeholder" | "step" | "type"
 	>
-		& SharedFieldProps<TFieldValues, TTransformedValues>
+		& SharedFieldProps<TFieldValues, TTransformedValues> & {
+			classNames?: {
+				base?: string;
+				input?: string;
+				inputGroup?: string;
+			};
+			label?: string;
+		}
 ) {
-	const { control, inputMode, max, min, name, placeholder, required, step, type = "text" } = props;
+	const {
+		classNames,
+		control,
+		inputMode,
+		label,
+		max,
+		min,
+		name,
+		placeholder,
+		required,
+		step,
+		type = "text",
+	} = props;
 
 	const inputClassName = tw`h-[54px] rounded-[12px] bg-cedar-grey px-9 text-[12px] text-cedar-black
 	placeholder:text-cedar-black/40 lg:h-[64px] lg:text-[14px]`;
 
 	return (
-		<Form.Field control={control} name={name}>
+		<Form.Field control={control} name={name} className={classNames?.base}>
 			<FormRequiredIndicator required={required} />
+
+			{label && (
+				<Form.Label className="text-[12px] text-cedar-black/64 lg:text-[14px]">{label}</Form.Label>
+			)}
 
 			<Form.Input
 				inputMode={inputMode}
@@ -248,8 +271,11 @@ export function TextField<TFieldValues extends FieldValues, TTransformedValues =
 				type={type}
 				placeholder={placeholder}
 				classNames={{
-					input: cnJoin(type === "password" ? "placeholder:text-cedar-black/40" : inputClassName),
-					inputGroup: cnJoin(type === "password" && inputClassName),
+					input: cnMerge(
+						type === "password" ? "placeholder:text-cedar-black/40" : inputClassName,
+						classNames?.input
+					),
+					inputGroup: cnMerge(type === "password" && inputClassName, classNames?.inputGroup),
 				}}
 			/>
 			<FormErrorMessageShared />
@@ -268,7 +294,9 @@ export function TextAreaField<TFieldValues extends FieldValues, TTransformedValu
 		<Form.Field control={control} name={name}>
 			<FormRequiredIndicator required={required} />
 
-			<Form.Label className="text-[12px] text-cedar-black/64 lg:text-[14px]">{label}</Form.Label>
+			{label && (
+				<Form.Label className="text-[12px] text-cedar-black/64 lg:text-[14px]">{label}</Form.Label>
+			)}
 
 			<Form.TextArea
 				className="min-h-[132px] rounded-[12px] bg-cedar-grey px-6 py-4 text-[12px] text-cedar-black
@@ -281,16 +309,21 @@ export function TextAreaField<TFieldValues extends FieldValues, TTransformedValu
 
 export function SelectField<TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
 	props: SharedFieldProps<TFieldValues, TTransformedValues> & {
-		classNames?: { trigger?: string };
+		classNames?: { base?: string; trigger?: string };
+		label?: string;
 		options: readonly SharedOption[];
 		placeholder: string;
 	}
 ) {
-	const { classNames, control, name, options, placeholder, required } = props;
+	const { classNames, control, label, name, options, placeholder, required } = props;
 
 	return (
-		<Form.Field control={control} name={name}>
+		<Form.Field control={control} name={name} className={classNames?.base}>
 			<FormRequiredIndicator required={required} />
+
+			{label && (
+				<Form.Label className="text-[12px] text-cedar-black/64 lg:text-[14px]">{label}</Form.Label>
+			)}
 
 			<Form.FieldBoundController
 				render={({ field }) => (
@@ -402,14 +435,19 @@ export function ComboboxField<TFieldValues extends FieldValues, TTransformedValu
 
 export function DateField<TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
 	props: SharedFieldProps<TFieldValues, TTransformedValues> & {
+		label?: string;
 		placeholder: string;
 	}
 ) {
-	const { control, name, placeholder, required } = props;
+	const { control, label, name, placeholder, required } = props;
 
 	return (
 		<Form.Field control={control} name={name}>
 			<FormRequiredIndicator required={required} />
+
+			{label && (
+				<Form.Label className="text-[12px] text-cedar-black/64 lg:text-[14px]">{label}</Form.Label>
+			)}
 
 			<Form.FieldBoundController
 				render={({ field }) => (

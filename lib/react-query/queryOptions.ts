@@ -60,6 +60,10 @@ export type TacotsTrackingTrackerDataListQuery = z.infer<
 	(typeof backendApiSchemaRoutes)["@get/forms/tacots/tracking"]["query"]
 >;
 
+export type GeneralReceiptsListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/general/receipts"]["query"]
+>;
+
 export const sessionQuery = () => {
 	return queryOptions({
 		queryFn: () => checkUserSessionForQuery(),
@@ -371,6 +375,46 @@ export const dashboardProjectsQuery = () => {
 		queryFn: () => callBackendApiForQuery("@get/general/projects"),
 		queryKey: ["dashboard", "projects"],
 		select: (data) => data.data,
+		staleTime: 1000 * 60 * 10,
+	});
+};
+
+export const generalProjectsQuery = () => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/general/projects"),
+		queryKey: ["general", "projects"],
+		staleTime: 1000 * 60 * 10,
+	});
+};
+
+export const generalMetadataQuery = () => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/general/metadata"),
+		queryKey: ["general", "metadata"],
+		staleTime: 1000 * 60 * 10,
+	});
+};
+
+export const generalReceiptsQuery = (query?: GeneralReceiptsListQuery) => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/general/receipts", { query }),
+		queryKey: ["general", "receipts", query],
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
+export const generalGoogleFormQuery = () => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/general/google-forms"),
+		queryKey: ["general", "google-forms"],
+		staleTime: 1000 * 60 * 10,
+	});
+};
+
+export const adminUsersQuery = () => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/admin/users"),
+		queryKey: ["admin", "users"],
 		staleTime: 1000 * 60 * 10,
 	});
 };

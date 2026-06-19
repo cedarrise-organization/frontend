@@ -48,8 +48,8 @@ importers:
         specifier: 0.12.56
         version: 0.12.56
       '@zayne-labs/ui-react':
-        specifier: 0.12.3
-        version: 0.12.3(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.79.0(react@19.2.7))(react@19.2.7)(tailwind-merge@3.6.0)(tailwindcss@4.3.1)(zustand@5.0.14(@types/react@19.2.17)(immer@11.1.8)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
+        specifier: 0.12.4
+        version: 0.12.4(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.79.0(react@19.2.7))(react@19.2.7)(tailwind-merge@3.6.0)(tailwindcss@4.3.1)(zustand@5.0.14(@types/react@19.2.17)(immer@11.1.8)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))
       cmdk:
         specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -2760,8 +2760,8 @@ packages:
   '@zayne-labs/tsconfig@0.13.14':
     resolution: {integrity: sha512-5qo4g6j6ctZp7AtiiWcFuMLguI0Dm+vUsMiSU+6Zq9AnfvFIOvsLUYLmWcN0p08+NHunMxd5j9LNwcSEtVfzQQ==}
 
-  '@zayne-labs/ui-react@0.12.3':
-    resolution: {integrity: sha512-uAdIVqY7H6Y7k8y/3njKOhu5Kd47h6xotDvKydUTRWamaJEHl/wU2ebOs+j8RZr3hVwRVxaEJuafE9U0qeSyWw==}
+  '@zayne-labs/ui-react@0.12.4':
+    resolution: {integrity: sha512-H0eO82N/FAY/zG3XiMj7Bm6YlQB/UWWOfbGAkiMtKt325km5c8SLq7nGtLygPqKw3Uq5Hz760IR3Ce5cx8gohA==}
     engines: {node: '>=18.x'}
     peerDependencies:
       react: ^19.2.7
@@ -8409,7 +8409,7 @@ snapshots:
 
   '@zayne-labs/tsconfig@0.13.14': {}
 
-  '@zayne-labs/ui-react@0.12.3(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.79.0(react@19.2.7))(react@19.2.7)(tailwind-merge@3.6.0)(tailwindcss@4.3.1)(zustand@5.0.14(@types/react@19.2.17)(immer@11.1.8)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))':
+  '@zayne-labs/ui-react@0.12.4(react-dom@19.2.7(react@19.2.7))(react-hook-form@7.79.0(react@19.2.7))(react@19.2.7)(tailwind-merge@3.6.0)(tailwindcss@4.3.1)(zustand@5.0.14(@types/react@19.2.17)(immer@11.1.8)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))':
     dependencies:
       '@zayne-labs/toolkit-core': 0.12.56
       '@zayne-labs/toolkit-react': 0.12.56(react@19.2.7)(tailwind-merge@3.6.0)(zustand@5.0.14(@types/react@19.2.17)(immer@11.1.8)(react@19.2.7)(use-sync-external-store@1.6.0(react@19.2.7)))

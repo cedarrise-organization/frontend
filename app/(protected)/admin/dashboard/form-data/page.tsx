@@ -6,10 +6,9 @@ import { parseAsArrayOf, parseAsInteger, parseAsString, parseAsStringLiteral, us
 import { useMemo, useState } from "react";
 import { DialogAnimated, TabsAnimated } from "@/components/animated/ui";
 import { For, ForWithWrapper } from "@/components/common/for";
-import { DropdownMenu, Select } from "@/components/ui";
+import { DropdownMenu } from "@/components/ui";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 import { getSortingStateParser } from "@/components/ui/data-table/data-table-parsers";
 import type { QueryKeys } from "@/components/ui/data-table/data-table-types";
@@ -17,6 +16,7 @@ import { useDataTable } from "@/components/ui/data-table/use-data-table";
 import {
 	AdminReviewStatusOptions,
 	AshTrackingSortByOptions,
+	OrderByOptions,
 	ReviewStatusOptions,
 	TacotsRecommendationSortByOptions,
 	VolunteerSortByOptions,
@@ -50,7 +50,6 @@ import {
 	volunteerRegistrationFormDataQuery,
 	volunteerRegistrationFormDetailQuery,
 	type AshFeedbackFormDataQueryResult,
-	type AshRegistrationFormDataListQuery,
 	type AshRegistrationFormDataQueryResult,
 	type TacotsFeedbackFormDataQueryResult,
 	type TacotsRecommendationFormDataQueryResult,
@@ -59,6 +58,7 @@ import {
 } from "@/lib/react-query/queryOptions";
 import { cnMerge } from "@/lib/utils/cn";
 import { EMPTY_VALUE_PLACEHOLDER } from "../-components/constants";
+import { DashboardDataTableSection } from "../-components/DashboardDataTableShared";
 import { Main } from "../-components/Main";
 
 const FORM_DATA_TABLE_INITIAL_STATE = {
@@ -125,8 +125,10 @@ const FORM_DATA_TABSANIMATED = [
 const ASH_SORT_OPTIONS = [
 	{ label: "First Name", value: "firstName" },
 	{ label: "Surname", value: "surname" },
-	{ label: "Created", value: "createdAt" },
-] as const;
+] as const satisfies ReadonlyArray<{
+	label: string;
+	value: (typeof AshTrackingSortByOptions)[number];
+}>;
 
 const TACOTS_RECOMMENDATION_SORT_OPTIONS = [
 	{ label: "First Name", value: "firstName" },
@@ -134,18 +136,21 @@ const TACOTS_RECOMMENDATION_SORT_OPTIONS = [
 	{ label: "Gender", value: "gender" },
 	{ label: "School Name", value: "schoolName" },
 	{ label: "Last Class", value: "lastClass" },
-	{ label: "Created", value: "createdAt" },
-] as const;
+] as const satisfies ReadonlyArray<{
+	label: string;
+	value: (typeof TacotsRecommendationSortByOptions)[number];
+}>;
 
 const VOLUNTEER_SORT_OPTIONS = [
 	{ label: "First Name", value: "firstName" },
 	{ label: "Surname", value: "surname" },
 	{ label: "Email", value: "emailAddress" },
-	{ label: "Phone", value: "phoneNumber" },
 	{ label: "State", value: "state" },
 	{ label: "Volunteer Area", value: "volunteerAreas" },
-	{ label: "Created", value: "createdAt" },
-] as const;
+] as const satisfies ReadonlyArray<{
+	label: string;
+	value: (typeof VolunteerSortByOptions)[number];
+}>;
 
 const ASH_STATUS_OPTIONS = [
 	{ label: "Accepted", value: "accepted" },
@@ -159,13 +164,6 @@ const TACOTS_RECOMMENDATION_STATUS_OPTIONS = [
 	{ label: "Not Selected", value: "NOT SELECTED" },
 ] as const;
 
-const TOOLBAR_ORDER_OPTIONS = [
-	{ label: "Ascending", value: "asc" },
-	{ label: "Descending", value: "desc" },
-] as const;
-
-const EMPTY_SORT_OPTIONS: ReadonlyArray<{ label: string; value: string }> = [];
-
 type AshRegistrationFormRecord = AshRegistrationFormDataQueryResult["data"][number];
 
 type AshFeedbackFormRecord = AshFeedbackFormDataQueryResult["data"][number];
@@ -177,8 +175,6 @@ type TacotsFeedbackFormRecord = TacotsFeedbackFormDataQueryResult["data"][number
 type VolunteerRegistrationFormRecord = VolunteerRegistrationFormDataQueryResult["data"][number];
 
 type VolunteerFeedbackFormRecord = VolunteerFeedbackFormDataQueryResult["data"][number];
-
-type FormDataOrderBy = NonNullable<AshRegistrationFormDataListQuery>["orderBy"];
 
 type FormRecord =
 	| AshFeedbackFormRecord
@@ -235,11 +231,11 @@ function FormDataPage() {
 			</header>
 
 			<TabsAnimated.Root defaultValue="ash">
-				<Card.Root className="rounded-[20px] bg-cedar-white p-4 lg:p-5">
+				<div className="rounded-[20px] bg-cedar-white p-4 lg:p-5">
 					<TabsAnimated.List
 						classNames={{
-							highlight: "rounded-[12px] bg-cedar-red shadow-none",
-							list: "h-12 min-w-[330px] rounded-[12px] bg-cedar-grey p-1",
+							highlight: "rounded-[12px] bg-cedar-red",
+							list: "h-12 rounded-[12px] bg-cedar-grey p-2",
 						}}
 					>
 						<For
@@ -255,7 +251,7 @@ function FormDataPage() {
 							)}
 						/>
 					</TabsAnimated.List>
-				</Card.Root>
+				</div>
 
 				<TabsAnimated.ContentList>
 					<TabsAnimated.Content value="ash" className="flex flex-col gap-6">
@@ -280,8 +276,46 @@ export default FormDataPage;
 function AshFormDataTab(props: { onViewMore: (record: SelectedRecord) => void }) {
 	const { onViewMore } = props;
 
-	const registrationColumns = useAshRegistrationColumns({ onViewMore });
-	const feedbackColumns = useAshFeedbackColumns({ onViewMore });
+	const registrationColumns = useMemo<Array<ColumnDef<AshRegistrationFormRecord>>>(() => {
+		return [
+			getTextColumn("firstName", "FIRST NAME", (row) => row.firstName),
+			getTextColumn("surname", "SURNAME", (row) => row.surname),
+			getTextColumn("gender", "GENDER", (row) => row.gender, false),
+			getTextColumn("schoolState", "SCHOOL STATE", (row) => row.schoolState, false),
+			getTextColumn("currentClass", "CURRENT CLASS", (row) => row.currentClass, false),
+			{
+				accessorFn: (row) => row.status,
+				cell: ({ row }) => <StatusPill status={row.original.status} />,
+				enableColumnFilter: true,
+				header: ({ column }) => <DataTableColumnHeader column={column} label="STATUS" />,
+				id: "status",
+				meta: {
+					label: "Status",
+					options: [...ASH_STATUS_OPTIONS],
+					variant: "select",
+				},
+			},
+			getTextColumn("assignedMentor", "ASSIGNED MENTOR", (row) => row.assignedMentor, false),
+			getActionsColumn({ kind: "registration", program: "ash" }, onViewMore),
+		];
+	}, [onViewMore]);
+
+	const feedbackColumns = useMemo<Array<ColumnDef<AshFeedbackFormRecord>>>(() => {
+		return [
+			getTextColumn("firstName", "FIRST NAME", (row) => row.studentFirstName),
+			getTextColumn("surname", "SURNAME", (row) => row.studentSurname),
+			getTextColumn("schoolName", "SCHOOL NAME", (row) => row.schoolName, false),
+			getTextColumn("confidenceRating", "CONFIDENCE RATING", (row) => row.confidenceRating, false),
+			getTextColumn(
+				"volunteerSupportRating",
+				"VOLUNTEER SUPPORT RATING",
+				(row) => row.volunteerSupportRating,
+				false
+			),
+			getTextColumn("currentClass", "CURRENT CLASS", (row) => row.currentClass, false),
+			getActionsColumn({ kind: "feedback", program: "ash" }, onViewMore),
+		];
+	}, [onViewMore]);
 
 	const registrationQuery = useFormDataQueryState({
 		pageKey: ASH_FORM_DATA_QUERY_KEYS.registration.page,
@@ -318,7 +352,6 @@ function AshFormDataTab(props: { onViewMore: (record: SelectedRecord) => void })
 		ashFeedbackFormDataQuery({
 			limit: feedbackQuery.limit,
 			page: feedbackQuery.page,
-			...(feedbackQuery.orderBy && { orderBy: feedbackQuery.orderBy }),
 			...(search && { search }),
 		})
 	);
@@ -349,6 +382,7 @@ function AshFormDataTab(props: { onViewMore: (record: SelectedRecord) => void })
 	const feedbackTable = useDataTable<AshFeedbackFormRecord>({
 		columns: feedbackColumns,
 		data: feedbackRecords,
+		enableSorting: false,
 		getRowId: (row) => row.id,
 		initialState: FORM_DATA_TABLE_INITIAL_STATE,
 		pageCount: feedbackQueryResult.data?.meta.pagination.totalPages ?? 1,
@@ -358,20 +392,19 @@ function AshFormDataTab(props: { onViewMore: (record: SelectedRecord) => void })
 	return (
 		<>
 			<FormDataStats stats={dashboardStats} />
-			<FormDataTableSection
+			<DashboardDataTableSection
 				color="yellow"
 				count={registrationRecords.length}
 				isLoading={registrationQueryResult.isPending}
 				label="ASH - Student Registrations"
 				searchQueryKey="ashFormDataSearch"
 				sortOptions={ASH_SORT_OPTIONS}
-				statusColumnId="status"
 				statusQueryKey="ashFormDataStatus"
 				statusOptions={ASH_STATUS_OPTIONS}
 				table={registrationTable.table}
 				onDownload={() => registrationDownloadMutation.mutate()}
 			/>
-			<FormDataTableSection
+			<DashboardDataTableSection
 				color="red"
 				count={feedbackRecords.length}
 				isLoading={feedbackQueryResult.isPending}
@@ -387,8 +420,39 @@ function AshFormDataTab(props: { onViewMore: (record: SelectedRecord) => void })
 function TacotsFormDataTab(props: { onViewMore: (record: SelectedRecord) => void }) {
 	const { onViewMore } = props;
 
-	const recommendationColumns = useTacotsRecommendationColumns({ onViewMore });
-	const feedbackColumns = useTacotsFeedbackColumns({ onViewMore });
+	const recommendationColumns = useMemo<Array<ColumnDef<TacotsRecommendationFormRecord>>>(() => {
+		return [
+			getTextColumn("firstName", "FIRST NAME", (row) => row.firstName),
+			getTextColumn("surname", "SURNAME", (row) => row.surname),
+			getTextColumn("gender", "GENDER", (row) => row.gender, false),
+			getTextColumn("schoolName", "SCHOOL NAME", (row) => row.schoolName, false),
+			getTextColumn("lastClass", "LAST CLASS", (row) => row.lastClass, false),
+			{
+				accessorFn: (row) => row.adminStatus,
+				cell: ({ row }) => <StatusPill status={row.original.adminStatus} />,
+				enableColumnFilter: true,
+				header: ({ column }) => <DataTableColumnHeader column={column} label="ADMIN STATUS" />,
+				id: "adminStatus",
+				meta: {
+					label: "Admin Status",
+					options: [...TACOTS_RECOMMENDATION_STATUS_OPTIONS],
+					variant: "select",
+				},
+			},
+			getActionsColumn({ kind: "recommendation", program: "tacots" }, onViewMore),
+		];
+	}, [onViewMore]);
+
+	const feedbackColumns = useMemo<Array<ColumnDef<TacotsFeedbackFormRecord>>>(() => {
+		return [
+			getTextColumn("firstName", "FIRST NAME", (row) => row.studentFirstName),
+			getTextColumn("surname", "SURNAME", (row) => row.studentSurname),
+			getTextColumn("parentGuardianPhone", "PARENT/GUARDIAN PHONE", (row) => row.parentPhone, false),
+			getTextColumn("currentSchool", "CURRENT SCHOOL", (row) => row.currentSchool, false),
+			getTextColumn("currentClass", "CURRENT CLASS", (row) => row.currentClass, false),
+			getActionsColumn({ kind: "feedback", program: "tacots" }, onViewMore),
+		];
+	}, [onViewMore]);
 
 	const recommendationQuery = useFormDataQueryState({
 		pageKey: TACOTS_FORM_DATA_QUERY_KEYS.recommendation.page,
@@ -425,7 +489,6 @@ function TacotsFormDataTab(props: { onViewMore: (record: SelectedRecord) => void
 		tacotsFeedbackFormDataQuery({
 			limit: feedbackQuery.limit,
 			page: feedbackQuery.page,
-			...(feedbackQuery.orderBy && { orderBy: feedbackQuery.orderBy }),
 			...(search && { search }),
 		})
 	);
@@ -456,6 +519,7 @@ function TacotsFormDataTab(props: { onViewMore: (record: SelectedRecord) => void
 	const feedbackTable = useDataTable<TacotsFeedbackFormRecord>({
 		columns: feedbackColumns,
 		data: feedbackRecords,
+		enableSorting: false,
 		getRowId: (row) => row.id,
 		initialState: FORM_DATA_TABLE_INITIAL_STATE,
 		pageCount: feedbackQueryResult.data?.meta.pagination.totalPages ?? 1,
@@ -465,20 +529,19 @@ function TacotsFormDataTab(props: { onViewMore: (record: SelectedRecord) => void
 	return (
 		<>
 			<FormDataStats stats={dashboardStats} />
-			<FormDataTableSection
+			<DashboardDataTableSection
 				color="yellow"
 				count={recommendationRecords.length}
 				isLoading={recommendationQueryResult.isPending}
 				label="TACOTS - Recommendations"
 				searchQueryKey="tacotsFormDataSearch"
 				sortOptions={TACOTS_RECOMMENDATION_SORT_OPTIONS}
-				statusColumnId="adminStatus"
 				statusQueryKey="tacotsRecommendationStatus"
 				statusOptions={TACOTS_RECOMMENDATION_STATUS_OPTIONS}
 				table={recommendationTable.table}
 				onDownload={() => recommendationDownloadMutation.mutate()}
 			/>
-			<FormDataTableSection
+			<DashboardDataTableSection
 				color="red"
 				count={feedbackRecords.length}
 				isLoading={feedbackQueryResult.isPending}
@@ -494,8 +557,52 @@ function TacotsFormDataTab(props: { onViewMore: (record: SelectedRecord) => void
 function VolunteerFormDataTab(props: { onViewMore: (record: SelectedRecord) => void }) {
 	const { onViewMore } = props;
 
-	const registrationColumns = useVolunteerRegistrationColumns({ onViewMore });
-	const feedbackColumns = useVolunteerFeedbackColumns({ onViewMore });
+	const registrationColumns = useMemo<Array<ColumnDef<VolunteerRegistrationFormRecord>>>(() => {
+		return [
+			getTextColumn("firstName", "FIRST NAME", (row) => row.firstName),
+			getTextColumn("surname", "SURNAME", (row) => row.surname),
+			getTextColumn("gender", "GENDER", (row) => row.gender, false),
+			getTextColumn("state", "STATE", (row) => row.state, false),
+			getTextColumn("emailAddress", "E-MAIL", (row) => row.emailAddress, false),
+			{
+				accessorFn: (row) => row.status,
+				cell: ({ row }) => <StatusPill status={row.original.status} />,
+				enableColumnFilter: true,
+				header: ({ column }) => <DataTableColumnHeader column={column} label="STATUS" />,
+				id: "status",
+				meta: {
+					label: "Status",
+					options: [...ASH_STATUS_OPTIONS],
+					variant: "select",
+				},
+			},
+			getTextColumn("volunteerAreas", "VOLUNTEER AREA", (row) => row.volunteerAreas, false),
+			getTextColumn("availability", "AVAILABILITY", (row) => row.availability, false),
+			getActionsColumn({ kind: "registration", program: "volunteer" }, onViewMore),
+		];
+	}, [onViewMore]);
+
+	const feedbackColumns = useMemo<Array<ColumnDef<VolunteerFeedbackFormRecord>>>(() => {
+		return [
+			getTextColumn("firstName", "FIRST NAME", (row) => row.firstName),
+			getTextColumn("surname", "SURNAME", (row) => row.surname),
+			getTextColumn(
+				"programVolunteered",
+				"PROGRAM VOLUNTEERED",
+				(row) => row.programVolunteered,
+				false
+			),
+			getTextColumn("volunteerDuration", "VOLUNTEER DURATION", (row) => row.volunteerDuration, false),
+			getTextColumn(
+				"overallExperienceRating",
+				"OVERALL EXPERIENCE RATING",
+				(row) => `${row.overallExperienceRating}/5`,
+				false
+			),
+			getTextColumn("wouldRecommend", "WOULD RECOMMEND", (row) => row.wouldRecommend, false),
+			getActionsColumn({ kind: "feedback", program: "volunteer" }, onViewMore),
+		];
+	}, [onViewMore]);
 
 	const registrationQuery = useFormDataQueryState({
 		pageKey: VOLUNTEER_FORM_DATA_QUERY_KEYS.registration.page,
@@ -532,7 +639,6 @@ function VolunteerFormDataTab(props: { onViewMore: (record: SelectedRecord) => v
 		volunteerFeedbackFormDataQuery({
 			limit: feedbackQuery.limit,
 			page: feedbackQuery.page,
-			...(feedbackQuery.orderBy && { orderBy: feedbackQuery.orderBy }),
 			...(search && { search }),
 		})
 	);
@@ -563,6 +669,7 @@ function VolunteerFormDataTab(props: { onViewMore: (record: SelectedRecord) => v
 	const feedbackTable = useDataTable<VolunteerFeedbackFormRecord>({
 		columns: feedbackColumns,
 		data: feedbackRecords,
+		enableSorting: false,
 		getRowId: (row) => row.id,
 		initialState: FORM_DATA_TABLE_INITIAL_STATE,
 		pageCount: feedbackQueryResult.data?.meta.pagination.totalPages ?? 1,
@@ -572,20 +679,19 @@ function VolunteerFormDataTab(props: { onViewMore: (record: SelectedRecord) => v
 	return (
 		<>
 			<FormDataStats stats={dashboardStats} />
-			<FormDataTableSection
+			<DashboardDataTableSection
 				color="yellow"
 				count={registrationRecords.length}
 				isLoading={registrationQueryResult.isPending}
 				label="Volunteer - Registration"
 				searchQueryKey="volunteerFormDataSearch"
 				sortOptions={VOLUNTEER_SORT_OPTIONS}
-				statusColumnId="status"
 				statusQueryKey="volunteerRegistrationStatus"
 				statusOptions={ASH_STATUS_OPTIONS}
 				table={registrationTable.table}
 				onDownload={() => registrationDownloadMutation.mutate()}
 			/>
-			<FormDataTableSection
+			<DashboardDataTableSection
 				color="red"
 				count={feedbackRecords.length}
 				isLoading={feedbackQueryResult.isPending}
@@ -646,420 +752,17 @@ const useFormDataQueryState = <const TSortBy extends string>(props: {
 	);
 
 	const activeSort = sorting[0];
+	const orderBy =
+		activeSort ? (activeSort.desc ? OrderByOptions[1] : OrderByOptions[0]) : undefined;
 
 	return useMemo(() => {
 		return {
 			limit,
-			orderBy: getOrderBy(activeSort),
+			orderBy,
 			page,
 			sortBy: activeSort?.id,
 		};
-	}, [activeSort, limit, page]);
-};
-
-const getOrderBy = (sort: { desc: boolean } | undefined): FormDataOrderBy => {
-	if (!sort) return;
-
-	return sort.desc ? "desc" : "asc";
-};
-
-function FormDataTableSection<TRecord extends FormRecord>(props: {
-	color: "red" | "yellow";
-	count: number;
-	isLoading: boolean;
-	label: string;
-	onDownload: () => void;
-	searchQueryKey: string;
-	sortOptions?: ReadonlyArray<{ label: string; value: string }>;
-	statusColumnId?: string;
-	statusOptions?: ReadonlyArray<{ label: string; value: string }>;
-	statusQueryKey?: string;
-	table: ReturnType<typeof useDataTable<TRecord>>["table"];
-}) {
-	const {
-		color,
-		count,
-		isLoading,
-		label,
-		onDownload,
-		searchQueryKey,
-		sortOptions = EMPTY_SORT_OPTIONS,
-		statusColumnId,
-		statusOptions,
-		statusQueryKey,
-		table,
-	} = props;
-
-	return (
-		<Card.Root as="section" className="overflow-hidden rounded-[20px] bg-cedar-white">
-			<Card.Header className="flex flex-row items-center justify-between gap-4 px-5 pt-5 pb-4 lg:px-7">
-				<div className="flex items-center gap-4">
-					<span
-						className={cnMerge(
-							"h-[52px] w-2 rounded-full",
-							color === "yellow" ? "bg-cedar-yellow" : "bg-cedar-red"
-						)}
-					/>
-					<div className="min-w-0">
-						<Card.Title className="text-[16px] font-semibold text-cedar-black lg:text-[18px]">
-							{label}
-						</Card.Title>
-						<Card.Description className="mt-1 text-[12px] text-cedar-black/64 lg:text-[14px]">
-							{count} {count === 1 ? "Submission" : "Submissions"}
-						</Card.Description>
-					</div>
-				</div>
-
-				<div className="flex items-center gap-4">
-					<Button
-						size="medium"
-						type="button"
-						className="h-auto rounded-[12px] bg-cedar-grey px-5 py-3 text-[12px] text-cedar-black/64
-							lg:h-auto lg:px-7 lg:text-[14px]"
-						onClick={onDownload}
-					>
-						export as CSV tables
-					</Button>
-					<span
-						className="rounded-[6px] bg-cedar-black/12 px-3 py-1.5 text-[14px] text-cedar-black/56"
-					>
-						{count}
-					</span>
-				</div>
-			</Card.Header>
-
-			<Card.Content className="border-y border-cedar-black/8 bg-cedar-grey p-5 lg:px-7">
-				<FormDataTableToolbar
-					searchQueryKey={searchQueryKey}
-					sortOptions={sortOptions}
-					statusColumnId={statusColumnId}
-					statusQueryKey={statusQueryKey}
-					statusOptions={statusOptions}
-					table={table}
-				/>
-			</Card.Content>
-
-			<Card.Footer className="block p-0">
-				<DataTable
-					isLoading={isLoading}
-					table={table}
-					className="gap-0 overflow-x-auto rounded-none border-0 text-[13px]
-						**:data-[slot=table-cell]:px-5 **:data-[slot=table-cell]:py-4
-						**:data-[slot=table-container]:min-w-[900px]
-						**:data-[slot=table-container]:overflow-x-auto **:data-[slot=table-head]:h-12
-						**:data-[slot=table-head]:px-5 **:data-[slot=table-head]:text-[12px]
-						**:data-[slot=table-head]:font-semibold **:data-[slot=table-head]:text-cedar-black/80
-						**:data-[slot=table-row]:border-cedar-black/10
-						**:data-[slot=table-row]:hover:bg-transparent [&_table]:border-0
-						[&>div:first-child]:rounded-none [&>div:first-child]:border-0 [&>div:last-child]:px-1
-						[&>div:last-child]:py-3 lg:[&>div:last-child]:px-5"
-				/>
-			</Card.Footer>
-		</Card.Root>
-	);
-}
-
-function FormDataTableToolbar<TRecord extends FormRecord>(props: {
-	searchQueryKey: string;
-	sortOptions: ReadonlyArray<{ label: string; value: string }>;
-	statusColumnId?: string;
-	statusOptions?: ReadonlyArray<{ label: string; value: string }>;
-	statusQueryKey?: string;
-	table: ReturnType<typeof useDataTable<TRecord>>["table"];
-}) {
-	const { searchQueryKey, sortOptions, statusColumnId, statusOptions, statusQueryKey, table } = props;
-
-	const queryKeys = table.options.meta?.queryKeys;
-	const pageQueryKey = queryKeys?.page ?? "page";
-	const sortQueryKey = queryKeys?.sort ?? "sort";
-	const resolvedStatusQueryKey = statusQueryKey ?? "unusedStatusFilter";
-
-	const [, setSearch] = useQueryState(searchQueryKey, parseAsString.withDefault(""));
-	const [, setPage] = useQueryState(pageQueryKey, parseAsInteger.withDefault(1));
-	const [, setSort] = useQueryState(sortQueryKey, parseAsString);
-	const [, setStatus] = useQueryState(
-		resolvedStatusQueryKey,
-		parseAsArrayOf(parseAsString).withDefault([])
-	);
-
-	const columns = table.getAllColumns();
-	const searchColumn = columns.find((column) => column.id === "firstName");
-	const statusColumn =
-		statusColumnId ? columns.find((column) => column.id === statusColumnId) : undefined;
-	const sorting = table.getState().sorting[0];
-	const statusFilterValue = statusColumn?.getFilterValue();
-	const status =
-		Array.isArray(statusFilterValue) && typeof statusFilterValue[0] === "string" ?
-			statusFilterValue[0]
-		:	"";
-	const sortBy = sorting?.id ?? "";
-	const orderBy = getOrderBy(sorting) ?? "";
-	const searchFilterValue = searchColumn?.getFilterValue() as string | undefined;
-	const hasSortControls = sortOptions.length > 0;
-
-	const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const { value } = event.target;
-
-		searchColumn?.setFilterValue(value);
-		void setSearch(value || null);
-		void setPage(1);
-	};
-
-	const handleSortByChange = (value: string) => {
-		table.setSorting(value ? [{ desc: orderBy === "desc", id: value }] : []);
-	};
-
-	const handleOrderByChange = (value: string) => {
-		if (!sortBy) return;
-
-		table.setSorting([{ desc: value === "desc", id: sortBy }]);
-	};
-
-	const handleStatusChange = (value: string) => {
-		statusColumn?.setFilterValue(value ? [value] : undefined);
-		void setStatus(value ? [value] : null);
-		void setPage(1);
-	};
-
-	const handleResetFilters = () => {
-		searchColumn?.setFilterValue(null);
-		statusColumn?.setFilterValue(null);
-		table.setSorting([]);
-		table.setPageIndex(0);
-		void setSearch(null);
-		void setStatus(null);
-		void setSort(null);
-	};
-
-	return (
-		<div className="flex flex-wrap items-center gap-3 lg:gap-4">
-			<label
-				className="flex h-[40px] w-full max-w-[430px] items-center gap-3 rounded-[12px] bg-cedar-white
-					px-4 text-[12px] text-cedar-black/64 lg:h-[40px] lg:max-w-[220px]"
-			>
-				<input
-					placeholder="search this section"
-					className="w-full bg-transparent outline-none placeholder:text-cedar-black/36"
-					value={searchFilterValue}
-					onChange={handleSearchChange}
-				/>
-			</label>
-
-			{hasSortControls && (
-				<ToolbarSelect
-					placeholder="Sort By"
-					value={sortBy}
-					onValueChange={handleSortByChange}
-					options={sortOptions}
-				/>
-			)}
-
-			{statusColumn && statusOptions && (
-				<ToolbarSelect
-					placeholder="Status"
-					value={status}
-					onValueChange={handleStatusChange}
-					options={statusOptions}
-				/>
-			)}
-
-			{hasSortControls && (
-				<ToolbarSelect
-					placeholder="Order By"
-					value={orderBy}
-					onValueChange={handleOrderByChange}
-					options={TOOLBAR_ORDER_OPTIONS}
-				/>
-			)}
-
-			<Button
-				size="medium"
-				type="button"
-				className="h-[40px] rounded-[12px] border border-cedar-black/10 bg-cedar-white px-4 text-[12px]
-					text-cedar-black/64 lg:h-[40px] lg:px-4 lg:text-[12px]"
-				onClick={handleResetFilters}
-			>
-				Reset Filters
-			</Button>
-		</div>
-	);
-}
-
-function ToolbarSelect(props: {
-	onValueChange: (value: string) => void;
-	options: ReadonlyArray<{ label: string; value: string }>;
-	placeholder: string;
-	value: string;
-}) {
-	const { onValueChange, options, placeholder, value } = props;
-
-	return (
-		<Select.Root value={value} onValueChange={onValueChange}>
-			<Select.Trigger
-				className="h-[40px] w-[110px] rounded-[12px] border border-cedar-black/10 bg-cedar-white px-4
-					text-[12px] text-cedar-black/64 shadow-none"
-				classNames={{ icon: "size-4 text-cedar-black" }}
-			>
-				<Select.Value placeholder={placeholder} />
-			</Select.Trigger>
-			<Select.Content>
-				<For
-					each={options}
-					renderItem={(option) => (
-						<Select.Item key={option.value} value={option.value}>
-							{option.label}
-						</Select.Item>
-					)}
-				/>
-			</Select.Content>
-		</Select.Root>
-	);
-}
-
-const useAshRegistrationColumns = (props: { onViewMore: (record: SelectedRecord) => void }) => {
-	const { onViewMore } = props;
-
-	return useMemo<Array<ColumnDef<AshRegistrationFormRecord>>>(() => {
-		return [
-			getTextColumn("firstName", "FIRST NAME", (row) => row.firstName),
-			getTextColumn("surname", "SURNAME", (row) => row.surname),
-			getTextColumn("gender", "GENDER", (row) => row.gender, false),
-			getTextColumn("schoolState", "SCHOOL STATE", (row) => row.schoolState, false),
-			getTextColumn("currentClass", "CURRENT CLASS", (row) => row.currentClass, false),
-			{
-				accessorFn: (row) => row.status,
-				cell: ({ row }) => <StatusPill status={row.original.status} />,
-				enableColumnFilter: true,
-				header: ({ column }) => <DataTableColumnHeader column={column} label="STATUS" />,
-				id: "status",
-				meta: {
-					label: "Status",
-					options: [...ASH_STATUS_OPTIONS],
-					variant: "select",
-				},
-			},
-			getTextColumn("assignedMentor", "ASSIGNED MENTOR", (row) => row.assignedMentor, false),
-			getActionsColumn({ kind: "registration", program: "ash" }, onViewMore),
-		];
-	}, [onViewMore]);
-};
-
-const useAshFeedbackColumns = (props: { onViewMore: (record: SelectedRecord) => void }) => {
-	const { onViewMore } = props;
-
-	return useMemo<Array<ColumnDef<AshFeedbackFormRecord>>>(() => {
-		return [
-			getTextColumn("firstName", "FIRST NAME", (row) => row.studentFirstName),
-			getTextColumn("surname", "SURNAME", (row) => row.studentSurname),
-			getTextColumn("schoolName", "SCHOOL NAME", (row) => row.schoolName, false),
-			getTextColumn("confidenceRating", "CONFIDENCE RATING", (row) => row.confidenceRating, false),
-			getTextColumn(
-				"volunteerSupportRating",
-				"VOLUNTEER SUPPORT RATING",
-				(row) => row.volunteerSupportRating,
-				false
-			),
-			getTextColumn("currentClass", "CURRENT CLASS", (row) => row.currentClass, false),
-			getActionsColumn({ kind: "feedback", program: "ash" }, onViewMore),
-		];
-	}, [onViewMore]);
-};
-
-const useTacotsRecommendationColumns = (props: { onViewMore: (record: SelectedRecord) => void }) => {
-	const { onViewMore } = props;
-
-	return useMemo<Array<ColumnDef<TacotsRecommendationFormRecord>>>(() => {
-		return [
-			getTextColumn("firstName", "FIRST NAME", (row) => row.firstName),
-			getTextColumn("surname", "SURNAME", (row) => row.surname),
-			getTextColumn("gender", "GENDER", (row) => row.gender, false),
-			getTextColumn("schoolName", "SCHOOL NAME", (row) => row.schoolName, false),
-			getTextColumn("lastClass", "LAST CLASS", (row) => row.lastClass, false),
-			{
-				accessorFn: (row) => row.adminStatus,
-				cell: ({ row }) => <StatusPill status={row.original.adminStatus} />,
-				enableColumnFilter: true,
-				header: ({ column }) => <DataTableColumnHeader column={column} label="ADMIN STATUS" />,
-				id: "adminStatus",
-				meta: {
-					label: "Admin Status",
-					options: [...TACOTS_RECOMMENDATION_STATUS_OPTIONS],
-					variant: "select",
-				},
-			},
-			getActionsColumn({ kind: "recommendation", program: "tacots" }, onViewMore),
-		];
-	}, [onViewMore]);
-};
-
-const useTacotsFeedbackColumns = (props: { onViewMore: (record: SelectedRecord) => void }) => {
-	const { onViewMore } = props;
-
-	return useMemo<Array<ColumnDef<TacotsFeedbackFormRecord>>>(() => {
-		return [
-			getTextColumn("firstName", "FIRST NAME", (row) => row.studentFirstName),
-			getTextColumn("surname", "SURNAME", (row) => row.studentSurname),
-			getTextColumn("parentGuardianPhone", "PARENT/GUARDIAN PHONE", (row) => row.parentPhone, false),
-			getTextColumn("currentSchool", "CURRENT SCHOOL", (row) => row.currentSchool, false),
-			getTextColumn("currentClass", "CURRENT CLASS", (row) => row.currentClass, false),
-			getActionsColumn({ kind: "feedback", program: "tacots" }, onViewMore),
-		];
-	}, [onViewMore]);
-};
-
-const useVolunteerRegistrationColumns = (props: { onViewMore: (record: SelectedRecord) => void }) => {
-	const { onViewMore } = props;
-
-	return useMemo<Array<ColumnDef<VolunteerRegistrationFormRecord>>>(() => {
-		return [
-			getTextColumn("firstName", "FIRST NAME", (row) => row.firstName),
-			getTextColumn("surname", "SURNAME", (row) => row.surname),
-			getTextColumn("gender", "GENDER", (row) => row.gender, false),
-			getTextColumn("state", "STATE", (row) => row.state, false),
-			getTextColumn("emailAddress", "E-MAIL", (row) => row.emailAddress, false),
-			{
-				accessorFn: (row) => row.status,
-				cell: ({ row }) => <StatusPill status={row.original.status} />,
-				enableColumnFilter: true,
-				header: ({ column }) => <DataTableColumnHeader column={column} label="STATUS" />,
-				id: "status",
-				meta: {
-					label: "Status",
-					options: [...ASH_STATUS_OPTIONS],
-					variant: "select",
-				},
-			},
-			getTextColumn("volunteerAreas", "VOLUNTEER AREA", (row) => row.volunteerAreas, false),
-			getTextColumn("availability", "AVAILABILITY", (row) => row.availability, false),
-			getActionsColumn({ kind: "registration", program: "volunteer" }, onViewMore),
-		];
-	}, [onViewMore]);
-};
-
-const useVolunteerFeedbackColumns = (props: { onViewMore: (record: SelectedRecord) => void }) => {
-	const { onViewMore } = props;
-
-	return useMemo<Array<ColumnDef<VolunteerFeedbackFormRecord>>>(() => {
-		return [
-			getTextColumn("firstName", "FIRST NAME", (row) => row.firstName),
-			getTextColumn("surname", "SURNAME", (row) => row.surname),
-			getTextColumn(
-				"programVolunteered",
-				"PROGRAM VOLUNTEERED",
-				(row) => row.programVolunteered,
-				false
-			),
-			getTextColumn("volunteerDuration", "VOLUNTEER DURATION", (row) => row.volunteerDuration, false),
-			getTextColumn(
-				"overallExperienceRating",
-				"OVERALL EXPERIENCE RATING",
-				(row) => `${row.overallExperienceRating}/5`,
-				false
-			),
-			getTextColumn("wouldRecommend", "WOULD RECOMMEND", (row) => row.wouldRecommend, false),
-			getActionsColumn({ kind: "feedback", program: "volunteer" }, onViewMore),
-		];
-	}, [onViewMore]);
+	}, [activeSort, limit, orderBy, page]);
 };
 
 const getTextColumn = <TRecord extends FormRecord>(
@@ -1093,11 +796,25 @@ const getActionsColumn = <TRecord extends FormRecord>(
 			<RowActions
 				record={row.original}
 				target={target}
-				onViewMore={() =>
-					onViewMore(
-						getSelectedRecordFromActionTarget(target, row.original.id, getRecordName(row.original))
-					)
-				}
+				onViewMore={() => {
+					const firstName =
+						"firstName" in row.original ? row.original.firstName : row.original.studentFirstName;
+					const surname =
+						"surname" in row.original ? row.original.surname : row.original.studentSurname;
+					const title = [firstName, surname].join(" ") || "Unnamed submission";
+
+					if (target.program === "ash") {
+						onViewMore({ id: row.original.id, kind: target.kind, program: target.program, title });
+						return;
+					}
+
+					if (target.program === "tacots") {
+						onViewMore({ id: row.original.id, kind: target.kind, program: target.program, title });
+						return;
+					}
+
+					onViewMore({ id: row.original.id, kind: target.kind, program: target.program, title });
+				}}
 			/>
 		),
 		enableHiding: false,
@@ -1254,22 +971,182 @@ function FormDataDetailsDialog(props: {
 		enabled: selectedRecord?.program === "volunteer" && selectedRecord.kind === "feedback",
 	});
 
-	const record = getSelectedRecordDetails({
-		ashFeedbackRecord: ashFeedbackDetailQueryResult.data?.data,
-		ashRegistrationRecord: ashRegistrationDetailQueryResult.data?.data,
-		selectedRecord,
-		tacotsFeedbackRecord: tacotsFeedbackDetailQueryResult.data?.data,
-		tacotsRecommendationRecord: tacotsRecommendationDetailQueryResult.data?.data,
-		volunteerFeedbackRecord: volunteerFeedbackDetailQueryResult.data?.data,
-		volunteerRegistrationRecord: volunteerRegistrationDetailQueryResult.data?.data,
-	});
+	const { record, rows } = (() => {
+		if (selectedRecord?.program === "ash" && selectedRecord.kind === "registration") {
+			const formRecord = ashRegistrationDetailQueryResult.data?.data;
 
-	const rows = getDetailRows(record);
-	const status = getRecordStatus(record);
+			return {
+				record: formRecord,
+				rows:
+					formRecord ?
+						[
+							{ label: "First Name", value: formatDetailValue(formRecord.firstName) },
+							{ label: "Surname", value: formatDetailValue(formRecord.surname) },
+							{ label: "Gender", value: formatDetailValue(formRecord.gender) },
+							{ label: "School State", value: formatDetailValue(formRecord.schoolState) },
+							{ label: "Current Class", value: formatDetailValue(formRecord.currentClass) },
+							{ label: "Status", value: formatDetailValue(formRecord.status) },
+							{ label: "Assigned Mentor", value: formatDetailValue(formRecord.assignedMentor) },
+						]
+					:	[],
+			};
+		}
+
+		if (selectedRecord?.program === "ash" && selectedRecord.kind === "feedback") {
+			const formRecord = ashFeedbackDetailQueryResult.data?.data;
+
+			return {
+				record: formRecord,
+				rows:
+					formRecord ?
+						[
+							{ label: "First Name", value: formatDetailValue(formRecord.studentFirstName) },
+							{ label: "Surname", value: formatDetailValue(formRecord.studentSurname) },
+							{ label: "School Name", value: formatDetailValue(formRecord.schoolName) },
+							{
+								label: "Confidence Rating",
+								value: formatDetailValue(formRecord.confidenceRating),
+							},
+							{
+								label: "Volunteer Support Rating",
+								value: formatDetailValue(formRecord.volunteerSupportRating),
+							},
+							{ label: "Current Class", value: formatDetailValue(formRecord.currentClass) },
+						]
+					:	[],
+			};
+		}
+
+		if (selectedRecord?.program === "tacots" && selectedRecord.kind === "recommendation") {
+			const formRecord = tacotsRecommendationDetailQueryResult.data?.data;
+
+			return {
+				record: formRecord,
+				rows:
+					formRecord ?
+						[
+							{ label: "First Name", value: formatDetailValue(formRecord.firstName) },
+							{ label: "Surname", value: formatDetailValue(formRecord.surname) },
+							{ label: "Gender", value: formatDetailValue(formRecord.gender) },
+							{ label: "School Name", value: formatDetailValue(formRecord.schoolName) },
+							{ label: "Last Class", value: formatDetailValue(formRecord.lastClass) },
+							{ label: "Admin Status", value: formatDetailValue(formRecord.adminStatus) },
+						]
+					:	[],
+			};
+		}
+
+		if (selectedRecord?.program === "tacots" && selectedRecord.kind === "feedback") {
+			const formRecord = tacotsFeedbackDetailQueryResult.data?.data;
+
+			return {
+				record: formRecord,
+				rows:
+					formRecord ?
+						[
+							{ label: "First Name", value: formatDetailValue(formRecord.studentFirstName) },
+							{ label: "Surname", value: formatDetailValue(formRecord.studentSurname) },
+							{
+								label: "Parent/Guardian Phone",
+								value: formatDetailValue(formRecord.parentPhone),
+							},
+							{ label: "Current School", value: formatDetailValue(formRecord.currentSchool) },
+							{ label: "Current Class", value: formatDetailValue(formRecord.currentClass) },
+						]
+					:	[],
+			};
+		}
+
+		if (selectedRecord?.program === "volunteer" && selectedRecord.kind === "registration") {
+			const formRecord = volunteerRegistrationDetailQueryResult.data?.data;
+
+			return {
+				record: formRecord,
+				rows:
+					formRecord ?
+						[
+							{ label: "First Name", value: formatDetailValue(formRecord.firstName) },
+							{ label: "Surname", value: formatDetailValue(formRecord.surname) },
+							{ label: "Gender", value: formatDetailValue(formRecord.gender) },
+							{ label: "State", value: formatDetailValue(formRecord.state) },
+							{ label: "E-mail", value: formatDetailValue(formRecord.emailAddress) },
+							{ label: "Status", value: formatDetailValue(formRecord.status) },
+							{ label: "Volunteer Area", value: formatDetailValue(formRecord.volunteerAreas) },
+							{ label: "Availability", value: formatDetailValue(formRecord.availability) },
+						]
+					:	[],
+			};
+		}
+
+		if (selectedRecord?.program === "volunteer" && selectedRecord.kind === "feedback") {
+			const formRecord = volunteerFeedbackDetailQueryResult.data?.data;
+
+			return {
+				record: formRecord,
+				rows:
+					formRecord ?
+						[
+							{ label: "First Name", value: formatDetailValue(formRecord.firstName) },
+							{ label: "Surname", value: formatDetailValue(formRecord.surname) },
+							{
+								label: "Program Volunteered",
+								value: formatDetailValue(formRecord.programVolunteered),
+							},
+							{
+								label: "Volunteer Duration",
+								value: formatDetailValue(formRecord.volunteerDuration),
+							},
+							{
+								label: "Overall Experience Rating",
+								value: formatDetailValue(formRecord.overallExperienceRating),
+							},
+							{ label: "Would Recommend", value: formatDetailValue(formRecord.wouldRecommend) },
+						]
+					:	[],
+			};
+		}
+
+		return { record: undefined, rows: [] };
+	})();
+
+	const status = (() => {
+		if (!record) return;
+		if ("status" in record) return record.status;
+		if ("adminStatus" in record) return record.adminStatus;
+		return void 0;
+	})();
+
+	const submittedAt = record?.createdAt;
+
+	const submittedDate =
+		submittedAt ?
+			new Intl.DateTimeFormat("en", {
+				day: "numeric",
+				month: "short",
+				year: "numeric",
+			}).format(new Date(submittedAt))
+		:	EMPTY_VALUE_PLACEHOLDER;
+
 	const isReviewableRecord =
 		(selectedRecord?.program === "ash" && selectedRecord.kind === "registration")
 		|| (selectedRecord?.program === "tacots" && selectedRecord.kind === "recommendation")
 		|| (selectedRecord?.program === "volunteer" && selectedRecord.kind === "registration");
+
+	let detailDescription = "";
+
+	if (selectedRecord?.program === "ash") {
+		detailDescription = selectedRecord.kind === "registration" ? "ASH Registration" : "ASH Feedback";
+	}
+
+	if (selectedRecord?.program === "tacots") {
+		detailDescription =
+			selectedRecord.kind === "recommendation" ? "TACOTS Recommendation" : "TACOTS Feedback";
+	}
+
+	if (selectedRecord?.program === "volunteer") {
+		detailDescription =
+			selectedRecord.kind === "registration" ? "Volunteer Registration" : "Volunteer Feedback";
+	}
 
 	return (
 		<DialogAnimated.Root
@@ -1287,12 +1164,12 @@ function FormDataDetailsDialog(props: {
 							className="shrink-0 flex-row items-start justify-between gap-6 border-b
 								border-cedar-black/10 px-7 pt-7 pb-6 text-left lg:px-10 lg:pt-10"
 						>
-							<div>
+							<div className="flex flex-col gap-1">
 								<DialogAnimated.Title className="text-[22px] text-cedar-black">
 									{selectedRecord.title}
 								</DialogAnimated.Title>
-								<DialogAnimated.Description className="mt-1 text-[16px] text-cedar-black/64">
-									{getDetailDescription(selectedRecord)} - {getRecordDate(record)}
+								<DialogAnimated.Description className="text-[16px] text-cedar-black/64">
+									{detailDescription} - {submittedDate}
 								</DialogAnimated.Description>
 							</div>
 							{status && <StatusPill status={status} />}
@@ -1355,108 +1232,6 @@ function FormDataDetailsDialog(props: {
 	);
 }
 
-const getSelectedRecordDetails = (records: {
-	ashFeedbackRecord: AshFeedbackFormRecord | undefined;
-	ashRegistrationRecord: AshRegistrationFormRecord | undefined;
-	selectedRecord: SelectedRecord | null;
-	tacotsFeedbackRecord: TacotsFeedbackFormRecord | undefined;
-	tacotsRecommendationRecord: TacotsRecommendationFormRecord | undefined;
-	volunteerFeedbackRecord: VolunteerFeedbackFormRecord | undefined;
-	volunteerRegistrationRecord: VolunteerRegistrationFormRecord | undefined;
-}): FormRecord | undefined => {
-	const {
-		ashFeedbackRecord,
-		ashRegistrationRecord,
-		selectedRecord,
-		tacotsFeedbackRecord,
-		tacotsRecommendationRecord,
-		volunteerFeedbackRecord,
-		volunteerRegistrationRecord,
-	} = records;
-
-	if (selectedRecord?.program === "ash") {
-		return selectedRecord.kind === "registration" ? ashRegistrationRecord : ashFeedbackRecord;
-	}
-
-	if (selectedRecord?.program === "tacots") {
-		return selectedRecord.kind === "recommendation" ? tacotsRecommendationRecord : tacotsFeedbackRecord;
-	}
-
-	if (selectedRecord?.program === "volunteer") {
-		return selectedRecord.kind === "registration" ?
-				volunteerRegistrationRecord
-			:	volunteerFeedbackRecord;
-	}
-
-	return undefined;
-};
-
-const getSelectedRecordFromActionTarget = (
-	target: FormDataActionTarget,
-	id: string,
-	title: string
-): SelectedRecord => {
-	if (target.program === "ash") {
-		return { id, kind: target.kind, program: target.program, title };
-	}
-
-	if (target.program === "tacots") {
-		return { id, kind: target.kind, program: target.program, title };
-	}
-
-	return { id, kind: target.kind, program: target.program, title };
-};
-
-const getDetailDescription = (selectedRecord: SelectedRecord) => {
-	if (selectedRecord.program === "ash") {
-		return selectedRecord.kind === "registration" ? "ASH Registration" : "ASH Feedback";
-	}
-
-	if (selectedRecord.program === "tacots") {
-		return selectedRecord.kind === "recommendation" ? "TACOTS Recommendation" : "TACOTS Feedback";
-	}
-
-	return selectedRecord.kind === "registration" ? "Volunteer Registration" : "Volunteer Feedback";
-};
-
-const getRecordDate = (record: { createdAt?: string } | undefined) => {
-	const value = record?.createdAt;
-
-	if (!value) {
-		return EMPTY_VALUE_PLACEHOLDER;
-	}
-
-	return new Intl.DateTimeFormat("en", {
-		day: "numeric",
-		month: "short",
-		year: "numeric",
-	}).format(new Date(value));
-};
-
-const getRecordName = (record: FormRecord) => {
-	const firstName = "firstName" in record ? record.firstName : record.studentFirstName;
-	const surname = "surname" in record ? record.surname : record.studentSurname;
-
-	return [firstName, surname].join(" ") || "Unnamed submission";
-};
-
-const getRecordStatus = (record: FormRecord | undefined): string | undefined => {
-	if (!record) return;
-
-	if ("status" in record) return record.status;
-
-	if ("adminStatus" in record) return record.adminStatus;
-
-	return undefined;
-};
-
-const labelizeKey = (key: string) => {
-	return key
-		.replaceAll(/([A-Z])/g, " $1")
-		.replaceAll(/[_-]/g, " ")
-		.replace(/^./, (value) => value.toUpperCase());
-};
-
 const formatDetailValue = (value: unknown): string => {
 	if (value === null || value === undefined || value === "") {
 		return EMPTY_VALUE_PLACEHOLDER;
@@ -1475,18 +1250,6 @@ const formatDetailValue = (value: unknown): string => {
 	}
 
 	return EMPTY_VALUE_PLACEHOLDER;
-};
-
-const FORM_RECORD_HIDDEN_KEYS = new Set(["deletedAt", "id", "updatedAt"]);
-
-const getDetailRows = (record: FormRecord | undefined) => {
-	if (!record) {
-		return [];
-	}
-
-	return Object.entries(record)
-		.filter(([key]) => !FORM_RECORD_HIDDEN_KEYS.has(key))
-		.map(([key, value]) => ({ label: labelizeKey(key), value: formatDetailValue(value) }));
 };
 
 function StatusPill({ status }: { status: string }) {

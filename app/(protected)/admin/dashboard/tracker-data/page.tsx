@@ -6,10 +6,8 @@ import { parseAsInteger, parseAsString, useQueryState } from "nuqs";
 import { useMemo, useState } from "react";
 import { DialogAnimated, TabsAnimated } from "@/components/animated/ui";
 import { For, ForWithWrapper } from "@/components/common/for";
-import { DropdownMenu, Select } from "@/components/ui";
-import { Button } from "@/components/ui/button";
+import { DropdownMenu } from "@/components/ui";
 import { Card } from "@/components/ui/card";
-import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 import { getSortingStateParser } from "@/components/ui/data-table/data-table-parsers";
 import type { QueryKeys } from "@/components/ui/data-table/data-table-types";
@@ -18,6 +16,7 @@ import {
 	AshExitSortByOptions,
 	AshTrackingRecordSortByOptions,
 	CapacityEvaluationSortByOptions,
+	OrderByOptions,
 	OutreachSortByOptions,
 	TacotsExitSortByOptions,
 	TacotsOnboardingSortByOptions,
@@ -58,7 +57,6 @@ import {
 	tacotsTrackingTrackerDataQuery,
 	type AshAttendanceTrackerDataQueryResult,
 	type AshExitTrackerDataQueryResult,
-	type AshTrackingTrackerDataListQuery,
 	type AshTrackingTrackerDataQueryResult,
 	type CapacityBuildingTrackerDataQueryResult,
 	type OutreachTrackerDataQueryResult,
@@ -68,6 +66,7 @@ import {
 } from "@/lib/react-query/queryOptions";
 import { cnMerge } from "@/lib/utils/cn";
 import { EMPTY_VALUE_PLACEHOLDER } from "../-components/constants";
+import { DashboardDataTableSection } from "../-components/DashboardDataTableShared";
 import { Main } from "../-components/Main";
 
 const TRACKER_DATA_TABLE_INITIAL_STATE = {
@@ -145,61 +144,67 @@ const CAPACITY_TRACKER_DATA_QUERY_KEYS = {
 	sort: "capacityTrackerDataSort",
 } as const satisfies QueryKeys;
 
-const TOOLBAR_ORDER_OPTIONS = [
-	{ label: "Ascending", value: "asc" },
-	{ label: "Descending", value: "desc" },
-] as const;
-
-const EMPTY_SORT_OPTIONS: ReadonlyArray<{ label: string; value: string }> = [];
-
 const ASH_TRACKING_SORT_OPTIONS = [
 	{ label: "Academic Session", value: "academicSession" },
 	{ label: "School Name", value: "schoolName" },
 	{ label: "Term", value: "term" },
-	{ label: "Created", value: "createdAt" },
-] as const;
+	{ label: "Assigned Mentor", value: "mentorName" },
+] as const satisfies ReadonlyArray<{
+	label: string;
+	value: (typeof AshTrackingRecordSortByOptions)[number];
+}>;
 
 const ASH_EXIT_SORT_OPTIONS = [
-	{ label: "Age at Exit", value: "ageAtExit" },
+	{ label: "School Name", value: "schoolName" },
 	{ label: "Class at Exit", value: "classAtExit" },
 	{ label: "Exit Date", value: "exitDate" },
-	{ label: "Created", value: "createdAt" },
-] as const;
+] as const satisfies ReadonlyArray<{ label: string; value: (typeof AshExitSortByOptions)[number] }>;
 
 const TACOTS_TRACKING_SORT_OPTIONS = [
 	{ label: "Academic Session", value: "academicSession" },
 	{ label: "Assessment Period", value: "assessmentPeriod" },
 	{ label: "Term", value: "academicTerm" },
-	{ label: "Created", value: "createdAt" },
-] as const;
+] as const satisfies ReadonlyArray<{
+	label: string;
+	value: (typeof TacotsTrackingRecordSortByOptions)[number];
+}>;
 
 const TACOTS_ONBOARDING_SORT_OPTIONS = [
 	{ label: "Current School", value: "enrolledSchoolName" },
 	{ label: "Date of Onboarding", value: "onboardingDate" },
+	{ label: "General Health Status", value: "generalHealthStatus" },
 	{ label: "State", value: "enrolledSchoolState" },
-	{ label: "Created", value: "createdAt" },
-] as const;
+	{ label: "Class", value: "enrolledClass" },
+] as const satisfies ReadonlyArray<{
+	label: string;
+	value: (typeof TacotsOnboardingSortByOptions)[number];
+}>;
 
 const TACOTS_EXIT_SORT_OPTIONS = [
 	{ label: "Year of Exit", value: "yearOfExit" },
 	{ label: "School Attended", value: "schoolAttendedDuringProgram" },
-	{ label: "Current Status", value: "currentStatus" },
-	{ label: "Created", value: "createdAt" },
-] as const;
+	{ label: "Reason for Exit", value: "exitReason" },
+] as const satisfies ReadonlyArray<{
+	label: string;
+	value: (typeof TacotsExitSortByOptions)[number];
+}>;
 
 const OUTREACH_SORT_OPTIONS = [
 	{ label: "Start Date", value: "outreachStartDate" },
+	{ label: "End Date", value: "outreachEndDate" },
 	{ label: "State", value: "outreachState" },
 	{ label: "Outreach Type", value: "outreachType" },
-	{ label: "Created", value: "createdAt" },
-] as const;
+] as const satisfies ReadonlyArray<{ label: string; value: (typeof OutreachSortByOptions)[number] }>;
 
 const CAPACITY_SORT_OPTIONS = [
 	{ label: "Program Name", value: "programName" },
+	{ label: "Program Type", value: "programType" },
 	{ label: "Program Date", value: "programDate" },
 	{ label: "Location", value: "location" },
-	{ label: "Created", value: "createdAt" },
-] as const;
+] as const satisfies ReadonlyArray<{
+	label: string;
+	value: (typeof CapacityEvaluationSortByOptions)[number];
+}>;
 
 type AshAttendanceRecord = AshAttendanceTrackerDataQueryResult["data"][number];
 type AshExitRecord = AshExitTrackerDataQueryResult["data"][number];
@@ -210,7 +215,6 @@ type TacotsExitRecord = TacotsExitTrackerDataQueryResult["data"][number];
 type TacotsOnboardingRecord = TacotsOnboardingTrackerDataQueryResult["data"][number];
 type TacotsTrackingRecord = TacotsTrackingTrackerDataQueryResult["data"][number];
 
-type TrackerDataOrderBy = NonNullable<AshTrackingTrackerDataListQuery>["orderBy"];
 type TrackerRecord =
 	| AshAttendanceRecord
 	| AshExitRecord
@@ -243,11 +247,11 @@ function TrackerDataPage() {
 			</header>
 
 			<TabsAnimated.Root defaultValue="ash">
-				<Card.Root className="rounded-[20px] bg-cedar-white p-4 lg:p-5">
+				<div className="rounded-[20px] bg-cedar-white p-4 lg:p-5">
 					<TabsAnimated.List
 						classNames={{
-							highlight: "rounded-[12px] bg-cedar-red shadow-none",
-							list: "h-12 min-w-[520px] rounded-[12px] bg-cedar-grey p-1",
+							highlight: "rounded-[12px] bg-cedar-red",
+							list: "h-12 rounded-[12px] bg-cedar-grey p-2",
 						}}
 					>
 						<For
@@ -263,22 +267,22 @@ function TrackerDataPage() {
 							)}
 						/>
 					</TabsAnimated.List>
-				</Card.Root>
+				</div>
 
 				<TabsAnimated.ContentList className="mt-6 flex flex-col gap-6">
-					<TabsAnimated.Content value="ash" className="flex flex-col gap-6">
+					<TabsAnimated.Content value={TRACKER_DATA_TABS[0].value} className="flex flex-col gap-6">
 						<AshTrackerDataTab onViewMore={setSelectedRecord} />
 					</TabsAnimated.Content>
 
-					<TabsAnimated.Content value="tacots" className="flex flex-col gap-6">
+					<TabsAnimated.Content value={TRACKER_DATA_TABS[1].value} className="flex flex-col gap-6">
 						<TacotsTrackerDataTab onViewMore={setSelectedRecord} />
 					</TabsAnimated.Content>
 
-					<TabsAnimated.Content value="outreaches" className="flex flex-col gap-6">
+					<TabsAnimated.Content value={TRACKER_DATA_TABS[2].value} className="flex flex-col gap-6">
 						<OutreachTrackerDataTab onViewMore={setSelectedRecord} />
 					</TabsAnimated.Content>
 
-					<TabsAnimated.Content value="capacity-building" className="flex flex-col gap-6">
+					<TabsAnimated.Content value={TRACKER_DATA_TABS[3].value} className="flex flex-col gap-6">
 						<CapacityBuildingTrackerDataTab onViewMore={setSelectedRecord} />
 					</TabsAnimated.Content>
 				</TabsAnimated.ContentList>
@@ -294,9 +298,79 @@ export default TrackerDataPage;
 function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) => void }) {
 	const { onViewMore } = props;
 
-	const trackingColumns = useAshTrackingColumns({ onViewMore });
-	const attendanceColumns = useAshAttendanceColumns({ onViewMore });
-	const exitColumns = useAshExitColumns({ onViewMore });
+	const trackingColumns = useMemo<Array<ColumnDef<AshTrackingRecord>>>(() => {
+		return [
+			getTextColumn("firstName", "FIRST NAME", (row) => row.firstName),
+			getTextColumn("surname", "SURNAME", (row) => row.surname),
+			getTextColumn("academicSession", "ACADEMIC SESSION", (row) => row.academicSession, false),
+			getTextColumn("term", "TERM", (row) => row.term, false),
+			getTextColumn("schoolName", "SCHOOL NAME", (row) => row.schoolName, false),
+			getTextColumn("mentorName", "ASSIGNED MENTOR", (row) => row.mentorName, false),
+			getActionsColumn(
+				{ kind: "tracking", program: "ash" },
+				onViewMore,
+				(row) => `${row.firstName} ${row.surname}`,
+				"ASH - Termly Tracking Form"
+			),
+		];
+	}, [onViewMore]);
+
+	const attendanceColumns = useMemo<Array<ColumnDef<AshAttendanceRecord>>>(() => {
+		return [
+			getTextColumn("sessionDate", "DATE", (row) => row.sessionDate, false),
+			getTextColumn(
+				"studentsInAttendance",
+				"STUDENTS IN ATTENDANCE",
+				(row) => formatDetailValue(row.studentsInAttendance),
+				false
+			),
+			getTextColumn(
+				"studentsMentored",
+				"STUDENTS MENTORED",
+				(row) => formatDetailValue(row.studentsMentored),
+				false
+			),
+			getTextColumn(
+				"sessionsConducted",
+				"SESSIONS HAD",
+				(row) => formatDetailValue(row.sessionsConducted),
+				false
+			),
+			getTextColumn(
+				"volunteersInAttendance",
+				"VOLUNTEERS IN ATTENDANCE",
+				(row) => row.volunteersInAttendance,
+				false
+			),
+			getTextColumn("sessionDetails", "SPECIFY SESSION", (row) => row.sessionDetails, false, {
+				truncate: true,
+			}),
+			getActionsColumn(
+				{ kind: "attendance", program: "ash" },
+				onViewMore,
+				() => "ASH Attendance Record",
+				"ASH - Weekly activity & Attendance"
+			),
+		];
+	}, [onViewMore]);
+
+	const exitColumns = useMemo<Array<ColumnDef<AshExitRecord>>>(() => {
+		return [
+			getTextColumn("studentName", "STUDENT NAME", (row) => `${row.firstName} ${row.surname}`),
+			getTextColumn("ageAtExit", "AGE AT EXIT", (row) => row.ageAtExit, false),
+			getTextColumn("schoolName", "SCHOOL NAME", (row) => row.schoolName, false),
+			getTextColumn("classAtExit", "CLASS AT EXIT", (row) => row.classAtExit, false),
+			getTextColumn("durationInProgram", "DURATION IN PROGRAM", (row) => row.durationInProgram, false),
+			getTextColumn("facilitatorName", "FACILITATOR NAME", (row) => row.facilitatorName, false),
+			getTextColumn("exitDate", "EXIT DATE", (row) => row.exitDate, false),
+			getActionsColumn(
+				{ kind: "exit", program: "ash" },
+				onViewMore,
+				(row) => `${row.firstName} ${row.surname}`,
+				"ASH - Exit Submitted data"
+			),
+		];
+	}, [onViewMore]);
 
 	const trackingQuery = useTrackerDataQueryState({
 		pageKey: ASH_TRACKER_DATA_QUERY_KEYS.tracking.page,
@@ -335,7 +409,6 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 		ashAttendanceTrackerDataQuery({
 			limit: attendanceQuery.limit,
 			page: attendanceQuery.page,
-			...(attendanceQuery.orderBy && { orderBy: attendanceQuery.orderBy }),
 			...(search && { search }),
 		})
 	);
@@ -353,11 +426,26 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 	const trackingRecords = trackingQueryResult.data?.data ?? [];
 	const attendanceRecords = attendanceQueryResult.data?.data ?? [];
 	const exitRecords = exitQueryResult.data?.data ?? [];
+	const metadata = trackingQueryResult.data?.meta.metadata;
 
-	const stats = getTrackerDataStats({
-		completedRecords: exitRecords.length,
-		records: [...trackingRecords, ...attendanceRecords, ...exitRecords],
-	});
+	const stats = [
+		{
+			label: "Total Records",
+			value: metadata?.totalRecords ?? 0,
+		},
+		{
+			label: "High-risk beneficiary",
+			value: metadata?.highRiskStudents ?? 0,
+		},
+		{
+			label: "Avg. Attendance",
+			value: `${metadata?.avgAttendanceRate ?? 0}%`,
+		},
+		{
+			label: "Completed",
+			value: metadata?.completed ?? 0,
+		},
+	] as const;
 
 	const trackingTable = useDataTable<AshTrackingRecord>({
 		columns: trackingColumns,
@@ -371,6 +459,7 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 	const attendanceTable = useDataTable<AshAttendanceRecord>({
 		columns: attendanceColumns,
 		data: attendanceRecords,
+		enableSorting: false,
 		getRowId: (row) => row.id,
 		initialState: TRACKER_DATA_TABLE_INITIAL_STATE,
 		pageCount: attendanceQueryResult.data?.meta.pagination.totalPages ?? 1,
@@ -393,7 +482,7 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 	return (
 		<>
 			<TrackerDataStats stats={stats} />
-			<TrackerDataTableSection
+			<DashboardDataTableSection
 				color="yellow"
 				count={trackingRecords.length}
 				isLoading={trackingQueryResult.isPending}
@@ -403,7 +492,7 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 				table={trackingTable.table}
 				onDownload={() => trackingDownloadMutation.mutate()}
 			/>
-			<TrackerDataTableSection
+			<DashboardDataTableSection
 				color="yellow"
 				count={attendanceRecords.length}
 				isLoading={attendanceQueryResult.isPending}
@@ -412,7 +501,7 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 				table={attendanceTable.table}
 				onDownload={() => attendanceDownloadMutation.mutate()}
 			/>
-			<TrackerDataTableSection
+			<DashboardDataTableSection
 				color="red"
 				count={exitRecords.length}
 				isLoading={exitQueryResult.isPending}
@@ -429,9 +518,80 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) => void }) {
 	const { onViewMore } = props;
 
-	const trackingColumns = useTacotsTrackingColumns({ onViewMore });
-	const onboardingColumns = useTacotsOnboardingColumns({ onViewMore });
-	const exitColumns = useTacotsExitColumns({ onViewMore });
+	const trackingColumns = useMemo<Array<ColumnDef<TacotsTrackingRecord>>>(() => {
+		return [
+			getTextColumn("fullName", "FULL NAME", (row) => `${row.firstName} ${row.surname}`),
+			getTextColumn("academicSession", "ACADEMIC SESSION", (row) => row.academicSession, false),
+			getTextColumn("academicTerm", "TERM", (row) => row.academicTerm, false),
+			getTextColumn("region", "REGION", (row) => row.region, false),
+			getTextColumn("assessmentPeriod", "ASSESSMENT PERIOD", (row) => row.assessmentPeriod, false),
+			getTextColumn("studentAveragePct", "STUDENT AVERAGE(%)", (row) => row.studentAveragePct, false),
+			getActionsColumn(
+				{ kind: "tracking", program: "tacots" },
+				onViewMore,
+				(row) => `${row.firstName} ${row.surname}`,
+				"TACOTS - Student Tracking"
+			),
+		];
+	}, [onViewMore]);
+
+	const onboardingColumns = useMemo<Array<ColumnDef<TacotsOnboardingRecord>>>(() => {
+		return [
+			getTextColumn("fullName", "FULL NAME", (row) => `${row.firstName} ${row.surname}`),
+			getTextColumn("onboardingDate", "ONBOARDING DATE", (row) => row.onboardingDate, false),
+			getTextColumn(
+				"generalHealthStatus",
+				"GEN. HEALTH STATUS",
+				(row) => row.generalHealthStatus,
+				false
+			),
+			getTextColumn(
+				"enrolledSchoolName",
+				"ENROLLED SCHOOL NAME",
+				(row) => row.enrolledSchoolName,
+				false
+			),
+			getTextColumn(
+				"enrolledSchoolState",
+				"ENROLLED SCHOOL STATE",
+				(row) => row.enrolledSchoolState,
+				false
+			),
+			getTextColumn("enrolledClass", "ENROLLED CLASS", (row) => row.enrolledClass, false),
+			getActionsColumn(
+				{ kind: "onboarding", program: "tacots" },
+				onViewMore,
+				(row) => `${row.firstName} ${row.surname}`,
+				"TACOTS - Beneficiary Onboarding"
+			),
+		];
+	}, [onViewMore]);
+
+	const exitColumns = useMemo<Array<ColumnDef<TacotsExitRecord>>>(() => {
+		return [
+			getTextColumn("studentName", "STUDENT NAME", (row) => `${row.firstName} ${row.surname}`),
+			getTextColumn("yearOfExit", "YEAR OF EXIT", (row) => row.yearOfExit, false),
+			getTextColumn(
+				"schoolAttendedDuringProgram",
+				"SCHOOL ATTENDED",
+				(row) => row.schoolAttendedDuringProgram,
+				false
+			),
+			getTextColumn(
+				"educationAttained",
+				"HIGHEST LEVEL OF EDU. ATTAINED",
+				(row) => row.highestEducationAttained,
+				false
+			),
+			getTextColumn("exitReason", "REASONS FOR EXIT", (row) => row.exitReason, false),
+			getActionsColumn(
+				{ kind: "exit", program: "tacots" },
+				onViewMore,
+				(row) => `${row.firstName} ${row.surname}`,
+				"TACOTS - Exit Completion"
+			),
+		];
+	}, [onViewMore]);
 
 	const trackingQuery = useTrackerDataQueryState({
 		pageKey: TACOTS_TRACKER_DATA_QUERY_KEYS.tracking.page,
@@ -489,11 +649,26 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 	const trackingRecords = trackingQueryResult.data?.data ?? [];
 	const onboardingRecords = onboardingQueryResult.data?.data ?? [];
 	const exitRecords = exitQueryResult.data?.data ?? [];
+	const metadata = trackingQueryResult.data?.meta.metadata;
 
-	const stats = getTrackerDataStats({
-		completedRecords: exitRecords.length,
-		records: [...trackingRecords, ...onboardingRecords, ...exitRecords],
-	});
+	const stats = [
+		{
+			label: "Total Records",
+			value: metadata?.totalRecords ?? 0,
+		},
+		{
+			label: "High-risk beneficiary",
+			value: metadata?.highRiskStudents ?? 0,
+		},
+		{
+			label: "Onboarding Rate",
+			value: `${Math.round(metadata?.onboardingRate ?? 0)}%`,
+		},
+		{
+			label: "Completed",
+			value: metadata?.completed ?? 0,
+		},
+	] as const;
 
 	const trackingTable = useDataTable<TacotsTrackingRecord>({
 		columns: trackingColumns,
@@ -529,7 +704,7 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 	return (
 		<>
 			<TrackerDataStats stats={stats} />
-			<TrackerDataTableSection
+			<DashboardDataTableSection
 				color="yellow"
 				count={trackingRecords.length}
 				isLoading={trackingQueryResult.isPending}
@@ -539,7 +714,7 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 				table={trackingTable.table}
 				onDownload={() => trackingDownloadMutation.mutate()}
 			/>
-			<TrackerDataTableSection
+			<DashboardDataTableSection
 				color="yellow"
 				count={onboardingRecords.length}
 				isLoading={onboardingQueryResult.isPending}
@@ -549,7 +724,7 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 				table={onboardingTable.table}
 				onDownload={() => onboardingDownloadMutation.mutate()}
 			/>
-			<TrackerDataTableSection
+			<DashboardDataTableSection
 				color="red"
 				count={exitRecords.length}
 				isLoading={exitQueryResult.isPending}
@@ -566,7 +741,27 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 function OutreachTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) => void }) {
 	const { onViewMore } = props;
 
-	const columns = useOutreachColumns({ onViewMore });
+	const columns = useMemo<Array<ColumnDef<OutreachRecord>>>(() => {
+		return [
+			getTextColumn("outreachStartDate", "START DATE", (row) => row.outreachStartDate, false),
+			getTextColumn("outreachEndDate", "END DATE", (row) => row.outreachEndDate, false),
+			getTextColumn("outreachState", "OUTREACH STATE", (row) => row.outreachState, false),
+			getTextColumn("volunteers", "NUM. OF VOLUNTEERS", (row) => row.numVolunteers, false),
+			getTextColumn("beneficiaries", "NUM. OF BENEFICIARIES", (row) => row.numBeneficiaries, false),
+			getTextColumn(
+				"outreachType",
+				"OUTREACH TYPE",
+				(row) => formatDetailValue(row.outreachType),
+				false
+			),
+			getActionsColumn(
+				{ kind: "tracker", program: "outreaches" },
+				onViewMore,
+				() => "Cedar Outreach Tracker",
+				"Cedar Outreach - Tracker Data"
+			),
+		];
+	}, [onViewMore]);
 	const queryState = useTrackerDataQueryState({
 		pageKey: OUTREACH_TRACKER_DATA_QUERY_KEYS.page,
 		perPageKey: OUTREACH_TRACKER_DATA_QUERY_KEYS.perPage,
@@ -587,7 +782,25 @@ function OutreachTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRec
 	);
 
 	const records = queryResult.data?.data ?? [];
-	const stats = getTrackerDataStats({ completedRecords: 0, records });
+	const metadata = queryResult.data?.meta.metadata;
+	const stats = [
+		{
+			label: "Communities Engaged",
+			value: metadata?.communitiesEngaged ?? 0,
+		},
+		{
+			label: "Beneficiaries Reached",
+			value: metadata?.beneficiariesReached ?? 0,
+		},
+		{
+			label: "Volunteers",
+			value: metadata?.volunteers ?? 0,
+		},
+		{
+			label: "Outreach Events",
+			value: metadata?.outreachEvents ?? 0,
+		},
+	] as const;
 	const table = useDataTable<OutreachRecord>({
 		columns,
 		data: records,
@@ -602,7 +815,7 @@ function OutreachTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRec
 	return (
 		<>
 			<TrackerDataStats stats={stats} />
-			<TrackerDataTableSection
+			<DashboardDataTableSection
 				color="yellow"
 				count={records.length}
 				isLoading={queryResult.isPending}
@@ -619,7 +832,27 @@ function OutreachTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRec
 function CapacityBuildingTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) => void }) {
 	const { onViewMore } = props;
 
-	const columns = useCapacityBuildingColumns({ onViewMore });
+	const columns = useMemo<Array<ColumnDef<CapacityBuildingRecord>>>(() => {
+		return [
+			getTextColumn("programName", "PROGRAM NAME", (row) => row.programName),
+			getTextColumn("programType", "PROGRAM TYPE", (row) => row.programType, false),
+			getTextColumn("programDate", "PROGRAM DATE", (row) => row.programDate, false),
+			getTextColumn("location", "LOCATION", (row) => row.location, false),
+			getTextColumn("participants", "NO. OF PARTICIPANTS", (row) => row.numberOfParticipants, false),
+			getTextColumn(
+				"objectiveAchievement",
+				"OBJECTIVE ACHIEVEMENT",
+				(row) => row.objectiveAchievement,
+				false
+			),
+			getActionsColumn(
+				{ kind: "evaluation", program: "capacity-building" },
+				onViewMore,
+				(row) => row.programName,
+				"Capacity Building Program Evaluation"
+			),
+		];
+	}, [onViewMore]);
 	const queryState = useTrackerDataQueryState({
 		pageKey: CAPACITY_TRACKER_DATA_QUERY_KEYS.page,
 		perPageKey: CAPACITY_TRACKER_DATA_QUERY_KEYS.perPage,
@@ -640,7 +873,26 @@ function CapacityBuildingTrackerDataTab(props: { onViewMore: (record: SelectedTr
 	);
 
 	const records = queryResult.data?.data ?? [];
-	const stats = getTrackerDataStats({ completedRecords: 0, records });
+	const metadata = queryResult.data?.meta.metadata;
+	const stats = [
+		{
+			label: "Participants Impacted",
+			value: metadata?.participantsImpacted ?? 0,
+		},
+		{
+			label: "Organizations Partnered with",
+			value: metadata?.organizationsPartneredWith ?? 0,
+		},
+		{
+			label: "Volunteers Engaged",
+			value: metadata?.volunteersEngaged ?? 0,
+		},
+		{
+			label: "Workshops Conducted",
+			value: metadata?.workshopsConducted ?? 0,
+		},
+	] as const;
+
 	const table = useDataTable<CapacityBuildingRecord>({
 		columns,
 		data: records,
@@ -655,7 +907,7 @@ function CapacityBuildingTrackerDataTab(props: { onViewMore: (record: SelectedTr
 	return (
 		<>
 			<TrackerDataStats stats={stats} />
-			<TrackerDataTableSection
+			<DashboardDataTableSection
 				color="yellow"
 				count={records.length}
 				isLoading={queryResult.isPending}
@@ -669,9 +921,7 @@ function CapacityBuildingTrackerDataTab(props: { onViewMore: (record: SelectedTr
 	);
 }
 
-function TrackerDataStats(props: {
-	stats: ReadonlyArray<{ description: string; label: string; note: string; value: number | string }>;
-}) {
+function TrackerDataStats(props: { stats: ReadonlyArray<{ label: string; value: number | string }> }) {
 	const { stats } = props;
 
 	return (
@@ -691,15 +941,6 @@ function TrackerDataStats(props: {
 							<Card.Description className="mt-2 text-[14px] text-cedar-black/64 lg:text-[18px]">
 								{stat.label}
 							</Card.Description>
-							<p
-								className={cnMerge(
-									"mt-1 text-[11px]",
-									stat.description === "No change" && "text-cedar-black/36",
-									stat.description !== "No change" && "text-cedar-yellow"
-								)}
-							>
-								{stat.note}
-							</p>
 						</Card.Content>
 					</Card.Root>
 				)}
@@ -728,432 +969,17 @@ const useTrackerDataQueryState = <const TSortBy extends string>(props: {
 	);
 
 	const activeSort = sorting[0];
+	const orderBy =
+		activeSort ? (activeSort.desc ? OrderByOptions[1] : OrderByOptions[0]) : undefined;
 
 	return useMemo(() => {
 		return {
 			limit,
-			orderBy: getOrderBy(activeSort),
+			orderBy,
 			page,
 			sortBy: activeSort?.id,
 		};
-	}, [activeSort, limit, page]);
-};
-
-const getOrderBy = (sort: { desc: boolean } | undefined): TrackerDataOrderBy => {
-	if (!sort) return;
-
-	return sort.desc ? "desc" : "asc";
-};
-
-function TrackerDataTableSection<TRecord extends TrackerRecord>(props: {
-	color: "red" | "yellow";
-	count: number;
-	isLoading: boolean;
-	label: string;
-	onDownload: () => void;
-	searchQueryKey: string;
-	sortOptions?: ReadonlyArray<{ label: string; value: string }>;
-	table: ReturnType<typeof useDataTable<TRecord>>["table"];
-}) {
-	const {
-		color,
-		count,
-		isLoading,
-		label,
-		onDownload,
-		searchQueryKey,
-		sortOptions = EMPTY_SORT_OPTIONS,
-		table,
-	} = props;
-
-	return (
-		<Card.Root as="section" className="overflow-hidden rounded-[20px] bg-cedar-white">
-			<Card.Header className="flex flex-row items-center justify-between gap-4 px-5 pt-5 pb-4 lg:px-7">
-				<div className="flex items-center gap-4">
-					<span
-						className={cnMerge(
-							"h-[52px] w-2 rounded-full",
-							color === "yellow" ? "bg-cedar-yellow" : "bg-cedar-red"
-						)}
-					/>
-					<div className="min-w-0">
-						<Card.Title className="text-[16px] font-semibold text-cedar-black lg:text-[18px]">
-							{label}
-						</Card.Title>
-						<Card.Description className="mt-1 text-[12px] text-cedar-black/64 lg:text-[14px]">
-							{count} {count === 1 ? "Submission" : "Submissions"}
-						</Card.Description>
-					</div>
-				</div>
-
-				<div className="flex items-center gap-4">
-					<Button
-						size="medium"
-						type="button"
-						className="h-auto rounded-[12px] bg-cedar-grey px-5 py-3 text-[12px] text-cedar-black/64
-							lg:h-auto lg:px-7 lg:text-[14px]"
-						onClick={onDownload}
-					>
-						export as CSV tables
-					</Button>
-					<span
-						className="rounded-[6px] bg-cedar-black/12 px-3 py-1.5 text-[14px] text-cedar-black/56"
-					>
-						{count}
-					</span>
-				</div>
-			</Card.Header>
-
-			<Card.Content className="border-y border-cedar-black/8 bg-cedar-grey p-5 lg:px-7">
-				<TrackerDataTableToolbar
-					searchQueryKey={searchQueryKey}
-					sortOptions={sortOptions}
-					table={table}
-				/>
-			</Card.Content>
-
-			<Card.Footer>
-				<DataTable
-					isLoading={isLoading}
-					table={table}
-					className="gap-0 overflow-x-auto rounded-none border-0 text-[13px]
-						**:data-[slot=table-cell]:px-5 **:data-[slot=table-cell]:py-4
-						**:data-[slot=table-container]:min-w-[900px]
-						**:data-[slot=table-container]:overflow-x-auto **:data-[slot=table-head]:h-12
-						**:data-[slot=table-head]:px-5 **:data-[slot=table-head]:text-[12px]
-						**:data-[slot=table-head]:font-semibold **:data-[slot=table-head]:text-cedar-black/80
-						**:data-[slot=table-row]:border-cedar-black/10
-						**:data-[slot=table-row]:hover:bg-transparent [&_table]:border-0
-						[&>div:first-child]:rounded-none [&>div:first-child]:border-0 [&>div:last-child]:px-1
-						[&>div:last-child]:py-3 lg:[&>div:last-child]:px-5"
-				/>
-			</Card.Footer>
-		</Card.Root>
-	);
-}
-
-function TrackerDataTableToolbar<TRecord extends TrackerRecord>(props: {
-	searchQueryKey: string;
-	sortOptions: ReadonlyArray<{ label: string; value: string }>;
-	table: ReturnType<typeof useDataTable<TRecord>>["table"];
-}) {
-	const { searchQueryKey, sortOptions, table } = props;
-
-	const queryKeys = table.options.meta?.queryKeys;
-	const pageQueryKey = queryKeys?.page ?? "page";
-	const sortQueryKey = queryKeys?.sort ?? "sort";
-
-	const [search, setSearch] = useQueryState(searchQueryKey, parseAsString.withDefault(""));
-	const [, setPage] = useQueryState(pageQueryKey, parseAsInteger.withDefault(1));
-	const [sort, setSort] = useQueryState(sortQueryKey, parseAsString);
-	const currentSort = table.getState().sorting[0];
-	const sortBy = currentSort?.id ?? sort?.split(".")[0] ?? "";
-	const orderBy = getOrderBy(currentSort) ?? sort?.split(".")[1] ?? "";
-
-	const handleResetFilters = () => {
-		table.setSorting([]);
-		table.setPageIndex(0);
-		void setSearch(null);
-		void setSort(null);
-		void setPage(1);
-	};
-
-	return (
-		<div className="flex flex-wrap items-center gap-3 lg:gap-4">
-			<label
-				className="flex h-[40px] w-full max-w-[430px] items-center gap-3 rounded-[12px] bg-cedar-white
-					px-4 text-[12px] text-cedar-black/64 lg:h-[40px] lg:max-w-[220px]"
-			>
-				<input
-					className="w-full bg-transparent outline-none placeholder:text-cedar-black/36"
-					placeholder="search this section"
-					value={search}
-					onChange={(event) => {
-						void setSearch(event.target.value || null);
-						void setPage(1);
-					}}
-				/>
-			</label>
-
-			{sortOptions.length > 0 && (
-				<>
-					<ToolbarSelect
-						placeholder="Sort By"
-						options={sortOptions}
-						value={sortBy}
-						onValueChange={(value) => {
-							void setSort(value || null);
-							void setPage(1);
-						}}
-					/>
-					<ToolbarSelect
-						placeholder="Order By"
-						options={TOOLBAR_ORDER_OPTIONS}
-						value={orderBy}
-						onValueChange={(value) => {
-							if (!sortBy) {
-								return;
-							}
-
-							void setSort(`${sortBy}.${value}`);
-							void setPage(1);
-						}}
-					/>
-				</>
-			)}
-
-			<Button
-				size="medium"
-				type="button"
-				className="h-[40px] rounded-[12px] border border-cedar-black/10 bg-cedar-white px-4 text-[12px]
-					text-cedar-black/64 lg:h-[40px] lg:px-4 lg:text-[12px]"
-				onClick={handleResetFilters}
-			>
-				Reset Filters
-			</Button>
-		</div>
-	);
-}
-
-function ToolbarSelect(props: {
-	onValueChange: (value: string) => void;
-	options: ReadonlyArray<{ label: string; value: string }>;
-	placeholder: string;
-	value: string;
-}) {
-	const { onValueChange, options, placeholder, value } = props;
-
-	return (
-		<Select.Root value={value} onValueChange={onValueChange}>
-			<Select.Trigger
-				className="h-[40px] w-[110px] rounded-[12px] border border-cedar-black/10 bg-cedar-white px-4
-					text-[12px] text-cedar-black/64 shadow-none"
-				classNames={{ icon: "size-4 text-cedar-black" }}
-			>
-				<Select.Value placeholder={placeholder} />
-			</Select.Trigger>
-			<Select.Content>
-				<For
-					each={options}
-					renderItem={(option) => (
-						<Select.Item key={option.value} value={option.value}>
-							{option.label}
-						</Select.Item>
-					)}
-				/>
-			</Select.Content>
-		</Select.Root>
-	);
-}
-
-const useAshTrackingColumns = (props: { onViewMore: (record: SelectedTrackerRecord) => void }) => {
-	const { onViewMore } = props;
-
-	return useMemo<Array<ColumnDef<AshTrackingRecord>>>(() => {
-		return [
-			getTextColumn("firstName", "FIRST NAME", (row) => row.firstName),
-			getTextColumn("surname", "SURNAME", (row) => row.surname),
-			getTextColumn("academicSession", "ACADEMIC SESSION", (row) => row.academicSession, false),
-			getTextColumn("term", "TERM", (row) => row.term, false),
-			getTextColumn("schoolName", "SCHOOL NAME", (row) => row.schoolName, false),
-			getTextColumn("mentorName", "ASSIGNED MENTOR", (row) => row.mentorName, false),
-			getActionsColumn(
-				{ kind: "tracking", program: "ash" },
-				onViewMore,
-				(row) => getFullName(row),
-				"ASH - Termly Tracking Form"
-			),
-		];
-	}, [onViewMore]);
-};
-
-const useAshAttendanceColumns = (props: { onViewMore: (record: SelectedTrackerRecord) => void }) => {
-	const { onViewMore } = props;
-
-	return useMemo<Array<ColumnDef<AshAttendanceRecord>>>(() => {
-		return [
-			getTextColumn("sessionDate", "DATE", (row) => row.sessionDate, false),
-			getTextColumn(
-				"studentsInAttendance",
-				"STUDENTS IN ATTENDANCE",
-				(row) => formatDetailValue(row.studentsInAttendance),
-				false
-			),
-			getTextColumn(
-				"studentsMentored",
-				"STUDENTS MENTORED",
-				(row) => formatDetailValue(row.studentsMentored),
-				false
-			),
-			getTextColumn(
-				"sessionsConducted",
-				"SESSIONS HAD",
-				(row) => formatDetailValue(row.sessionsConducted),
-				false
-			),
-			getTextColumn(
-				"volunteersInAttendance",
-				"VOLUNTEERS IN ATTENDANCE",
-				(row) => row.volunteersInAttendance,
-				false
-			),
-			getTextColumn("sessionDetails", "SPECIFY SESSION", (row) => row.sessionDetails, false, {
-				truncate: true,
-			}),
-			getActionsColumn(
-				{ kind: "attendance", program: "ash" },
-				onViewMore,
-				() => "ASH Attendance Record",
-				"ASH - Weekly activity & Attendance"
-			),
-		];
-	}, [onViewMore]);
-};
-
-const useAshExitColumns = (props: { onViewMore: (record: SelectedTrackerRecord) => void }) => {
-	const { onViewMore } = props;
-
-	return useMemo<Array<ColumnDef<AshExitRecord>>>(() => {
-		return [
-			getTextColumn("studentName", "STUDENT NAME", (row) => getFullName(row)),
-			getTextColumn("ageAtExit", "AGE AT EXIT", (row) => row.ageAtExit, false),
-			getTextColumn("schoolName", "SCHOOL NAME", (row) => row.schoolName, false),
-			getTextColumn("classAtExit", "CLASS AT EXIT", (row) => row.classAtExit, false),
-			getTextColumn("durationInProgram", "DURATION IN PROGRAM", (row) => row.durationInProgram, false),
-			getTextColumn("facilitatorName", "FACILITATOR NAME", (row) => row.facilitatorName, false),
-			getTextColumn("exitDate", "EXIT DATE", (row) => row.exitDate, false),
-			getActionsColumn(
-				{ kind: "exit", program: "ash" },
-				onViewMore,
-				(row) => getFullName(row),
-				"ASH - Exit Submitted data"
-			),
-		];
-	}, [onViewMore]);
-};
-
-const useTacotsTrackingColumns = (props: { onViewMore: (record: SelectedTrackerRecord) => void }) => {
-	const { onViewMore } = props;
-
-	return useMemo<Array<ColumnDef<TacotsTrackingRecord>>>(() => {
-		return [
-			getTextColumn("fullName", "FULL NAME", (row) => getFullName(row)),
-			getTextColumn("academicSession", "ACADEMIC SESSION", (row) => row.academicSession, false),
-			getTextColumn("academicTerm", "TERM", (row) => row.academicTerm, false),
-			getTextColumn("region", "REGION", (row) => row.region, false),
-			getTextColumn("assessmentPeriod", "ASSESSMENT PERIOD", (row) => row.assessmentPeriod, false),
-			getTextColumn("studentAveragePct", "STUDENT AVERAGE(%)", (row) => row.studentAveragePct, false),
-			getActionsColumn(
-				{ kind: "tracking", program: "tacots" },
-				onViewMore,
-				(row) => getFullName(row),
-				"TACOTS - Student Tracking"
-			),
-		];
-	}, [onViewMore]);
-};
-
-const useTacotsOnboardingColumns = (props: { onViewMore: (record: SelectedTrackerRecord) => void }) => {
-	const { onViewMore } = props;
-
-	return useMemo<Array<ColumnDef<TacotsOnboardingRecord>>>(() => {
-		return [
-			getTextColumn("fullName", "FULL NAME", (row) => getFullName(row)),
-			getTextColumn("onboardingDate", "ONBOARDING DATE", (row) => row.onboardingDate, false),
-			getTextColumn("healthStatus", "GEN. HEALTH STATUS", (row) => row.generalHealthStatus, false),
-			getTextColumn("schoolName", "ENROLLED SCHOOL NAME", (row) => row.enrolledSchoolName, false),
-			getTextColumn("schoolState", "ENROLLED SCHOOL STATE", (row) => row.enrolledSchoolState, false),
-			getTextColumn("currentClass", "ENROLLED CLASS", (row) => row.enrolledClass, false),
-			getActionsColumn(
-				{ kind: "onboarding", program: "tacots" },
-				onViewMore,
-				(row) => getFullName(row),
-				"TACOTS - Beneficiary Onboarding"
-			),
-		];
-	}, [onViewMore]);
-};
-
-const useTacotsExitColumns = (props: { onViewMore: (record: SelectedTrackerRecord) => void }) => {
-	const { onViewMore } = props;
-
-	return useMemo<Array<ColumnDef<TacotsExitRecord>>>(() => {
-		return [
-			getTextColumn("studentName", "STUDENT NAME", (row) => getFullName(row)),
-			getTextColumn("yearOfExit", "YEAR OF EXIT", (row) => row.yearOfExit, false),
-			getTextColumn(
-				"schoolAttended",
-				"SCHOOL ATTENDED",
-				(row) => row.schoolAttendedDuringProgram,
-				false
-			),
-			getTextColumn(
-				"educationAttained",
-				"HIGHEST LEVEL OF EDU. ATTAINED",
-				(row) => row.highestEducationAttained,
-				false
-			),
-			getTextColumn("reason", "REASONS FOR EXIT", (row) => row.exitReason, false),
-			getActionsColumn(
-				{ kind: "exit", program: "tacots" },
-				onViewMore,
-				(row) => getFullName(row),
-				"TACOTS - Exit Completion"
-			),
-		];
-	}, [onViewMore]);
-};
-
-const useOutreachColumns = (props: { onViewMore: (record: SelectedTrackerRecord) => void }) => {
-	const { onViewMore } = props;
-
-	return useMemo<Array<ColumnDef<OutreachRecord>>>(() => {
-		return [
-			getTextColumn("startDate", "START DATE", (row) => row.outreachStartDate, false),
-			getTextColumn("endDate", "END DATE", (row) => row.outreachEndDate, false),
-			getTextColumn("outreachState", "OUTREACH STATE", (row) => row.outreachState, false),
-			getTextColumn("volunteers", "NUM. OF VOLUNTEERS", (row) => row.numVolunteers, false),
-			getTextColumn("beneficiaries", "NUM. OF BENEFICIARIES", (row) => row.numBeneficiaries, false),
-			getTextColumn(
-				"outreachType",
-				"OUTREACH TYPE",
-				(row) => formatDetailValue(row.outreachType),
-				false
-			),
-			getActionsColumn(
-				{ kind: "tracker", program: "outreaches" },
-				onViewMore,
-				() => "Cedar Outreach Tracker",
-				"Cedar Outreach - Tracker Data"
-			),
-		];
-	}, [onViewMore]);
-};
-
-const useCapacityBuildingColumns = (props: { onViewMore: (record: SelectedTrackerRecord) => void }) => {
-	const { onViewMore } = props;
-
-	return useMemo<Array<ColumnDef<CapacityBuildingRecord>>>(() => {
-		return [
-			getTextColumn("programName", "PROGRAM NAME", (row) => row.programName),
-			getTextColumn("programType", "PROGRAM TYPE", (row) => row.programType, false),
-			getTextColumn("programDate", "PROGRAM DATE", (row) => row.programDate, false),
-			getTextColumn("location", "LOCATION", (row) => row.location, false),
-			getTextColumn("participants", "NO. OF PARTICIPANTS", (row) => row.numberOfParticipants, false),
-			getTextColumn(
-				"objectiveAchievement",
-				"OBJECTIVE ACHIEVEMENT",
-				(row) => row.objectiveAchievement,
-				false
-			),
-			getActionsColumn(
-				{ kind: "evaluation", program: "capacity-building" },
-				onViewMore,
-				(row) => row.programName,
-				"Capacity Building Program Evaluation"
-			),
-		];
-	}, [onViewMore]);
+	}, [activeSort, limit, orderBy, page]);
 };
 
 const getTextColumn = <TRecord extends TrackerRecord>(
@@ -1197,11 +1023,29 @@ const getActionsColumn = <TRecord extends TrackerRecord>(
 			<TrackerRowActions
 				record={row.original}
 				target={target}
-				onViewMore={() =>
-					onViewMore(
-						getSelectedTrackerRecord(target, row.original.id, dialogTitle, getTitle(row.original))
-					)
-				}
+				onViewMore={() => {
+					const recordTitle = getTitle(row.original);
+
+					const title = `${dialogTitle}${recordTitle ? ` - ${recordTitle}` : ""}`;
+
+					const ashKind: AshTrackerDataKind = target.program === "ash" ? target.kind : "tracking";
+					const tacotsKind: TacotsTrackerDataKind =
+						target.program === "tacots" ? target.kind : "tracking";
+
+					const selectedRecordByProgram = {
+						ash: { id: row.original.id, kind: ashKind, program: "ash", title },
+						"capacity-building": {
+							id: row.original.id,
+							kind: "evaluation",
+							program: "capacity-building",
+							title,
+						},
+						outreaches: { id: row.original.id, kind: "tracker", program: "outreaches", title },
+						tacots: { id: row.original.id, kind: tacotsKind, program: "tacots", title },
+					} satisfies Record<SelectedTrackerRecord["program"], SelectedTrackerRecord>;
+
+					onViewMore(selectedRecordByProgram[target.program]);
+				}}
 			/>
 		),
 		enableHiding: false,
@@ -1376,17 +1220,248 @@ function TrackerDataDetailsDialog(props: {
 		enabled: selectedRecord?.program === "capacity-building",
 	});
 
-	const record =
-		ashAttendanceDetailQueryResult.data?.data
-		?? ashExitDetailQueryResult.data?.data
-		?? ashTrackingDetailQueryResult.data?.data
-		?? tacotsExitDetailQueryResult.data?.data
-		?? tacotsOnboardingDetailQueryResult.data?.data
-		?? tacotsTrackingDetailQueryResult.data?.data
-		?? outreachDetailQueryResult.data?.data
-		?? capacityDetailQueryResult.data?.data;
+	const { rows, submittedAt } = (() => {
+		if (selectedRecord?.program === "ash" && selectedRecord.kind === "tracking") {
+			const trackerRecord = ashTrackingDetailQueryResult.data?.data;
 
-	const rows = getDetailRows(record);
+			return {
+				rows:
+					trackerRecord ?
+						[
+							{ label: "First Name", value: formatDetailValue(trackerRecord.firstName) },
+							{ label: "Surname", value: formatDetailValue(trackerRecord.surname) },
+							{
+								label: "Academic Session",
+								value: formatDetailValue(trackerRecord.academicSession),
+							},
+							{ label: "Term", value: formatDetailValue(trackerRecord.term) },
+							{ label: "School Name", value: formatDetailValue(trackerRecord.schoolName) },
+							{ label: "Assigned Mentor", value: formatDetailValue(trackerRecord.mentorName) },
+						]
+					:	[],
+				submittedAt: trackerRecord?.createdAt,
+			};
+		}
+
+		if (selectedRecord?.program === "ash" && selectedRecord.kind === "attendance") {
+			const trackerRecord = ashAttendanceDetailQueryResult.data?.data;
+
+			return {
+				rows:
+					trackerRecord ?
+						[
+							{ label: "Date", value: formatDetailValue(trackerRecord.sessionDate) },
+							{
+								label: "Students In Attendance",
+								value: formatDetailValue(trackerRecord.studentsInAttendance),
+							},
+							{
+								label: "Students Mentored",
+								value: formatDetailValue(trackerRecord.studentsMentored),
+							},
+							{ label: "Sessions Had", value: formatDetailValue(trackerRecord.sessionsConducted) },
+							{
+								label: "Volunteers In Attendance",
+								value: formatDetailValue(trackerRecord.volunteersInAttendance),
+							},
+							{
+								label: "Specify Session",
+								value: formatDetailValue(trackerRecord.sessionDetails),
+							},
+						]
+					:	[],
+				submittedAt: trackerRecord?.sessionDate,
+			};
+		}
+
+		if (selectedRecord?.program === "ash" && selectedRecord.kind === "exit") {
+			const trackerRecord = ashExitDetailQueryResult.data?.data;
+
+			return {
+				rows:
+					trackerRecord ?
+						[
+							{
+								label: "Student Name",
+								value: formatDetailValue(`${trackerRecord.firstName} ${trackerRecord.surname}`),
+							},
+							{ label: "Age At Exit", value: formatDetailValue(trackerRecord.ageAtExit) },
+							{ label: "School Name", value: formatDetailValue(trackerRecord.schoolName) },
+							{ label: "Class At Exit", value: formatDetailValue(trackerRecord.classAtExit) },
+							{
+								label: "Duration In Program",
+								value: formatDetailValue(trackerRecord.durationInProgram),
+							},
+							{
+								label: "Facilitator Name",
+								value: formatDetailValue(trackerRecord.facilitatorName),
+							},
+							{ label: "Exit Date", value: formatDetailValue(trackerRecord.exitDate) },
+						]
+					:	[],
+				submittedAt: trackerRecord?.exitDate,
+			};
+		}
+
+		if (selectedRecord?.program === "tacots" && selectedRecord.kind === "tracking") {
+			const trackerRecord = tacotsTrackingDetailQueryResult.data?.data;
+
+			return {
+				rows:
+					trackerRecord ?
+						[
+							{
+								label: "Full Name",
+								value: formatDetailValue(`${trackerRecord.firstName} ${trackerRecord.surname}`),
+							},
+							{
+								label: "Academic Session",
+								value: formatDetailValue(trackerRecord.academicSession),
+							},
+							{ label: "Term", value: formatDetailValue(trackerRecord.academicTerm) },
+							{ label: "Region", value: formatDetailValue(trackerRecord.region) },
+							{
+								label: "Assessment Period",
+								value: formatDetailValue(trackerRecord.assessmentPeriod),
+							},
+							{
+								label: "Student Average (%)",
+								value: formatDetailValue(trackerRecord.studentAveragePct),
+							},
+						]
+					:	[],
+				submittedAt: trackerRecord?.submissionDate,
+			};
+		}
+
+		if (selectedRecord?.program === "tacots" && selectedRecord.kind === "onboarding") {
+			const trackerRecord = tacotsOnboardingDetailQueryResult.data?.data;
+
+			return {
+				rows:
+					trackerRecord ?
+						[
+							{
+								label: "Full Name",
+								value: formatDetailValue(`${trackerRecord.firstName} ${trackerRecord.surname}`),
+							},
+							{
+								label: "Onboarding Date",
+								value: formatDetailValue(trackerRecord.onboardingDate),
+							},
+							{
+								label: "Gen. Health Status",
+								value: formatDetailValue(trackerRecord.generalHealthStatus),
+							},
+							{
+								label: "Enrolled School Name",
+								value: formatDetailValue(trackerRecord.enrolledSchoolName),
+							},
+							{
+								label: "Enrolled School State",
+								value: formatDetailValue(trackerRecord.enrolledSchoolState),
+							},
+							{
+								label: "Enrolled Class",
+								value: formatDetailValue(trackerRecord.enrolledClass),
+							},
+						]
+					:	[],
+				submittedAt: trackerRecord?.onboardingDate,
+			};
+		}
+
+		if (selectedRecord?.program === "tacots" && selectedRecord.kind === "exit") {
+			const trackerRecord = tacotsExitDetailQueryResult.data?.data;
+
+			return {
+				rows:
+					trackerRecord ?
+						[
+							{
+								label: "Student Name",
+								value: formatDetailValue(`${trackerRecord.firstName} ${trackerRecord.surname}`),
+							},
+							{ label: "Year Of Exit", value: formatDetailValue(trackerRecord.yearOfExit) },
+							{
+								label: "School Attended",
+								value: formatDetailValue(trackerRecord.schoolAttendedDuringProgram),
+							},
+							{
+								label: "Highest Level Of Edu. Attained",
+								value: formatDetailValue(trackerRecord.highestEducationAttained),
+							},
+							{
+								label: "Reasons For Exit",
+								value: formatDetailValue(trackerRecord.exitReason),
+							},
+						]
+					:	[],
+				submittedAt: trackerRecord?.submissionDate,
+			};
+		}
+
+		if (selectedRecord?.program === "outreaches") {
+			const trackerRecord = outreachDetailQueryResult.data?.data;
+
+			return {
+				rows:
+					trackerRecord ?
+						[
+							{ label: "Start Date", value: formatDetailValue(trackerRecord.outreachStartDate) },
+							{ label: "End Date", value: formatDetailValue(trackerRecord.outreachEndDate) },
+							{ label: "Outreach State", value: formatDetailValue(trackerRecord.outreachState) },
+							{
+								label: "Num. Of Volunteers",
+								value: formatDetailValue(trackerRecord.numVolunteers),
+							},
+							{
+								label: "Num. Of Beneficiaries",
+								value: formatDetailValue(trackerRecord.numBeneficiaries),
+							},
+							{ label: "Outreach Type", value: formatDetailValue(trackerRecord.outreachType) },
+						]
+					:	[],
+				submittedAt: trackerRecord?.outreachStartDate,
+			};
+		}
+
+		if (selectedRecord?.program === "capacity-building") {
+			const trackerRecord = capacityDetailQueryResult.data?.data;
+
+			return {
+				rows:
+					trackerRecord ?
+						[
+							{ label: "Program Name", value: formatDetailValue(trackerRecord.programName) },
+							{ label: "Program Type", value: formatDetailValue(trackerRecord.programType) },
+							{ label: "Program Date", value: formatDetailValue(trackerRecord.programDate) },
+							{ label: "Location", value: formatDetailValue(trackerRecord.location) },
+							{
+								label: "No. Of Participants",
+								value: formatDetailValue(trackerRecord.numberOfParticipants),
+							},
+							{
+								label: "Objective Achievement",
+								value: formatDetailValue(trackerRecord.objectiveAchievement),
+							},
+						]
+					:	[],
+				submittedAt: trackerRecord?.programDate,
+			};
+		}
+
+		return { rows: [], submittedAt: undefined };
+	})();
+
+	const submittedDate =
+		typeof submittedAt === "string" ?
+			new Intl.DateTimeFormat("en", {
+				day: "numeric",
+				month: "short",
+				year: "numeric",
+			}).format(new Date(submittedAt))
+		:	EMPTY_VALUE_PLACEHOLDER;
 
 	return (
 		<DialogAnimated.Root
@@ -1409,7 +1484,7 @@ function TrackerDataDetailsDialog(props: {
 									{selectedRecord.title}
 								</DialogAnimated.Title>
 								<DialogAnimated.Description className="mt-1 text-[16px] text-cedar-black/64">
-									Submitted - {getRecordDate(record)}
+									Submitted - {submittedDate}
 								</DialogAnimated.Description>
 							</div>
 						</DialogAnimated.Header>
@@ -1452,103 +1527,6 @@ function TrackerDataDetailsDialog(props: {
 	);
 }
 
-const HIDDEN_DETAIL_KEYS = new Set(["deletedAt", "id", "updatedAt"]);
-
-const getDetailRows = (record: TrackerRecord | undefined) => {
-	if (!record) {
-		return [];
-	}
-
-	return Object.entries(record)
-		.filter(([key]) => !HIDDEN_DETAIL_KEYS.has(key))
-		.map(([key, value]) => ({ label: labelizeKey(key), value: formatDetailValue(value) }));
-};
-
-const labelizeKey = (key: string) => {
-	return key
-		.replaceAll(/([A-Z])/g, " $1")
-		.replaceAll(/[_-]/g, " ")
-		.replace(/^./, (value) => value.toUpperCase());
-};
-
-const getRecordDate = (
-	record:
-		| {
-				createdAt?: string;
-				dateSubmitted?: string;
-				exitDate?: string;
-				onboardingDate?: string;
-				outreachStartDate?: string;
-				programDate?: string;
-				sessionDate?: string;
-				submissionDate?: string;
-		  }
-		| undefined
-) => {
-	const value =
-		record?.createdAt
-		?? record?.submissionDate
-		?? record?.sessionDate
-		?? record?.exitDate
-		?? record?.onboardingDate
-		?? record?.outreachStartDate
-		?? record?.programDate
-		?? record?.dateSubmitted;
-
-	if (!value) {
-		return EMPTY_VALUE_PLACEHOLDER;
-	}
-
-	return new Intl.DateTimeFormat("en", {
-		day: "numeric",
-		month: "short",
-		year: "numeric",
-	}).format(new Date(value));
-};
-
-const getSelectedTrackerRecord = (
-	target: TrackerActionTarget,
-	id: string,
-	dialogTitle: string,
-	recordTitle: string
-): SelectedTrackerRecord => {
-	const title = `${dialogTitle}${recordTitle ? ` - ${recordTitle}` : ""}`;
-
-	if (target.program === "ash") {
-		return { id, kind: target.kind, program: target.program, title };
-	}
-
-	if (target.program === "tacots") {
-		return { id, kind: target.kind, program: target.program, title };
-	}
-
-	if (target.program === "outreaches") {
-		return { id, kind: target.kind, program: target.program, title };
-	}
-
-	return { id, kind: target.kind, program: target.program, title };
-};
-
-const getFullName = (record: { firstName: string; surname: string }) => {
-	return `${record.firstName} ${record.surname}`;
-};
-
-const getPerformanceMetric = (record: TrackerRecord) => {
-	if ("studentAveragePct" in record) {
-		return record.studentAveragePct;
-	}
-
-	if ("posttestAverage" in record && typeof record.posttestAverage === "number") {
-		return record.posttestAverage;
-	}
-
-	if ("schoolAverage" in record && typeof record.schoolAverage === "number") {
-		return record.schoolAverage;
-	}
-
-	return void 0;
-};
-
 const formatDetailValue = (value: unknown): string => {
 	if (value === null || value === undefined || value === "") {
 		return EMPTY_VALUE_PLACEHOLDER;
@@ -1567,48 +1545,4 @@ const formatDetailValue = (value: unknown): string => {
 	}
 
 	return EMPTY_VALUE_PLACEHOLDER;
-};
-
-const getTrackerDataStats = (props: { completedRecords: number; records: TrackerRecord[] }) => {
-	const { completedRecords, records } = props;
-
-	const riskCount = records.filter((record) => isHighRiskRecord(record)).length;
-	const averageMetric = getAverageMetric(records);
-
-	return [
-		{
-			description: "this week",
-			label: "Total Records",
-			note: `+${records.length} this week`,
-			value: records.length,
-		},
-		{ description: "review", label: "High-risk beneficiary", note: "Requires review", value: riskCount },
-		{
-			description: "attendance",
-			label: "Avg. Attendance",
-			note: "Across all programs",
-			value: `${averageMetric}%`,
-		},
-		{ description: "No change", label: "Completed", note: "No change", value: completedRecords },
-	] as const;
-};
-
-const isHighRiskRecord = (record: TrackerRecord) => {
-	const value = getPerformanceMetric(record);
-
-	return value !== undefined && value < 50;
-};
-
-const getAverageMetric = (records: TrackerRecord[]) => {
-	const values = records
-		.map((record) => getPerformanceMetric(record))
-		.filter((value) => value !== undefined);
-
-	if (values.length === 0) {
-		return 0;
-	}
-
-	const total = values.reduce((sum, value) => sum + value, 0);
-
-	return Math.round(total / values.length);
 };

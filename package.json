@@ -27,7 +27,7 @@
 		"@zayne-labs/toolkit-core": "0.12.56",
 		"@zayne-labs/toolkit-react": "0.12.56",
 		"@zayne-labs/toolkit-type-helpers": "0.12.56",
-		"@zayne-labs/ui-react": "0.12.3",
+		"@zayne-labs/ui-react": "0.12.4",
 		"cmdk": "^1.1.1",
 		"date-fns": "4.4.0",
 		"embla-carousel-autoplay": "^8.6.0",

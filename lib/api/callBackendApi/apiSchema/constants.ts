@@ -13,7 +13,13 @@ export const AdminRoleActionOptions = defineEnum(["assign", "revoke"]);
 
 export const AdminRoleNameOptions = defineEnum(["admin", "superadmin"]);
 
-export const AdminDepartmentOptions = defineEnum(["TACOTS", "ASH", "CAPACITY BUILDING", "OUTREACHES"]);
+export const AdminDepartmentOptions = defineEnum([
+	"TACOTS",
+	"ASH",
+	"CAPACITY BUILDING",
+	"CEDAR OUTREACHES",
+	"ADMINISTRATIVE SUPPORT",
+]);
 
 export const ReviewStatusOptions = defineEnum(["accepted", "rejected", "pending"]);
 
@@ -22,6 +28,16 @@ export const AdminReviewStatusOptions = defineEnum(["NOT SELECTED", "KEEP IN VIE
 export const ProjectStatusOptions = defineEnum(["ongoing", "completed"]);
 
 export const OrderByOptions = defineEnum(["asc", "desc"]);
+
+export const ReceiptSortByOptions = defineEnum([
+	"name",
+	"amount",
+	"description",
+	"uploadedBy",
+	"createdAt",
+]);
+
+export const GalleryFolderOptions = defineEnum(["ASH", "OUTREACHES", "CAPACITY_BUILDING"]);
 
 export const OutreachTypeOptions = defineEnum([
 	"SOFT SKILLS",
