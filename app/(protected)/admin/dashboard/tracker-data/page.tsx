@@ -1215,6 +1215,11 @@ function TrackerDataDetailsDialog(props: {
 							{ label: "Term", value: formatDetailValue(trackerRecord.term) },
 							{ label: "School Name", value: formatDetailValue(trackerRecord.schoolName) },
 							{ label: "Assigned Mentor", value: formatDetailValue(trackerRecord.mentorName) },
+							{
+								label: "Term Result",
+								url: trackerRecord.termResultUrl,
+								value: formatDetailValue(trackerRecord.termResultUrl),
+							},
 						]
 					:	[],
 				submittedAt: trackerRecord?.createdAt,
@@ -1306,6 +1311,16 @@ function TrackerDataDetailsDialog(props: {
 								label: "Student Average (%)",
 								value: formatDetailValue(trackerRecord.studentAveragePct),
 							},
+							{
+								label: "Term Result",
+								url: trackerRecord.termResultUrl,
+								value: formatDetailValue(trackerRecord.termResultUrl),
+							},
+							{
+								label: "Payment Evidence",
+								url: trackerRecord.paymentEvidenceUrl,
+								value: formatDetailValue(trackerRecord.paymentEvidenceUrl),
+							},
 						]
 					:	[],
 				submittedAt: trackerRecord?.submissionDate,
@@ -1342,6 +1357,16 @@ function TrackerDataDetailsDialog(props: {
 							{
 								label: "Enrolled Class",
 								value: formatDetailValue(trackerRecord.enrolledClass),
+							},
+							{
+								label: "Admission Letter",
+								url: trackerRecord.admissionLetterUrl,
+								value: formatDetailValue(trackerRecord.admissionLetterUrl),
+							},
+							{
+								label: "Parent Signature",
+								url: trackerRecord.parentSignatureUrl,
+								value: formatDetailValue(trackerRecord.parentSignatureUrl),
 							},
 						]
 					:	[],
@@ -1482,7 +1507,16 @@ function TrackerDataDetailsDialog(props: {
 										className="min-w-0 text-right font-medium wrap-break-word
 											text-cedar-black/72"
 									>
-										{row.value}
+									{"url" in row && row.url ?
+										<a
+											href={row.url}
+											target="_blank"
+											rel="noreferrer"
+											className="text-cedar-red underline underline-offset-4"
+										>
+											View attachment
+										</a>
+									: row.value}
 									</span>
 								</li>
 							)}

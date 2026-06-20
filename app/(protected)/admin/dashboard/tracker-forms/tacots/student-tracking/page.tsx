@@ -119,7 +119,7 @@ const useTacotsStudentTrackingStorageState = createUseStorageState<GetFormStepSt
 function TacotsStudentTrackingPage() {
 	return (
 		<Main bg="transparent" className="items-center gap-10 lg:gap-[64px]">
-			<FormPageHeader title="TACOTS Student Tracking Form" href="/admin/dashboard" />
+			<FormPageHeader title="TACOTS Student Tracking Form" href="/admin/dashboard/tracker-forms" />
 			<TacotsStudentTrackingForm />
 		</Main>
 	);

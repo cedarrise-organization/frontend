@@ -34,7 +34,7 @@ const TacotsExitSchema = backendApiSchemaRoutes["@post/forms/tacots/exit"].body;
 function TacotsExitCompletionPage() {
 	return (
 		<Main bg="transparent" className="items-center gap-10 lg:gap-[64px]">
-			<FormPageHeader title="TACOTS Exit / Completion Form" href="/admin/dashboard" />
+			<FormPageHeader title="TACOTS Exit / Completion Form" href="/admin/dashboard/tracker-forms" />
 			<TacotsExitCompletionForm />
 		</Main>
 	);

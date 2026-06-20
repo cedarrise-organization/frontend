@@ -1,7 +1,7 @@
 import { ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
 import { Logo } from "@/components/common/Logo";
-import { NavLink, type MainAppRoutes } from "@/components/common/NavLink";
+import { NavLink, NavLinkEphemeral, type MainAppRoutes } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
 
 const quickLinks = [
@@ -44,13 +44,15 @@ function Footer() {
 						development.
 					</p>
 
-					<Button
-						theme="secondary"
-						className="mt-12 h-8.5 rounded-[12px] px-6 text-[10px] lg:h-10 lg:rounded-[12px] lg:px-6
-							lg:text-[14px]"
-					>
-						Admin
-					</Button>
+					<NavLinkEphemeral href="/auth/admin/signin">
+						<Button
+							theme="secondary"
+							className="mt-12 h-8.5 rounded-[12px] px-6 text-[10px] lg:h-10 lg:rounded-[12px]
+								lg:px-6 lg:text-[14px]"
+						>
+							Admin
+						</Button>
+					</NavLinkEphemeral>
 				</header>
 
 				<article className="flex flex-wrap gap-x-4 gap-y-5 lg:mt-6 lg:gap-x-10">

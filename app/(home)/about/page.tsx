@@ -1,7 +1,16 @@
 import Image from "next/image";
-import { aboutCoreValueDesktopImg, aboutCoreValueMobileImg, aboutHeroImg } from "@/assets/images/about";
-import { ForWithWrapper } from "@/components/common/for";
+import {
+	aboutCoreValueDesktopImg,
+	aboutCoreValueMobileImg,
+	aboutHeroImg,
+	teamMemberFourImg,
+	teamMemberOneImg,
+	teamMemberThreeImg,
+	teamMemberTwoImg,
+} from "@/assets/images/about";
+import { For } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
+import { Card } from "@/components/ui/card";
 import { FinalCTASection } from "../-components/FinalCTASectionShared";
 import { Main } from "../-components/Main";
 
@@ -105,19 +114,25 @@ function MissionVisionSection() {
 function CoreValuesSection() {
 	return (
 		<section className="flex flex-col items-center gap-6 lg:gap-8">
-			<picture className="w-full max-w-[1050px]">
-				<source media="(min-width: 1024px)" srcSet={aboutCoreValueDesktopImg.src} />
+			<picture className="w-full lg:max-w-[1110px]">
+				<source media="(min-width: 1000px)" srcSet={aboutCoreValueDesktopImg.src} />
 
 				<Image
 					src={aboutCoreValueMobileImg}
 					alt="CedarRise core values"
 					className="w-full object-contain"
-					sizes="(min-width: 1024px) 1050px, 100vw"
 				/>
 			</picture>
 		</section>
 	);
 }
+
+const teamMembers = [
+	{ image: teamMemberOneImg, name: "Emmanuella Aguenu", role: "Managing Director" },
+	{ image: teamMemberTwoImg, name: "Ogechukwu Igwe", role: "Asst. Coordinator" },
+	{ image: teamMemberThreeImg, name: "Uchechukwu Onyijechi", role: "Academic Coordinator" },
+	{ image: teamMemberFourImg, name: "Ylenor Abang", role: "Treasurer" },
+] as const;
 
 function TeamSection() {
 	return (
@@ -132,17 +147,41 @@ function TeamSection() {
 				</p>
 			</header>
 
-			<ForWithWrapper
-				className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-5"
-				each={10}
-				renderItem={(index) => (
-					<li
-						key={index}
-						className="min-h-[180px] rounded-[18px] bg-cedar-black lg:min-h-[280px]
-							lg:rounded-[24px]"
-					/>
-				)}
-			/>
+			<ul className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-5">
+				<For
+					each={teamMembers}
+					renderItem={(member) => (
+						<Card.Root
+							as="li"
+							key={member.name}
+							className="h-full min-h-[180px] overflow-hidden rounded-[18px] bg-cedar-black p-0
+								text-cedar-white lg:min-h-[280px] lg:rounded-[24px]"
+						>
+							<Card.Header className="aspect-[1.12] w-full">
+								<Image src={member.image} alt={member.name} className="size-full object-cover" />
+							</Card.Header>
+
+							<Card.Content className="flex flex-col gap-1 p-3 lg:p-4">
+								<Card.Title className="text-[14px]/[1.2]">{member.name}</Card.Title>
+								<Card.Description className="text-[10px]/[1.2] text-cedar-white/80">
+									{member.role}
+								</Card.Description>
+							</Card.Content>
+						</Card.Root>
+					)}
+				/>
+
+				<For
+					each={6}
+					renderItem={(index) => (
+						<li
+							key={index}
+							className="min-h-[180px] rounded-[18px] bg-cedar-black lg:min-h-[280px]
+								lg:rounded-[24px]"
+						/>
+					)}
+				/>
+			</ul>
 		</section>
 	);
 }

@@ -958,6 +958,21 @@ function FormDataDetailsDialog(props: {
 							{ label: "Current Class", value: formatDetailValue(formRecord.currentClass) },
 							{ label: "Status", value: formatDetailValue(formRecord.status) },
 							{ label: "Assigned Mentor", value: formatDetailValue(formRecord.assignedMentor) },
+							{
+								label: "Passport Photo",
+								url: formRecord.passportPhotoUrl,
+								value: formatDetailValue(formRecord.passportPhotoUrl),
+							},
+							{
+								label: "Last Result",
+								url: formRecord.lastResultUrl,
+								value: formatDetailValue(formRecord.lastResultUrl),
+							},
+							{
+								label: "Parent Signature",
+								url: formRecord.parentSignatureUrl,
+								value: formatDetailValue(formRecord.parentSignatureUrl),
+							},
 						]
 					:	[],
 			};
@@ -1002,6 +1017,16 @@ function FormDataDetailsDialog(props: {
 							{ label: "School Name", value: formatDetailValue(formRecord.schoolName) },
 							{ label: "Last Class", value: formatDetailValue(formRecord.lastClass) },
 							{ label: "Admin Status", value: formatDetailValue(formRecord.adminStatus) },
+							{
+								label: "Passport Photo",
+								url: formRecord.passportPhotoUrl,
+								value: formatDetailValue(formRecord.passportPhotoUrl),
+							},
+							{
+								label: "Last Result",
+								url: formRecord.lastResultUrl,
+								value: formatDetailValue(formRecord.lastResultUrl),
+							},
 						]
 					:	[],
 			};
@@ -1161,7 +1186,16 @@ function FormDataDetailsDialog(props: {
 										className="min-w-0 text-right font-medium wrap-break-word
 											text-cedar-black/72"
 									>
-										{row.value}
+									{"url" in row && row.url ?
+										<a
+											href={row.url}
+											target="_blank"
+											rel="noreferrer"
+											className="text-cedar-red underline underline-offset-4"
+										>
+											View attachment
+										</a>
+									: row.value}
 									</span>
 								</li>
 							)}

@@ -28,7 +28,7 @@ import {
 function OutreachTrackerPage() {
 	return (
 		<Main bg="transparent" className="items-center gap-10 lg:gap-[64px]">
-			<FormPageHeader title="Cedar Outreach Tracker Form" href="/admin/dashboard" />
+			<FormPageHeader title="Cedar Outreach Tracker Form" href="/admin/dashboard/tracker-forms" />
 			<OutreachTrackerForm />
 		</Main>
 	);

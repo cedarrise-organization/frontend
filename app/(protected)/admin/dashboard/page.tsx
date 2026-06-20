@@ -36,7 +36,29 @@ import {
 	dashboardStudentPerformanceQuery,
 } from "@/lib/react-query/queryOptions";
 import { cnJoin, cnMerge } from "@/lib/utils/cn";
+import { EMPTY_VALUE_PLACEHOLDER } from "./-components/constants";
 import { Main } from "./-components/Main";
+
+const chartScopesByTitle = {
+	"Acceptance Rate - by Programme": "ASH + TACOTS",
+	"Application Numbers Over Time": "ASH + TACOTS",
+	"At-risk vs Low-risk Students": "ASH",
+	"Attendance Trend - Monthly Sessions": "ASH",
+	"Average Mentorship Hours": "TACOTS",
+	"Average Spend per Student": "TACOTS",
+	"Class/Age Distribution": "ASH",
+	"Dropout Trend - Monthly": "ASH",
+	"Gender Diversity": "ASH + TACOTS",
+	"Geographic Distribution - Top States": "ASH",
+	"Graduation Rate Trend": "ASH",
+	"Pre/Mid/Post-test Scores by Term": "ASH",
+	"Students Meeting Benchmark": "TACOTS",
+	"TACOTS Mid-term & End-of-term Scores": "TACOTS",
+	"Total Accumulated Mentorship Hours": "TACOTS",
+	"Total Community Service Hours": "TACOTS",
+} as const satisfies Record<string, "ASH" | "ASH + TACOTS" | "TACOTS">;
+
+type ChartTitles = keyof typeof chartScopesByTitle;
 
 const chartColorGroups = {
 	blackRedYellow: ["var(--color-cedar-black)", "var(--color-cedar-red)", "var(--color-cedar-yellow)"],
@@ -55,6 +77,7 @@ const chartColorsByTitle = {
 	"At-risk vs Low-risk Students": chartColorGroups.pie,
 	"Attendance Trend - Monthly Sessions": chartColorGroups.red,
 	"Average Mentorship Hours": chartColorGroups.red,
+	"Average Spend per Student": chartColorGroups.blackRedYellow,
 	"Class/Age Distribution": chartColorGroups.single,
 	"Dropout Trend - Monthly": chartColorGroups.single,
 	"Gender Diversity": chartColorGroups.redBlack,
@@ -63,26 +86,7 @@ const chartColorsByTitle = {
 	"Students Meeting Benchmark": ["hsl(350, 43%, 68%)", "hsl(350, 43%, 56%)", "var(--color-cedar-red)"],
 	"TACOTS Mid-term & End-of-term Scores": chartColorGroups.redYellow,
 	"Total Community Service Hours": chartColorGroups.redYellow,
-	"Total Spend per TACOTS Student": chartColorGroups.blackRedYellow,
-} as const satisfies Record<string, readonly string[]>;
-
-const chartScopesByTitle = {
-	"Application Numbers Over Time": "ASH + TACOTS",
-	"At-risk vs Low-risk Students": "ASH",
-	"Attendance Trend - Monthly Sessions": "ASH",
-	"Average Mentorship Hours": "TACOTS",
-	"Class/Age Distribution": "ASH",
-	"Dropout Trend - Monthly": "ASH",
-	"Gender Diversity": "ASH + TACOTS",
-	"Geographic Distribution - Top States": "ASH",
-	"Graduation Rate Trend": "ASH",
-	"Pre/Mid/Post-test Scores by Term": "ASH",
-	"Students Meeting Benchmark": "TACOTS",
-	"TACOTS Mid-term & End-of-term Scores": "TACOTS",
-	"Total Accumulated Mentorship Hours": "TACOTS",
-	"Total Community Service Hours": "TACOTS",
-	"Total Spend per TACOTS Student": "TACOTS",
-} as const satisfies Record<string, "ASH" | "ASH + TACOTS" | "TACOTS">;
+} as const satisfies Partial<Record<ChartTitles, readonly string[]>>;
 
 function DashboardPage() {
 	const cardsQueryResult = useQuery(dashboardCardsQuery());
@@ -98,8 +102,8 @@ function DashboardPage() {
 
 	return (
 		<Main className="gap-6 lg:gap-8">
-			<section className="grid gap-4 lg:grid-cols-[1fr_300px] xl:grid-cols-[1fr_330px]">
-				<div className="grid gap-3 lg:grid-cols-2 xl:grid-cols-3">
+			<section className="flex flex-col gap-4 lg:flex-row">
+				<div className="grid grow gap-3 lg:grid-cols-2 xl:grid-cols-3">
 					<DashboardStatCard
 						icon="solar:user-check-rounded-outline"
 						title="Volunteers"
@@ -294,7 +298,7 @@ function DashboardPage() {
 						dataset={institutionalEffectiveness?.c_studentBenchMark}
 					/>
 					<DashboardChartCard
-						title="Total Spend per TACOTS Student"
+						title="Average Spend per Student"
 						description="Average programme spend by category"
 						dataset={institutionalEffectiveness?.c_spendPerstudent}
 					/>
@@ -349,9 +353,12 @@ function DashboardStatCard(props: {
 	const { icon, stats, title } = props;
 
 	return (
-		<Card.Root className="rounded-[20px] bg-cedar-white p-4 shadow-[0_1px_0_hsl(0,0%,0%,0.04)]">
+		<Card.Root
+			className="flex flex-col gap-5 rounded-[20px] bg-cedar-white p-4
+				shadow-[0_1px_0_hsl(0,0%,0%,0.04)]"
+		>
 			<Card.Header
-				className="mb-5 inline-flex items-center gap-2 rounded-[8px] bg-cedar-yellow/20 px-2.5 py-1
+				className="inline-flex items-center gap-2 rounded-[8px] bg-cedar-yellow/20 px-2.5 py-1
 					text-cedar-yellow"
 			>
 				<IconBox icon={icon} className="size-4" />
@@ -386,14 +393,16 @@ function AlertsPanel() {
 	];
 
 	return (
-		<Card.Root className="rounded-[20px] bg-cedar-white p-4 shadow-[0_1px_0_hsl(0,0%,0%,0.04)]">
+		<Card.Root
+			className="flex flex-col gap-4 rounded-[20px] bg-cedar-white p-4
+				shadow-[0_1px_0_hsl(0,0%,0%,0.04)]"
+		>
 			<Card.Header className="rounded-[14px] bg-cedar-red px-4 py-3 text-cedar-white">
 				<Card.Title className="text-center text-[14px]/[1.2]">Alerts & Notifications</Card.Title>
 			</Card.Header>
 
-			<Card.Content>
-				<ForWithWrapper
-					className="mt-4 flex flex-col gap-3"
+			<Card.Content className="flex flex-col gap-3">
+				<For
 					each={alerts}
 					renderItem={(alert, index) => (
 						<li
@@ -427,9 +436,9 @@ function ProjectCard(props: {
 		<Card.Root
 			className="flex w-full gap-3 rounded-[18px] bg-cedar-white p-3 shadow-[0_1px_0_hsl(0,0%,0%,0.04)]"
 		>
-			<div
-				className="grid h-[92px] w-[120px] shrink-0 place-content-center overflow-hidden rounded-[12px]
-					bg-cedar-black/8"
+			<Card.Header
+				className="flex h-[92px] w-[120px] shrink-0 items-center justify-center overflow-hidden
+					rounded-[12px] bg-cedar-black/8"
 			>
 				{project.imageUrl ?
 					<Image
@@ -440,7 +449,7 @@ function ProjectCard(props: {
 						className="size-full object-cover"
 					/>
 				:	<IconBox icon="solar:gallery-outline" className="size-8 text-cedar-black/32" />}
-			</div>
+			</Card.Header>
 
 			<Card.Content className="flex grow flex-col">
 				<Card.Title className="truncate text-[13px]/[1.2]">{project.title}</Card.Title>
@@ -468,26 +477,27 @@ function DashboardChartCard(props: {
 	className?: string;
 	dataset: DashboardChartDataset | undefined;
 	description: string;
-	title: string;
+	title: ChartTitles;
 }) {
 	const { className, dataset, description, title } = props;
 
 	return (
 		<Card.Root
 			className={cnMerge(
-				"w-full rounded-[18px] bg-cedar-white p-4 shadow-[0_1px_0_hsl(0,0%,0%,0.04)]",
+				`flex w-full flex-col gap-3 rounded-[18px] bg-cedar-white p-4
+				shadow-[0_1px_0_hsl(0,0%,0%,0.04)]`,
 				className
 			)}
 		>
-			<Card.Header className="mb-3 flex flex-row items-start justify-between gap-3">
-				<div>
+			<Card.Header className="flex flex-row items-start justify-between gap-3">
+				<div className="flex flex-col gap-1">
 					<Card.Title className="text-[13px]/[1.2] lg:text-[14px]">{title}</Card.Title>
-					<Card.Description className="mt-1 text-[10px] text-cedar-black/48">
+					<Card.Description className="text-[10px] text-cedar-black/48">
 						{description}
 					</Card.Description>
 				</div>
 				<Badge className="border-0 bg-cedar-yellow/16 px-2 py-1 text-[9px] text-cedar-yellow">
-					{getChartScope(title)}
+					{chartScopesByTitle[title]}
 				</Badge>
 			</Card.Header>
 
@@ -496,7 +506,7 @@ function DashboardChartCard(props: {
 	);
 }
 
-function renderChartContent(props: { dataset: DashboardChartDataset | undefined; title: string }) {
+function renderChartContent(props: { dataset: DashboardChartDataset | undefined; title: ChartTitles }) {
 	const { dataset, title } = props;
 
 	if (!dataset) {
@@ -517,14 +527,16 @@ function GenderDiversityChart(props: { dataset: DashboardChartDataset }) {
 	const totalAmount = pieData.reduce((total, item) => total + item.value, 0);
 
 	return (
-		<div className="flex min-h-[178px] w-full items-center justify-between gap-6">
+		<article className="flex min-h-[178px] w-full items-center justify-between gap-6">
 			<div className="min-w-[128px]">
-				<Badge className="mb-5 border-0 bg-cedar-yellow/16 px-3 py-1 text-[10px] text-cedar-yellow">
+				<Badge className="border-0 bg-cedar-yellow/16 px-3 py-1 text-[10px] text-cedar-yellow">
 					ash student + tacots recommendation
 				</Badge>
 
-				<ul className="flex flex-col gap-2">
-					{pieData.map((item) => (
+				<ForWithWrapper
+					each={pieData}
+					className="mt-5 flex flex-col gap-2"
+					renderItem={(item) => (
 						<li key={item.label} className="grid grid-cols-[14px_1fr_36px] items-center gap-2">
 							<span className="size-3 rounded-[3px]" style={{ backgroundColor: item.fill }} />
 							<span className="text-[14px] text-cedar-black/56">{item.label}</span>
@@ -532,8 +544,8 @@ function GenderDiversityChart(props: { dataset: DashboardChartDataset }) {
 								{formatPercent(item.value, totalAmount)}
 							</span>
 						</li>
-					))}
-				</ul>
+					)}
+				/>
 			</div>
 
 			<Chart.Container
@@ -551,14 +563,37 @@ function GenderDiversityChart(props: { dataset: DashboardChartDataset }) {
 					/>
 				</PieChart>
 			</Chart.Container>
-		</div>
+		</article>
 	);
 }
 
-function renderChart(dataset: DashboardChartDataset, title: string) {
-	const colors = getChartColors(title);
-	const chartData = toChartData(dataset, colors);
-	const config = toChartConfig(dataset, colors, title);
+function renderChart(dataset: DashboardChartDataset, title: ChartTitles) {
+	const colors = chartColorsByTitle[title as keyof typeof chartColorsByTitle];
+
+	const chartData = dataset.labels.map((label, labelIndex) => {
+		const dataPoint: Record<string, number | string | null> = { label };
+
+		if (dataset.datasets.length === 1) {
+			dataPoint.fill = colors[labelIndex % colors.length] ?? "var(--color-cedar-yellow)";
+		}
+
+		for (const [dataItemIndex, dataItem] of dataset.datasets.entries()) {
+			dataPoint[dataItem.label ?? `value-${dataItemIndex}`] = dataItem.data[labelIndex] ?? null;
+		}
+
+		return dataPoint;
+	});
+
+	const config = Object.fromEntries(
+		dataset.datasets.map((dataItem, index) => [
+			dataItem.label ?? `value-${index}`,
+			{
+				color: getSeriesColor({ colors, index, label: dataItem.label, title }),
+				label: dataItem.label ?? `Series ${index + 1}`,
+			},
+		])
+	);
+
 	const pieData = toPieData(dataset, colors);
 
 	if (title === "Total Community Service Hours") {
@@ -579,7 +614,16 @@ function renderChart(dataset: DashboardChartDataset, title: string) {
 				<BarChart data={chartData}>
 					<CartesianGrid vertical={false} strokeDasharray="3 3" />
 					<XAxis dataKey="label" tickLine={false} axisLine={false} tickMargin={8} />
-					<YAxis tickLine={false} axisLine={false} width={30} />
+					<YAxis
+						tickFormatter={
+							title === "Pre/Mid/Post-test Scores by Term" ?
+								(value) => `${String(value)}%`
+							:	undefined
+						}
+						tickLine={false}
+						axisLine={false}
+						width={title === "Pre/Mid/Post-test Scores by Term" ? 36 : 30}
+					/>
 					<Chart.Tooltip content={<Chart.TooltipContent />} />
 					<For
 						each={dataset.datasets}
@@ -653,7 +697,7 @@ function renderChart(dataset: DashboardChartDataset, title: string) {
 }
 
 function renderTacotsScoresChart(props: {
-	chartData: Array<Record<string, number | string>>;
+	chartData: Array<Record<string, number | string | null>>;
 	config: Chart.ChartConfig;
 	dataset: DashboardChartDataset;
 }) {
@@ -696,7 +740,7 @@ function renderTacotsScoresChart(props: {
 }
 
 function renderCommunityServiceChart(props: {
-	chartData: Array<Record<string, number | string>>;
+	chartData: Array<Record<string, number | string | null>>;
 	config: Chart.ChartConfig;
 	dataset: DashboardChartDataset;
 }) {
@@ -777,7 +821,7 @@ function isAverageSeries(label: string | undefined) {
 }
 
 function renderMentorshipAreaChart(props: {
-	chartData: Array<Record<string, number | string>>;
+	chartData: Array<Record<string, number | string | null>>;
 	colors: readonly string[];
 	config: Chart.ChartConfig;
 	dataset: DashboardChartDataset;
@@ -793,8 +837,26 @@ function renderMentorshipAreaChart(props: {
 			<AreaChart data={chartData}>
 				<CartesianGrid vertical={true} strokeDasharray="3 3" />
 				<XAxis dataKey="label" tickLine={false} axisLine={false} tickMargin={8} />
-				<YAxis tickLine={false} axisLine={false} width={30} />
-				<Chart.Tooltip content={<Chart.TooltipContent />} />
+				<YAxis
+					tickFormatter={(value) => `${String(value)} hr`}
+					tickLine={false}
+					axisLine={false}
+					width={44}
+				/>
+				<Chart.Tooltip
+					content={
+						<Chart.TooltipContent
+							formatter={(value, name) => (
+								<>
+									<span className="text-shadcn-muted-foreground">{String(name)}</span>
+									<span className="ml-auto font-mono font-medium tabular-nums">
+										{String(value)} hr
+									</span>
+								</>
+							)}
+						/>
+					}
+				/>
 				<Area
 					type="monotone"
 					dataKey={dataKey}
@@ -824,7 +886,7 @@ function ChartPieShape(props: PieSectorDataItem) {
 function LineDataCard(props: {
 	description: string;
 	items: DashboardLineData | undefined;
-	title: string;
+	title: ChartTitles;
 	variant?: "programmes";
 }) {
 	const { description, items, title, variant } = props;
@@ -832,8 +894,11 @@ function LineDataCard(props: {
 	const maxAmount = Math.max(...(items ?? []).map((item) => item.amount), 1);
 
 	return (
-		<Card.Root className="w-full rounded-[18px] bg-cedar-white p-4 shadow-[0_1px_0_hsl(0,0%,0%,0.04)]">
-			<Card.Header className="mb-3 flex flex-row items-start justify-between gap-3">
+		<Card.Root
+			className="flex w-full flex-col gap-3 rounded-[18px] bg-cedar-white p-4
+				shadow-[0_1px_0_hsl(0,0%,0%,0.04)]"
+		>
+			<Card.Header className="flex flex-row items-start justify-between gap-3">
 				<div>
 					<Card.Title className="text-[13px]/[1.2] lg:text-[14px]">{title}</Card.Title>
 					<Card.Description className="mt-1 text-[10px] text-cedar-black/48">
@@ -841,7 +906,7 @@ function LineDataCard(props: {
 					</Card.Description>
 				</div>
 				<Badge className="border-0 bg-cedar-yellow/16 px-2 py-1 text-[9px] text-cedar-yellow">
-					{getChartScope(title)}
+					{chartScopesByTitle[title]}
 				</Badge>
 			</Card.Header>
 
@@ -872,7 +937,11 @@ function LineDataCard(props: {
 									}
 								/>
 							</div>
-							<p className="text-right text-[11px] font-medium">{formatNumber(item.amount)}</p>
+							<p className="text-right text-[11px] font-medium">
+								{formatNumber(item.amount)}
+								{title === "Acceptance Rate - by Programme" && "%"}
+								{title === "Total Accumulated Mentorship Hours" && " hr"}
+							</p>
 						</li>
 					)}
 				/>
@@ -891,21 +960,6 @@ function getProgrammeBarTrackClassName(index: number) {
 	);
 }
 
-function toChartData(dataset: DashboardChartDataset, colors: readonly string[]) {
-	return dataset.labels.map((label, labelIndex) => {
-		const dataPoint: Record<string, number | string> = {
-			fill: colors[labelIndex % colors.length] ?? "var(--color-cedar-yellow)",
-			label,
-		};
-
-		for (const [dataItemIndex, dataItem] of dataset.datasets.entries()) {
-			dataPoint[dataItem.label ?? `value-${dataItemIndex}`] = dataItem.data[labelIndex] ?? 0;
-		}
-
-		return dataPoint;
-	});
-}
-
 function toPieData(dataset: DashboardChartDataset, colors: readonly string[]) {
 	const firstDataSet = dataset.datasets[0];
 
@@ -914,28 +968,6 @@ function toPieData(dataset: DashboardChartDataset, colors: readonly string[]) {
 		label,
 		value: firstDataSet?.data[index] ?? 0,
 	}));
-}
-
-function toChartConfig(dataset: DashboardChartDataset, colors: readonly string[], title?: string) {
-	return Object.fromEntries(
-		dataset.datasets.map((dataItem, index) => [
-			dataItem.label ?? `value-${index}`,
-			{
-				color: getSeriesColor({ colors, index, label: dataItem.label, title }),
-				label: dataItem.label ?? `Series ${index + 1}`,
-			},
-		])
-	);
-}
-
-function getChartColors(title: string) {
-	const colors = chartColorsByTitle[title as keyof typeof chartColorsByTitle];
-
-	return colors;
-}
-
-function getChartScope(title: string) {
-	return chartScopesByTitle[title as keyof typeof chartScopesByTitle];
 }
 
 function getSeriesColor(context: {
@@ -959,17 +991,11 @@ function getSeriesColor(context: {
 }
 
 const formatNumber = (value: number | undefined) => {
-	if (value == null || Number.isNaN(value)) {
-		return "--";
-	}
-
-	return Math.round(value).toLocaleString();
+	return value == null || Number.isNaN(value) ?
+			EMPTY_VALUE_PLACEHOLDER
+		:	Math.round(value).toLocaleString();
 };
 
 const formatPercent = (value: number, total: number) => {
-	if (total === 0) {
-		return "0%";
-	}
-
-	return `${Math.round((value / total) * 100)}%`;
+	return `${total === 0 ? "0" : Math.round((value / total) * 100)}%`;
 };
