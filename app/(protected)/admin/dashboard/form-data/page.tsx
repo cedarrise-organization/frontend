@@ -1186,16 +1186,16 @@ function FormDataDetailsDialog(props: {
 										className="min-w-0 text-right font-medium wrap-break-word
 											text-cedar-black/72"
 									>
-									{"url" in row && row.url ?
-										<a
-											href={row.url}
-											target="_blank"
-											rel="noreferrer"
-											className="text-cedar-red underline underline-offset-4"
-										>
-											View attachment
-										</a>
-									: row.value}
+										{"url" in row && row.url ?
+											<a
+												href={row.url}
+												target="_blank"
+												rel="noreferrer"
+												className="text-cedar-red underline underline-offset-4"
+											>
+												View attachment
+											</a>
+										:	row.value}
 									</span>
 								</li>
 							)}

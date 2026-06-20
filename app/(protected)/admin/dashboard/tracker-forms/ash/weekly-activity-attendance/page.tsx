@@ -28,7 +28,10 @@ type AshAttendanceFormData = z.infer<typeof AshAttendanceSchema>;
 function AshWeeklyActivityAttendancePage() {
 	return (
 		<Main bg="transparent" className="items-center gap-10 lg:gap-[64px]">
-			<FormPageHeader title="ASH Weekly activity & Attendance Form" href="/admin/dashboard/tracker-forms" />
+			<FormPageHeader
+				title="ASH Weekly activity & Attendance Form"
+				href="/admin/dashboard/tracker-forms"
+			/>
 			<AshWeeklyActivityAttendanceForm />
 		</Main>
 	);

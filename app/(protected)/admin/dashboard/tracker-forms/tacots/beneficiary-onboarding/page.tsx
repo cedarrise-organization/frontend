@@ -174,7 +174,10 @@ const useTacotsOnboardingStorageState = createUseStorageState<GetFormStepStoreTy
 function TacotsBeneficiaryOnboardingPage() {
 	return (
 		<Main bg="transparent" className="items-center gap-10 lg:gap-[64px]">
-			<FormPageHeader title="TACOTS Beneficiary Onboarding Form" href="/admin/dashboard/tracker-forms" />
+			<FormPageHeader
+				title="TACOTS Beneficiary Onboarding Form"
+				href="/admin/dashboard/tracker-forms"
+			/>
 			<TacotsBeneficiaryOnboardingForm />
 		</Main>
 	);
