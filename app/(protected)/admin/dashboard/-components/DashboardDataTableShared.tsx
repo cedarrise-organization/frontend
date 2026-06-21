@@ -1,6 +1,8 @@
+/* eslint-disable react-refresh/only-export-components */
 "use client";
 
 import type { Table } from "@tanstack/react-table";
+import { isArray, isBoolean, isNumber, isString } from "@zayne-labs/toolkit-type-helpers";
 import { parseAsArrayOf, parseAsInteger, parseAsString, useQueryState } from "nuqs";
 import { For } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
@@ -11,11 +13,7 @@ import { getSortingStateParser } from "@/components/ui/data-table/data-table-par
 import { Form } from "@/components/ui/form";
 import { OrderByOptions } from "@/lib/api/callBackendApi/apiSchema";
 import { cnMerge } from "@/lib/utils/cn";
-
-const DASHBOARD_TABLE_ORDER_OPTIONS = [
-	{ label: "Ascending", value: "asc" },
-	{ label: "Descending", value: "desc" },
-] as const;
+import { EMPTY_VALUE_PLACEHOLDER } from "./constants";
 
 export function DashboardDataTableSection<TRecord>(props: {
 	color: "red" | "yellow";
@@ -70,11 +68,9 @@ export function DashboardDataTableSection<TRecord>(props: {
 					>
 						export as CSV tables
 					</Button>
-					<span
-						className="rounded-[6px] bg-cedar-black/12 px-3 py-1.5 text-[14px] text-cedar-black/56"
-					>
+					<p className="rounded-[6px] bg-cedar-black/12 px-3 py-1.5 text-[14px] text-cedar-black/56">
 						{count}
-					</span>
+					</p>
 				</div>
 			</article>
 
@@ -257,7 +253,6 @@ function DashboardToolbarSelect(props: {
 	);
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useDashboardDataTableQueryState = <const TSortBy extends string>(props: {
 	pageKey: string;
 	perPageKey: string;
@@ -281,4 +276,46 @@ export const useDashboardDataTableQueryState = <const TSortBy extends string>(pr
 		page,
 		sortBy: activeSort?.id,
 	};
+};
+
+const DASHBOARD_TABLE_ORDER_OPTIONS = [
+	{ label: "Ascending", value: "asc" },
+	{ label: "Descending", value: "desc" },
+] as const;
+
+export const formatDashboardDetailValue = (value: unknown): string => {
+	if (value === null || value === undefined || value === "") {
+		return EMPTY_VALUE_PLACEHOLDER;
+	}
+
+	if (isBoolean(value)) {
+		return value ? "True" : "False";
+	}
+
+	if (isArray(value)) {
+		return value.map((item) => formatDashboardDetailValue(item)).join(", ");
+	}
+
+	if (isNumber(value) || isString(value)) {
+		return String(value);
+	}
+
+	return EMPTY_VALUE_PLACEHOLDER;
+};
+
+export const getDashboardDetailRows = (record: Record<string, unknown> | undefined) => {
+	if (!record) {
+		return [];
+	}
+
+	return Object.entries(record)
+		.filter(
+			([key]) =>
+				!["createdAt", "deletedAt", "id", "updatedAt"].includes(key) && !key.endsWith("PublicId")
+		)
+		.map(([key, value]) => ({
+			label: key.split(/(?=[A-Z])/).join(" "),
+			url: key.endsWith("Url") && isString(value) ? value : undefined,
+			value: formatDashboardDetailValue(value),
+		}));
 };

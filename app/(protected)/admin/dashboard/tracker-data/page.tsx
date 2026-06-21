@@ -66,6 +66,8 @@ import { cnMerge } from "@/lib/utils/cn";
 import { EMPTY_VALUE_PLACEHOLDER } from "../-components/constants";
 import {
 	DashboardDataTableSection,
+	formatDashboardDetailValue,
+	getDashboardDetailRows,
 	useDashboardDataTableQueryState,
 } from "../-components/DashboardDataTableShared";
 import { Main } from "../-components/Main";
@@ -322,19 +324,19 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 			getTextColumn(
 				"studentsInAttendance",
 				"STUDENTS IN ATTENDANCE",
-				(row) => formatDetailValue(row.studentsInAttendance),
+				(row) => formatDashboardDetailValue(row.studentsInAttendance),
 				false
 			),
 			getTextColumn(
 				"studentsMentored",
 				"STUDENTS MENTORED",
-				(row) => formatDetailValue(row.studentsMentored),
+				(row) => formatDashboardDetailValue(row.studentsMentored),
 				false
 			),
 			getTextColumn(
 				"sessionsConducted",
 				"SESSIONS HAD",
-				(row) => formatDetailValue(row.sessionsConducted),
+				(row) => formatDashboardDetailValue(row.sessionsConducted),
 				false
 			),
 			getTextColumn(
@@ -757,7 +759,7 @@ function OutreachTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRec
 			getTextColumn(
 				"outreachType",
 				"OUTREACH TYPE",
-				(row) => formatDetailValue(row.outreachType),
+				(row) => formatDashboardDetailValue(row.outreachType),
 				false
 			),
 			getActionsColumn(
@@ -973,7 +975,7 @@ const getTextColumn = <TRecord extends TrackerRecord>(
 					options?.truncate && "block max-w-[220px] truncate"
 				)}
 			>
-				{formatDetailValue(row.getValue(id))}
+				{formatDashboardDetailValue(row.getValue(id))}
 			</span>
 		),
 		enableColumnFilter,
@@ -1242,19 +1244,7 @@ function TrackerDataDetailsDialog(props: {
 		return {};
 	})();
 
-	const rows =
-		record ?
-			Object.entries(record)
-				.filter(
-					([key]) =>
-						!["createdAt", "deletedAt", "id", "updatedAt"].includes(key) && !key.endsWith("PublicId")
-				)
-				.map(([key, value]) => ({
-					label: key.replaceAll(/([A-Z])/g, " $1"),
-					url: key.endsWith("Url") && typeof value === "string" ? value : undefined,
-					value: formatDetailValue(value),
-				}))
-		:	[];
+	const rows = getDashboardDetailRows(record);
 
 	const submittedDate =
 		typeof submittedAt === "string" ?
@@ -1340,22 +1330,3 @@ function TrackerDataDetailsDialog(props: {
 	);
 }
 
-const formatDetailValue = (value: unknown): string => {
-	if (value === null || value === undefined || value === "") {
-		return EMPTY_VALUE_PLACEHOLDER;
-	}
-
-	if (typeof value === "boolean") {
-		return value ? "True" : "False";
-	}
-
-	if (Array.isArray(value)) {
-		return value.map((item) => formatDetailValue(item)).join(", ");
-	}
-
-	if (typeof value === "number" || typeof value === "string") {
-		return String(value);
-	}
-
-	return EMPTY_VALUE_PLACEHOLDER;
-};

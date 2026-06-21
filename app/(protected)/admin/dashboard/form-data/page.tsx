@@ -58,6 +58,8 @@ import { cnMerge } from "@/lib/utils/cn";
 import { EMPTY_VALUE_PLACEHOLDER } from "../-components/constants";
 import {
 	DashboardDataTableSection,
+	formatDashboardDetailValue,
+	getDashboardDetailRows,
 	useDashboardDataTableQueryState,
 } from "../-components/DashboardDataTableShared";
 import { Main } from "../-components/Main";
@@ -745,7 +747,9 @@ const getTextColumn = <TRecord extends FormRecord>(
 	return {
 		accessorFn,
 		cell: ({ row }) => (
-			<span className="text-[13px] text-cedar-black/72">{formatDetailValue(row.getValue(id))}</span>
+			<span className="text-[13px] text-cedar-black/72">
+				{formatDashboardDetailValue(row.getValue(id))}
+			</span>
 		),
 		enableColumnFilter,
 		header: ({ column }) => <DataTableColumnHeader column={column} label={label} />,
@@ -982,19 +986,7 @@ function FormDataDetailsDialog(props: {
 		return void 0;
 	})();
 
-	const rows =
-		record ?
-			Object.entries(record)
-				.filter(
-					([key]) =>
-						!["createdAt", "deletedAt", "id", "updatedAt"].includes(key) && !key.endsWith("PublicId")
-				)
-				.map(([key, value]) => ({
-					label: key.replaceAll(/([A-Z])/g, " $1"),
-					url: key.endsWith("Url") && typeof value === "string" ? value : undefined,
-					value: formatDetailValue(value),
-				}))
-		:	[];
+	const rows = getDashboardDetailRows(record);
 
 	const status = (() => {
 		if (!record) return;
@@ -1129,26 +1121,6 @@ function FormDataDetailsDialog(props: {
 		</DialogAnimated.Root>
 	);
 }
-
-const formatDetailValue = (value: unknown): string => {
-	if (value === null || value === undefined || value === "") {
-		return EMPTY_VALUE_PLACEHOLDER;
-	}
-
-	if (typeof value === "boolean") {
-		return value ? "True" : "False";
-	}
-
-	if (Array.isArray(value)) {
-		return value.map((item) => formatDetailValue(item)).join(", ");
-	}
-
-	if (typeof value === "number" || typeof value === "string") {
-		return String(value);
-	}
-
-	return EMPTY_VALUE_PLACEHOLDER;
-};
 
 function StatusPill({ status }: { status: string }) {
 	const normalizedStatus = status.toLowerCase();

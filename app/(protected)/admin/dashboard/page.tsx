@@ -192,12 +192,12 @@ function DashboardPage() {
 				<Carousel.Root options={{ align: "start", loop: false }}>
 					<Carousel.Content className="-mr-3 gap-3 select-none lg:-mr-5 lg:gap-5">
 						<For
-							each={(projectsQueryResult.data ?? []).slice(0, 2)}
+							each={projectsQueryResult.data ?? []}
 							renderItem={(project, index, array) => (
 								<Carousel.Item
 									key={project.id}
 									className={cnJoin(
-										"w-1/2 cursor-grab active:cursor-grabbing lg:w-full lg:max-w-[528px]",
+										"w-1/2 max-w-[560px] cursor-grab active:cursor-grabbing",
 										index === array.length - 1 && "pr-3 lg:pr-0"
 									)}
 								>
