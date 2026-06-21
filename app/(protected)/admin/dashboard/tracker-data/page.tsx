@@ -1329,4 +1329,3 @@ function TrackerDataDetailsDialog(props: {
 		</DialogAnimated.Root>
 	);
 }
-
