@@ -73,7 +73,7 @@ function NavigationMenuTrigger(props: React.ComponentProps<typeof NavigationMenu
 
 			<IconBox
 				icon="lucide:chevron-down"
-				className="relative top-px ml-1 size-3 transition duration-300
+				className="relative top-px ml-1 size-3 shrink-0 transition duration-300
 					group-data-popup-open/navigation-menu-trigger:rotate-180
 					group-data-open/navigation-menu-trigger:rotate-180"
 				aria-hidden="true"
@@ -92,13 +92,6 @@ function NavigationMenuContent(props: React.ComponentProps<typeof NavigationMenu
 				`top-0 left-0 w-full p-1 ease-[cubic-bezier(0.22,1,0.36,1)]
 				group-data-[viewport=false]/navigation-menu:top-full
 				group-data-[viewport=false]/navigation-menu:mt-1.5
-				group-data-[viewport=false]/navigation-menu:overflow-hidden
-				group-data-[viewport=false]/navigation-menu:rounded-lg
-				group-data-[viewport=false]/navigation-menu:bg-shadcn-popover
-				group-data-[viewport=false]/navigation-menu:text-shadcn-popover-foreground
-				group-data-[viewport=false]/navigation-menu:shadow-sm
-				group-data-[viewport=false]/navigation-menu:ring-1
-				group-data-[viewport=false]/navigation-menu:ring-shadcn-foreground/10
 				group-data-[viewport=false]/navigation-menu:duration-300
 				data-[motion=from-end]:slide-in-from-right-52 data-[motion=from-start]:slide-in-from-left-52
 				data-[motion=to-end]:slide-out-to-right-52 data-[motion=to-start]:slide-out-to-left-52
@@ -148,8 +141,7 @@ function NavigationMenuLink({
 			className={cnMerge(
 				`flex items-center gap-2 rounded-lg p-2 text-sm transition-all outline-none
 				hover:bg-shadcn-muted focus:bg-shadcn-muted focus-visible:ring-3
-				focus-visible:ring-shadcn-ring/50 focus-visible:outline-1
-				in-data-[slot=navigation-menu-content]:rounded-md data-active:bg-shadcn-muted/50
+				focus-visible:ring-shadcn-ring/50 focus-visible:outline-1 data-active:bg-shadcn-muted/50
 				data-active:hover:bg-shadcn-muted data-active:focus:bg-shadcn-muted
 				[&_svg:not([class*='size-'])]:size-4`,
 				className

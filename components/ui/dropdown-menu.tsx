@@ -64,10 +64,7 @@ function DropdownMenuItem(
 				data-[variant=destructive]:focus:bg-shadcn-destructive/10
 				data-[variant=destructive]:focus:text-shadcn-destructive
 				dark:data-[variant=destructive]:focus:bg-shadcn-destructive/20
-				data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none
-				[&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4
-				[&_svg:not([class*='text-'])]:text-shadcn-muted-foreground
-				data-[variant=destructive]:*:[svg]:text-shadcn-destructive!`,
+				data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none`,
 				inset && "pl-8",
 				className
 			)}

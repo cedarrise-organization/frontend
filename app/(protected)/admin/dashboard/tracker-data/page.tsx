@@ -1198,264 +1198,63 @@ function TrackerDataDetailsDialog(props: {
 		enabled: selectedRecord?.program === "capacity-building",
 	});
 
-	const { rows, submittedAt } = (() => {
+	const { record, submittedAt } = (() => {
 		if (selectedRecord?.program === "ash" && selectedRecord.kind === "tracking") {
 			const trackerRecord = ashTrackingDetailQueryResult.data?.data;
-
-			return {
-				rows:
-					trackerRecord ?
-						[
-							{ label: "First Name", value: formatDetailValue(trackerRecord.firstName) },
-							{ label: "Surname", value: formatDetailValue(trackerRecord.surname) },
-							{
-								label: "Academic Session",
-								value: formatDetailValue(trackerRecord.academicSession),
-							},
-							{ label: "Term", value: formatDetailValue(trackerRecord.term) },
-							{ label: "School Name", value: formatDetailValue(trackerRecord.schoolName) },
-							{ label: "Assigned Mentor", value: formatDetailValue(trackerRecord.mentorName) },
-							{
-								label: "Term Result",
-								url: trackerRecord.termResultUrl,
-								value: formatDetailValue(trackerRecord.termResultUrl),
-							},
-						]
-					:	[],
-				submittedAt: trackerRecord?.createdAt,
-			};
+			return { record: trackerRecord, submittedAt: trackerRecord?.createdAt };
 		}
 
 		if (selectedRecord?.program === "ash" && selectedRecord.kind === "attendance") {
 			const trackerRecord = ashAttendanceDetailQueryResult.data?.data;
-
-			return {
-				rows:
-					trackerRecord ?
-						[
-							{ label: "Date", value: formatDetailValue(trackerRecord.sessionDate) },
-							{
-								label: "Students In Attendance",
-								value: formatDetailValue(trackerRecord.studentsInAttendance),
-							},
-							{
-								label: "Students Mentored",
-								value: formatDetailValue(trackerRecord.studentsMentored),
-							},
-							{ label: "Sessions Had", value: formatDetailValue(trackerRecord.sessionsConducted) },
-							{
-								label: "Volunteers In Attendance",
-								value: formatDetailValue(trackerRecord.volunteersInAttendance),
-							},
-							{
-								label: "Specify Session",
-								value: formatDetailValue(trackerRecord.sessionDetails),
-							},
-						]
-					:	[],
-				submittedAt: trackerRecord?.sessionDate,
-			};
+			return { record: trackerRecord, submittedAt: trackerRecord?.sessionDate };
 		}
 
 		if (selectedRecord?.program === "ash" && selectedRecord.kind === "exit") {
 			const trackerRecord = ashExitDetailQueryResult.data?.data;
-
-			return {
-				rows:
-					trackerRecord ?
-						[
-							{
-								label: "Student Name",
-								value: formatDetailValue(`${trackerRecord.firstName} ${trackerRecord.surname}`),
-							},
-							{ label: "Age At Exit", value: formatDetailValue(trackerRecord.ageAtExit) },
-							{ label: "School Name", value: formatDetailValue(trackerRecord.schoolName) },
-							{ label: "Class At Exit", value: formatDetailValue(trackerRecord.classAtExit) },
-							{
-								label: "Duration In Program",
-								value: formatDetailValue(trackerRecord.durationInProgram),
-							},
-							{
-								label: "Facilitator Name",
-								value: formatDetailValue(trackerRecord.facilitatorName),
-							},
-							{ label: "Exit Date", value: formatDetailValue(trackerRecord.exitDate) },
-						]
-					:	[],
-				submittedAt: trackerRecord?.exitDate,
-			};
+			return { record: trackerRecord, submittedAt: trackerRecord?.exitDate };
 		}
 
 		if (selectedRecord?.program === "tacots" && selectedRecord.kind === "tracking") {
 			const trackerRecord = tacotsTrackingDetailQueryResult.data?.data;
-
-			return {
-				rows:
-					trackerRecord ?
-						[
-							{
-								label: "Full Name",
-								value: formatDetailValue(`${trackerRecord.firstName} ${trackerRecord.surname}`),
-							},
-							{
-								label: "Academic Session",
-								value: formatDetailValue(trackerRecord.academicSession),
-							},
-							{ label: "Term", value: formatDetailValue(trackerRecord.academicTerm) },
-							{ label: "Region", value: formatDetailValue(trackerRecord.region) },
-							{
-								label: "Assessment Period",
-								value: formatDetailValue(trackerRecord.assessmentPeriod),
-							},
-							{
-								label: "Student Average (%)",
-								value: formatDetailValue(trackerRecord.studentAveragePct),
-							},
-							{
-								label: "Term Result",
-								url: trackerRecord.termResultUrl,
-								value: formatDetailValue(trackerRecord.termResultUrl),
-							},
-							{
-								label: "Payment Evidence",
-								url: trackerRecord.paymentEvidenceUrl,
-								value: formatDetailValue(trackerRecord.paymentEvidenceUrl),
-							},
-						]
-					:	[],
-				submittedAt: trackerRecord?.submissionDate,
-			};
+			return { record: trackerRecord, submittedAt: trackerRecord?.submissionDate };
 		}
 
 		if (selectedRecord?.program === "tacots" && selectedRecord.kind === "onboarding") {
 			const trackerRecord = tacotsOnboardingDetailQueryResult.data?.data;
-
-			return {
-				rows:
-					trackerRecord ?
-						[
-							{
-								label: "Full Name",
-								value: formatDetailValue(`${trackerRecord.firstName} ${trackerRecord.surname}`),
-							},
-							{
-								label: "Onboarding Date",
-								value: formatDetailValue(trackerRecord.onboardingDate),
-							},
-							{
-								label: "Gen. Health Status",
-								value: formatDetailValue(trackerRecord.generalHealthStatus),
-							},
-							{
-								label: "Enrolled School Name",
-								value: formatDetailValue(trackerRecord.enrolledSchoolName),
-							},
-							{
-								label: "Enrolled School State",
-								value: formatDetailValue(trackerRecord.enrolledSchoolState),
-							},
-							{
-								label: "Enrolled Class",
-								value: formatDetailValue(trackerRecord.enrolledClass),
-							},
-							{
-								label: "Admission Letter",
-								url: trackerRecord.admissionLetterUrl,
-								value: formatDetailValue(trackerRecord.admissionLetterUrl),
-							},
-							{
-								label: "Parent Signature",
-								url: trackerRecord.parentSignatureUrl,
-								value: formatDetailValue(trackerRecord.parentSignatureUrl),
-							},
-						]
-					:	[],
-				submittedAt: trackerRecord?.onboardingDate,
-			};
+			return { record: trackerRecord, submittedAt: trackerRecord?.onboardingDate };
 		}
 
 		if (selectedRecord?.program === "tacots" && selectedRecord.kind === "exit") {
 			const trackerRecord = tacotsExitDetailQueryResult.data?.data;
-
-			return {
-				rows:
-					trackerRecord ?
-						[
-							{
-								label: "Student Name",
-								value: formatDetailValue(`${trackerRecord.firstName} ${trackerRecord.surname}`),
-							},
-							{ label: "Year Of Exit", value: formatDetailValue(trackerRecord.yearOfExit) },
-							{
-								label: "School Attended",
-								value: formatDetailValue(trackerRecord.schoolAttendedDuringProgram),
-							},
-							{
-								label: "Highest Level Of Edu. Attained",
-								value: formatDetailValue(trackerRecord.highestEducationAttained),
-							},
-							{
-								label: "Reasons For Exit",
-								value: formatDetailValue(trackerRecord.exitReason),
-							},
-						]
-					:	[],
-				submittedAt: trackerRecord?.submissionDate,
-			};
+			return { record: trackerRecord, submittedAt: trackerRecord?.submissionDate };
 		}
 
 		if (selectedRecord?.program === "outreaches") {
 			const trackerRecord = outreachDetailQueryResult.data?.data;
-
-			return {
-				rows:
-					trackerRecord ?
-						[
-							{ label: "Start Date", value: formatDetailValue(trackerRecord.outreachStartDate) },
-							{ label: "End Date", value: formatDetailValue(trackerRecord.outreachEndDate) },
-							{ label: "Outreach State", value: formatDetailValue(trackerRecord.outreachState) },
-							{
-								label: "Num. Of Volunteers",
-								value: formatDetailValue(trackerRecord.numVolunteers),
-							},
-							{
-								label: "Num. Of Beneficiaries",
-								value: formatDetailValue(trackerRecord.numBeneficiaries),
-							},
-							{ label: "Outreach Type", value: formatDetailValue(trackerRecord.outreachType) },
-						]
-					:	[],
-				submittedAt: trackerRecord?.outreachStartDate,
-			};
+			return { record: trackerRecord, submittedAt: trackerRecord?.outreachStartDate };
 		}
 
 		if (selectedRecord?.program === "capacity-building") {
 			const trackerRecord = capacityDetailQueryResult.data?.data;
-
-			return {
-				rows:
-					trackerRecord ?
-						[
-							{ label: "Program Name", value: formatDetailValue(trackerRecord.programName) },
-							{ label: "Program Type", value: formatDetailValue(trackerRecord.programType) },
-							{ label: "Program Date", value: formatDetailValue(trackerRecord.programDate) },
-							{ label: "Location", value: formatDetailValue(trackerRecord.location) },
-							{
-								label: "No. Of Participants",
-								value: formatDetailValue(trackerRecord.numberOfParticipants),
-							},
-							{
-								label: "Objective Achievement",
-								value: formatDetailValue(trackerRecord.objectiveAchievement),
-							},
-						]
-					:	[],
-				submittedAt: trackerRecord?.programDate,
-			};
+			return { record: trackerRecord, submittedAt: trackerRecord?.programDate };
 		}
 
-		return { rows: [], submittedAt: undefined };
+		return {};
 	})();
+
+	const rows =
+		record ?
+			Object.entries(record)
+				.filter(
+					([key]) =>
+						!["createdAt", "deletedAt", "id", "updatedAt"].includes(key) && !key.endsWith("PublicId")
+				)
+				.map(([key, value]) => ({
+					label: key.replaceAll(/([A-Z])/g, " $1"),
+					url: key.endsWith("Url") && typeof value === "string" ? value : undefined,
+					value: formatDetailValue(value),
+				}))
+		:	[];
 
 	const submittedDate =
 		typeof submittedAt === "string" ?
@@ -1502,12 +1301,14 @@ function TrackerDataDetailsDialog(props: {
 										border-b border-cedar-black/10 py-3 text-[15px] last:border-b-0
 										lg:text-[17px]"
 								>
-									<span className="min-w-0 wrap-break-word text-cedar-black/72">{row.label}</span>
+									<span className="min-w-0 wrap-break-word text-cedar-black/72 capitalize">
+										{row.label}
+									</span>
 									<span
 										className="min-w-0 text-right font-medium wrap-break-word
 											text-cedar-black/72"
 									>
-										{"url" in row && row.url ?
+										{row.url ?
 											<a
 												href={row.url}
 												target="_blank"

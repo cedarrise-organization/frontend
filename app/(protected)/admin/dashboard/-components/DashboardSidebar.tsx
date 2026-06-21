@@ -4,89 +4,9 @@ import { For, ForWithWrapper } from "@zayne-labs/ui-react/common/for";
 import { CollapsibleAnimated } from "@/components/animated/ui";
 import { IconBox } from "@/components/common/IconBox";
 import { Logo } from "@/components/common/Logo";
-import { NavLink, type MainAppRoutes } from "@/components/common/NavLink";
+import { NavLink } from "@/components/common/NavLink";
 import { Sidebar } from "@/components/ui";
-
-type DashboardNavItem = {
-	icon: string;
-	label: string;
-	link: MainAppRoutes;
-};
-
-const placeholderHref = "#";
-
-const dashboardNavSections = [
-	{
-		icon: "lucide:layout-grid",
-		label: "Dashboard",
-		link: "/admin/dashboard",
-	},
-	{
-		children: [
-			{
-				icon: "streamline-ultimate:layers-stacked",
-				label: "Form Data",
-				link: "/admin/dashboard/form-data",
-			},
-			{
-				icon: "material-symbols:subtitles-outline-rounded",
-				label: "Tracker Forms",
-				link: "/admin/dashboard/tracker-forms",
-			},
-			{
-				icon: "hugeicons:wallet-05",
-				label: "Tracker Data",
-				link: "/admin/dashboard/tracker-data",
-			},
-		],
-		label: "Forms & Tracking",
-	},
-	{
-		children: [
-			{
-				icon: "lucide:square-pen",
-				label: "Blog Uploads",
-				link: placeholderHref,
-			},
-			{
-				icon: "hugeicons:share-03",
-				label: "General Uploads",
-				link: "/admin/dashboard/general-uploads",
-			},
-		],
-		label: "Content Management",
-	},
-	{
-		children: [
-			{
-				icon: "lucide:receipt-text",
-				label: "Receipts",
-				link: placeholderHref,
-			},
-			{
-				icon: "mynaui:layers-two",
-				label: "General Information",
-				link: placeholderHref,
-			},
-		],
-		label: "Interim Miscellaneous",
-	},
-	{
-		children: [
-			{
-				icon: "solar:user-linear",
-				label: "Users",
-				link: placeholderHref,
-			},
-			{
-				icon: "solar:login-2-linear",
-				label: "Logout",
-				link: placeholderHref,
-			},
-		],
-		label: "System",
-	},
-] satisfies Array<DashboardNavItem | { children: DashboardNavItem[]; label: string }>;
+import { dashboardNavSections, placeholderHref, type DashboardNavItem } from "./constants";
 
 function DashboardSidebar() {
 	return (
@@ -270,7 +190,7 @@ function DashboardSidebarLink(props: DashboardNavItem) {
 				<span className="size-3.5 shrink-0 lg:size-5">
 					<IconBox icon={icon} className="size-full" />
 				</span>
-				<span className="group-data-[state=collapsed]:hidden">{label}</span>
+				<p className="group-data-[state=collapsed]:hidden">{label}</p>
 			</NavLink>
 		</Sidebar.MenuButton>
 	);

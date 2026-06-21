@@ -983,8 +983,62 @@ const dashboardRoutes = defineSchemaRoutes({
 		data: withBaseSuccessResponse({ data: InstitutionalEffectivenessMetricsSchema }),
 	},
 
+	"@get/dashboard/notifications": {
+		data: withBaseSuccessResponseAndMeta({
+			data: z.array(
+				z.object({
+					createdAt: z.string(),
+					dedupeKey: z.string(),
+					deletedAt: z.string().nullable(),
+					dismissedAt: z.string().nullable(),
+					entityType: z.enum(["ash", "volunteer", "tacots", "capacity_building", "administrative"]),
+					id: z.uuid(),
+					message: z.string(),
+					metadata: z.string().nullable(),
+					resolvedAt: z.string().nullable(),
+					severity: z.enum(["low", "medium", "high", "critical"]),
+					status: z.enum(["active", "dismissed", "resolved"]),
+					title: z.string(),
+					type: z.enum([
+						"POTENTIAL_DROPOUT_RISK",
+						"LOW_ATTENDANCE_RATE",
+						"LOW_MENTORSHIP_ENGAGEMENT",
+						"SCORE_DROP_ALERT",
+						"VOLUNTEER_INACTIVITY",
+					]),
+					updatedAt: z.string().nullable(),
+				})
+			),
+			meta: PaginatedMetaSchema,
+		}),
+		query: z
+			.object({
+				entityType: z
+					.enum(["ash", "volunteer", "tacots", "capacity_building", "administrative"])
+					.optional(),
+				limit: z.number().min(1).max(100).optional(),
+				page: z.number().min(1).optional(),
+				status: z.enum(["active", "dismissed", "resolved"]).optional(),
+				type: z
+					.enum([
+						"POTENTIAL_DROPOUT_RISK",
+						"LOW_ATTENDANCE_RATE",
+						"LOW_MENTORSHIP_ENGAGEMENT",
+						"SCORE_DROP_ALERT",
+						"VOLUNTEER_INACTIVITY",
+					])
+					.optional(),
+			})
+			.optional(),
+	},
+
 	"@get/dashboard/student-performance": {
 		data: withBaseSuccessResponse({ data: StudentPerformanceMetricsSchema }),
+	},
+
+	"@patch/dashboard/notifications/:id": {
+		data: BaseSuccessResponseSchema,
+		params: IdParamsSchema,
 	},
 });
 

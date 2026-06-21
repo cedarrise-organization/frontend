@@ -64,6 +64,10 @@ export type GeneralReceiptsListQuery = z.infer<
 	(typeof backendApiSchemaRoutes)["@get/general/receipts"]["query"]
 >;
 
+export type DashboardNotificationsQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/dashboard/notifications"]["query"]
+>;
+
 export const sessionQuery = () => {
 	return queryOptions({
 		queryFn: () => checkUserSessionForQuery(),
@@ -367,6 +371,14 @@ export const dashboardCardsQuery = () => {
 		queryKey: ["dashboard", "cards"],
 		select: (data) => data.data,
 		staleTime: 1000 * 60 * 10,
+	});
+};
+
+export const dashboardNotificationsQuery = (query?: DashboardNotificationsQuery) => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/dashboard/notifications", { query }),
+		queryKey: ["dashboard", "notifications", query],
+		staleTime: 1000 * 60 * 5,
 	});
 };
 

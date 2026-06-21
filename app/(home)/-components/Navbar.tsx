@@ -23,12 +23,12 @@ function NavBar() {
 		<header
 			ref={observedElementRef}
 			className={cnJoin(
-				`sticky top-0 isolate z-10 flex w-full scrollbar-thin items-center justify-between gap-10
-				overflow-x-auto bg-cedar-white px-4 py-3 transition-shadow duration-300 ease-[ease]
-				lg:bg-cedar-white/90 lg:px-[50px] lg:backdrop-blur-2xl`,
+				`sticky top-0 isolate z-10 flex w-full scrollbar-thin items-center justify-between gap-10 px-4
+				py-3 transition-shadow duration-300 ease-[ease] lg:overflow-x-auto lg:px-[50px]`,
 				isScrolled && "shadow-[0_2px_4px_hsl(0,0%,0%,0.05)]"
 			)}
 		>
+			<span className="absolute inset-0 -z-1 bg-cedar-white/90 backdrop-blur-2xl" />
 			<Logo />
 
 			<DesktopNavigation className="max-lg:hidden" />
@@ -83,7 +83,7 @@ function DesktopNavigation(props: { className?: string }) {
 								href={item.link}
 								className="inline-flex h-[56px] shrink-0 items-center justify-center rounded-[20px]
 									p-5 transition-colors hover:bg-cedar-grey hover:text-cedar-red
-									data-[active=true]:bg-cedar-yellow data-[active=true]:text-cedar-white"
+									data-active:bg-cedar-yellow data-active:text-cedar-white"
 							>
 								{item.label}
 							</NavLink>
@@ -93,11 +93,18 @@ function DesktopNavigation(props: { className?: string }) {
 							<DropdownMenu.Root modal={false}>
 								<DropdownMenu.Trigger
 									data-active={item.children.some((childItem) => childItem.link === pathname)}
-									className="inline-flex h-[56px] shrink-0 items-center justify-center
-										rounded-[20px] p-5 transition-colors hover:bg-cedar-grey hover:text-cedar-red
-										data-[active=true]:bg-cedar-yellow data-[active=true]:text-cedar-white"
+									className="group inline-flex h-[56px] shrink-0 items-center justify-center
+										gap-1.5 rounded-[20px] p-5 transition-colors hover:bg-cedar-grey
+										hover:text-cedar-red data-active:bg-cedar-yellow
+										data-active:text-cedar-white"
 								>
 									{item.label}
+									<span
+										className="size-3.5 transition-transform duration-200
+											group-data-open:rotate-180"
+									>
+										<IconBox icon="lucide:chevron-down" className="size-full" />
+									</span>
 								</DropdownMenu.Trigger>
 
 								<DropdownMenu.Content
@@ -116,17 +123,16 @@ function DesktopNavigation(props: { className?: string }) {
 													className="group flex min-h-[56px] items-center justify-between
 														gap-4 rounded-[18px] p-0 px-4 text-[14px] transition-colors
 														focus:bg-[hsl(0,0%,84%)] focus:text-cedar-red
-														data-[active=true]:bg-cedar-black
-														data-[active=true]:text-cedar-white"
+														data-active:bg-cedar-black data-active:text-cedar-white"
 												>
 													<NavLink href={childItem.link}>
 														<p>{childItem.label}</p>
 
 														<span
 															className="grid size-7 place-content-center rounded-full
-																bg-cedar-yellow text-cedar-white opacity-0
+																bg-cedar-yellow text-[hsl(0,0%,84)] opacity-0
 																transition-opacity group-hover:opacity-100
-																group-data-[active=true]:opacity-100"
+																group-data-active:opacity-100"
 														>
 															<IconBox
 																icon="solar:arrow-right-up-outline"
@@ -182,7 +188,7 @@ function MobileNavigation(props: { className?: string }) {
 									href={linkItem.link}
 									className="group flex h-12 items-center justify-between gap-4 rounded-[14px]
 										px-4 transition-colors hover:bg-cedar-grey hover:text-cedar-red
-										data-[active=true]:bg-cedar-black data-[active=true]:text-cedar-white"
+										data-active:bg-cedar-black data-active:text-cedar-white"
 								>
 									{linkItem.label}
 								</NavLink>
@@ -200,8 +206,8 @@ function MobileNavigation(props: { className?: string }) {
 											(childLinkItem) => childLinkItem.link === pathname
 										)}
 										className="flex h-12 w-full items-center justify-between rounded-[14px] px-4
-											hover:bg-cedar-grey hover:text-cedar-red
-											data-[active=true]:bg-cedar-yellow data-[active=true]:text-cedar-white"
+											hover:bg-cedar-grey hover:text-cedar-red data-active:bg-cedar-yellow
+											data-active:text-cedar-white"
 									>
 										<span>{linkItem.label}</span>
 										<IconBox
@@ -221,8 +227,7 @@ function MobileNavigation(props: { className?: string }) {
 													href={childItem.link}
 													className="group flex h-12 items-center gap-3 rounded-[12px] px-4
 														transition-colors hover:bg-cedar-grey hover:text-cedar-red
-														data-[active=true]:bg-cedar-black
-														data-[active=true]:text-cedar-white"
+														data-active:bg-cedar-black data-active:text-cedar-white"
 												>
 													<p>{childItem.label}</p>
 												</NavLink>

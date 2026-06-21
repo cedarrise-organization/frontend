@@ -772,19 +772,31 @@ const getActionsColumn = <TRecord extends FormRecord>(
 						"firstName" in row.original ? row.original.firstName : row.original.studentFirstName;
 					const surname =
 						"surname" in row.original ? row.original.surname : row.original.studentSurname;
-					const title = [firstName, surname].join(" ") || "Unnamed submission";
+					const title = [firstName, surname].join(" ") || EMPTY_VALUE_PLACEHOLDER;
+					const id = row.original.id;
 
-					if (target.program === "ash") {
-						onViewMore({ id: row.original.id, kind: target.kind, program: target.program, title });
-						return;
-					}
+					const selectedRecordByProgram = {
+						ash: {
+							id,
+							kind: target.program === "ash" ? target.kind : "feedback",
+							program: "ash",
+							title,
+						},
+						tacots: {
+							id,
+							kind: target.program === "tacots" ? target.kind : "feedback",
+							program: "tacots",
+							title,
+						},
+						volunteer: {
+							id,
+							kind: target.program === "volunteer" ? target.kind : "feedback",
+							program: "volunteer",
+							title,
+						},
+					} satisfies Record<SelectedRecord["program"], SelectedRecord>;
 
-					if (target.program === "tacots") {
-						onViewMore({ id: row.original.id, kind: target.kind, program: target.program, title });
-						return;
-					}
-
-					onViewMore({ id: row.original.id, kind: target.kind, program: target.program, title });
+					onViewMore(selectedRecordByProgram[target.program]);
 				}}
 			/>
 		),
@@ -942,168 +954,47 @@ function FormDataDetailsDialog(props: {
 		enabled: selectedRecord?.program === "volunteer" && selectedRecord.kind === "feedback",
 	});
 
-	const { record, rows } = (() => {
+	const record = (() => {
 		if (selectedRecord?.program === "ash" && selectedRecord.kind === "registration") {
-			const formRecord = ashRegistrationDetailQueryResult.data?.data;
-
-			return {
-				record: formRecord,
-				rows:
-					formRecord ?
-						[
-							{ label: "First Name", value: formatDetailValue(formRecord.firstName) },
-							{ label: "Surname", value: formatDetailValue(formRecord.surname) },
-							{ label: "Gender", value: formatDetailValue(formRecord.gender) },
-							{ label: "School State", value: formatDetailValue(formRecord.schoolState) },
-							{ label: "Current Class", value: formatDetailValue(formRecord.currentClass) },
-							{ label: "Status", value: formatDetailValue(formRecord.status) },
-							{ label: "Assigned Mentor", value: formatDetailValue(formRecord.assignedMentor) },
-							{
-								label: "Passport Photo",
-								url: formRecord.passportPhotoUrl,
-								value: formatDetailValue(formRecord.passportPhotoUrl),
-							},
-							{
-								label: "Last Result",
-								url: formRecord.lastResultUrl,
-								value: formatDetailValue(formRecord.lastResultUrl),
-							},
-							{
-								label: "Parent Signature",
-								url: formRecord.parentSignatureUrl,
-								value: formatDetailValue(formRecord.parentSignatureUrl),
-							},
-						]
-					:	[],
-			};
+			return ashRegistrationDetailQueryResult.data?.data;
 		}
 
 		if (selectedRecord?.program === "ash" && selectedRecord.kind === "feedback") {
-			const formRecord = ashFeedbackDetailQueryResult.data?.data;
-
-			return {
-				record: formRecord,
-				rows:
-					formRecord ?
-						[
-							{ label: "First Name", value: formatDetailValue(formRecord.studentFirstName) },
-							{ label: "Surname", value: formatDetailValue(formRecord.studentSurname) },
-							{ label: "School Name", value: formatDetailValue(formRecord.schoolName) },
-							{
-								label: "Confidence Rating",
-								value: formatDetailValue(formRecord.confidenceRating),
-							},
-							{
-								label: "Volunteer Support Rating",
-								value: formatDetailValue(formRecord.volunteerSupportRating),
-							},
-							{ label: "Current Class", value: formatDetailValue(formRecord.currentClass) },
-						]
-					:	[],
-			};
+			return ashFeedbackDetailQueryResult.data?.data;
 		}
 
 		if (selectedRecord?.program === "tacots" && selectedRecord.kind === "recommendation") {
-			const formRecord = tacotsRecommendationDetailQueryResult.data?.data;
-
-			return {
-				record: formRecord,
-				rows:
-					formRecord ?
-						[
-							{ label: "First Name", value: formatDetailValue(formRecord.firstName) },
-							{ label: "Surname", value: formatDetailValue(formRecord.surname) },
-							{ label: "Gender", value: formatDetailValue(formRecord.gender) },
-							{ label: "School Name", value: formatDetailValue(formRecord.schoolName) },
-							{ label: "Last Class", value: formatDetailValue(formRecord.lastClass) },
-							{ label: "Admin Status", value: formatDetailValue(formRecord.adminStatus) },
-							{
-								label: "Passport Photo",
-								url: formRecord.passportPhotoUrl,
-								value: formatDetailValue(formRecord.passportPhotoUrl),
-							},
-							{
-								label: "Last Result",
-								url: formRecord.lastResultUrl,
-								value: formatDetailValue(formRecord.lastResultUrl),
-							},
-						]
-					:	[],
-			};
+			return tacotsRecommendationDetailQueryResult.data?.data;
 		}
 
 		if (selectedRecord?.program === "tacots" && selectedRecord.kind === "feedback") {
-			const formRecord = tacotsFeedbackDetailQueryResult.data?.data;
-
-			return {
-				record: formRecord,
-				rows:
-					formRecord ?
-						[
-							{ label: "First Name", value: formatDetailValue(formRecord.studentFirstName) },
-							{ label: "Surname", value: formatDetailValue(formRecord.studentSurname) },
-							{
-								label: "Parent/Guardian Phone",
-								value: formatDetailValue(formRecord.parentPhone),
-							},
-							{ label: "Current School", value: formatDetailValue(formRecord.currentSchool) },
-							{ label: "Current Class", value: formatDetailValue(formRecord.currentClass) },
-						]
-					:	[],
-			};
+			return tacotsFeedbackDetailQueryResult.data?.data;
 		}
 
 		if (selectedRecord?.program === "volunteer" && selectedRecord.kind === "registration") {
-			const formRecord = volunteerRegistrationDetailQueryResult.data?.data;
-
-			return {
-				record: formRecord,
-				rows:
-					formRecord ?
-						[
-							{ label: "First Name", value: formatDetailValue(formRecord.firstName) },
-							{ label: "Surname", value: formatDetailValue(formRecord.surname) },
-							{ label: "Gender", value: formatDetailValue(formRecord.gender) },
-							{ label: "State", value: formatDetailValue(formRecord.state) },
-							{ label: "E-mail", value: formatDetailValue(formRecord.emailAddress) },
-							{ label: "Status", value: formatDetailValue(formRecord.status) },
-							{ label: "Volunteer Area", value: formatDetailValue(formRecord.volunteerAreas) },
-							{ label: "Availability", value: formatDetailValue(formRecord.availability) },
-						]
-					:	[],
-			};
+			return volunteerRegistrationDetailQueryResult.data?.data;
 		}
 
 		if (selectedRecord?.program === "volunteer" && selectedRecord.kind === "feedback") {
-			const formRecord = volunteerFeedbackDetailQueryResult.data?.data;
-
-			return {
-				record: formRecord,
-				rows:
-					formRecord ?
-						[
-							{ label: "First Name", value: formatDetailValue(formRecord.firstName) },
-							{ label: "Surname", value: formatDetailValue(formRecord.surname) },
-							{
-								label: "Program Volunteered",
-								value: formatDetailValue(formRecord.programVolunteered),
-							},
-							{
-								label: "Volunteer Duration",
-								value: formatDetailValue(formRecord.volunteerDuration),
-							},
-							{
-								label: "Overall Experience Rating",
-								value: formatDetailValue(formRecord.overallExperienceRating),
-							},
-							{ label: "Would Recommend", value: formatDetailValue(formRecord.wouldRecommend) },
-						]
-					:	[],
-			};
+			return volunteerFeedbackDetailQueryResult.data?.data;
 		}
 
-		return { record: undefined, rows: [] };
+		return void 0;
 	})();
+
+	const rows =
+		record ?
+			Object.entries(record)
+				.filter(
+					([key]) =>
+						!["createdAt", "deletedAt", "id", "updatedAt"].includes(key) && !key.endsWith("PublicId")
+				)
+				.map(([key, value]) => ({
+					label: key.replaceAll(/([A-Z])/g, " $1"),
+					url: key.endsWith("Url") && typeof value === "string" ? value : undefined,
+					value: formatDetailValue(value),
+				}))
+		:	[];
 
 	const status = (() => {
 		if (!record) return;
@@ -1181,12 +1072,14 @@ function FormDataDetailsDialog(props: {
 										border-b border-cedar-black/10 py-3 text-[15px] last:border-b-0
 										lg:text-[17px]"
 								>
-									<span className="min-w-0 wrap-break-word text-cedar-black/72">{row.label}</span>
+									<span className="min-w-0 wrap-break-word text-cedar-black/72 capitalize">
+										{row.label}
+									</span>
 									<span
 										className="min-w-0 text-right font-medium wrap-break-word
 											text-cedar-black/72"
 									>
-										{"url" in row && row.url ?
+										{row.url ?
 											<a
 												href={row.url}
 												target="_blank"

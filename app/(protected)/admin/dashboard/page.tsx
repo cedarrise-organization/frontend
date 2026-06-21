@@ -1,7 +1,8 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { tw } from "@zayne-labs/toolkit-core";
+import { formatDistanceToNowStrict } from "date-fns";
 import Image from "next/image";
 import {
 	Area,
@@ -23,15 +24,17 @@ import {
 } from "recharts";
 import { For, ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
-import { Carousel, Chart, Skeleton } from "@/components/ui";
+import { Carousel, Chart, ScrollArea, Skeleton } from "@/components/ui";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import type { DashboardChartDataset, DashboardLineData } from "@/lib/api/callBackendApi/apiSchema";
+import { dismissDashboardNotificationMutation } from "@/lib/react-query/mutationOptions";
 import {
 	dashboardCardsQuery,
 	dashboardEnrollmentQuery,
 	dashboardInstitutionalEffectivenessQuery,
+	dashboardNotificationsQuery,
 	dashboardProjectsQuery,
 	dashboardStudentPerformanceQuery,
 } from "@/lib/react-query/queryOptions";
@@ -57,6 +60,13 @@ const chartScopesByTitle = {
 	"Total Accumulated Mentorship Hours": "TACOTS",
 	"Total Community Service Hours": "TACOTS",
 } as const satisfies Record<string, "ASH" | "ASH + TACOTS" | "TACOTS">;
+
+const notificationSeverityClassNames = {
+	critical: "bg-cedar-red",
+	high: "bg-cedar-red",
+	low: "bg-cedar-yellow",
+	medium: "bg-cedar-black",
+} as const;
 
 type ChartTitles = keyof typeof chartScopesByTitle;
 
@@ -102,74 +112,72 @@ function DashboardPage() {
 
 	return (
 		<Main className="gap-6 lg:gap-8">
-			<section className="flex flex-col gap-4 lg:flex-row">
-				<div className="grid grow gap-3 lg:grid-cols-2 xl:grid-cols-3">
-					<DashboardStatCard
-						icon="solar:user-check-rounded-outline"
-						title="Volunteers"
-						stats={[
-							{ label: "Applied", value: cards?.volunteer.applied },
-							{ label: "Accepted", value: cards?.volunteer.accepted },
-							{ label: "Partners", value: cards?.volunteer.Partners },
-							{ label: "Current volunteers", value: cards?.volunteer.currentVolunteers },
-							{ label: "Sponsors", value: cards?.volunteer.sponsors },
-						]}
-					/>
+			<section className="grid grow gap-3 lg:grid-cols-2 xl:grid-cols-3">
+				<DashboardStatCard
+					icon="solar:user-check-rounded-outline"
+					title="Volunteers"
+					stats={[
+						{ label: "Applied", value: cards?.volunteer.applied },
+						{ label: "Accepted", value: cards?.volunteer.accepted },
+						{ label: "Partners", value: cards?.volunteer.Partners },
+						{ label: "Current volunteers", value: cards?.volunteer.currentVolunteers },
+						{ label: "Sponsors", value: cards?.volunteer.sponsors },
+					]}
+				/>
 
-					<DashboardStatCard
-						icon="solar:document-add-outline"
-						title="Capacity Building"
-						stats={[
-							{ label: "Impacted", value: cards?.capacityBuilding.participantsImpacted },
-							{
-								label: "Organizations",
-								value: cards?.capacityBuilding.organizationsPartneredWith,
-							},
-							{ label: "Volunteers", value: cards?.capacityBuilding.volunteersEngaged },
-							{ label: "Workshops", value: cards?.capacityBuilding.workshopsConducted },
-						]}
-					/>
+				<DashboardStatCard
+					icon="solar:document-add-outline"
+					title="Capacity Building"
+					stats={[
+						{ label: "Impacted", value: cards?.capacityBuilding.participantsImpacted },
+						{
+							label: "Organizations",
+							value: cards?.capacityBuilding.organizationsPartneredWith,
+						},
+						{ label: "Volunteers", value: cards?.capacityBuilding.volunteersEngaged },
+						{ label: "Workshops", value: cards?.capacityBuilding.workshopsConducted },
+					]}
+				/>
 
-					<DashboardStatCard
-						icon="solar:map-point-wave-outline"
-						title="Outreaches"
-						stats={[
-							{ label: "Communities", value: cards?.outreaches.communitiesEngaged },
-							{ label: "Beneficiaries", value: cards?.outreaches.beneficiariesReached },
-							{ label: "Partners", value: cards?.outreaches.partners },
-							{ label: "Volunteers", value: cards?.outreaches.volunteers },
-							{ label: "Events", value: cards?.outreaches.outreachEvents },
-						]}
-					/>
+				<DashboardStatCard
+					icon="solar:map-point-wave-outline"
+					title="Outreaches"
+					stats={[
+						{ label: "Communities", value: cards?.outreaches.communitiesEngaged },
+						{ label: "Beneficiaries", value: cards?.outreaches.beneficiariesReached },
+						{ label: "Partners", value: cards?.outreaches.partners },
+						{ label: "Volunteers", value: cards?.outreaches.volunteers },
+						{ label: "Events", value: cards?.outreaches.outreachEvents },
+					]}
+				/>
 
-					<DashboardStatCard
-						icon="solar:book-bookmark-outline"
-						title="ASH"
-						stats={[
-							{ label: "Students", value: cards?.ash.studentsEnrolled },
-							{ label: "Volunteers", value: cards?.ash.volunteers },
-							{ label: "Communities", value: cards?.ash.communitiesEngaged },
-							{ label: "Improved grades", suffix: "%", value: cards?.ash.improvedGrades },
-							{ label: "Beneficiaries", value: cards?.ash.currentBeneficiaries },
-							{ label: "Graduated", value: cards?.ash.graduated },
-							{ label: "Drop outs", value: cards?.ash.dropOuts },
-						]}
-					/>
+				<DashboardStatCard
+					icon="solar:book-bookmark-outline"
+					title="ASH"
+					stats={[
+						{ label: "Students", value: cards?.ash.studentsEnrolled },
+						{ label: "Volunteers", value: cards?.ash.volunteers },
+						{ label: "Communities", value: cards?.ash.communitiesEngaged },
+						{ label: "Improved grades", suffix: "%", value: cards?.ash.improvedGrades },
+						{ label: "Beneficiaries", value: cards?.ash.currentBeneficiaries },
+						{ label: "Graduated", value: cards?.ash.graduated },
+						{ label: "Drop outs", value: cards?.ash.dropOuts },
+					]}
+				/>
 
-					<DashboardStatCard
-						icon="solar:shield-star-outline"
-						title="TACOTS"
-						stats={[
-							{ label: "Enrolled", value: cards?.tacots.enrolled },
-							{ label: "In schools", value: cards?.tacots.currentlyInSchools },
-							{ label: "Partner schools", value: cards?.tacots.partnerSchools },
-							{ label: "Benefactors", value: cards?.tacots.benefactors },
-							{ label: "Sponsors", value: cards?.tacots.sponsors },
-							{ label: "Partners", value: cards?.tacots.partners },
-							{ label: "Graduated", value: cards?.tacots.graduated },
-						]}
-					/>
-				</div>
+				<DashboardStatCard
+					icon="solar:shield-star-outline"
+					title="TACOTS"
+					stats={[
+						{ label: "Enrolled", value: cards?.tacots.enrolled },
+						{ label: "In schools", value: cards?.tacots.currentlyInSchools },
+						{ label: "Partner schools", value: cards?.tacots.partnerSchools },
+						{ label: "Benefactors", value: cards?.tacots.benefactors },
+						{ label: "Sponsors", value: cards?.tacots.sponsors },
+						{ label: "Partners", value: cards?.tacots.partners },
+						{ label: "Graduated", value: cards?.tacots.graduated },
+					]}
+				/>
 
 				<AlertsPanel />
 			</section>
@@ -202,7 +210,7 @@ function DashboardPage() {
 			</section>
 
 			<MetricsSection title="Student Performance & Success Metrics">
-				<div className="flex w-full flex-col gap-3 lg:flex-row">
+				<article className="flex w-full flex-col gap-3 lg:flex-row">
 					<DashboardChartCard
 						title="Graduation Rate Trend"
 						description="ASH beneficiary completion against drop-outs"
@@ -213,7 +221,7 @@ function DashboardPage() {
 						description="Total student attendance across sessions"
 						dataset={studentPerformance?.c_attendanceTrend}
 					/>
-				</div>
+				</article>
 
 				<DashboardChartCard
 					title="Pre/Mid/Post-test Scores by Term"
@@ -226,7 +234,7 @@ function DashboardPage() {
 					dataset={studentPerformance?.c_tacots_scores}
 				/>
 
-				<div className="flex w-full flex-col gap-3 lg:flex-row">
+				<article className="flex w-full flex-col gap-3 lg:flex-row">
 					<DashboardChartCard
 						title="Dropout Trend - Monthly"
 						description="Dropouts captured by month"
@@ -237,7 +245,7 @@ function DashboardPage() {
 						description="Risk split from latest post-test average"
 						dataset={studentPerformance?.c_risk}
 					/>
-				</div>
+				</article>
 			</MetricsSection>
 
 			<MetricsSection title="Enrollment & Recruitment">
@@ -246,7 +254,8 @@ function DashboardPage() {
 					description="ASH and TACOTS application trend"
 					dataset={enrollment?.c_applicationNumbers}
 				/>
-				<div className="flex w-full flex-col gap-3 lg:flex-row">
+
+				<article className="flex w-full flex-col gap-3 lg:flex-row">
 					<LineDataCard
 						title="Acceptance Rate - by Programme"
 						description="Current application conversion"
@@ -258,8 +267,9 @@ function DashboardPage() {
 						description="Current gender split"
 						dataset={enrollment?.c_genderDiversity}
 					/>
-				</div>
-				<div className="flex w-full flex-col gap-3 lg:flex-row">
+				</article>
+
+				<article className="flex w-full flex-col gap-3 lg:flex-row">
 					<DashboardChartCard
 						title="Class/Age Distribution"
 						description="Student spread by education band"
@@ -270,7 +280,7 @@ function DashboardPage() {
 						description="Student concentration by state"
 						items={enrollment?.c_geographicalDistribution}
 					/>
-				</div>
+				</article>
 			</MetricsSection>
 
 			<MetricsSection title="Institutional Effectiveness">
@@ -279,7 +289,8 @@ function DashboardPage() {
 					description="Community service hours (TACOTS)"
 					dataset={institutionalEffectiveness?.c_communityServiceHours}
 				/>
-				<div className="flex w-full flex-col gap-3 lg:flex-row">
+
+				<article className="flex w-full flex-col gap-3 lg:flex-row">
 					<DashboardChartCard
 						title="Average Mentorship Hours"
 						description="Mentorship time per beneficiary"
@@ -290,8 +301,9 @@ function DashboardPage() {
 						description="Session-level recorded mentorship"
 						items={institutionalEffectiveness?.c_totalAccHours}
 					/>
-				</div>
-				<div className="flex w-full flex-col gap-3 lg:flex-row">
+				</article>
+
+				<article className="flex w-full flex-col gap-3 lg:flex-row">
 					<DashboardChartCard
 						title="Students Meeting Benchmark"
 						description="Academic benchmark progress"
@@ -302,7 +314,7 @@ function DashboardPage() {
 						description="Average programme spend by category"
 						dataset={institutionalEffectiveness?.c_spendPerstudent}
 					/>
-				</div>
+				</article>
 			</MetricsSection>
 		</Main>
 	);
@@ -354,29 +366,32 @@ function DashboardStatCard(props: {
 
 	return (
 		<Card.Root
-			className="flex flex-col gap-5 rounded-[20px] bg-cedar-white p-4
+			className="flex flex-col gap-5 rounded-[20px] bg-cedar-white p-5
 				shadow-[0_1px_0_hsl(0,0%,0%,0.04)]"
 		>
 			<Card.Header
-				className="inline-flex items-center gap-2 rounded-[8px] bg-cedar-yellow/20 px-2.5 py-1
-					text-cedar-yellow"
+				className="inline-flex w-fit items-center gap-2 rounded-[8px] bg-cedar-yellow/16 p-2
+					text-cedar-yellow lg:p-2.5"
 			>
-				<IconBox icon={icon} className="size-4" />
-				<Card.Title className="text-[13px]/[1.2]">{title}</Card.Title>
+				<IconBox icon={icon} className="lg:size-5" />
+				<Card.Title className="text-base/[1.2] lg:text-[20px]">{title}</Card.Title>
 			</Card.Header>
 
-			<Card.Content>
-				<ForWithWrapper
-					className="grid grid-cols-3 gap-x-4 gap-y-5"
+			<Card.Content className="grid grid-cols-3 justify-items-center gap-3">
+				<For
 					each={stats}
 					renderItem={(stat) => (
-						<li key={stat.label}>
-							<p className="text-[22px]/[1] font-medium tracking-tight">
+						<div
+							key={stat.label}
+							className="flex h-[64px] w-full flex-col items-center justify-center gap-2
+								rounded-[12px] bg-cedar-grey/24 text-center lg:h-[96px]"
+						>
+							<h3 className="text-[32px]/[1]">
 								{formatNumber(stat.value)}
 								{stat.suffix}
-							</p>
-							<p className="mt-1 text-[9px]/[1.2] text-cedar-black/48">{stat.label}</p>
-						</li>
+							</h3>
+							<p className="text-[10px]/[1.2] text-cedar-black/64 lg:text-[12px]">{stat.label}</p>
+						</div>
 					)}
 				/>
 			</Card.Content>
@@ -385,37 +400,107 @@ function DashboardStatCard(props: {
 }
 
 function AlertsPanel() {
-	const alerts = [
-		"3 students flagged for dropout risk in ASH cohort 7",
-		"Low mentorship engagement in TACOTS zone B",
-		"ASH impact report is ready for review",
-		"Capacity building partner update due this week",
-	];
+	const notificationsQueryResult = useQuery(
+		dashboardNotificationsQuery({ limit: 20, page: 1, status: "active" })
+	);
+
+	const dismissNotificationMutation = useMutation(dismissDashboardNotificationMutation());
+
+	const queryClient = useQueryClient();
+
+	const onDismissNotification = (id: string) => {
+		dismissNotificationMutation.mutate(id, {
+			onSuccess: () => {
+				void queryClient.invalidateQueries({ queryKey: dashboardNotificationsQuery().queryKey });
+			},
+		});
+	};
+
+	const notifications = notificationsQueryResult.data?.data ?? [];
 
 	return (
 		<Card.Root
-			className="flex flex-col gap-4 rounded-[20px] bg-cedar-white p-4
+			className="flex flex-col gap-5 rounded-[20px] border border-cedar-black/40 bg-cedar-white p-4
 				shadow-[0_1px_0_hsl(0,0%,0%,0.04)]"
 		>
-			<Card.Header className="rounded-[14px] bg-cedar-red px-4 py-3 text-cedar-white">
-				<Card.Title className="text-center text-[14px]/[1.2]">Alerts & Notifications</Card.Title>
+			<Card.Header
+				className="flex items-center justify-center gap-3 rounded-[10px] bg-cedar-red px-8 py-3
+					text-cedar-white lg:rounded-[12px]"
+			>
+				<IconBox icon="lucide:bell" className="lg:size-5" />
+				<Card.Title className="text-center text-base/[1.2] lg:text-[24px]">
+					Alerts & Notifications
+				</Card.Title>
 			</Card.Header>
 
-			<Card.Content className="flex flex-col gap-3">
-				<For
-					each={alerts}
-					renderItem={(alert, index) => (
-						<li
-							key={alert}
-							className="border-b border-dashed border-cedar-black/10 pb-3 last:border-b-0"
-						>
-							<p className="text-[11px]/[1.35] text-cedar-black">{alert}</p>
-							<p className="mt-1 text-[9px] text-cedar-black/40">
-								{index + 1} day{index === 0 ? "" : "s"} ago
-							</p>
-						</li>
+			<Card.Content>
+				<ScrollArea.Root className="h-[276px] pr-2">
+					{notificationsQueryResult.isPending && (
+						<ForWithWrapper
+							className="flex flex-col gap-5"
+							each={4}
+							renderItem={(index) => (
+								<li key={index} className="flex items-center gap-3">
+									<Skeleton className="h-12 w-1 rounded-full" />
+									<div className="flex grow flex-col gap-2">
+										<Skeleton className="h-3 w-4/5" />
+										<Skeleton className="h-2.5 w-3/5" />
+									</div>
+								</li>
+							)}
+						/>
 					)}
-				/>
+
+					{!notificationsQueryResult.isPending && notifications.length === 0 && (
+						<p className="py-8 text-center text-[12px] text-cedar-black/48">
+							No active notifications.
+						</p>
+					)}
+
+					<ForWithWrapper
+						className="flex flex-col gap-5"
+						each={notifications}
+						renderItem={(notification) => (
+							<li
+								key={notification.id}
+								className="grid grid-cols-[4px_1fr_24px] items-center gap-3"
+							>
+								<span
+									className={cnJoin(
+										"h-full min-h-10 rounded-full",
+										notificationSeverityClassNames[notification.severity]
+									)}
+								/>
+
+								<div className="min-w-0">
+									<p className="text-[12px]/[1.35] text-cedar-black lg:text-[14px]">
+										{notification.title}
+									</p>
+									<p className="mt-1 text-[10px]/[1.4] text-cedar-black/48 lg:text-[11px]">
+										{notification.message} -{` `}
+										{formatDistanceToNowStrict(new Date(notification.createdAt), {
+											addSuffix: true,
+										})}
+									</p>
+								</div>
+
+								<Button
+									unstyled={true}
+									aria-label={`Dismiss ${notification.title}`}
+									isDisabled={
+										dismissNotificationMutation.isPending
+										&& dismissNotificationMutation.variables === notification.id
+									}
+									className="grid size-6 place-content-center text-cedar-black transition-opacity
+										hover:opacity-56"
+									onClick={() => onDismissNotification(notification.id)}
+								>
+									<IconBox icon="lucide:x" className="size-5" />
+								</Button>
+							</li>
+						)}
+					/>
+				</ScrollArea.Root>
 			</Card.Content>
 		</Card.Root>
 	);

@@ -13,6 +13,14 @@ export type VolunteerFormKind = "feedback" | "registration";
 export type FormDataProgram = "ash" | "tacots" | "volunteer";
 export type FormDataSectionKind = AshFormKind | TacotsFormKind | VolunteerFormKind;
 
+export const dismissDashboardNotificationMutation = () => {
+	return mutationOptions({
+		mutationFn: (id: string) => {
+			return callBackendApiForQuery("@patch/dashboard/notifications/:id", { params: { id } });
+		},
+	});
+};
+
 export const ashFormDataDownloadMutation = (kind: AshFormKind) => {
 	const filename = kind === "registration" ? "ash_students" : "ash_program_feedback";
 
