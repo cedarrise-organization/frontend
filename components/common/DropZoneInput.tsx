@@ -83,7 +83,6 @@ function DropZoneInputImagePreview(props: ImagePreviewProps) {
 										)}
 										width={50}
 										height={50}
-										priority={true}
 										alt="image-preview-thumbnail"
 									/>
 								),

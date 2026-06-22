@@ -12,6 +12,7 @@ import * as Tooltip from "@/components/ui/tooltip";
 import { useIsMobile } from "@/components/ui/useMobile";
 import { cnMerge } from "@/lib/utils/cn";
 import { IconBox } from "../common/IconBox";
+import { Presence } from "../common/presence";
 import { shadcnButtonVariants } from "./constants";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
@@ -277,7 +278,7 @@ function SidebarRoot(
 				data-slot="sidebar-container"
 				className={cnMerge(
 					`fixed inset-y-0 z-10 flex h-svh w-(--sidebar-width) transition-[left,right,width]
-					duration-200 ease-linear data-[side=left]:left-0
+					duration-300 ease-linear data-[side=left]:left-0
 					data-[side=left]:group-data-[collapsible=offcanvas]:-left-(--sidebar-width)
 					data-[side=right]:right-0
 					data-[side=right]:group-data-[collapsible=offcanvas]:-right-(--sidebar-width)`,
@@ -313,8 +314,13 @@ function SidebarRoot(
 	);
 }
 
-function SidebarTrigger(props: React.ComponentProps<"button"> & { unstyled?: boolean }) {
-	const { children, className, onClick, unstyled = false, ...restOfProps } = props;
+function SidebarTrigger(
+	props: React.ComponentProps<"button"> & {
+		classNames?: { base?: string; icon?: string };
+		unstyled?: boolean;
+	}
+) {
+	const { children, className, classNames, onClick, unstyled = false, ...restOfProps } = props;
 
 	const { toggleSidebar } = useSidebarContext();
 
@@ -325,7 +331,8 @@ function SidebarTrigger(props: React.ComponentProps<"button"> & { unstyled?: boo
 			data-slot="sidebar-trigger"
 			className={cnMerge(
 				!unstyled && shadcnButtonVariants({ size: "icon-sm", variant: "ghost" }),
-				className
+				className,
+				classNames?.base
 			)}
 			onClick={(event) => {
 				onClick?.(event);
@@ -333,7 +340,7 @@ function SidebarTrigger(props: React.ComponentProps<"button"> & { unstyled?: boo
 			}}
 			{...restOfProps}
 		>
-			{children ?? <IconBox icon="lucide:panel-left" className="size-4" />}
+			{children ?? <IconBox icon="lucide:panel-left" className={cnMerge("size-4", classNames?.icon)} />}
 			<div className="sr-only">Toggle Sidebar</div>
 		</button>
 	);
@@ -484,6 +491,22 @@ function SidebarContent(props: React.ComponentProps<"div">) {
 	);
 }
 
+export function SidebarDrawerOverlay(props: React.ComponentProps<"div">) {
+	const { open, setOpen, state } = useSidebarContext();
+
+	return (
+		<Presence present={open}>
+			<div
+				data-state={state}
+				onClick={() => setOpen(false)}
+				className="fixed inset-0 z-40 backdrop-blur-xs data-[state=collapsed]:animate-fade-out
+					data-[state=expanded]:animate-fade-in"
+				{...props}
+			/>
+		</Presence>
+	);
+}
+
 function SidebarGroup(props: React.ComponentProps<"div">) {
 	const { className, ...restOfProps } = props;
 
@@ -582,11 +605,11 @@ function SidebarMenuItem(props: React.ComponentProps<"li">) {
 
 const sidebarMenuButtonVariants = tv({
 	base: `peer/menu-button group/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2
-	text-left text-sm ring-shadcn-sidebar-ring outline-hidden transition-[width,height,padding]
-	group-has-data-[sidebar=menu-action]/menu-item:pr-8 focus-visible:ring-2 disabled:pointer-events-none
-	disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50
-	data-active:bg-shadcn-sidebar-accent data-active:text-shadcn-sidebar-accent-foreground
-	[&>span:last-child]:truncate`,
+	text-left text-sm ring-shadcn-sidebar-ring outline-hidden transition-[width,height,padding,gap]
+	duration-300 ease-in-out group-has-data-[sidebar=menu-action]/menu-item:pr-8 focus-visible:ring-2
+	disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none
+	aria-disabled:opacity-50 data-active:bg-shadcn-sidebar-accent
+	data-active:text-shadcn-sidebar-accent-foreground [&>span:last-child]:truncate`,
 
 	defaultVariants: {
 		size: "default",

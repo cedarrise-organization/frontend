@@ -40,7 +40,7 @@ function HomeContactForm() {
 			<TextAreaField control={form.control} name="feedback" label="Feedback" />
 
 			<Form.Submit asChild={true}>
-				<Button className="px-8 lg:self-end">Submit Feedback</Button>
+				<Button className="px-8 lg:self-end">Submit</Button>
 			</Form.Submit>
 		</Form.Root>
 	);

@@ -3,7 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toFormData } from "@zayne-labs/callapi/utils";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import {
 	DateField,
 	FormErrorMessageShared,
@@ -39,7 +41,6 @@ import {
 import { cnMerge } from "@/lib/utils/cn";
 import { Main } from "../-components/Main";
 
-// type ProjectFormData = z.infer<typeof GeneralProjectFrontendSchema>;
 type GeneralGoogleFormQueryResult = Awaited<
 	ReturnType<NonNullable<ReturnType<typeof generalGoogleFormQuery>["queryFn"]>>
 >;
@@ -49,11 +50,6 @@ const GALLERY_FOLDER_OPTIONS = [
 	{ label: "Outreaches Gallery", value: "OUTREACHES" },
 	{ label: "Capacity Building Gallery", value: "CAPACITY_BUILDING" },
 ] as const satisfies ReadonlyArray<{ label: string; value: (typeof GalleryFolderOptions)[number] }>;
-
-// const PROJECT_STATUS_SELECT_OPTIONS = [
-// 	{ label: "Active", value: "ongoing" },
-// 	{ label: "Completed", value: "completed" },
-// ] as const satisfies ReadonlyArray<{ label: string; value: (typeof ProjectStatusOptions)[number] }>;
 
 const ADMIN_DEPARTMENT_SELECT_OPTIONS = AdminDepartmentOptions.map((department) => ({
 	label: department,
@@ -196,8 +192,14 @@ function PhotoUploadCard(props: { onUploaded: () => void }) {
 						<>
 							<DropZone.Root
 								allowedFileTypes={["image/png", "image/jpg", "image/jpeg", "image/webp"]}
-								maxFileCount={3}
+								maxFileCount={10}
 								multiple={true}
+								onValidationSuccess={(ctx) => {
+									toast.success("Success", { description: ctx.message });
+								}}
+								onValidationError={(ctx) => {
+									toast.error("Error", { description: ctx.message });
+								}}
 								onFilesChange={(ctx) => {
 									field.onChange(ctx.fileStateArray.map((fileState) => fileState.file));
 								}}
@@ -223,11 +225,26 @@ function PhotoUploadCard(props: { onUploaded: () => void }) {
 											key={ctx.fileState.id}
 											fileState={ctx.fileState}
 											className="relative min-h-[64px] rounded-[12px] border border-dashed
-												border-cedar-black/12 bg-cedar-grey px-3 py-2"
+												border-cedar-black/12 bg-cedar-grey p-3"
 										>
-											<DropZone.FileItemPreview className="flex items-center gap-3" />
+											<DropZone.FileItemPreview
+												className="flex items-center gap-3"
+												renderPreview={{
+													image: {
+														node: (
+															<Image
+																src={ctx.fileState.preview ?? ""}
+																alt={ctx.fileState.file.name ?? "image-preview"}
+																className="size-full object-cover"
+																width={50}
+																height={50}
+															/>
+														),
+													},
+												}}
+											/>
 
-											<DropZone.FileItemMetadata className="text-[10px] text-cedar-black/56" />
+											<DropZone.FileItemMetadata className="text-[10px] text-cedar-black/64" />
 
 											<DropZone.FileItemDelete className="absolute top-2 right-2">
 												<IconBox icon="lucide:x" className="size-4 text-cedar-red" />
@@ -276,7 +293,6 @@ function ProjectUploadCard(props: { onUploaded: () => void }) {
 		defaultValues: {
 			description: "",
 			file: undefined,
-			status: undefined,
 			title: "",
 		},
 		resolver: zodResolver(GeneralProjectFrontendSchema),
@@ -287,13 +303,6 @@ function ProjectUploadCard(props: { onUploaded: () => void }) {
 			body: toFormData(data),
 			meta: { toast: { success: true } },
 			onSuccess: () => {
-				// if (data.status === "completed" && ctx.data.data.id) {
-				// 	await callBackendApiForQuery("@patch/general/projects/:id", {
-				// 		params: { id: ctx.data.data.id },
-				// 		query: { status: data.status },
-				// 	});
-				// }
-
 				form.reset();
 
 				onUploaded();
@@ -309,34 +318,38 @@ function ProjectUploadCard(props: { onUploaded: () => void }) {
 						control={form.control}
 						name="file"
 						render={({ field }) => (
-							<DropZoneInput.Root
-								allowedFileTypes={["image/png", "image/jpg", "image/jpeg", "image/webp"]}
-								maxFileCount={1}
-								multiple={false}
-								onChange={field.onChange}
-							>
-								<DropZoneInput.Area
-									classNames={{
-										container: `min-h-[140px] rounded-[14px] border border-dashed
-										border-cedar-black/12 bg-cedar-grey text-cedar-black/56 transition-colors
-										data-drag-over:bg-cedar-red/10`,
-									}}
+							<>
+								<DropZoneInput.Root
+									allowedFileTypes={["image/png", "image/jpg", "image/jpeg", "image/webp"]}
+									maxFileCount={1}
+									multiple={false}
+									onChange={field.onChange}
 								>
-									<p className="text-[12px] font-medium text-cedar-black/80">
-										Project image (optional)
-									</p>
-									<p className="text-[10px] text-cedar-black/40">
-										JPG, PNG, WEBP up to 20MB each
-									</p>
-								</DropZoneInput.Area>
+									<DropZoneInput.Area
+										classNames={{
+											container: `min-h-[140px] rounded-[14px] border border-dashed
+											border-cedar-black/12 bg-cedar-grey text-cedar-black/56 transition-colors
+											data-drag-over:bg-cedar-red/10`,
+										}}
+									>
+										<p className="text-[12px] font-medium text-cedar-black/80">
+											Project image (optional)
+										</p>
+										<p className="text-[10px] text-cedar-black/40">
+											JPG, PNG, WEBP up to 20MB each
+										</p>
+									</DropZoneInput.Area>
 
-								<DropZoneInput.ImagePreview
-									classNames={{
-										listContainer: "border-none",
-										listItem: "rounded-[12px] border border-dashed border-cedar-black/12",
-									}}
-								/>
-							</DropZoneInput.Root>
+									<DropZoneInput.ImagePreview
+										classNames={{
+											listContainer: "border-none",
+											listItem: "rounded-[12px] border border-dashed border-cedar-black/12",
+										}}
+									/>
+								</DropZoneInput.Root>
+
+								<FormErrorMessageShared />
+							</>
 						)}
 					/>
 

@@ -127,18 +127,7 @@ function DesktopNavigation(props: { className?: string }) {
 												>
 													<NavLink href={childItem.link}>
 														<p>{childItem.label}</p>
-
-														<span
-															className="grid size-7 place-content-center rounded-full
-																bg-cedar-yellow text-[hsl(0,0%,84)] opacity-0
-																transition-opacity group-hover:opacity-100
-																group-data-active:opacity-100"
-														>
-															<IconBox
-																icon="solar:arrow-right-up-outline"
-																className="size-3.5"
-															/>
-														</span>
+														<LinkIndicator />
 													</NavLink>
 												</DropdownMenu.Item>
 											)}
@@ -165,7 +154,7 @@ function MobileNavigation(props: { className?: string }) {
 		<>
 			<section
 				className={cnMerge(
-					`fixed inset-[0_0_0_auto] flex flex-col items-center gap-7 overflow-x-hidden pt-3
+					`fixed inset-[0_0_0_auto] flex flex-col items-center gap-7 overflow-x-hidden pt-8
 					transition-[width] ease-[cubic-bezier(0.32,0.72,0,1)]`,
 					isNavShow ?
 						"w-full bg-cedar-white/80 backdrop-blur-3xl duration-500"
@@ -225,11 +214,13 @@ function MobileNavigation(props: { className?: string }) {
 													onClick={toggleNavShow}
 													key={childItem.label}
 													href={childItem.link}
-													className="group flex h-12 items-center gap-3 rounded-[12px] px-4
-														transition-colors hover:bg-cedar-grey hover:text-cedar-red
-														data-active:bg-cedar-black data-active:text-cedar-white"
+													className="group flex h-12 items-center justify-between gap-3
+														rounded-[12px] px-4 transition-colors hover:bg-cedar-grey
+														hover:text-cedar-red data-active:bg-cedar-black
+														data-active:text-cedar-white"
 												>
 													<p>{childItem.label}</p>
+													<LinkIndicator />
 												</NavLink>
 											)}
 										/>
@@ -252,5 +243,17 @@ function MobileNavigation(props: { className?: string }) {
 				/>
 			</Button>
 		</>
+	);
+}
+
+function LinkIndicator() {
+	return (
+		<span
+			className="grid size-7 place-content-center rounded-full bg-cedar-yellow text-cedar-black/64
+				opacity-0 transition-opacity duration-200 ease-[ease] group-hover:opacity-100
+				group-data-active:opacity-100"
+		>
+			<IconBox icon="solar:arrow-right-up-outline" className="size-3.5" />
+		</span>
 	);
 }

@@ -175,7 +175,7 @@ export function FormPageHeader(props: { href: MainAppRoutes; title: string }) {
 
 	return (
 		<header
-			className="relative flex h-12 w-full items-center gap-5 rounded-[12px] bg-cedar-black p-3
+			className="relative flex h-[60px] w-full items-center gap-5 rounded-[12px] bg-cedar-black p-3
 				text-cedar-white lg:h-[115px] lg:rounded-[20px] lg:p-5"
 		>
 			<Button asChild={true} theme="secondary" size="icon" className="absolute">

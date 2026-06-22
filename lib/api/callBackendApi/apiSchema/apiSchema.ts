@@ -1241,7 +1241,6 @@ export const GeneralGalleryFrontendSchema = z.object({
 export const GeneralProjectFrontendSchema = z.object({
 	description: z.string().optional(),
 	file: z.file().optional(),
-	status: z.enum(ProjectStatusOptions),
 	title: z.string().min(3).max(150),
 });
 

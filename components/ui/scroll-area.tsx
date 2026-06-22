@@ -3,26 +3,39 @@
 import { ScrollArea as ScrollAreaPrimitive } from "radix-ui";
 import { cnMerge } from "@/lib/utils/cn";
 
-function ScrollAreaRoot(props: React.ComponentProps<typeof ScrollAreaPrimitive.Root>) {
-	const { children, className, ...restProps } = props;
+function ScrollAreaRoot(
+	props: React.ComponentProps<typeof ScrollAreaPrimitive.Root> & {
+		classNames?: {
+			base?: string;
+			corner?: string;
+			scrollbar?: string;
+			thumb?: string;
+			viewport?: string;
+		};
+	}
+) {
+	const { children, className, classNames, ...restProps } = props;
 
 	return (
 		<ScrollAreaPrimitive.Root
 			data-slot="scroll-area-root"
-			className={cnMerge("relative", className)}
+			className={cnMerge("relative", className, classNames?.base)}
 			{...restProps}
 		>
 			<ScrollAreaPrimitive.Viewport
 				data-slot="scroll-area-viewport"
-				className="size-full rounded-[inherit] transition-[color,box-shadow] outline-none
-					focus-visible:ring-[3px] focus-visible:ring-shadcn-ring/50 focus-visible:outline-1"
+				className={cnMerge(
+					`size-full rounded-[inherit] transition-[color,box-shadow] outline-none
+					focus-visible:ring-[3px] focus-visible:ring-shadcn-ring/50 focus-visible:outline-1`,
+					classNames?.viewport
+				)}
 			>
 				{children}
 			</ScrollAreaPrimitive.Viewport>
 
-			<ScrollAreaScrollBar />
+			<ScrollAreaScrollBar classNames={{ base: classNames?.scrollbar, thumb: classNames?.thumb }} />
 
-			<ScrollAreaPrimitive.Corner />
+			<ScrollAreaPrimitive.Corner className={classNames?.corner} />
 		</ScrollAreaPrimitive.Root>
 	);
 }

@@ -1,16 +1,29 @@
 "use client";
 
+import { useClickOutside } from "@zayne-labs/toolkit-react";
 import { For, ForWithWrapper } from "@zayne-labs/ui-react/common/for";
+import { useState } from "react";
 import { CollapsibleAnimated } from "@/components/animated/ui";
 import { IconBox } from "@/components/common/IconBox";
 import { Logo } from "@/components/common/Logo";
 import { NavLink } from "@/components/common/NavLink";
 import { Sidebar } from "@/components/ui";
+import { useIsMobile } from "@/components/ui/useMobile";
 import { dashboardNavSections, type DashboardNavItem } from "./constants";
 
 function DashboardSidebar() {
+	const isMobile = useIsMobile({ mobileBreakpoint: 1000 });
+	const [isOpen, setIsOpen] = useState(!isMobile);
+
+	const { ref: rootRef } = useClickOutside<HTMLDivElement>({
+		enabled: isMobile,
+		onClick: () => setIsOpen(false),
+	});
+
 	return (
 		<Sidebar.Provider
+			open={isOpen}
+			onOpenChange={setIsOpen}
 			sidebarWidth="303px"
 			sidebarWidthIcon="64px"
 			sidebarWidthIconDesktop="90px"
@@ -18,11 +31,12 @@ function DashboardSidebar() {
 			className="max-lg:max-w-(--sidebar-width-icon)"
 		>
 			<Sidebar.Root
+				ref={rootRef}
 				collapsible="icon"
 				variant="sidebar-sticky"
 				classNames={{
 					container: "animate-slide-from-left border-0 bg-cedar-black",
-					inner: "absolute gap-0 bg-cedar-black text-cedar-white",
+					inner: "gap-0 bg-cedar-black text-cedar-white",
 				}}
 			>
 				<DashboardSidebarHeaderSection />
@@ -30,7 +44,8 @@ function DashboardSidebar() {
 				<Sidebar.Content className="scrollbar-none pt-6 pb-12">
 					<ForWithWrapper
 						as="article"
-						className="flex grow flex-col gap-5 px-4 group-data-[state=collapsed]:px-2 lg:px-8"
+						className="flex grow flex-col gap-5 px-4 transition-[padding] duration-300 ease-in-out
+							group-data-[state=collapsed]:px-2 lg:px-8"
 						each={dashboardNavSections}
 						renderItem={(section) => (
 							<DashboardSidebarContentSection key={section.label} section={section} />
@@ -48,11 +63,9 @@ function DashboardSidebar() {
 
 function DashboardSidebarHeaderSection() {
 	return (
-		<Sidebar.Header className="border-b border-b-cedar-white/20 px-4 pt-5.5 pb-4 lg:pt-10 lg:pb-5">
+		<Sidebar.Header className="border-b border-b-cedar-white/20 px-4 pt-5.5 pb-4 lg:pt-11 lg:pb-5">
 			<Sidebar.Menu>
-				<Sidebar.MenuItem
-					className="flex items-center justify-between gap-2 group-data-[state=collapsed]:flex-col"
-				>
+				<Sidebar.MenuItem className="flex items-center">
 					<Sidebar.MenuButton className="h-auto p-0 text-cedar-white">
 						<Logo
 							variant="white"
@@ -61,16 +74,19 @@ function DashboardSidebarHeaderSection() {
 								image: "w-8 lg:w-[54px]",
 							}}
 						>
-							<div className="flex flex-col gap-1 leading-none">
-								<h3 className="text-[18px] text-cedar-white">CedarRise</h3>
-								<p className="text-[12px] text-cedar-yellow">Admin Dashboard</p>
+							<div className="flex shrink-0 flex-col gap-1 leading-none">
+								<h3 className="text-[18px] text-cedar-white lg:text-[24px]">CedarRise</h3>
+								<p className="text-[12px] text-cedar-yellow lg:text-[14px]">Admin Dashboard</p>
 							</div>
 						</Logo>
 					</Sidebar.MenuButton>
 
 					<Sidebar.Trigger
-						className="size-7 text-cedar-yellow group-data-[state=collapsed]:text-cedar-yellow
-							hover:bg-[initial] hover:text-cedar-yellow/70"
+						unstyled={true}
+						classNames={{
+							base: "absolute -right-6.5 size-4 lg:-right-7.5 lg:size-6",
+							icon: "size-full text-cedar-yellow hover:bg-[initial] hover:text-cedar-yellow/70",
+						}}
 					/>
 				</Sidebar.MenuItem>
 			</Sidebar.Menu>
@@ -96,17 +112,18 @@ function DashboardSidebarContentSection(props: { section: (typeof dashboardNavSe
 					<CollapsibleAnimated.Trigger asChild={true}>
 						<Sidebar.MenuButton
 							tooltip={section.label}
-							className="h-9 rounded-[8px] px-5 text-cedar-white/64
-								group-data-[state=collapsed]:justify-center hover:bg-cedar-white/10"
+							className="h-9 gap-3 rounded-[8px] px-5 text-cedar-white/64 hover:bg-cedar-white/10"
 						>
-							<span
-								className="text-[10px] tracking-wide uppercase group-data-[state=collapsed]:hidden
-									lg:text-[12px]"
+							<p
+								className="w-fit shrink-0 overflow-hidden whitespace-nowrap opacity-100
+									transition-[width,opacity] duration-200 ease-linear
+									group-data-[state=collapsed]:absolute group-data-[state=collapsed]:w-0
+									group-data-[state=collapsed]:opacity-0"
 							>
 								{section.label}
-							</span>
+							</p>
 
-							<span className="size-4 shrink-0 lg:size-5">
+							<span className="size-4 shrink-0 group-data-[state=collapsed]:mx-auto lg:size-5">
 								<IconBox
 									icon="lucide:chevron-right"
 									className="size-full transition-transform in-data-open:rotate-90"
@@ -181,16 +198,22 @@ function DashboardSidebarLink(props: DashboardNavItem) {
 	return (
 		<Sidebar.MenuButton
 			tooltip={label}
-			className="h-9 gap-3 rounded-[12px] p-0 px-5 text-[12px] text-cedar-white
-				group-data-[state=collapsed]:justify-center hover:bg-cedar-white/8 lg:h-12 lg:text-[14px]
-				data-active:bg-cedar-red data-active:text-cedar-white"
+			className="h-9 gap-3 rounded-[12px] p-0 px-5 text-[12px] text-cedar-white hover:bg-cedar-white/8
+				lg:h-12 lg:text-[14px] data-active:bg-cedar-red data-active:text-cedar-white"
 			asChild={true}
 		>
 			<NavLink href={link}>
-				<span className="size-3.5 shrink-0 lg:size-5">
+				<span className="size-3.5 shrink-0 group-data-[state=collapsed]:mx-auto lg:size-5">
 					<IconBox icon={icon} className="size-full" />
 				</span>
-				<p className="group-data-[state=collapsed]:hidden">{label}</p>
+				<p
+					className="w-fit shrink-0 overflow-hidden whitespace-nowrap opacity-100
+						transition-[width,opacity] duration-200 ease-linear
+						group-data-[state=collapsed]:absolute group-data-[state=collapsed]:w-0
+						group-data-[state=collapsed]:opacity-0"
+				>
+					{label}
+				</p>
 			</NavLink>
 		</Sidebar.MenuButton>
 	);

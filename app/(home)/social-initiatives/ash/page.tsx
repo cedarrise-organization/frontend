@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { heroImg, impactSectionImg } from "@/assets/images/social-initiatives/ash";
-import { ForWithWrapper } from "@/components/common/for";
+import { For, ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
 import { NavLink, NavLinkEphemeral, type MainAppRoutes } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
@@ -202,12 +202,11 @@ const formLinks = [
 
 function AshFormLinksSection() {
 	return (
-		<section>
-			<ForWithWrapper
-				className="flex flex-col gap-4 lg:gap-5"
+		<section className="flex flex-col gap-4 lg:gap-5">
+			<For
 				each={formLinks}
 				renderItem={(item) => (
-					<li
+					<article
 						key={item.label}
 						className="flex items-center justify-between gap-5 rounded-[16px] bg-cedar-black py-2
 							pr-2 pl-6 text-cedar-white lg:gap-12 lg:rounded-[20px] lg:py-5.5 lg:pr-5.5 lg:pl-12"
@@ -226,7 +225,7 @@ function AshFormLinksSection() {
 								<IconBox icon="solar:arrow-right-up-outline" />
 							</Button>
 						</NavLinkEphemeral>
-					</li>
+					</article>
 				)}
 			/>
 		</section>

@@ -420,15 +420,17 @@ function AlertsPanel() {
 
 	return (
 		<Card.Root
-			className="flex flex-col gap-5 rounded-[20px] border border-cedar-black/40 bg-cedar-white p-4
+			className="flex flex-col gap-5 rounded-[20px] bg-cedar-white p-4
 				shadow-[0_1px_0_hsl(0,0%,0%,0.04)]"
 		>
 			<Card.Header
 				className="flex items-center justify-center gap-3 rounded-[10px] bg-cedar-red px-8 py-3
 					text-cedar-white lg:rounded-[12px]"
 			>
-				<IconBox icon="lucide:bell" className="lg:size-5" />
-				<Card.Title className="text-center text-base/[1.2] lg:text-[24px]">
+				<span className="size-4 shrink-0 lg:size-5">
+					<IconBox icon="lucide:bell" className="size-full" />
+				</span>
+				<Card.Title className="shrink-0 text-center text-base/[1.2] lg:text-[24px]">
 					Alerts & Notifications
 				</Card.Title>
 			</Card.Header>
