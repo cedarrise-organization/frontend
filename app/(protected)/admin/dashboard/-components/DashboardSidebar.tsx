@@ -208,9 +208,8 @@ function DashboardSidebarLink(props: DashboardNavItem) {
 				</span>
 				<p
 					className="w-fit shrink-0 overflow-hidden whitespace-nowrap opacity-100
-						transition-[width,opacity] duration-200 ease-linear
-						group-data-[state=collapsed]:absolute group-data-[state=collapsed]:w-0
-						group-data-[state=collapsed]:opacity-0"
+						transition-[width,opacity] duration-200 ease-linear group-data-[state=collapsed]:absolute
+						group-data-[state=collapsed]:w-0 group-data-[state=collapsed]:opacity-0"
 				>
 					{label}
 				</p>
