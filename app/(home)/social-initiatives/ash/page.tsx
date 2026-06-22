@@ -189,7 +189,7 @@ function MomentsSection() {
 
 const formLinks = [
 	{
-		description: "Click to enrol a student in the ASH program.",
+		description: "Click to enroll a student in the ASH program.",
 		href: "/social-initiatives/ash/register",
 		label: "Register for ASH",
 	},
