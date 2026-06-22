@@ -6,7 +6,7 @@ import { IconBox } from "@/components/common/IconBox";
 import { Logo } from "@/components/common/Logo";
 import { NavLink } from "@/components/common/NavLink";
 import { Sidebar } from "@/components/ui";
-import { dashboardNavSections, placeholderHref, type DashboardNavItem } from "./constants";
+import { dashboardNavSections, type DashboardNavItem } from "./constants";
 
 function DashboardSidebar() {
 	return (
@@ -39,12 +39,12 @@ function DashboardSidebar() {
 						)}
 					/>
 
-					<Sidebar.Footer
+					{/* <Sidebar.Footer
 						className="mt-5 border-t border-t-cedar-white/20 px-4 pt-5
 							group-data-[state=collapsed]:px-2 lg:mt-[80px] lg:px-8 lg:pt-8.5"
 					>
-						{/* <DashboardSidebarFooterSection /> */}
-					</Sidebar.Footer>
+						<DashboardSidebarFooterSection />
+					</Sidebar.Footer> */}
 				</Sidebar.Content>
 
 				<Sidebar.Rail className="group-data-[state=collapsed]:-translate-x-1" />
@@ -139,41 +139,41 @@ function DashboardSidebarContentSection(props: { section: (typeof dashboardNavSe
 	);
 }
 
-function DashboardSidebarFooterSection() {
-	return (
-		<article
-			className="rounded-[20px] bg-[hsl(240,4%,5%)] px-3 pt-5 pb-3 group-data-[state=collapsed]:px-1.5"
-		>
-			<h3 className="text-[14px] text-cedar-white group-data-[state=collapsed]:hidden lg:text-base">
-				Impact Report 2025
-			</h3>
+// function DashboardSidebarFooterSection() {
+// 	return (
+// 		<article
+// 			className="rounded-[20px] bg-[hsl(240,4%,5%)] px-3 pt-5 pb-3 group-data-[state=collapsed]:px-1.5"
+// 		>
+// 			<h3 className="text-[14px] text-cedar-white group-data-[state=collapsed]:hidden lg:text-base">
+// 				Impact Report 2025
+// 			</h3>
 
-			<p
-				className="mt-3 text-[10px]/[1.2] text-cedar-white/64 group-data-[state=collapsed]:hidden
-					lg:text-[12px]"
-			>
-				Generate your annual outreach & donor summary
-			</p>
+// 			<p
+// 				className="mt-3 text-[10px]/[1.2] text-cedar-white/64 group-data-[state=collapsed]:hidden
+// 					lg:text-[12px]"
+// 			>
+// 				Generate your annual outreach & donor summary
+// 			</p>
 
-			<NavLink
-				href={placeholderHref}
-				className="relative mt-5 flex min-h-[126px] items-center justify-center rounded-[12px]
-					bg-cedar-yellow px-1 py-5 text-cedar-black transition-opacity hover:opacity-90"
-			>
-				<IconBox
-					icon="radix-icons:download"
-					className="size-[88px] shrink-0 group-data-[state=collapsed]:size-10"
-				/>
-				<p
-					className="absolute top-3 right-3 max-w-[50px] text-[12px]/[1.2]
-						group-data-[state=collapsed]:hidden lg:text-[14px]"
-				>
-					Export Report
-				</p>
-			</NavLink>
-		</article>
-	);
-}
+// 			<NavLink
+// 				href={placeholderHref}
+// 				className="relative mt-5 flex min-h-[126px] items-center justify-center rounded-[12px]
+// 					bg-cedar-yellow px-1 py-5 text-cedar-black transition-opacity hover:opacity-90"
+// 			>
+// 				<IconBox
+// 					icon="radix-icons:download"
+// 					className="size-[88px] shrink-0 group-data-[state=collapsed]:size-10"
+// 				/>
+// 				<p
+// 					className="absolute top-3 right-3 max-w-[50px] text-[12px]/[1.2]
+// 						group-data-[state=collapsed]:hidden lg:text-[14px]"
+// 				>
+// 					Export Report
+// 				</p>
+// 			</NavLink>
+// 		</article>
+// 	);
+// }
 
 function DashboardSidebarLink(props: DashboardNavItem) {
 	const { icon, label, link } = props;

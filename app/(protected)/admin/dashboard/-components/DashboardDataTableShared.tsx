@@ -2,6 +2,7 @@
 "use client";
 
 import type { Table } from "@tanstack/react-table";
+import { omitKeys } from "@zayne-labs/toolkit-core";
 import { isArray, isBoolean, isNumber, isString } from "@zayne-labs/toolkit-type-helpers";
 import { parseAsArrayOf, parseAsInteger, parseAsString, useQueryState } from "nuqs";
 import { For } from "@/components/common/for";
@@ -303,16 +304,22 @@ export const formatDashboardDetailValue = (value: unknown): string => {
 	return EMPTY_VALUE_PLACEHOLDER;
 };
 
-export const getDashboardDetailRows = (record: Record<string, unknown> | undefined) => {
+export const getDashboardDetailRows = <
+	TRecord extends {
+		createdAt?: unknown;
+		deletedAt?: unknown;
+		id?: unknown;
+		updatedAt?: unknown;
+	},
+>(
+	record: TRecord | undefined
+) => {
 	if (!record) {
 		return [];
 	}
 
-	return Object.entries(record)
-		.filter(
-			([key]) =>
-				!["createdAt", "deletedAt", "id", "updatedAt"].includes(key) && !key.endsWith("PublicId")
-		)
+	return Object.entries(omitKeys(record, ["deletedAt", "id", "updatedAt"]))
+		.filter(([key]) => !key.endsWith("PublicId"))
 		.map(([key, value]) => ({
 			label: key.split(/(?=[A-Z])/).join(" "),
 			url: key.endsWith("Url") && isString(value) ? value : undefined,

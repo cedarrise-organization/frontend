@@ -45,7 +45,7 @@ type GeneralGoogleFormQueryResult = Awaited<
 >;
 
 const GALLERY_FOLDER_OPTIONS = [
-	{ label: "Homepage Gallery", value: "ASH" },
+	{ label: "ASH Gallery", value: "ASH" },
 	{ label: "Outreaches Gallery", value: "OUTREACHES" },
 	{ label: "Capacity Building Gallery", value: "CAPACITY_BUILDING" },
 ] as const satisfies ReadonlyArray<{ label: string; value: (typeof GalleryFolderOptions)[number] }>;
