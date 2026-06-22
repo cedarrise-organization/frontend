@@ -43,7 +43,7 @@ function DashboardSidebar() {
 						className="mt-5 border-t border-t-cedar-white/20 px-4 pt-5
 							group-data-[state=collapsed]:px-2 lg:mt-[80px] lg:px-8 lg:pt-8.5"
 					>
-						<DashboardSidebarFooterSection />
+						{/* <DashboardSidebarFooterSection /> */}
 					</Sidebar.Footer>
 				</Sidebar.Content>
 
