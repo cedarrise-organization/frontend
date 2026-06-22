@@ -25,9 +25,7 @@ function DashboardSidebar() {
 					inner: "absolute gap-0 bg-cedar-black text-cedar-white",
 				}}
 			>
-				<Sidebar.Header className="border-b border-b-cedar-white/20 px-4 pt-5.5 pb-4 lg:pt-10 lg:pb-5">
-					<DashboardSidebarHeaderSection />
-				</Sidebar.Header>
+				<DashboardSidebarHeaderSection />
 
 				<Sidebar.Content className="scrollbar-none pt-6 pb-12">
 					<ForWithWrapper
@@ -39,12 +37,7 @@ function DashboardSidebar() {
 						)}
 					/>
 
-					{/* <Sidebar.Footer
-						className="mt-5 border-t border-t-cedar-white/20 px-4 pt-5
-							group-data-[state=collapsed]:px-2 lg:mt-[80px] lg:px-8 lg:pt-8.5"
-					>
-						<DashboardSidebarFooterSection />
-					</Sidebar.Footer> */}
+					{/* <DashboardSidebarFooterSection /> */}
 				</Sidebar.Content>
 
 				<Sidebar.Rail className="group-data-[state=collapsed]:-translate-x-1" />
@@ -55,31 +48,33 @@ function DashboardSidebar() {
 
 function DashboardSidebarHeaderSection() {
 	return (
-		<Sidebar.Menu>
-			<Sidebar.MenuItem
-				className="flex items-center justify-between gap-2 group-data-[state=collapsed]:flex-col"
-			>
-				<Sidebar.MenuButton className="h-auto p-0 text-cedar-white">
-					<Logo
-						variant="white"
-						width={32}
-						classNames={{
-							image: "w-8 lg:w-[54px]",
-						}}
-					>
-						<div className="flex flex-col gap-1 leading-none">
-							<h3 className="text-[18px] text-cedar-white">CedarRise</h3>
-							<p className="text-[12px] text-cedar-yellow">Admin Dashboard</p>
-						</div>
-					</Logo>
-				</Sidebar.MenuButton>
+		<Sidebar.Header className="border-b border-b-cedar-white/20 px-4 pt-5.5 pb-4 lg:pt-10 lg:pb-5">
+			<Sidebar.Menu>
+				<Sidebar.MenuItem
+					className="flex items-center justify-between gap-2 group-data-[state=collapsed]:flex-col"
+				>
+					<Sidebar.MenuButton className="h-auto p-0 text-cedar-white">
+						<Logo
+							variant="white"
+							width={32}
+							classNames={{
+								image: "w-8 lg:w-[54px]",
+							}}
+						>
+							<div className="flex flex-col gap-1 leading-none">
+								<h3 className="text-[18px] text-cedar-white">CedarRise</h3>
+								<p className="text-[12px] text-cedar-yellow">Admin Dashboard</p>
+							</div>
+						</Logo>
+					</Sidebar.MenuButton>
 
-				<Sidebar.Trigger
-					className="size-7 text-cedar-yellow group-data-[state=collapsed]:text-cedar-yellow
-						hover:bg-[initial] hover:text-cedar-yellow/70"
-				/>
-			</Sidebar.MenuItem>
-		</Sidebar.Menu>
+					<Sidebar.Trigger
+						className="size-7 text-cedar-yellow group-data-[state=collapsed]:text-cedar-yellow
+							hover:bg-[initial] hover:text-cedar-yellow/70"
+					/>
+				</Sidebar.MenuItem>
+			</Sidebar.Menu>
+		</Sidebar.Header>
 	);
 }
 
@@ -141,6 +136,10 @@ function DashboardSidebarContentSection(props: { section: (typeof dashboardNavSe
 
 // function DashboardSidebarFooterSection() {
 // 	return (
+//  <Sidebar.Footer
+// 						className="mt-5 border-t border-t-cedar-white/20 px-4 pt-5
+// 							group-data-[state=collapsed]:px-2 lg:mt-[80px] lg:px-8 lg:pt-8.5"
+// 					>
 // 		<article
 // 			className="rounded-[20px] bg-[hsl(240,4%,5%)] px-3 pt-5 pb-3 group-data-[state=collapsed]:px-1.5"
 // 		>
@@ -172,6 +171,7 @@ function DashboardSidebarContentSection(props: { section: (typeof dashboardNavSe
 // 				</p>
 // 			</NavLink>
 // 		</article>
+// </Sidebar.Footer>
 // 	);
 // }
 
