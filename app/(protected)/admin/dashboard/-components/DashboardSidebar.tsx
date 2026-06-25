@@ -1,8 +1,6 @@
 "use client";
 
-import { useClickOutside } from "@zayne-labs/toolkit-react";
 import { For, ForWithWrapper } from "@zayne-labs/ui-react/common/for";
-import { useState } from "react";
 import { CollapsibleAnimated } from "@/components/animated/ui";
 import { IconBox } from "@/components/common/IconBox";
 import { Logo } from "@/components/common/Logo";
@@ -13,25 +11,18 @@ import { dashboardNavSections, type DashboardNavItem } from "./constants";
 
 function DashboardSidebar() {
 	const isMobile = useIsMobile({ mobileBreakpoint: 1000 });
-	const [isOpen, setIsOpen] = useState(!isMobile);
-
-	const { ref: rootRef } = useClickOutside<HTMLDivElement>({
-		enabled: isMobile,
-		onClick: () => setIsOpen(false),
-	});
 
 	return (
 		<Sidebar.Provider
-			open={isOpen}
-			onOpenChange={setIsOpen}
 			sidebarWidth="303px"
 			sidebarWidthIcon="64px"
 			sidebarWidthIconDesktop="90px"
 			withMobileBreakpoint={false}
 			className="max-lg:max-w-(--sidebar-width-icon)"
 		>
+			<Sidebar.Overlay enabled={isMobile} />
+
 			<Sidebar.Root
-				ref={rootRef}
 				collapsible="icon"
 				variant="sidebar-sticky"
 				classNames={{
@@ -48,14 +39,17 @@ function DashboardSidebar() {
 							group-data-[state=collapsed]:px-2 lg:px-8"
 						each={dashboardNavSections}
 						renderItem={(section) => (
-							<DashboardSidebarContentSection key={section.label} section={section} />
+							<DashboardSidebarGroupSection key={section.label} section={section} />
 						)}
 					/>
 
 					{/* <DashboardSidebarFooterSection /> */}
 				</Sidebar.Content>
 
-				<Sidebar.Rail className="group-data-[state=collapsed]:-translate-x-1" />
+				<Sidebar.Rail
+					className="group-data-[state=collapsed]:-translate-x-2
+						lg:group-data-[state=collapsed]:-translate-x-1"
+				/>
 			</Sidebar.Root>
 		</Sidebar.Provider>
 	);
@@ -63,38 +57,36 @@ function DashboardSidebar() {
 
 function DashboardSidebarHeaderSection() {
 	return (
-		<Sidebar.Header className="border-b border-b-cedar-white/20 px-4 pt-5.5 pb-4 lg:pt-11 lg:pb-5">
-			<Sidebar.Menu>
-				<Sidebar.MenuItem className="flex items-center">
-					<Sidebar.MenuButton className="h-auto p-0 text-cedar-white">
-						<Logo
-							variant="white"
-							width={32}
-							classNames={{
-								image: "w-8 lg:w-[54px]",
-							}}
-						>
-							<div className="flex shrink-0 flex-col gap-1 leading-none">
-								<h3 className="text-[18px] text-cedar-white lg:text-[24px]">CedarRise</h3>
-								<p className="text-[12px] text-cedar-yellow lg:text-[14px]">Admin Dashboard</p>
-							</div>
-						</Logo>
-					</Sidebar.MenuButton>
+		<Sidebar.Header
+			className="relative border-b border-b-cedar-white/20 px-4 pt-5.5 pb-4 lg:pt-11 lg:pb-5"
+		>
+			<Sidebar.MenuButton className="h-auto p-0 text-cedar-white">
+				<Logo
+					variant="white"
+					width={32}
+					classNames={{
+						image: "w-8 lg:w-[54px]",
+					}}
+				>
+					<div className="flex shrink-0 flex-col gap-1 leading-none">
+						<h3 className="text-[18px] text-cedar-white lg:text-[24px]">CedarRise</h3>
+						<p className="text-[12px] text-cedar-yellow lg:text-[14px]">Admin Dashboard</p>
+					</div>
+				</Logo>
+			</Sidebar.MenuButton>
 
-					<Sidebar.Trigger
-						unstyled={true}
-						classNames={{
-							base: "absolute -right-6.5 size-4 lg:-right-7.5 lg:size-6",
-							icon: "size-full text-cedar-yellow hover:bg-[initial] hover:text-cedar-yellow/70",
-						}}
-					/>
-				</Sidebar.MenuItem>
-			</Sidebar.Menu>
+			<Sidebar.Trigger
+				unstyled={true}
+				classNames={{
+					base: "absolute -right-2.75 size-4 lg:-right-3.75 lg:size-6",
+					icon: "size-full text-cedar-yellow hover:bg-[initial] hover:text-cedar-yellow/70",
+				}}
+			/>
 		</Sidebar.Header>
 	);
 }
 
-function DashboardSidebarContentSection(props: { section: (typeof dashboardNavSections)[number] }) {
+function DashboardSidebarGroupSection(props: { section: (typeof dashboardNavSections)[number] }) {
 	const { section } = props;
 
 	return (

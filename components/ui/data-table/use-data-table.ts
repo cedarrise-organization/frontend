@@ -41,7 +41,7 @@ const THROTTLE_MS = 50;
 
 type UseDataTableProps<TData> = Omit<
 	TableOptions<TData>,
-	"getCoreRowModel" | "manualFiltering" | "manualPagination" | "manualSorting" | "pageCount" | "state"
+	"getCoreRowModel" | "manualPagination" | "manualSorting" | "pageCount" | "state"
 >
 	& Required<Pick<TableOptions<TData>, "pageCount">> & {
 		clearOnDefault?: boolean;
@@ -68,6 +68,7 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
 		enableSorting,
 		history = "replace",
 		initialState,
+		manualFiltering = true,
 		pageCount,
 		queryKeys,
 		scroll = false,
@@ -261,7 +262,7 @@ export function useDataTable<TData>(props: UseDataTableProps<TData>) {
 		getPaginationRowModel: getPaginationRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 		initialState,
-		manualFiltering: true,
+		manualFiltering,
 		manualPagination: true,
 		manualSorting: true,
 		meta: {

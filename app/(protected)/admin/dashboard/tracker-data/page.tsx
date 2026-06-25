@@ -7,7 +7,6 @@ import { useMemo, useState } from "react";
 import { DialogAnimated, TabsAnimated } from "@/components/animated/ui";
 import { For, ForWithWrapper } from "@/components/common/for";
 import { DropdownMenu } from "@/components/ui";
-import { Card } from "@/components/ui/card";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 import type { QueryKeys } from "@/components/ui/data-table/data-table-types";
 import { useDataTable } from "@/components/ui/data-table/use-data-table";
@@ -64,6 +63,7 @@ import {
 } from "@/lib/react-query/queryOptions";
 import { cnMerge } from "@/lib/utils/cn";
 import { EMPTY_VALUE_PLACEHOLDER } from "../-components/constants";
+import { DashboardDataStats } from "../-components/DashboardDataStats";
 import {
 	DashboardDataTableSection,
 	formatDashboardDetailValue,
@@ -249,7 +249,7 @@ function TrackerDataPage() {
 				<h1 className="text-[24px] font-semibold text-cedar-black lg:text-[40px]">Forms & Tracking</h1>
 			</header>
 
-			<TabsAnimated.Root defaultValue="ash">
+			<TabsAnimated.Root defaultValue="ash" className="gap-6">
 				<div className="rounded-[20px] bg-cedar-white p-4 lg:p-5">
 					<TabsAnimated.List
 						classNames={{
@@ -272,7 +272,7 @@ function TrackerDataPage() {
 					</TabsAnimated.List>
 				</div>
 
-				<TabsAnimated.ContentList className="mt-6 flex flex-col gap-6">
+				<TabsAnimated.ContentList className="flex flex-col gap-6">
 					<TabsAnimated.Content value={TRACKER_DATA_TABS[0].value} className="flex flex-col gap-6">
 						<AshTrackerDataTab onViewMore={setSelectedRecord} />
 					</TabsAnimated.Content>
@@ -486,11 +486,12 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 
 	return (
 		<>
-			<TrackerDataStats stats={stats} />
+			<DashboardDataStats stats={stats} />
 			<DashboardDataTableSection
 				color="yellow"
 				count={trackingRecords.length}
 				isLoading={trackingQueryResult.isPending}
+				isDownloadLoading={trackingDownloadMutation.isPending}
 				label="ASH - Termly Tracking Form"
 				searchQueryKey="ashTrackerDataSearch"
 				sortOptions={ASH_TRACKING_SORT_OPTIONS}
@@ -500,6 +501,7 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 			<DashboardDataTableSection
 				color="yellow"
 				count={attendanceRecords.length}
+				isDownloadLoading={attendanceDownloadMutation.isPending}
 				isLoading={attendanceQueryResult.isPending}
 				label="ASH - Weekly activity & Attendance"
 				searchQueryKey="ashTrackerDataSearch"
@@ -509,6 +511,7 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 			<DashboardDataTableSection
 				color="red"
 				count={exitRecords.length}
+				isDownloadLoading={exitDownloadMutation.isPending}
 				isLoading={exitQueryResult.isPending}
 				label="ASH - Exit Submitted data"
 				searchQueryKey="ashTrackerDataSearch"
@@ -711,11 +714,12 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 
 	return (
 		<>
-			<TrackerDataStats stats={stats} />
+			<DashboardDataStats stats={stats} />
 			<DashboardDataTableSection
 				color="yellow"
 				count={trackingRecords.length}
 				isLoading={trackingQueryResult.isPending}
+				isDownloadLoading={trackingDownloadMutation.isPending}
 				label="TACOTS - Student Tracking"
 				searchQueryKey="tacotsTrackerDataSearch"
 				sortOptions={TACOTS_TRACKING_SORT_OPTIONS}
@@ -726,6 +730,7 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 				color="yellow"
 				count={onboardingRecords.length}
 				isLoading={onboardingQueryResult.isPending}
+				isDownloadLoading={onboardingDownloadMutation.isPending}
 				label="TACOTS - Beneficiary Onboarding"
 				searchQueryKey="tacotsTrackerDataSearch"
 				sortOptions={TACOTS_ONBOARDING_SORT_OPTIONS}
@@ -736,6 +741,7 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 				color="red"
 				count={exitRecords.length}
 				isLoading={exitQueryResult.isPending}
+				isDownloadLoading={exitDownloadMutation.isPending}
 				label="TACOTS - Exit Completion"
 				searchQueryKey="tacotsTrackerDataSearch"
 				sortOptions={TACOTS_EXIT_SORT_OPTIONS}
@@ -823,10 +829,11 @@ function OutreachTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRec
 
 	return (
 		<>
-			<TrackerDataStats stats={stats} />
+			<DashboardDataStats stats={stats} />
 			<DashboardDataTableSection
 				color="yellow"
 				count={records.length}
+				isDownloadLoading={downloadMutation.isPending}
 				isLoading={queryResult.isPending}
 				label="Cedar Outreach - Tracker Data"
 				searchQueryKey="outreachTrackerDataSearch"
@@ -916,11 +923,12 @@ function CapacityBuildingTrackerDataTab(props: { onViewMore: (record: SelectedTr
 
 	return (
 		<>
-			<TrackerDataStats stats={stats} />
+			<DashboardDataStats stats={stats} />
 			<DashboardDataTableSection
 				color="yellow"
-				count={records.length}
 				isLoading={queryResult.isPending}
+				isDownloadLoading={downloadMutation.isPending}
+				count={records.length}
 				label="Capacity Building Program Evaluation"
 				searchQueryKey="capacityTrackerDataSearch"
 				sortOptions={CAPACITY_SORT_OPTIONS}
@@ -928,34 +936,6 @@ function CapacityBuildingTrackerDataTab(props: { onViewMore: (record: SelectedTr
 				onDownload={() => downloadMutation.mutate()}
 			/>
 		</>
-	);
-}
-
-function TrackerDataStats(props: { stats: ReadonlyArray<{ label: string; value: number | string }> }) {
-	const { stats } = props;
-
-	return (
-		<section className="grid gap-4 lg:grid-cols-4 lg:gap-6">
-			<For
-				each={stats}
-				renderItem={(stat) => (
-					<Card.Root
-						key={stat.label}
-						className="rounded-[18px] border border-cedar-black/10 bg-cedar-white p-7
-							lg:min-h-[140px] lg:px-8 lg:py-9"
-					>
-						<Card.Content>
-							<Card.Title className="text-[30px] font-semibold text-cedar-black lg:text-[40px]">
-								{stat.value}
-							</Card.Title>
-							<Card.Description className="mt-2 text-[14px] text-cedar-black/64 lg:text-[18px]">
-								{stat.label}
-							</Card.Description>
-						</Card.Content>
-					</Card.Root>
-				)}
-			/>
-		</section>
 	);
 }
 

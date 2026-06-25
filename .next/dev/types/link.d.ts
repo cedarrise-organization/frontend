@@ -35,6 +35,7 @@ declare namespace __next_route_internal_types__ {
     | `/`
     | `/about`
     | `/admin/dashboard`
+    | `/admin/dashboard/blog-uploads`
     | `/admin/dashboard/form-data`
     | `/admin/dashboard/general-uploads`
     | `/admin/dashboard/tracker-data`

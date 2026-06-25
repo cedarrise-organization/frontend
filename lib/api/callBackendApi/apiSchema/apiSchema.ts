@@ -253,11 +253,6 @@ const LoginSchema = z.object({
 	password: z.string().min(8, "Password must be at least 8 characters."),
 });
 
-const LookupItemSchema = z.object({
-	id: z.string(),
-	name: z.string(),
-});
-
 const RoleSchema = z.object({
 	createdAt: z.string(),
 	deletedAt: z.string().nullable().optional(),
@@ -724,12 +719,40 @@ const adminRoutes = defineSchemaRoutes({
 		params: UserIdParamsSchema,
 	},
 
+	"@get/admin/listusers": {
+		data: withBaseSuccessResponseAndMeta({
+			data: z.array(
+				z.object({
+					createdAt: z.string(),
+					deletedAt: z.string().nullable(),
+					department: z.enum(AdminDepartmentOptions),
+					email: z.email(),
+					id: z.uuid(),
+					name: z.string(),
+					password: z.string(),
+					updatedAt: z.string().nullable(),
+				})
+			),
+			meta: PaginatedMetaSchema,
+		}),
+		query: PaginatedQuerySchema.optional(),
+	},
+
 	"@get/admin/roles": {
 		data: withBaseSuccessResponse({ data: z.array(RoleSchema) }),
 	},
 
 	"@get/admin/roles/:userId": {
-		data: withBaseSuccessResponse({ data: z.array(RoleSchema) }),
+		data: withBaseSuccessResponse({
+			data: z.array(
+				z.object({
+					description: z.string().nullable(),
+					id: z.uuid(),
+					isDefault: z.boolean(),
+					name: z.enum(["volunteer", "admin", "superadmin"]),
+				})
+			),
+		}),
 		params: UserIdParamsSchema,
 	},
 
@@ -1128,19 +1151,50 @@ const generalRoutes = defineSchemaRoutes({
 
 const lookupRoutes = defineSchemaRoutes({
 	"@get/lookup/ash-students": {
-		data: withBaseSuccessResponse({ data: z.array(LookupItemSchema) }),
+		data: withBaseSuccessResponse({
+			data: z.array(
+				z.object({
+					id: z.uuid(),
+					name: z.string(),
+					status: z.literal("accepted"),
+				})
+			),
+		}),
 	},
 
 	"@get/lookup/tacots-onboarded": {
-		data: withBaseSuccessResponse({ data: z.array(LookupItemSchema) }),
+		data: withBaseSuccessResponse({
+			data: z.array(
+				z.object({
+					id: z.uuid(),
+					name: z.string(),
+				})
+			),
+		}),
 	},
 
 	"@get/lookup/tacots-recommended": {
-		data: withBaseSuccessResponse({ data: z.array(LookupItemSchema) }),
+		data: withBaseSuccessResponse({
+			data: z.array(
+				z.object({
+					id: z.uuid(),
+					name: z.string(),
+					status: z.literal("SELECTED"),
+				})
+			),
+		}),
 	},
 
 	"@get/lookup/volunteers": {
-		data: withBaseSuccessResponse({ data: z.array(LookupItemSchema) }),
+		data: withBaseSuccessResponse({
+			data: z.array(
+				z.object({
+					id: z.uuid(),
+					name: z.string(),
+					status: z.literal("accepted"),
+				})
+			),
+		}),
 	},
 });
 
@@ -1249,6 +1303,12 @@ export const GeneralReceiptFrontendSchema = z.object({
 	description: z.string().optional(),
 	file: RequiredFileSchema,
 	name: z.string().min(3).max(150),
+});
+
+export const BlogFrontendSchema = z.object({
+	description: z.string().optional(),
+	file: z.file().optional(),
+	title: z.string().min(3, "Enter at least 3 characters."),
 });
 
 export const GoogleFormFrontendSchema = z.object({

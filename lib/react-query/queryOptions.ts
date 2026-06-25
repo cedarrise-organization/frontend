@@ -68,6 +68,8 @@ export type DashboardNotificationsQuery = z.infer<
 	(typeof backendApiSchemaRoutes)["@get/dashboard/notifications"]["query"]
 >;
 
+export type BlogsListQuery = z.infer<(typeof backendApiSchemaRoutes)["@get/blogs"]["query"]>;
+
 export const sessionQuery = () => {
 	return queryOptions({
 		queryFn: () => checkUserSessionForQuery(),
@@ -390,6 +392,16 @@ export const dashboardProjectsQuery = () => {
 		staleTime: 1000 * 60 * 10,
 	});
 };
+
+export const blogsQuery = (query?: BlogsListQuery) => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/blogs", { query }),
+		queryKey: ["blogs", query],
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
+export type BlogsQueryResult = Awaited<ReturnType<NonNullable<ReturnType<typeof blogsQuery>["queryFn"]>>>;
 
 export const generalProjectsQuery = () => {
 	return queryOptions({

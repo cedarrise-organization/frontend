@@ -223,6 +223,17 @@ export function CheckboxQuestionField<TFieldValues extends FieldValues, TTransfo
 		</div>
 	);
 }
+function FormLabelShared(props: { className?: string; label: string | undefined }) {
+	const { className, label } = props;
+
+	return (
+		label && (
+			<Form.Label className={cnMerge("text-[12px] text-cedar-black/64 lg:text-[14px]", className)}>
+				{label}
+			</Form.Label>
+		)
+	);
+}
 
 export function TextField<TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
 	props: Pick<
@@ -234,6 +245,7 @@ export function TextField<TFieldValues extends FieldValues, TTransformedValues =
 				base?: string;
 				input?: string;
 				inputGroup?: string;
+				label?: string;
 			};
 			label?: string;
 		}
@@ -252,16 +264,14 @@ export function TextField<TFieldValues extends FieldValues, TTransformedValues =
 		type = "text",
 	} = props;
 
-	const inputClassName = tw`h-[54px] rounded-[12px] bg-cedar-grey px-9 text-[12px] text-cedar-black
-	placeholder:text-cedar-black/40 lg:h-[64px] lg:text-[14px]`;
+	const inputClassName = tw`h-[54px] rounded-[12px] bg-cedar-grey px-6 text-[12px] text-cedar-black
+	placeholder:text-cedar-black/40 lg:h-[64px] lg:px-9 lg:text-[14px]`;
 
 	return (
 		<Form.Field control={control} name={name} className={classNames?.base}>
 			<FormRequiredIndicator required={required} />
 
-			{label && (
-				<Form.Label className="text-[12px] text-cedar-black/64 lg:text-[14px]">{label}</Form.Label>
-			)}
+			<FormLabelShared label={label} className={classNames?.label} />
 
 			<Form.Input
 				inputMode={inputMode}
@@ -284,23 +294,31 @@ export function TextField<TFieldValues extends FieldValues, TTransformedValues =
 }
 
 export function TextAreaField<TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
-	props: SharedFieldProps<TFieldValues, TTransformedValues> & {
-		label: string;
-	}
+	props: Pick<InferProps<typeof Form.TextArea>, "placeholder">
+		& SharedFieldProps<TFieldValues, TTransformedValues> & {
+			classNames?: {
+				base?: string;
+				label?: string;
+				textArea?: string;
+			};
+			label: string;
+		}
 ) {
-	const { control, label, name, required } = props;
+	const { classNames, control, label, name, placeholder, required } = props;
 
 	return (
-		<Form.Field control={control} name={name}>
+		<Form.Field control={control} name={name} className={classNames?.base}>
 			<FormRequiredIndicator required={required} />
 
-			{label && (
-				<Form.Label className="text-[12px] text-cedar-black/64 lg:text-[14px]">{label}</Form.Label>
-			)}
+			<FormLabelShared label={label} className={classNames?.label} />
 
 			<Form.TextArea
-				className="min-h-[132px] rounded-[12px] bg-cedar-grey px-6 py-4 text-[12px] text-cedar-black
-					placeholder:text-cedar-black/40 lg:px-9 lg:text-[14px]"
+				placeholder={placeholder}
+				className={cnMerge(
+					`min-h-[132px] rounded-[12px] bg-cedar-grey px-6 py-4 text-[12px] text-cedar-black
+					placeholder:text-cedar-black/40 lg:px-9 lg:text-[14px]`,
+					classNames?.textArea
+				)}
 			/>
 			<FormErrorMessageShared />
 		</Form.Field>
@@ -321,9 +339,7 @@ export function SelectField<TFieldValues extends FieldValues, TTransformedValues
 		<Form.Field control={control} name={name} className={classNames?.base}>
 			<FormRequiredIndicator required={required} />
 
-			{label && (
-				<Form.Label className="text-[12px] text-cedar-black/64 lg:text-[14px]">{label}</Form.Label>
-			)}
+			<FormLabelShared label={label} />
 
 			<Form.FieldBoundController
 				render={({ field }) => (
@@ -445,9 +461,7 @@ export function DateField<TFieldValues extends FieldValues, TTransformedValues =
 		<Form.Field control={control} name={name}>
 			<FormRequiredIndicator required={required} />
 
-			{label && (
-				<Form.Label className="text-[12px] text-cedar-black/64 lg:text-[14px]">{label}</Form.Label>
-			)}
+			<FormLabelShared label={label} />
 
 			<Form.FieldBoundController
 				render={({ field }) => (
@@ -483,7 +497,7 @@ export function FileUploadField<TFieldValues extends FieldValues, TTransformedVa
 			<FormRequiredIndicator required={required} />
 
 			<div className="flex items-center justify-between gap-4">
-				<Form.Label className="text-[12px] text-cedar-black/80 lg:text-[14px]">{label}</Form.Label>
+				<FormLabelShared label={label} />
 
 				<Form.FieldBoundController
 					render={({ field }) => (

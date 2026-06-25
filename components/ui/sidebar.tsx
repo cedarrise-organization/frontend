@@ -156,7 +156,8 @@ function SidebarProvider(
 				data-slot="sidebar-wrapper"
 				data-state={sidebarState}
 				className={cnMerge(
-					"group/sidebar-wrapper flex min-h-svh flex-col has-data-[variant=inset]:bg-shadcn-sidebar",
+					`group/sidebar-wrapper relative isolate z-70 flex min-h-svh flex-col
+					has-data-[variant=inset]:bg-shadcn-sidebar`,
 					className
 				)}
 				style={
@@ -205,7 +206,8 @@ function SidebarRoot(
 			<aside
 				data-slot="sidebar-root"
 				className={cnMerge(
-					"flex w-(--sidebar-width) grow flex-col bg-shadcn-sidebar text-shadcn-sidebar-foreground",
+					`z-50 flex w-(--sidebar-width) grow flex-col bg-shadcn-sidebar
+					text-shadcn-sidebar-foreground`,
 					className,
 					classNames?.base
 				)}
@@ -242,7 +244,7 @@ function SidebarRoot(
 						<Sheet.Description>Displays the mobile sidebar.</Sheet.Description>
 					</Sheet.Header>
 
-					<aside className="flex size-full flex-col">{children}</aside>
+					<aside className="z-50 flex size-full flex-col">{children}</aside>
 				</Sheet.Content>
 			</Sheet.Root>
 		);
@@ -251,7 +253,7 @@ function SidebarRoot(
 	return (
 		<aside
 			className={cnMerge(
-				"group peer grow text-shadcn-sidebar-foreground data-[side=right]:order-last",
+				"group peer z-50 grow text-shadcn-sidebar-foreground data-[side=right]:order-last",
 				className,
 				classNames?.base
 			)}
@@ -277,8 +279,8 @@ function SidebarRoot(
 			<div
 				data-slot="sidebar-container"
 				className={cnMerge(
-					`fixed inset-y-0 z-10 flex h-svh w-(--sidebar-width) transition-[left,right,width]
-					duration-300 ease-linear data-[side=left]:left-0
+					`fixed inset-y-0 flex h-svh w-(--sidebar-width) transition-[left,right,width] duration-300
+					ease-linear data-[side=left]:left-0
 					data-[side=left]:group-data-[collapsible=offcanvas]:-left-(--sidebar-width)
 					data-[side=right]:right-0
 					data-[side=right]:group-data-[collapsible=offcanvas]:-right-(--sidebar-width)`,
@@ -491,17 +493,22 @@ function SidebarContent(props: React.ComponentProps<"div">) {
 	);
 }
 
-export function SidebarDrawerOverlay(props: React.ComponentProps<"div">) {
+export function SidebarOverlay(props: React.ComponentProps<"div"> & { enabled?: boolean }) {
+	const { className, enabled = true, ...restOfProps } = props;
+
 	const { open, setOpen, state } = useSidebarContext();
 
 	return (
-		<Presence present={open}>
+		<Presence present={enabled && open}>
 			<div
 				data-state={state}
 				onClick={() => setOpen(false)}
-				className="fixed inset-0 z-40 backdrop-blur-xs data-[state=collapsed]:animate-fade-out
-					data-[state=expanded]:animate-fade-in"
-				{...props}
+				className={cnMerge(
+					`fixed inset-0 z-40 backdrop-blur-xs data-[state=collapsed]:animate-fade-out
+					data-[state=expanded]:animate-fade-in`,
+					className
+				)}
+				{...restOfProps}
 			/>
 		</Presence>
 	);
@@ -839,6 +846,7 @@ export {
 	SidebarHeader as Header,
 	SidebarInput as Input,
 	SidebarInset as Inset,
+	SidebarOverlay as Overlay,
 	SidebarMenu as Menu,
 	SidebarMenuAction as MenuAction,
 	SidebarMenuBadge as MenuBadge,

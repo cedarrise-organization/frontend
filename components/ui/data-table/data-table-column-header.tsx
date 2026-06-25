@@ -17,7 +17,7 @@ export function DataTableColumnHeader<TData, TValue>({
 	...props
 }: DataTableColumnHeaderProps<TData, TValue>) {
 	if (!column.getCanSort() && !column.getCanHide()) {
-		return <div className={cnMerge(className)}>{label}</div>;
+		return <div className={className}>{label}</div>;
 	}
 
 	return (
@@ -38,6 +38,7 @@ export function DataTableColumnHeader<TData, TValue>({
 					: column.getIsSorted() === "asc" ? <IconBox icon="lucide:chevron-up" />
 					: <IconBox icon="lucide:chevrons-up-down" />)}
 			</DropdownMenu.Trigger>
+
 			<DropdownMenu.Content align="start" className="w-28">
 				{column.getCanSort() && (
 					<>
@@ -70,6 +71,7 @@ export function DataTableColumnHeader<TData, TValue>({
 						)}
 					</>
 				)}
+
 				{column.getCanHide() && (
 					<DropdownMenu.CheckboxItem
 						className="relative pr-8 pl-2 [&_svg]:text-shadcn-muted-foreground

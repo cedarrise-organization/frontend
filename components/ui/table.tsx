@@ -1,18 +1,18 @@
 import { cnMerge } from "@/lib/utils/cn";
 
 function TableRoot(
-	props: React.ComponentProps<"table"> & { classNames?: { container?: string; table?: string } }
+	props: React.ComponentProps<"table"> & { classNames?: { base?: string; table?: string } }
 ) {
 	const { className, classNames, ...restOfProps } = props;
 
 	return (
 		<div
 			data-slot="table-container"
-			className={cnMerge("relative w-full overflow-auto", classNames?.container)}
+			className={cnMerge("relative w-full overflow-auto", classNames?.base, className)}
 		>
 			<table
 				data-slot="table-root"
-				className={cnMerge("w-full caption-bottom text-sm", className, classNames?.table)}
+				className={cnMerge("w-full caption-bottom rounded-t-[20px] text-sm", classNames?.table)}
 				{...restOfProps}
 			/>
 		</div>
@@ -73,7 +73,7 @@ function TableHead(props: React.ComponentProps<"th">) {
 		<th
 			data-slot="table-head"
 			className={cnMerge(
-				`h-10 px-2 text-left align-middle font-medium text-shadcn-foreground has-[[role=checkbox]]:pr-0
+				`h-12 px-2 text-left align-middle font-medium text-shadcn-foreground has-[[role=checkbox]]:pr-0
 				*:[[role=checkbox]]:translate-y-0.5`,
 				className
 			)}

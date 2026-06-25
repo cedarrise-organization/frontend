@@ -95,6 +95,8 @@ export const buttonVariants = tv({
 			secondary: "bg-cedar-red text-cedar-white",
 
 			"secondary-outline": "border border-cedar-red bg-cedar-white text-cedar-red",
+
+			white: "bg-cedar-white text-cedar-black/64",
 		},
 
 		withInteractions: {

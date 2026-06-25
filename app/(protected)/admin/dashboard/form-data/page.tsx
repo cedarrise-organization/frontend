@@ -8,7 +8,6 @@ import { DialogAnimated, TabsAnimated } from "@/components/animated/ui";
 import { For, ForWithWrapper } from "@/components/common/for";
 import { DropdownMenu } from "@/components/ui";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 import type { QueryKeys } from "@/components/ui/data-table/data-table-types";
 import { useDataTable } from "@/components/ui/data-table/use-data-table";
@@ -56,6 +55,7 @@ import {
 } from "@/lib/react-query/queryOptions";
 import { cnMerge } from "@/lib/utils/cn";
 import { EMPTY_VALUE_PLACEHOLDER } from "../-components/constants";
+import { DashboardDataStats } from "../-components/DashboardDataStats";
 import {
 	DashboardDataTableSection,
 	formatDashboardDetailValue,
@@ -233,7 +233,7 @@ function FormDataPage() {
 				<h1 className="text-[24px] font-semibold text-cedar-black lg:text-[40px]">Forms & Tracking</h1>
 			</header>
 
-			<TabsAnimated.Root defaultValue="ash">
+			<TabsAnimated.Root defaultValue="ash" className="gap-6">
 				<div className="rounded-[20px] bg-cedar-white p-4 lg:p-5">
 					<TabsAnimated.List
 						classNames={{
@@ -364,7 +364,9 @@ function AshFormDataTab(props: { onViewMore: (record: SelectedRecord) => void })
 
 	const registrationMetadata = registrationQueryResult.data?.meta.metadata;
 	const registrationRecords = registrationQueryResult.data?.data ?? [];
+	const registrationPagination = registrationQueryResult.data?.meta.pagination;
 	const feedbackRecords = feedbackQueryResult.data?.data ?? [];
+	const feedbackPagination = feedbackQueryResult.data?.meta.pagination;
 
 	const dashboardStats = [
 		{ label: "Total Submissions", value: registrationMetadata?.totalSubmissions ?? 0 },
@@ -378,7 +380,7 @@ function AshFormDataTab(props: { onViewMore: (record: SelectedRecord) => void })
 		data: registrationRecords,
 		getRowId: (row) => row.id,
 		initialState: FORM_DATA_TABLE_INITIAL_STATE,
-		pageCount: registrationQueryResult.data?.meta.pagination.totalPages ?? 1,
+		pageCount: registrationPagination?.totalPages ?? 1,
 		queryKeys: ASH_FORM_DATA_QUERY_KEYS.registration,
 		sortableColumnIds: AshTrackingSortByOptions,
 	});
@@ -388,18 +390,19 @@ function AshFormDataTab(props: { onViewMore: (record: SelectedRecord) => void })
 		data: feedbackRecords,
 		getRowId: (row) => row.id,
 		initialState: FORM_DATA_TABLE_INITIAL_STATE,
-		pageCount: feedbackQueryResult.data?.meta.pagination.totalPages ?? 1,
+		pageCount: feedbackPagination?.totalPages ?? 1,
 		queryKeys: ASH_FORM_DATA_QUERY_KEYS.feedback,
 		sortableColumnIds: [],
 	});
 
 	return (
 		<>
-			<FormDataStats stats={dashboardStats} />
+			<DashboardDataStats stats={dashboardStats} />
 			<DashboardDataTableSection
 				color="yellow"
-				count={registrationRecords.length}
+				count={(registrationPagination?.totalPages ?? 1) * (registrationPagination?.limit ?? 0)}
 				isLoading={registrationQueryResult.isPending}
+				isDownloadLoading={registrationDownloadMutation.isPending}
 				label="ASH - Student Registrations"
 				searchQueryKey="ashFormDataSearch"
 				sortOptions={ASH_SORT_OPTIONS}
@@ -410,8 +413,9 @@ function AshFormDataTab(props: { onViewMore: (record: SelectedRecord) => void })
 			/>
 			<DashboardDataTableSection
 				color="red"
-				count={feedbackRecords.length}
+				count={(feedbackPagination?.totalPages ?? 1) * (feedbackPagination?.limit ?? 0)}
 				isLoading={feedbackQueryResult.isPending}
+				isDownloadLoading={feedbackDownloadMutation.isPending}
 				label="ASH - Program Feedback"
 				searchQueryKey="ashFormDataSearch"
 				table={feedbackTable.table}
@@ -502,7 +506,9 @@ function TacotsFormDataTab(props: { onViewMore: (record: SelectedRecord) => void
 
 	const recommendationMetadata = recommendationQueryResult.data?.meta.metadata;
 	const recommendationRecords = recommendationQueryResult.data?.data ?? [];
+	const recommendationPagination = recommendationQueryResult.data?.meta.pagination;
 	const feedbackRecords = feedbackQueryResult.data?.data ?? [];
+	const feedbackPagination = feedbackQueryResult.data?.meta.pagination;
 
 	const dashboardStats = [
 		{ label: "Total Submissions", value: recommendationMetadata?.totalSubmissions ?? 0 },
@@ -516,7 +522,7 @@ function TacotsFormDataTab(props: { onViewMore: (record: SelectedRecord) => void
 		data: recommendationRecords,
 		getRowId: (row) => row.id,
 		initialState: FORM_DATA_TABLE_INITIAL_STATE,
-		pageCount: recommendationQueryResult.data?.meta.pagination.totalPages ?? 1,
+		pageCount: recommendationPagination?.totalPages ?? 1,
 		queryKeys: TACOTS_FORM_DATA_QUERY_KEYS.recommendation,
 		sortableColumnIds: TacotsRecommendationSortByOptions,
 	});
@@ -526,18 +532,19 @@ function TacotsFormDataTab(props: { onViewMore: (record: SelectedRecord) => void
 		data: feedbackRecords,
 		getRowId: (row) => row.id,
 		initialState: FORM_DATA_TABLE_INITIAL_STATE,
-		pageCount: feedbackQueryResult.data?.meta.pagination.totalPages ?? 1,
+		pageCount: feedbackPagination?.totalPages ?? 1,
 		queryKeys: TACOTS_FORM_DATA_QUERY_KEYS.feedback,
 		sortableColumnIds: [],
 	});
 
 	return (
 		<>
-			<FormDataStats stats={dashboardStats} />
+			<DashboardDataStats stats={dashboardStats} />
 			<DashboardDataTableSection
 				color="yellow"
-				count={recommendationRecords.length}
+				count={(recommendationPagination?.totalPages ?? 1) * (recommendationPagination?.limit ?? 0)}
 				isLoading={recommendationQueryResult.isPending}
+				isDownloadLoading={recommendationDownloadMutation.isPending}
 				label="TACOTS - Recommendations"
 				searchQueryKey="tacotsFormDataSearch"
 				sortOptions={TACOTS_RECOMMENDATION_SORT_OPTIONS}
@@ -548,7 +555,8 @@ function TacotsFormDataTab(props: { onViewMore: (record: SelectedRecord) => void
 			/>
 			<DashboardDataTableSection
 				color="red"
-				count={feedbackRecords.length}
+				count={(feedbackPagination?.totalPages ?? 1) * (feedbackPagination?.limit ?? 0)}
+				isDownloadLoading={feedbackDownloadMutation.isPending}
 				isLoading={feedbackQueryResult.isPending}
 				label="TACOTS - Program Feedback"
 				searchQueryKey="tacotsFormDataSearch"
@@ -653,7 +661,9 @@ function VolunteerFormDataTab(props: { onViewMore: (record: SelectedRecord) => v
 
 	const registrationMetadata = registrationQueryResult.data?.meta.metadata;
 	const registrationRecords = registrationQueryResult.data?.data ?? [];
+	const registrationPagination = registrationQueryResult.data?.meta.pagination;
 	const feedbackRecords = feedbackQueryResult.data?.data ?? [];
+	const feedbackPagination = feedbackQueryResult.data?.meta.pagination;
 
 	const dashboardStats = [
 		{ label: "Total Submissions", value: registrationMetadata?.totalSubmissions ?? 0 },
@@ -667,7 +677,7 @@ function VolunteerFormDataTab(props: { onViewMore: (record: SelectedRecord) => v
 		data: registrationRecords,
 		getRowId: (row) => row.id,
 		initialState: FORM_DATA_TABLE_INITIAL_STATE,
-		pageCount: registrationQueryResult.data?.meta.pagination.totalPages ?? 1,
+		pageCount: registrationPagination?.totalPages ?? 1,
 		queryKeys: VOLUNTEER_FORM_DATA_QUERY_KEYS.registration,
 		sortableColumnIds: VolunteerSortByOptions,
 	});
@@ -677,18 +687,19 @@ function VolunteerFormDataTab(props: { onViewMore: (record: SelectedRecord) => v
 		data: feedbackRecords,
 		getRowId: (row) => row.id,
 		initialState: FORM_DATA_TABLE_INITIAL_STATE,
-		pageCount: feedbackQueryResult.data?.meta.pagination.totalPages ?? 1,
+		pageCount: feedbackPagination?.totalPages ?? 1,
 		queryKeys: VOLUNTEER_FORM_DATA_QUERY_KEYS.feedback,
 		sortableColumnIds: [],
 	});
 
 	return (
 		<>
-			<FormDataStats stats={dashboardStats} />
+			<DashboardDataStats stats={dashboardStats} />
 			<DashboardDataTableSection
 				color="yellow"
-				count={registrationRecords.length}
+				count={(registrationPagination?.totalPages ?? 1) * (registrationPagination?.limit ?? 0)}
 				isLoading={registrationQueryResult.isPending}
+				isDownloadLoading={registrationDownloadMutation.isPending}
 				label="Volunteer - Registration"
 				searchQueryKey="volunteerFormDataSearch"
 				sortOptions={VOLUNTEER_SORT_OPTIONS}
@@ -699,42 +710,15 @@ function VolunteerFormDataTab(props: { onViewMore: (record: SelectedRecord) => v
 			/>
 			<DashboardDataTableSection
 				color="red"
-				count={feedbackRecords.length}
+				count={(feedbackPagination?.totalPages ?? 1) * (feedbackPagination?.limit ?? 0)}
 				isLoading={feedbackQueryResult.isPending}
+				isDownloadLoading={feedbackDownloadMutation.isPending}
 				label="Volunteer - Feedback"
 				searchQueryKey="volunteerFormDataSearch"
 				table={feedbackTable.table}
 				onDownload={() => feedbackDownloadMutation.mutate()}
 			/>
 		</>
-	);
-}
-
-function FormDataStats(props: { stats: ReadonlyArray<{ label: string; value: number }> }) {
-	const { stats } = props;
-
-	return (
-		<section className="grid gap-4 lg:grid-cols-4 lg:gap-6">
-			<For
-				each={stats}
-				renderItem={(stat) => (
-					<Card.Root
-						key={stat.label}
-						className="rounded-[18px] border border-cedar-black/10 bg-cedar-white p-7
-							lg:min-h-[140px] lg:px-8 lg:py-9"
-					>
-						<Card.Content>
-							<Card.Title className="text-[30px] font-semibold text-cedar-black lg:text-[40px]">
-								{stat.value}
-							</Card.Title>
-							<Card.Description className="mt-2 text-[14px] text-cedar-black/64 lg:text-[18px]">
-								{stat.label}
-							</Card.Description>
-						</Card.Content>
-					</Card.Root>
-				)}
-			/>
-		</section>
 	);
 }
 
@@ -747,9 +731,7 @@ const getTextColumn = <TRecord extends FormRecord>(
 	return {
 		accessorFn,
 		cell: ({ row }) => (
-			<span className="text-[13px] text-cedar-black/72">
-				{formatDashboardDetailValue(row.getValue(id))}
-			</span>
+			<p className="text-[13px] text-cedar-black/72">{formatDashboardDetailValue(row.getValue(id))}</p>
 		),
 		enableColumnFilter,
 		header: ({ column }) => <DataTableColumnHeader column={column} label={label} />,

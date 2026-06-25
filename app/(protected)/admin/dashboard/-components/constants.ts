@@ -41,7 +41,7 @@ export const dashboardNavSections = [
 			{
 				icon: "lucide:square-pen",
 				label: "Blog Uploads",
-				link: placeholderHref,
+				link: "/admin/dashboard/blog-uploads",
 			},
 			{
 				icon: "hugeicons:share-03",

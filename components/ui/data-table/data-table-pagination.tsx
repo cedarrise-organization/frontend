@@ -26,7 +26,7 @@ export function DataTablePagination<TData>({
 			)}
 			{...props}
 		>
-			<div className="flex-1 text-sm whitespace-nowrap text-shadcn-muted-foreground">
+			<div className="grow text-sm whitespace-nowrap text-shadcn-muted-foreground">
 				{table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length}{" "}
 				row(s) selected.
 			</div>

@@ -30,7 +30,7 @@ function ScrollAreaRoot(
 					classNames?.viewport
 				)}
 			>
-				{children}
+				3{children}
 			</ScrollAreaPrimitive.Viewport>
 
 			<ScrollAreaScrollBar classNames={{ base: classNames?.scrollbar, thumb: classNames?.thumb }} />

@@ -62,10 +62,10 @@ const chartScopesByTitle = {
 } as const satisfies Record<string, "ASH" | "ASH + TACOTS" | "TACOTS">;
 
 const notificationSeverityClassNames = {
-	critical: "bg-cedar-red",
-	high: "bg-cedar-red",
-	low: "bg-cedar-yellow",
-	medium: "bg-cedar-black",
+	critical: tw`bg-cedar-red`,
+	high: tw`bg-cedar-red`,
+	low: tw`bg-cedar-yellow`,
+	medium: tw`bg-cedar-black`,
 } as const;
 
 type ChartTitles = keyof typeof chartScopesByTitle;
@@ -112,7 +112,7 @@ function DashboardPage() {
 
 	return (
 		<Main className="gap-6 lg:gap-8">
-			<section className="grid grow gap-3 lg:grid-cols-2 xl:grid-cols-3">
+			<section className="grid grow gap-3 md:grid-cols-2 xl:grid-cols-3">
 				<DashboardStatCard
 					icon="solar:user-check-rounded-outline"
 					title="Volunteers"
@@ -384,7 +384,7 @@ function DashboardStatCard(props: {
 						<div
 							key={stat.label}
 							className="flex h-[64px] w-full flex-col items-center justify-center gap-2
-								rounded-[12px] bg-cedar-grey/24 text-center lg:h-[96px]"
+								rounded-[12px] bg-cedar-grey/24 p-2 text-center lg:h-[96px]"
 						>
 							<h3 className="text-[32px]/[1]">
 								{formatNumber(stat.value)}
@@ -436,7 +436,7 @@ function AlertsPanel() {
 			</Card.Header>
 
 			<Card.Content>
-				<ScrollArea.Root className="h-[276px] pr-2">
+				<ScrollArea.Root classNames={{ base: "h-[276px]", viewport: "overscroll-contain" }}>
 					{notificationsQueryResult.isPending && (
 						<ForWithWrapper
 							className="flex flex-col gap-5"
@@ -474,11 +474,11 @@ function AlertsPanel() {
 									)}
 								/>
 
-								<div className="min-w-0">
+								<div className="flex min-w-0 flex-col gap-1">
 									<p className="text-[12px]/[1.35] text-cedar-black lg:text-[14px]">
 										{notification.title}
 									</p>
-									<p className="mt-1 text-[10px]/[1.4] text-cedar-black/48 lg:text-[11px]">
+									<p className="text-[10px]/[1.4] text-cedar-black/48 lg:text-[11px]">
 										{notification.message} -{` `}
 										{formatDistanceToNowStrict(new Date(notification.createdAt), {
 											addSuffix: true,

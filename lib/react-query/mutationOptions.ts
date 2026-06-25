@@ -21,6 +21,17 @@ export const dismissDashboardNotificationMutation = () => {
 	});
 };
 
+export const deleteBlogMutation = (id: string) => {
+	return mutationOptions({
+		mutationFn: () => {
+			return callBackendApiForQuery("@delete/blogs/:id", {
+				meta: { toast: { success: true } },
+				params: { id },
+			});
+		},
+	});
+};
+
 export const ashFormDataDownloadMutation = (kind: AshFormKind) => {
 	const filename = kind === "registration" ? "ash_students" : "ash_program_feedback";
 

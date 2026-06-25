@@ -1,9 +1,7 @@
-/* eslint-disable react-refresh/only-export-components */
 "use client";
 
-import type { Table } from "@tanstack/react-table";
-import { omitKeys } from "@zayne-labs/toolkit-core";
-import { isArray, isBoolean, isNumber, isString } from "@zayne-labs/toolkit-type-helpers";
+import type { Column, Table } from "@tanstack/react-table";
+import { isArray } from "@zayne-labs/toolkit-type-helpers";
 import { parseAsArrayOf, parseAsInteger, parseAsString, useQueryState } from "nuqs";
 import { For } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
@@ -12,13 +10,12 @@ import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { getSortingStateParser } from "@/components/ui/data-table/data-table-parsers";
 import { Form } from "@/components/ui/form";
-import { OrderByOptions } from "@/lib/api/callBackendApi/apiSchema";
 import { cnMerge } from "@/lib/utils/cn";
-import { EMPTY_VALUE_PLACEHOLDER } from "./constants";
 
 export function DashboardDataTableSection<TRecord>(props: {
 	color: "red" | "yellow";
 	count: number;
+	isDownloadLoading: boolean;
 	isLoading: boolean;
 	label: string;
 	onDownload: () => void;
@@ -31,6 +28,7 @@ export function DashboardDataTableSection<TRecord>(props: {
 	const {
 		color,
 		count,
+		isDownloadLoading,
 		isLoading,
 		label,
 		onDownload,
@@ -42,8 +40,11 @@ export function DashboardDataTableSection<TRecord>(props: {
 	} = props;
 
 	return (
-		<section className="overflow-hidden rounded-[20px] bg-cedar-white">
-			<article className="flex flex-row items-center justify-between gap-4 px-5 pt-5 pb-4 lg:px-7">
+		<section className="flex flex-col gap-5">
+			<article
+				className="flex flex-row items-center justify-between gap-4 bg-cedar-white px-5 pt-5 pb-4
+					lg:px-7"
+			>
 				<div className="flex items-center gap-4">
 					<span
 						className={cnMerge(
@@ -51,6 +52,7 @@ export function DashboardDataTableSection<TRecord>(props: {
 							color === "yellow" ? "bg-cedar-yellow" : "bg-cedar-red"
 						)}
 					/>
+
 					<div className="flex min-w-0 flex-col gap-1">
 						<h3 className="text-[16px] font-semibold text-cedar-black lg:text-[18px]">{label}</h3>
 						<p className="text-[12px] text-cedar-black/64 lg:text-[14px]">
@@ -61,6 +63,8 @@ export function DashboardDataTableSection<TRecord>(props: {
 
 				<div className="flex items-center gap-4">
 					<Button
+						isDisabled={isDownloadLoading}
+						isLoading={isDownloadLoading}
 						size="medium"
 						type="button"
 						className="h-auto rounded-[12px] bg-cedar-grey px-5 py-3 text-[12px] text-cedar-black/64
@@ -75,34 +79,121 @@ export function DashboardDataTableSection<TRecord>(props: {
 				</div>
 			</article>
 
-			<DataTable
-				isLoading={isLoading}
-				table={table}
-				className="gap-0 overflow-x-auto rounded-none border-0 text-[13px]
-					**:data-[slot=table-cell]:px-5 **:data-[slot=table-cell]:py-4
-					**:data-[slot=table-container]:min-w-[900px] **:data-[slot=table-container]:overflow-x-auto
-					**:data-[slot=table-head]:h-12 **:data-[slot=table-head]:px-5
-					**:data-[slot=table-head]:text-[12px] **:data-[slot=table-head]:font-semibold
-					**:data-[slot=table-head]:text-cedar-black/80 **:data-[slot=table-row]:border-cedar-black/10
-					**:data-[slot=table-row]:hover:bg-transparent [&_table]:border-0
-					[&>div:first-child]:rounded-none [&>div:first-child]:border-0 [&>div:last-child]:px-1
-					[&>div:last-child]:py-3 lg:[&>div:last-child]:px-5"
-			>
-				<div className="border-y border-cedar-black/8 bg-cedar-grey p-5 lg:px-7">
-					<DashboardDataTableToolbar
-						searchQueryKey={searchQueryKey}
-						sortOptions={sortOptions ?? []}
-						statusQueryKey={statusQueryKey}
-						statusOptions={statusOptions}
-						table={table}
-					/>
-				</div>
-			</DataTable>
+			<DashboardDataTable isLoading={isLoading} table={table}>
+				<DashboardDataTableQueryToolbar
+					searchQueryKey={searchQueryKey}
+					sortOptions={sortOptions ?? []}
+					statusQueryKey={statusQueryKey}
+					statusOptions={statusOptions}
+					table={table}
+				/>
+			</DashboardDataTable>
 		</section>
 	);
 }
 
-function DashboardDataTableToolbar<TRecord>(props: {
+export function DashboardDataTable<TRecord>(props: {
+	children: React.ReactNode;
+	isLoading: boolean;
+	table: Table<TRecord>;
+}) {
+	const { children, isLoading, table } = props;
+
+	return (
+		<DataTable
+			isLoading={isLoading}
+			table={table}
+			classNames={{
+				base: "text-[13px]",
+				pagination: "rounded-b-[20px] bg-cedar-white px-3 py-2",
+				tableCell: "px-5 py-4",
+				tableContainer: "mt-5 min-h-[650px] rounded-t-[20px] bg-cedar-white",
+				tableHead: "px-5 text-[12px] font-semibold text-cedar-black/80",
+				tableRow: "border-cedar-black/10 hover:bg-cedar-grey/20",
+			}}
+		>
+			<div className="w-full bg-cedar-grey px-5 lg:px-7">{children}</div>
+		</DataTable>
+	);
+}
+
+export function DashboardDataTableFilterToolbar<TRecord>(props: { table: Table<TRecord> }) {
+	const { table } = props;
+	const columns = table.getAllColumns().filter((column) => column.getCanFilter());
+
+	return (
+		<DashboardDataTableToolbar onReset={() => table.resetColumnFilters()}>
+			<For
+				each={columns}
+				renderItem={(column) => <DashboardColumnFilter key={column.id} column={column} />}
+			/>
+		</DashboardDataTableToolbar>
+	);
+}
+
+function DashboardDataTableToolbar(props: { children: React.ReactNode; onReset: () => void }) {
+	const { children, onReset } = props;
+
+	return (
+		<div className="flex flex-wrap items-center gap-3 lg:gap-4">
+			{children}
+
+			<Button
+				theme="secondary-outline"
+				size="medium"
+				type="button"
+				className="h-10 border-cedar-black/10 px-4 text-[12px] text-cedar-black/64 lg:h-10 lg:px-4
+					lg:text-[12px]"
+				onClick={onReset}
+			>
+				Reset Filters
+			</Button>
+		</div>
+	);
+}
+
+function DashboardColumnFilter<TRecord>(props: { column: Column<TRecord> }) {
+	const { column } = props;
+	const meta = column.columnDef.meta;
+	const filterValue = column.getFilterValue();
+
+	if (meta?.variant === "text") {
+		const value =
+			isArray(filterValue) ?
+				filterValue.join(" ")
+			:	String((filterValue as PropertyKey | undefined) ?? "");
+
+		return (
+			<DashboardToolbarSearch
+				placeholder={meta.placeholder ?? meta.label}
+				value={value}
+				onValueChange={(nextValue) => column.setFilterValue(nextValue || undefined)}
+			/>
+		);
+	}
+
+	if (meta?.variant === "select") {
+		const value = isArray(filterValue) ? filterValue[0] : filterValue;
+
+		return (
+			<DashboardToolbarSelect
+				onValueChange={(nextValue) => column.setFilterValue(nextValue ? [nextValue] : undefined)}
+				options={meta.options ?? []}
+				placeholder={meta.label ?? column.id}
+				value={typeof value === "string" ? value : ""}
+			/>
+		);
+	}
+
+	return null;
+}
+
+const DASHBOARD_TABLE_ORDER_OPTIONS = [
+	{ label: "Ascending", value: "asc" },
+	{ label: "Descending", value: "desc" },
+] as const;
+
+function DashboardDataTableQueryToolbar<TRecord>(props: {
 	searchQueryKey: string;
 	sortOptions: ReadonlyArray<{ label: string; value: string }>;
 	statusOptions?: ReadonlyArray<{ label: string; value: string }>;
@@ -128,14 +219,11 @@ function DashboardDataTableToolbar<TRecord>(props: {
 
 	const currentSort = table.getState().sorting[0];
 	const sortBy = currentSort?.id ?? "";
-
 	const orderBy = currentSort?.desc ? "desc" : "asc";
-
 	const hasSortControls = sortOptions.length > 0;
-	const statusValue = status[0] ?? "";
 
-	const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		void setSearch(event.target.value || null);
+	const handleSearchValueChange = (value: string) => {
+		void setSearch(value || null);
 		void setPage(null);
 	};
 
@@ -165,61 +253,63 @@ function DashboardDataTableToolbar<TRecord>(props: {
 	};
 
 	return (
-		<div className="flex flex-wrap items-center gap-3 lg:gap-4">
-			<Form.InputGroup
-				className="flex h-[40px] w-full max-w-[430px] items-center gap-3 rounded-[12px] bg-cedar-white
-					px-4 text-[12px] text-cedar-black/64 lg:h-[40px] lg:max-w-[220px]"
-			>
-				<Form.InputGroupAddon className="size-4 shrink-0 text-cedar-black/40">
-					<IconBox icon="lucide:search" className="size-full" />
-				</Form.InputGroupAddon>
-				<Form.InputPrimitive
-					type="search"
-					placeholder="search this section"
-					className="w-full bg-transparent outline-none placeholder:text-cedar-black/36"
-					value={search}
-					onChange={handleSearchChange}
-				/>
-			</Form.InputGroup>
+		<DashboardDataTableToolbar onReset={handleResetFilters}>
+			<DashboardToolbarSearch value={search} onValueChange={handleSearchValueChange} />
 
 			{hasSortControls && (
 				<DashboardToolbarSelect
-					placeholder="Sort By"
-					value={sortBy}
 					onValueChange={handleSortByChange}
 					options={sortOptions}
+					placeholder="Sort By"
+					value={sortBy}
 				/>
 			)}
 
 			{statusOptions && statusQueryKey && (
 				<DashboardToolbarSelect
-					placeholder="Status"
-					value={statusValue}
 					onValueChange={handleStatusChange}
 					options={statusOptions}
+					placeholder="Status"
+					value={status[0] ?? ""}
 				/>
 			)}
 
 			{hasSortControls && (
 				<DashboardToolbarSelect
-					placeholder="Order By"
-					value={orderBy}
 					onValueChange={handleOrderByChange}
 					options={DASHBOARD_TABLE_ORDER_OPTIONS}
+					placeholder="Order By"
+					value={orderBy}
 				/>
 			)}
+		</DashboardDataTableToolbar>
+	);
+}
 
-			<Button
-				theme="secondary-outline"
-				size="medium"
-				type="button"
-				className="h-10 border-cedar-black/10 px-4 text-[12px] text-cedar-black/64 lg:h-10 lg:px-4
-					lg:text-[12px]"
-				onClick={handleResetFilters}
-			>
-				Reset Filters
-			</Button>
-		</div>
+function DashboardToolbarSearch(props: {
+	onValueChange: (value: string) => void;
+	placeholder?: string;
+	value: string;
+}) {
+	const { onValueChange, placeholder = "search this section", value } = props;
+
+	return (
+		<Form.InputGroup
+			className="flex h-10 w-full max-w-[430px] items-center gap-3 rounded-[12px] bg-cedar-white px-4
+				text-[12px] text-cedar-black/64 lg:h-10 lg:max-w-[220px]"
+		>
+			<Form.InputGroupAddon className="size-4 shrink-0 text-cedar-black/40">
+				<IconBox icon="lucide:search" className="size-full" />
+			</Form.InputGroupAddon>
+
+			<Form.InputPrimitive
+				type="search"
+				placeholder={placeholder}
+				className="w-full bg-transparent outline-none placeholder:text-cedar-black/36"
+				value={value}
+				onChange={(event) => onValueChange(event.target.value)}
+			/>
+		</Form.InputGroup>
 	);
 }
 
@@ -234,9 +324,11 @@ function DashboardToolbarSelect(props: {
 	return (
 		<Select.Root value={value} onValueChange={onValueChange}>
 			<Select.Trigger
-				className="h-[40px] w-fit rounded-[12px] border border-cedar-black/10 bg-cedar-white px-4
-					text-[12px] text-cedar-black/64 shadow-none"
-				classNames={{ icon: "size-4 text-cedar-black" }}
+				classNames={{
+					base: `h-10 w-fit rounded-[12px] border border-cedar-black/10 bg-cedar-white px-4
+					text-[12px] text-cedar-black/64 shadow-none`,
+					icon: "size-4 text-cedar-black",
+				}}
 			>
 				<Select.Value placeholder={placeholder} />
 			</Select.Trigger>
@@ -253,76 +345,3 @@ function DashboardToolbarSelect(props: {
 		</Select.Root>
 	);
 }
-
-export const useDashboardDataTableQueryState = <const TSortBy extends string>(props: {
-	pageKey: string;
-	perPageKey: string;
-	sortableColumnIds: TSortBy[];
-	sortKey: string;
-}) => {
-	const { pageKey, perPageKey, sortableColumnIds, sortKey } = props;
-
-	const [page] = useQueryState(pageKey, parseAsInteger.withDefault(1));
-	const [limit] = useQueryState(perPageKey, parseAsInteger.withDefault(10));
-	const [sorting] = useQueryState(
-		sortKey,
-		getSortingStateParser<Record<TSortBy, unknown>>(sortableColumnIds).withDefault([])
-	);
-
-	const activeSort = sorting[0];
-
-	return {
-		limit,
-		orderBy: activeSort?.desc ? OrderByOptions[1] : OrderByOptions[0],
-		page,
-		sortBy: activeSort?.id,
-	};
-};
-
-const DASHBOARD_TABLE_ORDER_OPTIONS = [
-	{ label: "Ascending", value: "asc" },
-	{ label: "Descending", value: "desc" },
-] as const;
-
-export const formatDashboardDetailValue = (value: unknown): string => {
-	if (value === null || value === undefined || value === "") {
-		return EMPTY_VALUE_PLACEHOLDER;
-	}
-
-	if (isBoolean(value)) {
-		return value ? "True" : "False";
-	}
-
-	if (isArray(value)) {
-		return value.map((item) => formatDashboardDetailValue(item)).join(", ");
-	}
-
-	if (isNumber(value) || isString(value)) {
-		return String(value);
-	}
-
-	return EMPTY_VALUE_PLACEHOLDER;
-};
-
-export const getDashboardDetailRows = <
-	TRecord extends {
-		createdAt?: unknown;
-		deletedAt?: unknown;
-		id?: unknown;
-		updatedAt?: unknown;
-	},
->(
-	record: TRecord | undefined
-) => {
-	if (!record) {
-		return [];
-	}
-
-	return Object.entries(omitKeys(record, ["deletedAt", "id", "updatedAt"]))
-		.filter(([key]) => !key.endsWith("PublicId"))
-		.map(([key, value]) => ({
-			label: key.split(/(?=[A-Z])/).join(" "),
-			url: key.endsWith("Url") && isString(value) ? value : undefined,
-			value: formatDashboardDetailValue(value),
-		}));
-};
