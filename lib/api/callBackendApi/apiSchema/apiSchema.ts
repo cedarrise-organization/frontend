@@ -109,7 +109,7 @@ const BaseSuccessResponseSchema = z.object({
 const BaseErrorResponseSchema = z.object({
 	error: z.object({
 		code: z.union([z.string(), z.number()]),
-		details: z.record(z.string(), z.unknown()).optional(),
+		details: z.unknown().optional(),
 		message: z.string(),
 	}),
 	status: z.literal(false),
@@ -623,6 +623,12 @@ const StatusRecordSchema = z.object({
 	status: z.string(),
 });
 
+const VolunteerStatusRecordSchema = StatusRecordSchema.extend({
+	email: z.email(),
+	name: z.string(),
+	volunteerAreas: z.array(z.string()),
+});
+
 const PaginationMetaSchema = z.object({
 	limit: z.number(),
 	page: z.number(),
@@ -723,17 +729,13 @@ const adminRoutes = defineSchemaRoutes({
 		data: withBaseSuccessResponseAndMeta({
 			data: z.array(
 				z.object({
-					createdAt: z.string(),
-					deletedAt: z.string().nullable(),
 					department: z.enum(AdminDepartmentOptions),
 					email: z.email(),
 					id: z.uuid(),
 					name: z.string(),
-					password: z.string(),
-					updatedAt: z.string().nullable(),
 				})
 			),
-			meta: PaginatedMetaSchema,
+			meta: PaginatedMetaSchema.optional(),
 		}),
 		query: PaginatedQuerySchema.optional(),
 	},
@@ -757,7 +759,16 @@ const adminRoutes = defineSchemaRoutes({
 	},
 
 	"@get/admin/users": {
-		data: withBaseSuccessResponse({ data: z.array(AuthUserSchema) }),
+		data: withBaseSuccessResponse({
+			data: z.array(
+				z.object({
+					department: z.enum(AdminDepartmentOptions),
+					email: z.email(),
+					id: z.uuid(),
+					name: z.string(),
+				})
+			),
+		}),
 	},
 
 	"@patch/admin/roles/:userId/action": {
@@ -786,7 +797,7 @@ const blogRoutes = defineSchemaRoutes({
 
 	"@get/blogs": {
 		data: withBaseSuccessResponse({ data: z.array(BlogSchema) }),
-		query: PaginatedQuerySchema.pick({ limit: true, page: true }).optional(),
+		query: PaginatedQuerySchema.pick({ limit: true, page: true, search: true }).optional(),
 	},
 
 	"@get/blogs/:id": {
@@ -1269,24 +1280,6 @@ export const AshTermlyTrackingFrontendSchema = z.object({
 	term: getRequiredEnumSchema(AshTermOptions),
 });
 
-export const OutreachTrackerFrontendSchema = z.object({
-	activityDescription: RequiredStringSchema,
-	challengesEncountered: z.string().optional(),
-	city: RequiredStringSchema,
-	community: RequiredStringSchema,
-	completedBy: RequiredStringSchema,
-	impactStories: z.string().optional(),
-	lga: RequiredStringSchema,
-	location: getRequiredEnumSchema(NigeriaStateOptions),
-	numberOfBeneficiariesReached: RequiredStringSchema,
-	numberOfVolunteers: RequiredStringSchema,
-	outreachEndDate: DateStringSchema,
-	outreachStartDate: DateStringSchema,
-	outreachTypes: getRequiredEnumArraySchema(OutreachTypeOptions),
-	recommendations: z.string().optional(),
-	submissionDate: DateStringSchema,
-});
-
 export const GeneralGalleryFrontendSchema = z.object({
 	folder: z.enum(GalleryFolderOptions),
 	photos: z.array(z.file()).min(1).max(3),
@@ -1743,12 +1736,12 @@ const protectedFormRoutes = defineSchemaRoutes({
 		params: IdParamsSchema,
 	},
 
-	"@delete/forms/volunteer/:id": {
+	"@delete/volunteer/:id": {
 		data: withBaseSuccessResponse({ data: z.null() }),
 		params: IdParamsSchema,
 	},
 
-	"@delete/forms/volunteer/feedback/:id": {
+	"@delete/volunteer/feedback/:id": {
 		data: withBaseSuccessResponse({ data: z.null() }),
 		params: IdParamsSchema,
 	},
@@ -2290,8 +2283,8 @@ const protectedFormRoutes = defineSchemaRoutes({
 		query: AdminReviewStatusQuerySchema,
 	},
 
-	"@patch/forms/volunteer/:id/status": {
-		data: withBaseSuccessResponse({ data: StatusRecordSchema }),
+	"@patch/volunteer/:id/status": {
+		data: withBaseSuccessResponse({ data: VolunteerStatusRecordSchema }),
 		params: IdParamsSchema,
 		query: ReviewStatusQuerySchema,
 	},
@@ -2386,8 +2379,24 @@ const protectedFormRoutes = defineSchemaRoutes({
 	},
 
 	"@post/forms/outreaches": {
-		body: z.instanceof(FormData),
-		data: withBaseSuccessResponse({ data: FormRecordSchema }),
+		body: z.object({
+			activityDescription: RequiredStringSchema,
+			challengesEncountered: z.string().optional(),
+			impactStories: z.string().optional(),
+			numBeneficiaries: stringWithNumberValidation(z.int("Enter a whole number.").min(0)),
+			numVolunteers: stringWithNumberValidation(z.int("Enter a whole number.").min(0)),
+			outreachCity: RequiredStringSchema,
+			outreachCommunity: RequiredStringSchema,
+			outreachEndDate: DateStringSchema,
+			outreachLga: RequiredStringSchema,
+			outreachStartDate: DateStringSchema,
+			outreachState: getRequiredEnumSchema(NigeriaStateOptions),
+			outreachType: getRequiredEnumArraySchema(OutreachTypeOptions),
+			recommendations: z.string().optional(),
+			submissionDate: DateStringSchema,
+			submittedBy: RequiredStringSchema,
+		}),
+		data: withBaseSuccessResponse({ data: OutreachTrackerRecordSchema }),
 	},
 
 	"@post/forms/tacots/exit": {

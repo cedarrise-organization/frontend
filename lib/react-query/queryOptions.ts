@@ -4,75 +4,10 @@ import { callBackendApiForQuery } from "../api/callBackendApi";
 import { backendApiSchemaRoutes } from "../api/callBackendApi/apiSchema";
 import { checkUserSessionForQuery } from "../api/callBackendApi/plugins/utils/session";
 
-export type AshRegistrationFormDataListQuery = z.infer<
-	(typeof backendApiSchemaRoutes)["@get/forms/ash/registration"]["query"]
->;
-
-export type AshFeedbackFormDataListQuery = z.infer<
-	(typeof backendApiSchemaRoutes)["@get/forms/ash/feedback"]["query"]
->;
-
-export type TacotsRecommendationFormDataListQuery = z.infer<
-	(typeof backendApiSchemaRoutes)["@get/forms/tacots/recommendation"]["query"]
->;
-
-export type TacotsFeedbackFormDataListQuery = z.infer<
-	(typeof backendApiSchemaRoutes)["@get/forms/tacots/feedback"]["query"]
->;
-
-export type VolunteerRegistrationFormDataListQuery = z.infer<
-	(typeof backendApiSchemaRoutes)["@get/volunteer"]["query"]
->;
-
-export type VolunteerFeedbackFormDataListQuery = z.infer<
-	(typeof backendApiSchemaRoutes)["@get/volunteer/all/feedback"]["query"]
->;
-
-export type AshAttendanceTrackerDataListQuery = z.infer<
-	(typeof backendApiSchemaRoutes)["@get/forms/ash/attendance"]["query"]
->;
-
-export type AshExitTrackerDataListQuery = z.infer<
-	(typeof backendApiSchemaRoutes)["@get/forms/ash/exit"]["query"]
->;
-
-export type AshTrackingTrackerDataListQuery = z.infer<
-	(typeof backendApiSchemaRoutes)["@get/forms/ash/tracking"]["query"]
->;
-
-export type CapacityBuildingTrackerDataListQuery = z.infer<
-	(typeof backendApiSchemaRoutes)["@get/forms/capacity-building"]["query"]
->;
-
-export type OutreachTrackerDataListQuery = z.infer<
-	(typeof backendApiSchemaRoutes)["@get/forms/outreaches"]["query"]
->;
-
-export type TacotsExitTrackerDataListQuery = z.infer<
-	(typeof backendApiSchemaRoutes)["@get/forms/tacots/exit"]["query"]
->;
-
-export type TacotsOnboardingTrackerDataListQuery = z.infer<
-	(typeof backendApiSchemaRoutes)["@get/forms/tacots/onboarding"]["query"]
->;
-
-export type TacotsTrackingTrackerDataListQuery = z.infer<
-	(typeof backendApiSchemaRoutes)["@get/forms/tacots/tracking"]["query"]
->;
-
-export type GeneralReceiptsListQuery = z.infer<
-	(typeof backendApiSchemaRoutes)["@get/general/receipts"]["query"]
->;
-
-export type DashboardNotificationsQuery = z.infer<
-	(typeof backendApiSchemaRoutes)["@get/dashboard/notifications"]["query"]
->;
-
-export type BlogsListQuery = z.infer<(typeof backendApiSchemaRoutes)["@get/blogs"]["query"]>;
-
-export const sessionQuery = () => {
+export const sessionQuery = (...params: Parameters<typeof checkUserSessionForQuery>) => {
+	// eslint-disable-next-line tanstack-query/exhaustive-deps
 	return queryOptions({
-		queryFn: () => checkUserSessionForQuery(),
+		queryFn: () => checkUserSessionForQuery(...params),
 		queryKey: ["auth", "session"],
 		select: (data) => data.data,
 		staleTime: Infinity,
@@ -443,6 +378,22 @@ export const adminUsersQuery = () => {
 	});
 };
 
+export const adminListUsersQuery = (query?: AdminListUsersQuery) => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/admin/listusers", { query }),
+		queryKey: ["admin", "listusers", query],
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
+export const adminUserRolesQuery = (userId: string) => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/admin/roles/:userId", { params: { userId } }),
+		queryKey: ["admin", "roles", userId],
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
 export const dashboardStudentPerformanceQuery = () => {
 	return queryOptions({
 		queryFn: () => callBackendApiForQuery("@get/dashboard/student-performance"),
@@ -548,3 +499,73 @@ export const tacotsCarouselsQuery = () => {
 export type CarouselItemQueryResultType = Awaited<
 	ReturnType<NonNullable<ReturnType<typeof tacotsCarouselsQuery>["select"]>>
 >;
+
+export type AshRegistrationFormDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/ash/registration"]["query"]
+>;
+
+export type AshFeedbackFormDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/ash/feedback"]["query"]
+>;
+
+export type TacotsRecommendationFormDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/tacots/recommendation"]["query"]
+>;
+
+export type TacotsFeedbackFormDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/tacots/feedback"]["query"]
+>;
+
+export type VolunteerRegistrationFormDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/volunteer"]["query"]
+>;
+
+export type VolunteerFeedbackFormDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/volunteer/all/feedback"]["query"]
+>;
+
+export type AshAttendanceTrackerDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/ash/attendance"]["query"]
+>;
+
+export type AshExitTrackerDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/ash/exit"]["query"]
+>;
+
+export type AshTrackingTrackerDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/ash/tracking"]["query"]
+>;
+
+export type CapacityBuildingTrackerDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/capacity-building"]["query"]
+>;
+
+export type OutreachTrackerDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/outreaches"]["query"]
+>;
+
+export type TacotsExitTrackerDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/tacots/exit"]["query"]
+>;
+
+export type TacotsOnboardingTrackerDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/tacots/onboarding"]["query"]
+>;
+
+export type TacotsTrackingTrackerDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/tacots/tracking"]["query"]
+>;
+
+export type GeneralReceiptsListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/general/receipts"]["query"]
+>;
+
+export type AdminListUsersQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/admin/listusers"]["query"]
+>;
+
+export type DashboardNotificationsQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/dashboard/notifications"]["query"]
+>;
+
+export type BlogsListQuery = z.infer<(typeof backendApiSchemaRoutes)["@get/blogs"]["query"]>;

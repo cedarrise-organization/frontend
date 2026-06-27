@@ -38,6 +38,7 @@ declare namespace __next_route_internal_types__ {
     | `/admin/dashboard/blog-uploads`
     | `/admin/dashboard/form-data`
     | `/admin/dashboard/general-uploads`
+    | `/admin/dashboard/receipts`
     | `/admin/dashboard/tracker-data`
     | `/admin/dashboard/tracker-forms`
     | `/admin/dashboard/tracker-forms/ash/exit`
@@ -48,6 +49,7 @@ declare namespace __next_route_internal_types__ {
     | `/admin/dashboard/tracker-forms/tacots/beneficiary-onboarding`
     | `/admin/dashboard/tracker-forms/tacots/exit-completion`
     | `/admin/dashboard/tracker-forms/tacots/student-tracking`
+    | `/admin/dashboard/users`
     | `/auth/admin/signin`
     | `/blog`
     | `/capacity-building`

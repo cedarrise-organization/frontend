@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
 import { toFormData } from "@zayne-labs/callapi/utils";
+import { parseAsString, useQueryState } from "nuqs";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -12,11 +13,9 @@ import {
 	TextField,
 } from "@/app/(home)/-components/FormPartsShared";
 import * as DropZoneInput from "@/components/common/DropZoneInput";
-import { For } from "@/components/common/for";
 import { Show } from "@/components/common/show";
 import { DropdownMenu } from "@/components/ui";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { DataTableColumnHeader } from "@/components/ui/data-table/data-table-column-header";
 import type { QueryKeys } from "@/components/ui/data-table/data-table-types";
 import { useDataTable } from "@/components/ui/data-table/use-data-table";
@@ -28,7 +27,7 @@ import { blogsQuery, type BlogsQueryResult } from "@/lib/react-query/queryOption
 import { EMPTY_VALUE_PLACEHOLDER } from "../-components/constants";
 import {
 	DashboardDataTable,
-	DashboardDataTableFilterToolbar,
+	DashboardDataTableQueryToolbar,
 	useDashboardDataTableQueryState,
 } from "../-components/DashboardDataTableShared";
 import { Main } from "../-components/Main";
@@ -40,6 +39,7 @@ const BLOG_TABLE_QUERY_KEYS = {
 	joinOperator: "blogJoinOperator",
 	page: "blogPage",
 	perPage: "blogPerPage",
+	search: "blogSearch",
 	sort: "blogSort",
 } as const satisfies QueryKeys;
 
@@ -51,6 +51,7 @@ function BlogUploadsPage() {
 	const queryClient = useQueryClient();
 	const [editorRecord, setEditorRecord] = useState<BlogRecord | null>(null);
 	const [isEditorOpen, setIsEditorOpen] = useState(false);
+	const [search] = useQueryState(BLOG_TABLE_QUERY_KEYS.search, parseAsString.withDefault(""));
 
 	const blogQuery = useDashboardDataTableQueryState({
 		pageKey: BLOG_TABLE_QUERY_KEYS.page,
@@ -59,7 +60,13 @@ function BlogUploadsPage() {
 		sortKey: BLOG_TABLE_QUERY_KEYS.sort,
 	});
 
-	const blogsQueryResult = useQuery(blogsQuery({ limit: blogQuery.limit, page: blogQuery.page }));
+	const blogsQueryResult = useQuery(
+		blogsQuery({
+			limit: blogQuery.limit,
+			page: blogQuery.page,
+			...(search && { search }),
+		})
+	);
 
 	const records = blogsQueryResult.data?.data ?? [];
 
@@ -77,14 +84,8 @@ function BlogUploadsPage() {
 						</span>
 					</div>
 				),
-				enableColumnFilter: true,
 				header: ({ column }) => <DataTableColumnHeader column={column} label="TITLE" />,
 				id: "title",
-				meta: {
-					label: "Title",
-					placeholder: "search posts",
-					variant: "text",
-				},
 			},
 			{
 				accessorFn: (row) => row.description,
@@ -114,7 +115,7 @@ function BlogUploadsPage() {
 				cell: ({ row }) => (
 					<BlogRowActions
 						record={row.original}
-						onEdited={() => {
+						onEdit={() => {
 							setEditorRecord(row.original);
 							setIsEditorOpen(true);
 						}}
@@ -133,18 +134,10 @@ function BlogUploadsPage() {
 		data: records,
 		getRowId: (row) => row.id,
 		initialState: BLOG_TABLE_INITIAL_STATE,
-		manualFiltering: false,
 		pageCount: records.length < blogQuery.limit ? blogQuery.page : blogQuery.page + 1,
 		queryKeys: BLOG_TABLE_QUERY_KEYS,
 		sortableColumnIds: [],
 	});
-
-	const stats = [
-		{ label: "Total Posts", value: records.length },
-		{ label: "Published", value: records.length },
-		{ label: "Drafts", value: 0 },
-		{ label: "Scheduled", value: 0 },
-	] as const;
 
 	return (
 		<Main className="gap-6 lg:gap-12">
@@ -156,7 +149,7 @@ function BlogUploadsPage() {
 							setEditorRecord(null);
 							setIsEditorOpen(false);
 						}}
-						onSaved={() => {
+						onSave={() => {
 							setEditorRecord(null);
 							setIsEditorOpen(false);
 							void queryClient.invalidateQueries({ queryKey: blogsQuery().queryKey });
@@ -166,11 +159,11 @@ function BlogUploadsPage() {
 
 				<Show.Fallback>
 					<header className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-						<div>
+						<div className="flex flex-col gap-1">
 							<h1 className="text-[20px] font-semibold text-cedar-black lg:text-[24px]">
 								Blog Uploads
 							</h1>
-							<p className="mt-1 max-w-[520px] text-[12px] text-cedar-black/56 lg:text-[14px]">
+							<p className="max-w-[520px] text-[12px] text-cedar-black/56 lg:text-[14px]">
 								Create, manage, and publish blog posts for CedarRise's public blog page
 							</p>
 						</div>
@@ -188,13 +181,15 @@ function BlogUploadsPage() {
 							New Post
 						</Button>
 					</header>
-
-					<BlogStats stats={stats} />
 				</Show.Fallback>
 			</Show.Root>
 
 			<DashboardDataTable isLoading={blogsQueryResult.isPending} table={table.table}>
-				<DashboardDataTableFilterToolbar table={table.table} />
+				<DashboardDataTableQueryToolbar
+					searchPlaceholder="search posts"
+					sortOptions={[]}
+					table={table.table}
+				/>
 			</DashboardDataTable>
 		</Main>
 	);
@@ -202,40 +197,8 @@ function BlogUploadsPage() {
 
 export default BlogUploadsPage;
 
-function BlogStats(props: { stats: ReadonlyArray<{ label: string; value: number }> }) {
-	const { stats } = props;
-
-	return (
-		<section className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-5">
-			<For
-				each={stats}
-				renderItem={(stat) => (
-					<Card.Root
-						key={stat.label}
-						className="rounded-[14px] border border-cedar-black/10 bg-cedar-white px-5 py-4
-							lg:min-h-[92px] lg:px-7 lg:py-5"
-					>
-						<Card.Content>
-							<Card.Title className="text-[24px] font-semibold text-cedar-black lg:text-[30px]">
-								{stat.value}
-							</Card.Title>
-							<Card.Description className="mt-1 text-[12px] text-cedar-black/56 lg:text-[14px]">
-								{stat.label}
-							</Card.Description>
-						</Card.Content>
-					</Card.Root>
-				)}
-			/>
-		</section>
-	);
-}
-
-function BlogEditor(props: {
-	existingRecord: BlogRecord | null;
-	onBack: () => void;
-	onSaved: () => void;
-}) {
-	const { existingRecord, onBack, onSaved } = props;
+function BlogEditor(props: { existingRecord: BlogRecord | null; onBack: () => void; onSave: () => void }) {
+	const { existingRecord, onBack, onSave } = props;
 
 	const form = useForm({
 		resolver: zodResolver(BlogFrontendSchema),
@@ -251,21 +214,21 @@ function BlogEditor(props: {
 			await callBackendApiForQuery("@patch/blogs/:id", {
 				body: toFormData(data),
 				meta: { toast: { success: true } },
-				onSuccess: onSaved,
+				onSuccess: () => {
+					onSave();
+				},
 				params: { id: existingRecord.id },
 			});
-			return;
-		}
 
-		if (!data.file) {
-			form.setError("file", { message: "Upload a document." });
 			return;
 		}
 
 		await callBackendApiForQuery("@post/blogs", {
 			body: toFormData(data),
 			meta: { toast: { success: true } },
-			onSuccess: onSaved,
+			onSuccess: () => {
+				onSave();
+			},
 		});
 	});
 
@@ -358,10 +321,16 @@ function BlogEditor(props: {
 	);
 }
 
-function BlogRowActions(props: { onEdited: () => void; record: BlogRecord }) {
-	const { onEdited, record } = props;
+function BlogRowActions(props: { onEdit: () => void; record: BlogRecord }) {
+	const { onEdit, record } = props;
 	const queryClient = useQueryClient();
 	const deleteMutation = useMutation(deleteBlogMutation(record.id));
+
+	const onDelete = () => {
+		deleteMutation.mutate(undefined, {
+			onSuccess: () => void queryClient.invalidateQueries({ queryKey: blogsQuery().queryKey }),
+		});
+	};
 
 	return (
 		<DropdownMenu.Root>
@@ -374,21 +343,16 @@ function BlogRowActions(props: { onEdited: () => void; record: BlogRecord }) {
 			<DropdownMenu.Content align="end" className="w-[150px] rounded-[20px] p-3">
 				<DropdownMenu.Item asChild={true} className="justify-center">
 					<a href={record.documentUrl} target="_blank" rel="noreferrer">
-						View Document
+						View
 					</a>
 				</DropdownMenu.Item>
-				<DropdownMenu.Item className="justify-center" onClick={onEdited}>
+				<DropdownMenu.Item className="justify-center" onClick={onEdit}>
 					Edit
 				</DropdownMenu.Item>
 				<DropdownMenu.Item
 					className="justify-center text-cedar-red focus:text-cedar-red"
 					disabled={deleteMutation.isPending}
-					onClick={() => {
-						deleteMutation.mutate(undefined, {
-							onSuccess: () =>
-								void queryClient.invalidateQueries({ queryKey: blogsQuery().queryKey }),
-						});
-					}}
+					onClick={onDelete}
 				>
 					Delete
 				</DropdownMenu.Item>

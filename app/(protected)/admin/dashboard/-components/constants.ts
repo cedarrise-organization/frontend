@@ -56,7 +56,7 @@ export const dashboardNavSections = [
 			{
 				icon: "lucide:receipt-text",
 				label: "Receipts",
-				link: placeholderHref,
+				link: "/admin/dashboard/receipts",
 			},
 			{
 				icon: "mynaui:layers-two",
@@ -64,14 +64,14 @@ export const dashboardNavSections = [
 				link: placeholderHref,
 			},
 		],
-		label: "Interim Miscellaneous",
+		label: "Document and Records",
 	},
 	{
 		children: [
 			{
 				icon: "solar:user-linear",
 				label: "Users",
-				link: placeholderHref,
+				link: "/admin/dashboard/users",
 			},
 			{
 				icon: "solar:login-2-linear",

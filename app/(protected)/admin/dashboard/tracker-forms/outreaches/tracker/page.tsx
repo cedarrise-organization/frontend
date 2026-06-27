@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toFormData } from "@zayne-labs/callapi/utils";
 import { useForm } from "react-hook-form";
 import {
 	CheckboxQuestionField,
@@ -19,11 +18,13 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { callBackendApiForQuery } from "@/lib/api/callBackendApi";
 import {
+	backendApiSchemaRoutes,
 	getLgaOptions,
 	NigeriaStateOptions,
-	OutreachTrackerFrontendSchema,
 	OutreachTypeOptions,
 } from "@/lib/api/callBackendApi/apiSchema";
+
+const OutreachTrackerSchema = backendApiSchemaRoutes["@post/forms/outreaches"].body;
 
 function OutreachTrackerPage() {
 	return (
@@ -41,26 +42,26 @@ function OutreachTrackerForm() {
 		defaultValues: {
 			activityDescription: "",
 			challengesEncountered: "",
-			city: "",
-			community: "",
-			completedBy: "",
 			impactStories: "",
-			lga: "",
-			location: undefined,
-			numberOfBeneficiariesReached: undefined,
-			numberOfVolunteers: undefined,
+			numBeneficiaries: undefined,
+			numVolunteers: undefined,
+			outreachCity: "",
+			outreachCommunity: "",
 			outreachEndDate: "",
+			outreachLga: "",
 			outreachStartDate: "",
-			outreachTypes: [],
+			outreachState: undefined,
+			outreachType: [],
 			recommendations: "",
 			submissionDate: "",
+			submittedBy: "",
 		},
-		resolver: zodResolver(OutreachTrackerFrontendSchema),
+		resolver: zodResolver(OutreachTrackerSchema),
 	});
 
 	const onSubmit = form.handleSubmit(async (data) => {
 		await callBackendApiForQuery("@post/forms/outreaches", {
-			body: toFormData(data),
+			body: data,
 			meta: { toast: { success: true } },
 			onSuccess: () => form.reset(),
 		});
@@ -77,41 +78,58 @@ function OutreachTrackerForm() {
 			<div className="flex flex-col gap-4 lg:flex-row lg:gap-5">
 				<DateField
 					control={form.control}
+					classNames={{
+						base: "w-full",
+					}}
 					name="outreachStartDate"
 					placeholder="From"
 					required={true}
 				/>
-				<DateField control={form.control} name="outreachEndDate" placeholder="To" required={true} />
+
+				<DateField
+					control={form.control}
+					name="outreachEndDate"
+					placeholder="To"
+					required={true}
+					classNames={{
+						base: "w-full",
+					}}
+				/>
 			</div>
 
 			<ComboboxField
 				control={form.control}
-				name="location"
+				name="outreachState"
 				placeholder="Location of Outreach"
 				options={NigeriaStateOptions}
 				required={true}
 			/>
 
 			<div className="flex flex-col gap-4 lg:flex-row lg:gap-5">
-				<TextField control={form.control} name="city" placeholder="City" required={true} />
+				<TextField control={form.control} name="outreachCity" placeholder="City" required={true} />
 
-				<Form.Watch control={form.control} name="location">
-					{(location) => (
+				<Form.Watch control={form.control} name="outreachState">
+					{(outreachState) => (
 						<ComboboxField
 							control={form.control}
-							name="lga"
+							name="outreachLga"
 							placeholder="Local Government Area"
-							options={getLgaOptions(location)}
+							options={getLgaOptions(outreachState)}
 							required={true}
 						/>
 					)}
 				</Form.Watch>
 			</div>
 
-			<TextField control={form.control} name="community" placeholder="Community" required={true} />
 			<TextField
 				control={form.control}
-				name="numberOfVolunteers"
+				name="outreachCommunity"
+				placeholder="Community"
+				required={true}
+			/>
+			<TextField
+				control={form.control}
+				name="numVolunteers"
 				placeholder="Number of Volunteers"
 				min={0}
 				step={1}
@@ -120,7 +138,7 @@ function OutreachTrackerForm() {
 			/>
 			<TextField
 				control={form.control}
-				name="numberOfBeneficiariesReached"
+				name="numBeneficiaries"
 				placeholder="Number of Beneficiaries Reached"
 				min={0}
 				step={1}
@@ -130,7 +148,7 @@ function OutreachTrackerForm() {
 
 			<CheckboxQuestionField
 				control={form.control}
-				name="outreachTypes"
+				name="outreachType"
 				question="Type of Outreach"
 				options={OutreachTypeOptions}
 				required={true}
@@ -165,7 +183,7 @@ function OutreachTrackerForm() {
 
 			<TextField
 				control={form.control}
-				name="completedBy"
+				name="submittedBy"
 				placeholder="Name of Person Completing Form"
 				required={true}
 			/>

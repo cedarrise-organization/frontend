@@ -1,6 +1,6 @@
 "use client";
 
-import { For, ForWithWrapper } from "@zayne-labs/ui-react/common/for";
+import { For, ForWithWrapper } from "@/components/common/for";
 import { CollapsibleAnimated } from "@/components/animated/ui";
 import { IconBox } from "@/components/common/IconBox";
 import { Logo } from "@/components/common/Logo";
@@ -104,7 +104,8 @@ function DashboardSidebarGroupSection(props: { section: (typeof dashboardNavSect
 					<CollapsibleAnimated.Trigger asChild={true}>
 						<Sidebar.MenuButton
 							tooltip={section.label}
-							className="h-9 gap-3 rounded-[8px] px-5 text-cedar-white/64 hover:bg-cedar-white/10"
+							className="h-9 gap-3 rounded-[8px] px-5 text-cedar-white/64
+								group-data-[state=collapsed]:px-0 hover:bg-cedar-white/10"
 						>
 							<p
 								className="w-fit shrink-0 overflow-hidden whitespace-nowrap opacity-100
@@ -190,8 +191,9 @@ function DashboardSidebarLink(props: DashboardNavItem) {
 	return (
 		<Sidebar.MenuButton
 			tooltip={label}
-			className="h-9 gap-3 rounded-[12px] p-0 px-5 text-[12px] text-cedar-white hover:bg-cedar-white/8
-				lg:h-12 lg:text-[14px] data-active:bg-cedar-red data-active:text-cedar-white"
+			className="h-9 gap-3 rounded-[12px] p-0 px-5 text-[12px] text-cedar-white
+				group-data-[state=collapsed]:px-0 hover:bg-cedar-white/8 lg:h-12 lg:text-[14px]
+				data-active:bg-cedar-red data-active:text-cedar-white"
 			asChild={true}
 		>
 			<NavLink href={link}>

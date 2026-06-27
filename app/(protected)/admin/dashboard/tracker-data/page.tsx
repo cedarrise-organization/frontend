@@ -89,6 +89,7 @@ const ASH_TRACKER_DATA_QUERY_KEYS = {
 		joinOperator: "ashAttendanceJoinOperator",
 		page: "ashAttendancePage",
 		perPage: "ashAttendancePerPage",
+		search: "ashTrackerDataSearch",
 		sort: "ashAttendanceSort",
 	},
 	exit: {
@@ -96,6 +97,7 @@ const ASH_TRACKER_DATA_QUERY_KEYS = {
 		joinOperator: "ashExitJoinOperator",
 		page: "ashExitPage",
 		perPage: "ashExitPerPage",
+		search: "ashTrackerDataSearch",
 		sort: "ashExitSort",
 	},
 	tracking: {
@@ -103,6 +105,7 @@ const ASH_TRACKER_DATA_QUERY_KEYS = {
 		joinOperator: "ashTrackingJoinOperator",
 		page: "ashTrackingPage",
 		perPage: "ashTrackingPerPage",
+		search: "ashTrackerDataSearch",
 		sort: "ashTrackingSort",
 	},
 } as const satisfies Record<AshTrackerDataKind, QueryKeys>;
@@ -113,6 +116,7 @@ const TACOTS_TRACKER_DATA_QUERY_KEYS = {
 		joinOperator: "tacotsExitJoinOperator",
 		page: "tacotsExitPage",
 		perPage: "tacotsExitPerPage",
+		search: "tacotsTrackerDataSearch",
 		sort: "tacotsExitSort",
 	},
 	onboarding: {
@@ -120,6 +124,7 @@ const TACOTS_TRACKER_DATA_QUERY_KEYS = {
 		joinOperator: "tacotsOnboardingJoinOperator",
 		page: "tacotsOnboardingPage",
 		perPage: "tacotsOnboardingPerPage",
+		search: "tacotsTrackerDataSearch",
 		sort: "tacotsOnboardingSort",
 	},
 	tracking: {
@@ -127,6 +132,7 @@ const TACOTS_TRACKER_DATA_QUERY_KEYS = {
 		joinOperator: "tacotsTrackingJoinOperator",
 		page: "tacotsTrackingPage",
 		perPage: "tacotsTrackingPerPage",
+		search: "tacotsTrackerDataSearch",
 		sort: "tacotsTrackingSort",
 	},
 } as const satisfies Record<TacotsTrackerDataKind, QueryKeys>;
@@ -136,6 +142,7 @@ const OUTREACH_TRACKER_DATA_QUERY_KEYS = {
 	joinOperator: "outreachTrackerDataJoinOperator",
 	page: "outreachTrackerDataPage",
 	perPage: "outreachTrackerDataPerPage",
+	search: "outreachTrackerDataSearch",
 	sort: "outreachTrackerDataSort",
 } as const satisfies QueryKeys;
 
@@ -144,6 +151,7 @@ const CAPACITY_TRACKER_DATA_QUERY_KEYS = {
 	joinOperator: "capacityTrackerDataJoinOperator",
 	page: "capacityTrackerDataPage",
 	perPage: "capacityTrackerDataPerPage",
+	search: "capacityTrackerDataSearch",
 	sort: "capacityTrackerDataSort",
 } as const satisfies QueryKeys;
 
@@ -396,7 +404,10 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 		sortKey: ASH_TRACKER_DATA_QUERY_KEYS.exit.sort,
 	});
 
-	const [search] = useQueryState("ashTrackerDataSearch", parseAsString.withDefault(""));
+	const [search] = useQueryState(
+		ASH_TRACKER_DATA_QUERY_KEYS.tracking.search,
+		parseAsString.withDefault("")
+	);
 
 	const trackingQueryResult = useQuery(
 		ashTrackingTrackerDataQuery({
@@ -493,7 +504,6 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 				isLoading={trackingQueryResult.isPending}
 				isDownloadLoading={trackingDownloadMutation.isPending}
 				label="ASH - Termly Tracking Form"
-				searchQueryKey="ashTrackerDataSearch"
 				sortOptions={ASH_TRACKING_SORT_OPTIONS}
 				table={trackingTable.table}
 				onDownload={() => trackingDownloadMutation.mutate()}
@@ -504,7 +514,6 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 				isDownloadLoading={attendanceDownloadMutation.isPending}
 				isLoading={attendanceQueryResult.isPending}
 				label="ASH - Weekly activity & Attendance"
-				searchQueryKey="ashTrackerDataSearch"
 				table={attendanceTable.table}
 				onDownload={() => attendanceDownloadMutation.mutate()}
 			/>
@@ -514,7 +523,6 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 				isDownloadLoading={exitDownloadMutation.isPending}
 				isLoading={exitQueryResult.isPending}
 				label="ASH - Exit Submitted data"
-				searchQueryKey="ashTrackerDataSearch"
 				sortOptions={ASH_EXIT_SORT_OPTIONS}
 				table={exitTable.table}
 				onDownload={() => exitDownloadMutation.mutate()}
@@ -622,7 +630,10 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 		sortKey: TACOTS_TRACKER_DATA_QUERY_KEYS.exit.sort,
 	});
 
-	const [search] = useQueryState("tacotsTrackerDataSearch", parseAsString.withDefault(""));
+	const [search] = useQueryState(
+		TACOTS_TRACKER_DATA_QUERY_KEYS.tracking.search,
+		parseAsString.withDefault("")
+	);
 
 	const trackingQueryResult = useQuery(
 		tacotsTrackingTrackerDataQuery({
@@ -721,7 +732,6 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 				isLoading={trackingQueryResult.isPending}
 				isDownloadLoading={trackingDownloadMutation.isPending}
 				label="TACOTS - Student Tracking"
-				searchQueryKey="tacotsTrackerDataSearch"
 				sortOptions={TACOTS_TRACKING_SORT_OPTIONS}
 				table={trackingTable.table}
 				onDownload={() => trackingDownloadMutation.mutate()}
@@ -732,7 +742,6 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 				isLoading={onboardingQueryResult.isPending}
 				isDownloadLoading={onboardingDownloadMutation.isPending}
 				label="TACOTS - Beneficiary Onboarding"
-				searchQueryKey="tacotsTrackerDataSearch"
 				sortOptions={TACOTS_ONBOARDING_SORT_OPTIONS}
 				table={onboardingTable.table}
 				onDownload={() => onboardingDownloadMutation.mutate()}
@@ -743,7 +752,6 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 				isLoading={exitQueryResult.isPending}
 				isDownloadLoading={exitDownloadMutation.isPending}
 				label="TACOTS - Exit Completion"
-				searchQueryKey="tacotsTrackerDataSearch"
 				sortOptions={TACOTS_EXIT_SORT_OPTIONS}
 				table={exitTable.table}
 				onDownload={() => exitDownloadMutation.mutate()}
@@ -783,7 +791,7 @@ function OutreachTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRec
 		sortKey: OUTREACH_TRACKER_DATA_QUERY_KEYS.sort,
 	});
 
-	const [search] = useQueryState("outreachTrackerDataSearch", parseAsString.withDefault(""));
+	const [search] = useQueryState(OUTREACH_TRACKER_DATA_QUERY_KEYS.search, parseAsString.withDefault(""));
 
 	const queryResult = useQuery(
 		outreachTrackerDataQuery({
@@ -836,7 +844,6 @@ function OutreachTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRec
 				isDownloadLoading={downloadMutation.isPending}
 				isLoading={queryResult.isPending}
 				label="Cedar Outreach - Tracker Data"
-				searchQueryKey="outreachTrackerDataSearch"
 				sortOptions={OUTREACH_SORT_OPTIONS}
 				table={table.table}
 				onDownload={() => downloadMutation.mutate()}
@@ -876,7 +883,7 @@ function CapacityBuildingTrackerDataTab(props: { onViewMore: (record: SelectedTr
 		sortKey: CAPACITY_TRACKER_DATA_QUERY_KEYS.sort,
 	});
 
-	const [search] = useQueryState("capacityTrackerDataSearch", parseAsString.withDefault(""));
+	const [search] = useQueryState(CAPACITY_TRACKER_DATA_QUERY_KEYS.search, parseAsString.withDefault(""));
 
 	const queryResult = useQuery(
 		capacityBuildingTrackerDataQuery({
@@ -930,7 +937,6 @@ function CapacityBuildingTrackerDataTab(props: { onViewMore: (record: SelectedTr
 				isDownloadLoading={downloadMutation.isPending}
 				count={records.length}
 				label="Capacity Building Program Evaluation"
-				searchQueryKey="capacityTrackerDataSearch"
 				sortOptions={CAPACITY_SORT_OPTIONS}
 				table={table.table}
 				onDownload={() => downloadMutation.mutate()}
@@ -1031,82 +1037,98 @@ function TrackerRowActions<TRecord extends TrackerRecord>(props: {
 	const outreachDelete = useMutation(outreachDeleteMutation(record.id));
 	const capacityDelete = useMutation(capacityBuildingDeleteMutation(record.id));
 
-	const invalidateListQueries = async () => {
+	const invalidateListQueries = () => {
 		if (target.program === "ash" && target.kind === "attendance") {
-			await queryClient.invalidateQueries({ queryKey: ashAttendanceTrackerDataQuery().queryKey });
+			void queryClient.invalidateQueries({
+				queryKey: ashAttendanceTrackerDataQuery().queryKey.slice(0, -1),
+			});
 			return;
 		}
 
 		if (target.program === "ash" && target.kind === "exit") {
-			await queryClient.invalidateQueries({ queryKey: ashExitTrackerDataQuery().queryKey });
+			void queryClient.invalidateQueries({
+				queryKey: ashExitTrackerDataQuery().queryKey.slice(0, -1),
+			});
 			return;
 		}
 
 		if (target.program === "ash" && target.kind === "tracking") {
-			await queryClient.invalidateQueries({ queryKey: ashTrackingTrackerDataQuery().queryKey });
+			void queryClient.invalidateQueries({
+				queryKey: ashTrackingTrackerDataQuery().queryKey.slice(0, -1),
+			});
 			return;
 		}
 
 		if (target.program === "tacots" && target.kind === "exit") {
-			await queryClient.invalidateQueries({ queryKey: tacotsExitTrackerDataQuery().queryKey });
+			void queryClient.invalidateQueries({
+				queryKey: tacotsExitTrackerDataQuery().queryKey.slice(0, -1),
+			});
 			return;
 		}
 
 		if (target.program === "tacots" && target.kind === "onboarding") {
-			await queryClient.invalidateQueries({ queryKey: tacotsOnboardingTrackerDataQuery().queryKey });
+			void queryClient.invalidateQueries({
+				queryKey: tacotsOnboardingTrackerDataQuery().queryKey.slice(0, -1),
+			});
 			return;
 		}
 
 		if (target.program === "tacots" && target.kind === "tracking") {
-			await queryClient.invalidateQueries({ queryKey: tacotsTrackingTrackerDataQuery().queryKey });
+			void queryClient.invalidateQueries({
+				queryKey: tacotsTrackingTrackerDataQuery().queryKey.slice(0, -1),
+			});
 			return;
 		}
 
 		if (target.program === "outreaches") {
-			await queryClient.invalidateQueries({ queryKey: outreachTrackerDataQuery().queryKey });
+			void queryClient.invalidateQueries({
+				queryKey: outreachTrackerDataQuery().queryKey.slice(0, -1),
+			});
 			return;
 		}
 
-		await queryClient.invalidateQueries({ queryKey: capacityBuildingTrackerDataQuery().queryKey });
+		void queryClient.invalidateQueries({
+			queryKey: capacityBuildingTrackerDataQuery().queryKey.slice(0, -1),
+		});
 	};
 
 	const handleDelete = () => {
 		if (target.program === "ash" && target.kind === "attendance") {
-			ashAttendanceDelete.mutate(undefined, { onSuccess: () => void invalidateListQueries() });
+			ashAttendanceDelete.mutate(undefined, { onSuccess: () => invalidateListQueries() });
 			return;
 		}
 
 		if (target.program === "ash" && target.kind === "exit") {
-			ashExitDelete.mutate(undefined, { onSuccess: () => void invalidateListQueries() });
+			ashExitDelete.mutate(undefined, { onSuccess: () => invalidateListQueries() });
 			return;
 		}
 
 		if (target.program === "ash" && target.kind === "tracking") {
-			ashTrackingDelete.mutate(undefined, { onSuccess: () => void invalidateListQueries() });
+			ashTrackingDelete.mutate(undefined, { onSuccess: () => invalidateListQueries() });
 			return;
 		}
 
 		if (target.program === "tacots" && target.kind === "exit") {
-			tacotsExitDelete.mutate(undefined, { onSuccess: () => void invalidateListQueries() });
+			tacotsExitDelete.mutate(undefined, { onSuccess: () => invalidateListQueries() });
 			return;
 		}
 
 		if (target.program === "tacots" && target.kind === "onboarding") {
-			tacotsOnboardingDelete.mutate(undefined, { onSuccess: () => void invalidateListQueries() });
+			tacotsOnboardingDelete.mutate(undefined, { onSuccess: () => invalidateListQueries() });
 			return;
 		}
 
 		if (target.program === "tacots" && target.kind === "tracking") {
-			tacotsTrackingDelete.mutate(undefined, { onSuccess: () => void invalidateListQueries() });
+			tacotsTrackingDelete.mutate(undefined, { onSuccess: () => invalidateListQueries() });
 			return;
 		}
 
 		if (target.program === "outreaches") {
-			outreachDelete.mutate(undefined, { onSuccess: () => void invalidateListQueries() });
+			outreachDelete.mutate(undefined, { onSuccess: () => invalidateListQueries() });
 			return;
 		}
 
-		capacityDelete.mutate(undefined, { onSuccess: () => void invalidateListQueries() });
+		capacityDelete.mutate(undefined, { onSuccess: () => invalidateListQueries() });
 	};
 
 	return (

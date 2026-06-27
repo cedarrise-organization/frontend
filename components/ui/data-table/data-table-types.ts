@@ -28,7 +28,9 @@ export interface QueryKeys {
 	joinOperator: string;
 	page: string;
 	perPage: string;
+	search?: string;
 	sort: string;
+	status?: string;
 }
 
 export interface Option {

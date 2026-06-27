@@ -451,17 +451,22 @@ export function ComboboxField<TFieldValues extends FieldValues, TTransformedValu
 
 export function DateField<TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
 	props: SharedFieldProps<TFieldValues, TTransformedValues> & {
+		classNames?: {
+			base?: string;
+			dateTimePicker?: string;
+			label?: string;
+		};
 		label?: string;
 		placeholder: string;
 	}
 ) {
-	const { control, label, name, placeholder, required } = props;
+	const { classNames, control, label, name, placeholder, required } = props;
 
 	return (
-		<Form.Field control={control} name={name}>
+		<Form.Field control={control} name={name} className={classNames?.base}>
 			<FormRequiredIndicator required={required} />
 
-			<FormLabelShared label={label} />
+			<FormLabelShared label={label} className={classNames?.label} />
 
 			<Form.FieldBoundController
 				render={({ field }) => (
@@ -473,9 +478,12 @@ export function DateField<TFieldValues extends FieldValues, TTransformedValues =
 							onChangeDate: "yyyy-MM-dd",
 							visibleDate: "PPP",
 						}}
-						className="h-[54px] justify-between rounded-[12px] bg-cedar-grey px-9 text-[12px]
-							font-normal text-cedar-black/70 placeholder:text-cedar-black/40 lg:h-[64px] lg:px-9
-							lg:text-[14px]"
+						className={cnMerge(
+							`h-[54px] justify-between rounded-[12px] bg-cedar-grey px-9 text-[12px] font-normal
+							text-cedar-black/70 placeholder:text-cedar-black/40 lg:h-[64px] lg:px-9
+							lg:text-[14px]`,
+							classNames?.dateTimePicker
+						)}
 					/>
 				)}
 			/>

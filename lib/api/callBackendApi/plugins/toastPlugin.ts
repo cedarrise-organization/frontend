@@ -73,7 +73,7 @@ const getHTTPErrorMessages = (errorData: BaseApiErrorResponse) => {
 	const detailMessages = details
 		.filter(
 			(detail): detail is { message: string } =>
-				isObject(detail) && "message" in detail && isString(detail.message)
+				isObject<Record<string, unknown>>(detail) && isString(detail.message)
 		)
 		.map((detail) => detail.message);
 

@@ -74,6 +74,7 @@ const ASH_FORM_DATA_QUERY_KEYS = {
 		joinOperator: "ashFeedbackJoinOperator",
 		page: "ashFeedbackPage",
 		perPage: "ashFeedbackPerPage",
+		search: "ashFormDataSearch",
 		sort: "ashFeedbackSort",
 	},
 	registration: {
@@ -81,7 +82,9 @@ const ASH_FORM_DATA_QUERY_KEYS = {
 		joinOperator: "ashRegistrationJoinOperator",
 		page: "ashRegistrationPage",
 		perPage: "ashRegistrationPerPage",
+		search: "ashFormDataSearch",
 		sort: "ashRegistrationSort",
+		status: "ashFormDataStatus",
 	},
 } as const satisfies Record<AshFormKind, QueryKeys>;
 
@@ -91,6 +94,7 @@ const TACOTS_FORM_DATA_QUERY_KEYS = {
 		joinOperator: "tacotsFeedbackJoinOperator",
 		page: "tacotsFeedbackPage",
 		perPage: "tacotsFeedbackPerPage",
+		search: "tacotsFormDataSearch",
 		sort: "tacotsFeedbackSort",
 	},
 	recommendation: {
@@ -98,7 +102,9 @@ const TACOTS_FORM_DATA_QUERY_KEYS = {
 		joinOperator: "tacotsRecommendationJoinOperator",
 		page: "tacotsRecommendationPage",
 		perPage: "tacotsRecommendationPerPage",
+		search: "tacotsFormDataSearch",
 		sort: "tacotsRecommendationSort",
+		status: "tacotsRecommendationStatus",
 	},
 } as const satisfies Record<TacotsFormKind, QueryKeys>;
 
@@ -108,6 +114,7 @@ const VOLUNTEER_FORM_DATA_QUERY_KEYS = {
 		joinOperator: "volunteerFeedbackJoinOperator",
 		page: "volunteerFeedbackPage",
 		perPage: "volunteerFeedbackPerPage",
+		search: "volunteerFormDataSearch",
 		sort: "volunteerFeedbackSort",
 	},
 	registration: {
@@ -115,7 +122,9 @@ const VOLUNTEER_FORM_DATA_QUERY_KEYS = {
 		joinOperator: "volunteerRegistrationJoinOperator",
 		page: "volunteerRegistrationPage",
 		perPage: "volunteerRegistrationPerPage",
+		search: "volunteerFormDataSearch",
 		sort: "volunteerRegistrationSort",
+		status: "volunteerRegistrationStatus",
 	},
 } as const satisfies Record<VolunteerFormKind, QueryKeys>;
 
@@ -334,9 +343,12 @@ function AshFormDataTab(props: { onViewMore: (record: SelectedRecord) => void })
 		sortKey: ASH_FORM_DATA_QUERY_KEYS.feedback.sort,
 	});
 
-	const [search] = useQueryState("ashFormDataSearch", parseAsString.withDefault(""));
+	const [search] = useQueryState(
+		ASH_FORM_DATA_QUERY_KEYS.registration.search,
+		parseAsString.withDefault("")
+	);
 	const [statusFilter] = useQueryState(
-		"ashFormDataStatus",
+		ASH_FORM_DATA_QUERY_KEYS.registration.status,
 		parseAsArrayOf(parseAsStringLiteral(ReviewStatusOptions)).withDefault([])
 	);
 
@@ -404,9 +416,7 @@ function AshFormDataTab(props: { onViewMore: (record: SelectedRecord) => void })
 				isLoading={registrationQueryResult.isPending}
 				isDownloadLoading={registrationDownloadMutation.isPending}
 				label="ASH - Student Registrations"
-				searchQueryKey="ashFormDataSearch"
 				sortOptions={ASH_SORT_OPTIONS}
-				statusQueryKey="ashFormDataStatus"
 				statusOptions={ASH_STATUS_OPTIONS}
 				table={registrationTable.table}
 				onDownload={() => registrationDownloadMutation.mutate()}
@@ -417,7 +427,6 @@ function AshFormDataTab(props: { onViewMore: (record: SelectedRecord) => void })
 				isLoading={feedbackQueryResult.isPending}
 				isDownloadLoading={feedbackDownloadMutation.isPending}
 				label="ASH - Program Feedback"
-				searchQueryKey="ashFormDataSearch"
 				table={feedbackTable.table}
 				onDownload={() => feedbackDownloadMutation.mutate()}
 			/>
@@ -476,9 +485,12 @@ function TacotsFormDataTab(props: { onViewMore: (record: SelectedRecord) => void
 		sortKey: TACOTS_FORM_DATA_QUERY_KEYS.feedback.sort,
 	});
 
-	const [search] = useQueryState("tacotsFormDataSearch", parseAsString.withDefault(""));
+	const [search] = useQueryState(
+		TACOTS_FORM_DATA_QUERY_KEYS.recommendation.search,
+		parseAsString.withDefault("")
+	);
 	const [statusFilter] = useQueryState(
-		"tacotsRecommendationStatus",
+		TACOTS_FORM_DATA_QUERY_KEYS.recommendation.status,
 		parseAsArrayOf(parseAsStringLiteral(AdminReviewStatusOptions)).withDefault([])
 	);
 
@@ -546,9 +558,7 @@ function TacotsFormDataTab(props: { onViewMore: (record: SelectedRecord) => void
 				isLoading={recommendationQueryResult.isPending}
 				isDownloadLoading={recommendationDownloadMutation.isPending}
 				label="TACOTS - Recommendations"
-				searchQueryKey="tacotsFormDataSearch"
 				sortOptions={TACOTS_RECOMMENDATION_SORT_OPTIONS}
-				statusQueryKey="tacotsRecommendationStatus"
 				statusOptions={TACOTS_RECOMMENDATION_STATUS_OPTIONS}
 				table={recommendationTable.table}
 				onDownload={() => recommendationDownloadMutation.mutate()}
@@ -559,7 +569,6 @@ function TacotsFormDataTab(props: { onViewMore: (record: SelectedRecord) => void
 				isDownloadLoading={feedbackDownloadMutation.isPending}
 				isLoading={feedbackQueryResult.isPending}
 				label="TACOTS - Program Feedback"
-				searchQueryKey="tacotsFormDataSearch"
 				table={feedbackTable.table}
 				onDownload={() => feedbackDownloadMutation.mutate()}
 			/>
@@ -631,9 +640,12 @@ function VolunteerFormDataTab(props: { onViewMore: (record: SelectedRecord) => v
 		sortKey: VOLUNTEER_FORM_DATA_QUERY_KEYS.feedback.sort,
 	});
 
-	const [search] = useQueryState("volunteerFormDataSearch", parseAsString.withDefault(""));
+	const [search] = useQueryState(
+		VOLUNTEER_FORM_DATA_QUERY_KEYS.registration.search,
+		parseAsString.withDefault("")
+	);
 	const [statusFilter] = useQueryState(
-		"volunteerRegistrationStatus",
+		VOLUNTEER_FORM_DATA_QUERY_KEYS.registration.status,
 		parseAsArrayOf(parseAsStringLiteral(ReviewStatusOptions)).withDefault([])
 	);
 
@@ -701,9 +713,7 @@ function VolunteerFormDataTab(props: { onViewMore: (record: SelectedRecord) => v
 				isLoading={registrationQueryResult.isPending}
 				isDownloadLoading={registrationDownloadMutation.isPending}
 				label="Volunteer - Registration"
-				searchQueryKey="volunteerFormDataSearch"
 				sortOptions={VOLUNTEER_SORT_OPTIONS}
-				statusQueryKey="volunteerRegistrationStatus"
 				statusOptions={ASH_STATUS_OPTIONS}
 				table={registrationTable.table}
 				onDownload={() => registrationDownloadMutation.mutate()}
@@ -714,7 +724,6 @@ function VolunteerFormDataTab(props: { onViewMore: (record: SelectedRecord) => v
 				isLoading={feedbackQueryResult.isPending}
 				isDownloadLoading={feedbackDownloadMutation.isPending}
 				label="Volunteer - Feedback"
-				searchQueryKey="volunteerFormDataSearch"
 				table={feedbackTable.table}
 				onDownload={() => feedbackDownloadMutation.mutate()}
 			/>
@@ -811,61 +820,69 @@ function RowActions(props: { onViewMore: () => void; record: FormRecord; target:
 	const canReview = isAshRegistration || isTacotsRecommendation || isVolunteerRegistration;
 	const canDelete = canReview || isVolunteerFeedback;
 
-	const invalidateListQueries = async () => {
+	const invalidateListQueries = () => {
 		if (isAshRegistration) {
-			await queryClient.invalidateQueries({ queryKey: ashRegistrationFormDataQuery().queryKey });
+			void queryClient.invalidateQueries({
+				queryKey: ashRegistrationFormDataQuery().queryKey.slice(0, -1),
+			});
 			return;
 		}
 
 		if (isTacotsRecommendation) {
-			await queryClient.invalidateQueries({ queryKey: tacotsRecommendationFormDataQuery().queryKey });
+			void queryClient.invalidateQueries({
+				queryKey: tacotsRecommendationFormDataQuery().queryKey.slice(0, -1),
+			});
 			return;
 		}
 
 		if (isVolunteerRegistration) {
-			await queryClient.invalidateQueries({ queryKey: volunteerRegistrationFormDataQuery().queryKey });
+			void queryClient.invalidateQueries({
+				queryKey: volunteerRegistrationFormDataQuery().queryKey.slice(0, -1),
+			});
 			return;
 		}
 
 		if (isVolunteerFeedback) {
-			await queryClient.invalidateQueries({ queryKey: volunteerFeedbackFormDataQuery().queryKey });
+			void queryClient.invalidateQueries({
+				queryKey: volunteerFeedbackFormDataQuery().queryKey.slice(0, -1),
+			});
 		}
 	};
 
 	const handleAccept = () => {
 		if (isAshRegistration) {
-			ashStatusMutation.mutate("accepted", { onSuccess: () => void invalidateListQueries() });
+			ashStatusMutation.mutate("accepted", { onSuccess: () => invalidateListQueries() });
 			return;
 		}
 
 		if (isTacotsRecommendation) {
-			tacotsStatusMutation.mutate("SELECTED", { onSuccess: () => void invalidateListQueries() });
+			tacotsStatusMutation.mutate("SELECTED", { onSuccess: () => invalidateListQueries() });
 			return;
 		}
 
 		if (isVolunteerRegistration) {
-			volunteerStatusMutation.mutate("accepted", { onSuccess: () => void invalidateListQueries() });
+			volunteerStatusMutation.mutate("accepted", { onSuccess: () => invalidateListQueries() });
 		}
 	};
 
 	const handleDelete = () => {
 		if (isAshRegistration) {
-			ashDeleteMutation.mutate(undefined, { onSuccess: () => void invalidateListQueries() });
+			ashDeleteMutation.mutate(undefined, { onSuccess: () => invalidateListQueries() });
 			return;
 		}
 
 		if (isTacotsRecommendation) {
-			tacotsDeleteMutation.mutate(undefined, { onSuccess: () => void invalidateListQueries() });
+			tacotsDeleteMutation.mutate(undefined, { onSuccess: () => invalidateListQueries() });
 			return;
 		}
 
 		if (isVolunteerRegistration) {
-			volunteerRegistrationDelete.mutate(undefined, { onSuccess: () => void invalidateListQueries() });
+			volunteerRegistrationDelete.mutate(undefined, { onSuccess: () => invalidateListQueries() });
 			return;
 		}
 
 		if (isVolunteerFeedback) {
-			volunteerFeedbackDelete.mutate(undefined, { onSuccess: () => void invalidateListQueries() });
+			volunteerFeedbackDelete.mutate(undefined, { onSuccess: () => invalidateListQueries() });
 		}
 	};
 
