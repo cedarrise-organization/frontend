@@ -1,7 +1,7 @@
 "use client";
 
-import { For, ForWithWrapper } from "@/components/common/for";
 import { CollapsibleAnimated } from "@/components/animated/ui";
+import { For, ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
 import { Logo } from "@/components/common/Logo";
 import { NavLink } from "@/components/common/NavLink";
