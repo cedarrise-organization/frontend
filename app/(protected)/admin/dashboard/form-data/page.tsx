@@ -237,11 +237,7 @@ function FormDataPage() {
 	const [selectedRecord, setSelectedRecord] = useState<SelectedRecord | null>(null);
 
 	return (
-		<Main className="gap-6 lg:gap-8">
-			<header>
-				<h1 className="text-[24px] font-semibold text-cedar-black lg:text-[40px]">Forms & Tracking</h1>
-			</header>
-
+		<Main className="gap-6 lg:gap-12">
 			<TabsAnimated.Root defaultValue="ash" className="gap-6">
 				<div className="rounded-[20px] bg-cedar-white p-4 lg:p-5">
 					<TabsAnimated.List
@@ -817,8 +813,6 @@ function RowActions(props: { onViewMore: () => void; record: FormRecord; target:
 	const isTacotsRecommendation = target.program === "tacots" && target.kind === "recommendation";
 	const isVolunteerRegistration = target.program === "volunteer" && target.kind === "registration";
 	const isVolunteerFeedback = target.program === "volunteer" && target.kind === "feedback";
-	const canReview = isAshRegistration || isTacotsRecommendation || isVolunteerRegistration;
-	const canDelete = canReview || isVolunteerFeedback;
 
 	const invalidateListQueries = () => {
 		if (isAshRegistration) {
@@ -849,40 +843,42 @@ function RowActions(props: { onViewMore: () => void; record: FormRecord; target:
 		}
 	};
 
-	const handleAccept = () => {
+	const reviewAction = (() => {
 		if (isAshRegistration) {
-			ashStatusMutation.mutate("accepted", { onSuccess: () => invalidateListQueries() });
-			return;
+			return () => ashStatusMutation.mutate("accepted", { onSuccess: invalidateListQueries });
 		}
 
 		if (isTacotsRecommendation) {
-			tacotsStatusMutation.mutate("SELECTED", { onSuccess: () => invalidateListQueries() });
-			return;
+			return () => tacotsStatusMutation.mutate("SELECTED", { onSuccess: invalidateListQueries });
 		}
 
 		if (isVolunteerRegistration) {
-			volunteerStatusMutation.mutate("accepted", { onSuccess: () => invalidateListQueries() });
+			return () => volunteerStatusMutation.mutate("accepted", { onSuccess: invalidateListQueries });
 		}
-	};
+
+		return null;
+	})();
+
+	const canDelete = Boolean(reviewAction) || isVolunteerFeedback;
 
 	const handleDelete = () => {
 		if (isAshRegistration) {
-			ashDeleteMutation.mutate(undefined, { onSuccess: () => invalidateListQueries() });
+			ashDeleteMutation.mutate(undefined, { onSuccess: invalidateListQueries });
 			return;
 		}
 
 		if (isTacotsRecommendation) {
-			tacotsDeleteMutation.mutate(undefined, { onSuccess: () => invalidateListQueries() });
+			tacotsDeleteMutation.mutate(undefined, { onSuccess: invalidateListQueries });
 			return;
 		}
 
 		if (isVolunteerRegistration) {
-			volunteerRegistrationDelete.mutate(undefined, { onSuccess: () => invalidateListQueries() });
+			volunteerRegistrationDelete.mutate(undefined, { onSuccess: invalidateListQueries });
 			return;
 		}
 
 		if (isVolunteerFeedback) {
-			volunteerFeedbackDelete.mutate(undefined, { onSuccess: () => invalidateListQueries() });
+			volunteerFeedbackDelete.mutate(undefined, { onSuccess: invalidateListQueries });
 		}
 	};
 
@@ -894,14 +890,14 @@ function RowActions(props: { onViewMore: () => void; record: FormRecord; target:
 			>
 				Actions
 			</DropdownMenu.Trigger>
-			<DropdownMenu.Content align="end" className="w-[150px] rounded-[20px] p-3">
+			<DropdownMenu.Content align="end" className="w-[150px] rounded-[20px] border-cedar-black/16 p-3">
 				<DropdownMenu.Item className="justify-center" onClick={onViewMore}>
 					View More
 				</DropdownMenu.Item>
-				{canReview && (
+				{reviewAction && (
 					<DropdownMenu.Item
 						className="justify-center text-cedar-yellow focus:text-cedar-yellow"
-						onClick={handleAccept}
+						onClick={reviewAction}
 					>
 						Accept
 					</DropdownMenu.Item>
@@ -982,16 +978,23 @@ function FormDataDetailsDialog(props: {
 			return volunteerFeedbackDetailQueryResult.data?.data;
 		}
 
-		return void 0;
+		return null;
 	})();
 
 	const rows = getDashboardDetailRows(record);
 
 	const status = (() => {
 		if (!record) return;
-		if ("status" in record) return record.status;
-		if ("adminStatus" in record) return record.adminStatus;
-		return void 0;
+
+		if ("status" in record) {
+			return record.status;
+		}
+
+		if ("adminStatus" in record) {
+			return record.adminStatus;
+		}
+
+		return null;
 	})();
 
 	const submittedAt = record?.createdAt;
@@ -1127,7 +1130,7 @@ function StatusPill({ status }: { status: string }) {
 	return (
 		<span
 			className={cnMerge(
-				"inline-flex rounded-[8px] px-4 py-2 text-[12px] font-medium",
+				"inline-flex rounded-[8px] px-4 py-2 text-[12px] font-medium whitespace-nowrap",
 				(normalizedStatus.includes("accept") || normalizedStatus.includes("select"))
 					&& !normalizedStatus.includes("not")
 					&& "bg-cedar-yellow/16 text-cedar-yellow",

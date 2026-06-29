@@ -328,6 +328,10 @@ export const dashboardProjectsQuery = () => {
 	});
 };
 
+export type DashboardProjectsQueryResult = Awaited<
+	ReturnType<NonNullable<ReturnType<typeof dashboardProjectsQuery>["select"]>>
+>;
+
 export const blogsQuery = (query?: BlogsListQuery) => {
 	return queryOptions({
 		queryFn: () => callBackendApiForQuery("@get/blogs", { query }),

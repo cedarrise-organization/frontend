@@ -53,7 +53,7 @@ export const formatDashboardDetailValue = (value: unknown): string => {
 export const getDashboardDetailRows = <
 	TRecord extends { createdAt?: unknown; deletedAt?: unknown; id?: unknown; updatedAt?: unknown },
 >(
-	record: TRecord | undefined
+	record: TRecord | null | undefined
 ) => {
 	if (!record) {
 		return [];

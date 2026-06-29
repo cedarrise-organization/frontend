@@ -31,9 +31,9 @@ function FormRequiredIndicator(props: { required: boolean | undefined }) {
 	return (
 		required && (
 			<Form.Description
-				className="mt-2 -mb-1 ml-0.5 text-[10px] tracking-tight text-red-500 lg:text-[13px]"
+				className="mt-2 -mb-1 ml-0.5 text-[14px] tracking-tight text-red-500 lg:text-[13px]"
 			>
-				*Required
+				*
 			</Form.Description>
 		)
 	);

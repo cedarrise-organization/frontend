@@ -39,8 +39,8 @@ export function DashboardDataTableSection<TRecord>(props: {
 	return (
 		<section className="flex flex-col gap-5">
 			<article
-				className="flex flex-row items-center justify-between gap-4 bg-cedar-white px-5 pt-5 pb-4
-					lg:px-7"
+				className="flex flex-row items-center justify-between gap-4 rounded-t-[20px] bg-cedar-white
+					px-5 pt-5 pb-4 lg:px-7"
 			>
 				<div className="flex items-center gap-4">
 					<span

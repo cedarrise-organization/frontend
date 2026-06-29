@@ -6,9 +6,7 @@ function LoadingScreen(props: { text?: string }) {
 
 	return (
 		<section
-			role="status"
-			aria-live="polite"
-			className="flex min-h-svh w-full flex-col items-center justify-center bg-cedar-grey px-6
+			className="flex min-h-svh w-full flex-col items-center justify-center gap-7 bg-cedar-grey px-6
 				text-center"
 		>
 			<div className="relative flex size-28 items-center justify-center lg:size-32">
@@ -19,25 +17,22 @@ function LoadingScreen(props: { text?: string }) {
 				/>
 				<Image
 					src={logo}
-					alt=""
+					alt="Logo"
 					priority={true}
 					className="size-20 rounded-[8px] border border-cedar-black/8 bg-cedar-white object-contain
 						p-4 shadow-[0_16px_40px_rgba(29,29,31,0.08)] lg:size-24 lg:p-5"
 				/>
 			</div>
 
-			<h3 className="mt-7 text-[28px] font-semibold text-cedar-black lg:text-[34px]">CedarRise</h3>
-			<p className="mt-2 text-[13px] text-cedar-black/56 lg:text-[14px]">{text}</p>
+			<div className="flex flex-col gap-2">
+				<h3 className="text-[28px] font-semibold text-cedar-black lg:text-[34px]">CedarRise</h3>
+				<p className="text-[13px] text-cedar-black/56 lg:text-[14px]">{text}</p>
+			</div>
 
-			<span
-				aria-hidden="true"
-				className="mt-7 flex h-1 w-36 overflow-hidden rounded-full bg-cedar-black/8"
-			>
-				<span className="h-full grow animate-pulse bg-cedar-red motion-reduce:animate-none" />
-				<span
-					className="h-full grow animate-pulse bg-cedar-yellow delay-150 motion-reduce:animate-none"
-				/>
-				<span className="h-full grow animate-pulse bg-cedar-black delay-300 motion-reduce:animate-none" />
+			<span className="flex h-1 w-[144px] overflow-hidden rounded-full bg-cedar-black/8">
+				<span className="w-full animate-pulse bg-cedar-red motion-reduce:animate-none" />
+				<span className="w-full animate-pulse bg-cedar-yellow delay-150 motion-reduce:animate-none" />
+				<span className="w-full animate-pulse bg-cedar-black delay-300 motion-reduce:animate-none" />
 			</span>
 		</section>
 	);
