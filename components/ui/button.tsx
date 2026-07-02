@@ -13,13 +13,13 @@ export type ButtonProps = InferProps<"button">
 			asChild?: boolean;
 			isLoading?: boolean;
 			loadingStyle?: "replace-content" | "side-by-side";
-			unstyled?: boolean;
+			unstyled?: "none" | true;
 		}
 	>;
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const buttonVariants = tv({
-	base: "flex items-center justify-center gap-2 rounded-[12px] lg:rounded-[20px]",
+	base: "flex items-center justify-center gap-2",
 
 	compoundVariants: [
 		{
@@ -61,6 +61,7 @@ export const buttonVariants = tv({
 	],
 
 	defaultVariants: {
+		rounded: "regular",
 		size: "medium",
 		theme: "primary",
 	},
@@ -83,13 +84,22 @@ export const buttonVariants = tv({
 			"side-by-side": "",
 		},
 
+		rounded: {
+			none: "",
+			regular: "rounded-[12px] lg:rounded-[20px]",
+		},
+
 		size: {
 			icon: "size-10 text-base lg:size-[70px] lg:text-[24px]",
 
 			medium: "h-12 w-fit px-9 text-[14px] font-medium lg:h-[70px] lg:px-[64px] lg:text-[20px]",
+
+			none: "",
 		},
 
 		theme: {
+			none: "",
+
 			primary: "bg-cedar-yellow text-cedar-white",
 
 			secondary: "bg-cedar-red text-cedar-white",
@@ -107,6 +117,8 @@ export const buttonVariants = tv({
 });
 
 function Button<TElement extends React.ElementType>(props: PolymorphicPropsStrict<TElement, ButtonProps>) {
+	const defaultVariantValue = props.unstyled === "none" ? props.unstyled : undefined;
+
 	const {
 		as: Element = "button",
 		asChild,
@@ -116,8 +128,9 @@ function Button<TElement extends React.ElementType>(props: PolymorphicPropsStric
 		disabled = isDisabled,
 		isLoading = false,
 		loadingStyle = "replace-content",
-		size,
-		theme,
+		rounded = defaultVariantValue,
+		size = defaultVariantValue,
+		theme = defaultVariantValue,
 		type = "button",
 		unstyled,
 		withInteractions = true,
@@ -134,6 +147,7 @@ function Button<TElement extends React.ElementType>(props: PolymorphicPropsStric
 				isDisabled,
 				isLoading,
 				loadingStyle,
+				rounded,
 				size,
 				theme,
 				withInteractions,

@@ -2,7 +2,11 @@
 import { mutationOptions } from "@tanstack/react-query";
 import type { ExtractUnion } from "@zayne-labs/toolkit-type-helpers";
 import { callBackendApiForQuery } from "../api/callBackendApi";
-import { AdminReviewStatusOptions, ReviewStatusOptions } from "../api/callBackendApi/apiSchema";
+import {
+	AdminReviewStatusOptions,
+	ProjectStatusOptions,
+	ReviewStatusOptions,
+} from "../api/callBackendApi/apiSchema";
 
 export type AshFormKind = "feedback" | "registration";
 export type AshTrackerDataKind = "attendance" | "exit" | "tracking";
@@ -13,10 +17,32 @@ export type VolunteerFormKind = "feedback" | "registration";
 export type FormDataProgram = "ash" | "tacots" | "volunteer";
 export type FormDataSectionKind = AshFormKind | TacotsFormKind | VolunteerFormKind;
 
+export const signoutMutation = () => {
+	return mutationOptions({
+		mutationFn: () => {
+			return callBackendApiForQuery("@post/auth/logout", {
+				meta: { toast: { success: false } },
+			});
+		},
+	});
+};
+
 export const dismissDashboardNotificationMutation = () => {
 	return mutationOptions({
 		mutationFn: (id: string) => {
 			return callBackendApiForQuery("@patch/dashboard/notifications/:id", { params: { id } });
+		},
+	});
+};
+
+export const dashboardProjectStatusMutation = (id: string) => {
+	return mutationOptions({
+		mutationFn: (status: ExtractUnion<typeof ProjectStatusOptions>) => {
+			return callBackendApiForQuery("@patch/general/projects/:id", {
+				meta: { toast: { success: true } },
+				params: { id },
+				query: { status },
+			});
 		},
 	});
 };
@@ -161,6 +187,17 @@ export const tacotsRecommendationDeleteMutation = (id: string) => {
 	return mutationOptions({
 		mutationFn: () => {
 			return callBackendApiForQuery("@delete/forms/tacots/recommendation/:id", {
+				meta: { toast: { success: true } },
+				params: { id },
+			});
+		},
+	});
+};
+
+export const tacotsFeedbackDeleteMutation = (id: string) => {
+	return mutationOptions({
+		mutationFn: () => {
+			return callBackendApiForQuery("@delete/forms/tacots/feedback/:id", {
 				meta: { toast: { success: true } },
 				params: { id },
 			});

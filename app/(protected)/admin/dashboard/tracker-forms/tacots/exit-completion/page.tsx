@@ -43,7 +43,8 @@ function TacotsExitCompletionPage() {
 export default TacotsExitCompletionPage;
 
 function TacotsExitCompletionForm() {
-	const { data: students = [] } = useQuery(tacotsOnboardedLookupQuery());
+	const tacotsOnboardedLookupQueryResult = useQuery(tacotsOnboardedLookupQuery());
+	const students = tacotsOnboardedLookupQueryResult.data ?? [];
 	const studentOptions = students.map((student) => ({ label: student.name, value: student.id }));
 
 	const form = useForm({

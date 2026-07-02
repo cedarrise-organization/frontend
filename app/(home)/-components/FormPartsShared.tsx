@@ -211,7 +211,7 @@ export function CheckboxQuestionField<TFieldValues extends FieldValues, TTransfo
 										}}
 									/>
 
-									<Form.Label htmlFor={fieldContext.formItemId}>{optionData.label}</Form.Label>
+									<Form.Label>{optionData.label}</Form.Label>
 								</li>
 							);
 						}}
@@ -223,6 +223,46 @@ export function CheckboxQuestionField<TFieldValues extends FieldValues, TTransfo
 		</div>
 	);
 }
+
+export function AgreementField<TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
+	props: SharedFieldProps<TFieldValues, TTransformedValues> & {
+		label: string;
+	}
+) {
+	const { control, label, name, required } = props;
+
+	return (
+		<Form.Field
+			control={control}
+			name={name}
+			className="w-full text-[12px] text-cedar-black/64 lg:text-[14px]"
+		>
+			<FormRequiredIndicator required={required} />
+
+			<Form.FieldBoundController
+				render={({ field, fieldContext }) => (
+					<Form.InputGroup className="items-start gap-3">
+						<Checkbox
+							id={fieldContext.formItemId}
+							checked={field.value}
+							onCheckedChange={field.onChange}
+							classNames={{
+								base: `mt-[2px] size-4 rounded-[4px] border-[1.5px] border-cedar-black/40
+								bg-transparent lg:mt-[3px] data-checked:bg-transparent`,
+								icon: "size-3",
+							}}
+						/>
+
+						<Form.Label htmlFor={fieldContext.formItemId}>{label}</Form.Label>
+					</Form.InputGroup>
+				)}
+			/>
+
+			<FormErrorMessageShared />
+		</Form.Field>
+	);
+}
+
 function FormLabelShared(props: { className?: string; label: string | undefined }) {
 	const { className, label } = props;
 
@@ -327,7 +367,7 @@ export function TextAreaField<TFieldValues extends FieldValues, TTransformedValu
 
 export function SelectField<TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
 	props: SharedFieldProps<TFieldValues, TTransformedValues> & {
-		classNames?: { base?: string; trigger?: string };
+		classNames?: { base?: string; trigger?: string; item?: string };
 		label?: string;
 		options: readonly SharedOption[];
 		placeholder: string;
@@ -363,7 +403,11 @@ export function SelectField<TFieldValues extends FieldValues, TTransformedValues
 										const optionData = getSharedOptionData(option);
 
 										return (
-											<Select.Item key={optionData.value} value={optionData.value}>
+											<Select.Item
+												key={optionData.value}
+												value={optionData.value}
+												className={classNames?.item}
+											>
 												{optionData.label}
 											</Select.Item>
 										);
@@ -493,12 +537,15 @@ export function DateField<TFieldValues extends FieldValues, TTransformedValues =
 	);
 }
 
+const defaultAllowedFileTypes = [".png", ".jpg", ".jpeg", ".webp"];
+
 export function FileUploadField<TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
-	props: SharedFieldProps<TFieldValues, TTransformedValues> & {
-		label: string;
-	}
+	props: Pick<InferProps<typeof DropZoneInput.Root>, "allowedFileTypes">
+		& SharedFieldProps<TFieldValues, TTransformedValues> & {
+			label: string;
+		}
 ) {
-	const { control, label, name, required } = props;
+	const { allowedFileTypes = defaultAllowedFileTypes, control, label, name, required } = props;
 
 	return (
 		<Form.Field control={control} name={name}>
@@ -510,7 +557,7 @@ export function FileUploadField<TFieldValues extends FieldValues, TTransformedVa
 				<Form.FieldBoundController
 					render={({ field }) => (
 						<DropZoneInput.Root
-							allowedFileTypes={["image/png", "image/jpg", "image/jpeg", "image/webp"]}
+							allowedFileTypes={allowedFileTypes}
 							maxFileCount={1}
 							multiple={false}
 							onChange={field.onChange}

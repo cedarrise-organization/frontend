@@ -30,10 +30,13 @@ import { Form, useFormContext } from "@/components/ui/form";
 import { callBackendApiForQuery } from "@/lib/api/callBackendApi";
 import {
 	AcademicSessionOptions,
-	ClassOptions,
+	NigeriaStateOptions,
 	TacotsAcademicTermOptions,
 	TacotsAssessmentPeriodOptions,
+	TacotsMentorshipDurationOptions,
 	TacotsMentorshipModeOptions,
+	TacotsServiceActivityTypeOptions,
+	TacotsServiceDurationOptions,
 	TacotsStudentTrackingFrontendSchema,
 } from "@/lib/api/callBackendApi/apiSchema";
 import { tacotsOnboardedLookupQuery } from "@/lib/react-query/queryOptions";
@@ -45,25 +48,44 @@ const stepItems = defineFormStepItems([
 		title: "Student information",
 		validator: TacotsStudentTrackingFrontendSchema.pick({
 			academicSession: true,
+			academicTerm: true,
 			assessmentPeriod: true,
-			currentClass: true,
-			currentSchool: true,
-			dateOfSubmission: true,
+			region: true,
+			schoolId: true,
 			studentId: true,
-			term: true,
+			submissionDate: true,
 		}),
 	},
 	{
 		StepComponent: TrackingDetailsStep,
 		title: "Tracking details",
-		validator: TacotsStudentTrackingFrontendSchema.omit({
-			academicSession: true,
-			assessmentPeriod: true,
-			currentClass: true,
-			currentSchool: true,
-			dateOfSubmission: true,
-			studentId: true,
-			term: true,
+		validator: TacotsStudentTrackingFrontendSchema.pick({
+			academicComment: true,
+			financialNotes: true,
+			formationComments: true,
+			highestSubjectScore: true,
+			lowestSubjectScore: true,
+			mentorName: true,
+			mentorshipDuration: true,
+			mentorshipMode: true,
+			mentorshipNotes: true,
+			mentorshipSessionDate: true,
+			paymentEvidence: true,
+			resourcesSpent: true,
+			responsibilityRating: true,
+			schoolRulesRating: true,
+			serviceActivityType: true,
+			serviceDate: true,
+			serviceDescription: true,
+			serviceDuration: true,
+			serviceSupervisor: true,
+			socialBehaviorRating: true,
+			studentAveragePct: true,
+			studentPositionInClass: true,
+			sundriesSpent: true,
+			termResult: true,
+			totalAmountSpent: true,
+			tuitionFeePaid: true,
 		}),
 	},
 ]);
@@ -78,38 +100,38 @@ const useTacotsStudentTrackingStorageState = createUseStorageState<GetFormStepSt
 			currentStep: 0,
 			formStepData: {
 				academicComment: "",
-				academicSession: "",
-				adherenceToSchoolRules: 0,
+				academicSession: undefined,
+				academicTerm: undefined,
 				assessmentPeriod: undefined,
-				briefMentoringSessionNotes: "",
-				communityServiceComment: "",
-				currentClass: undefined,
-				currentSchool: "",
-				dateOfActivity: "",
-				dateOfSubmission: "",
-				descriptionOfActivity: "",
 				financialNotes: "",
+				formationComments: "",
 				highestSubjectScore: "",
-				locationOfActivity: "",
 				lowestSubjectScore: "",
 				mentorName: "",
+				mentorshipDuration: undefined,
+				mentorshipMode: undefined,
+				mentorshipNotes: "",
 				mentorshipSessionDate: "",
-				modeOfMentorship: undefined,
-				resourcesGiven: "",
-				resultSheet: undefined,
-				schoolFormationComment: "",
-				senseOfResponsibility: 0,
-				socialBehavior: 0,
+				paymentEvidence: undefined,
+				region: undefined,
+				resourcesSpent: undefined,
+				responsibilityRating: 0,
+				schoolId: "",
+				schoolRulesRating: 0,
+				serviceActivityType: undefined,
+				serviceDate: "",
+				serviceDescription: "",
+				serviceDuration: undefined,
+				serviceSupervisor: "",
+				socialBehaviorRating: 0,
+				studentAveragePct: undefined,
 				studentId: "",
 				studentPositionInClass: "",
-				subjectsAverage: "",
-				sundries: "",
-				supervisorFacilitator: "",
-				term: undefined,
-				totalAmountSpentForTerm: "",
-				tuitionFeePaid: "",
-				typeOfServiceActivity: "",
-				uploadPaymentEvidence: undefined,
+				submissionDate: "",
+				sundriesSpent: undefined,
+				termResult: undefined,
+				totalAmountSpent: undefined,
+				tuitionFeePaid: undefined,
 			} satisfies WithUndefined<FormStepDataType> as unknown as FormStepDataType,
 		},
 		key: "admin-tacots-student-tracking-form-data",
@@ -177,51 +199,54 @@ function TacotsStudentTrackingForm() {
 
 function StudentInformationStep() {
 	const { control } = useFormContext<z.input<(typeof stepItems)[0]["validator"]>>();
-	const { data: students = [] } = useQuery(tacotsOnboardedLookupQuery());
+	const tacotsOnboardedLookupQueryResult = useQuery(tacotsOnboardedLookupQuery());
+	const students = tacotsOnboardedLookupQueryResult.data ?? [];
 	const studentOptions = students.map((student) => ({ label: student.name, value: student.id }));
-	const form = { control };
+	const schoolOptions = students.map((student) => ({ label: student.schoolName, value: student.id }));
 
 	return (
 		<>
 			<FormStepComponentSectionHeader title="Student Information" />
 
 			<SelectField
-				control={form.control}
+				control={control}
 				name="studentId"
 				placeholder="Student Full Name"
+				classNames={{ item: "capitalize", trigger: "capitalize" }}
 				options={studentOptions}
 				required={true}
 			/>
-			<TextField
-				control={form.control}
-				name="currentSchool"
+			<SelectField
+				control={control}
+				name="schoolId"
 				placeholder="School Name"
+				classNames={{ item: "capitalize", trigger: "capitalize" }}
+				options={schoolOptions}
 				required={true}
 			/>
 			<SelectField
-				control={form.control}
-				name="term"
-				placeholder="Term"
-				options={TacotsAcademicTermOptions}
+				control={control}
+				name="region"
+				placeholder="Region"
+				options={NigeriaStateOptions}
 				required={true}
 			/>
 			<SelectField
-				control={form.control}
+				control={control}
 				name="academicSession"
 				placeholder="Academic Session"
 				options={AcademicSessionOptions}
 				required={true}
 			/>
 			<SelectField
-				control={form.control}
-				name="currentClass"
+				control={control}
+				name="academicTerm"
 				placeholder="Academic Term"
-				options={ClassOptions}
+				options={TacotsAcademicTermOptions}
 				required={true}
 			/>
-
 			<OptionQuestionField
-				control={form.control}
+				control={control}
 				name="assessmentPeriod"
 				question="Assessment Period"
 				options={TacotsAssessmentPeriodOptions}
@@ -229,8 +254,8 @@ function StudentInformationStep() {
 			/>
 
 			<DateField
-				control={form.control}
-				name="dateOfSubmission"
+				control={control}
+				name="submissionDate"
 				placeholder="Date of Submission"
 				required={true}
 			/>
@@ -240,116 +265,168 @@ function StudentInformationStep() {
 
 function TrackingDetailsStep() {
 	const { control } = useFormContext<z.input<(typeof stepItems)[1]["validator"]>>();
-	const form = { control };
 
 	return (
 		<>
 			<FormStepComponentSectionHeader title="Academic Performance" note="Filled by School Teacher" />
 
 			<TextField
-				control={form.control}
+				control={control}
 				name="highestSubjectScore"
 				placeholder="Highest Subject Score"
+				required={true}
 			/>
-			<TextField control={form.control} name="lowestSubjectScore" placeholder="Lowest Subject Score" />
-			<TextField control={form.control} name="subjectsAverage" placeholder="Student's Average (%)" />
 			<TextField
-				control={form.control}
+				control={control}
+				name="lowestSubjectScore"
+				placeholder="Lowest Subject Score"
+				required={true}
+			/>
+			<TextField
+				control={control}
+				name="studentAveragePct"
+				placeholder="Student's Average (%)"
+				type="number"
+				required={true}
+			/>
+			<TextField
+				control={control}
 				name="studentPositionInClass"
 				placeholder="Student's Position in Class"
+				required={true}
 			/>
-			<FileUploadField control={form.control} name="resultSheet" label="Upload Copy of Result Sheet" />
-			<TextAreaField control={form.control} name="academicComment" label="Academic Comment" />
+			<FileUploadField
+				control={control}
+				name="termResult"
+				label="Upload Copy of Result Sheet"
+				required={true}
+			/>
+			<TextAreaField control={control} name="academicComment" label="Academic Comment" />
 
 			<FormStepComponentSectionHeader title="School Formation" note="Filled by School Teacher" />
 
 			<RatingQuestionField
-				control={form.control}
-				name="socialBehavior"
+				control={control}
+				name="socialBehaviorRating"
 				question="Social Behavior"
 				leftLabel="1"
 				rightLabel="5"
 				required={true}
 			/>
 			<RatingQuestionField
-				control={form.control}
-				name="adherenceToSchoolRules"
+				control={control}
+				name="schoolRulesRating"
 				question="Adherence to School Rules/Punctuality"
 				leftLabel="1"
 				rightLabel="5"
 				required={true}
 			/>
 			<RatingQuestionField
-				control={form.control}
-				name="senseOfResponsibility"
+				control={control}
+				name="responsibilityRating"
 				question="Sense of Responsibility"
 				leftLabel="1"
 				rightLabel="5"
 				required={true}
 			/>
 			<TextAreaField
-				control={form.control}
-				name="schoolFormationComment"
+				control={control}
+				name="formationComments"
 				label="Other Comments on Student Formation"
 			/>
 
 			<FormStepComponentSectionHeader title="Mentorship" note="Filled by Facilitator" />
 
-			<TextField control={form.control} name="mentorName" placeholder="Mentor's Name" />
+			<TextField control={control} name="mentorName" placeholder="Mentor's Name" required={true} />
 			<DateField
-				control={form.control}
+				control={control}
 				name="mentorshipSessionDate"
 				placeholder="Mentorship Session Date"
+				required={true}
 			/>
 			<OptionQuestionField
-				control={form.control}
-				name="modeOfMentorship"
+				control={control}
+				name="mentorshipMode"
 				question="Mode of Mentorship"
 				options={TacotsMentorshipModeOptions}
+				required={true}
+			/>
+			<SelectField
+				control={control}
+				name="mentorshipDuration"
+				placeholder="Duration of Mentorship Session"
+				options={TacotsMentorshipDurationOptions}
+				required={true}
 			/>
 			<TextAreaField
-				control={form.control}
-				name="briefMentoringSessionNotes"
+				control={control}
+				name="mentorshipNotes"
 				label="Brief Mentoring Session Notes"
+				required={true}
 			/>
 
 			<FormStepComponentSectionHeader title="Community Service" note="Filled by Beneficiary" />
 
-			<TextField
-				control={form.control}
-				name="typeOfServiceActivity"
+			<SelectField
+				control={control}
+				name="serviceActivityType"
 				placeholder="Type of Service Activity"
+				options={TacotsServiceActivityTypeOptions}
+				required={true}
 			/>
-			<DateField control={form.control} name="dateOfActivity" placeholder="Date of Activity" />
-			<TextField control={form.control} name="locationOfActivity" placeholder="Location of Activity" />
+			<DateField control={control} name="serviceDate" placeholder="Date of Activity" required={true} />
+			<SelectField
+				control={control}
+				name="serviceDuration"
+				placeholder="Duration of Activity (Hours)"
+				options={TacotsServiceDurationOptions}
+				required={true}
+			/>
 			<TextAreaField
-				control={form.control}
-				name="descriptionOfActivity"
+				control={control}
+				name="serviceDescription"
 				label="Description of Activity"
+				required={true}
 			/>
 			<TextField
-				control={form.control}
-				name="supervisorFacilitator"
-				placeholder="Supervisor / Facilitator"
+				control={control}
+				name="serviceSupervisor"
+				placeholder="Supervisor / Validator"
+				required={true}
 			/>
-			<TextAreaField control={form.control} name="communityServiceComment" label="Comments" />
 
 			<FormStepComponentSectionHeader title="Financial Support Tracking" note="Filled by Coordinator" />
 
-			<TextField control={form.control} name="tuitionFeePaid" placeholder="Tuition Fee Paid" />
-			<TextField control={form.control} name="resourcesGiven" placeholder="Resources Given" />
-			<TextField control={form.control} name="sundries" placeholder="Sundries" />
 			<TextField
-				control={form.control}
-				name="totalAmountSpentForTerm"
+				control={control}
+				name="tuitionFeePaid"
+				placeholder="Tuition Fee Paid"
+				type="number"
+				required={true}
+			/>
+			<TextField
+				control={control}
+				name="resourcesSpent"
+				placeholder="Resources (Books, Stationeries, Learning Materials)"
+				type="number"
+				required={true}
+			/>
+			<TextField
+				control={control}
+				name="sundriesSpent"
+				placeholder="Sundries"
+				type="number"
+				required={true}
+			/>
+			<TextField
+				control={control}
+				name="totalAmountSpent"
 				placeholder="Total Amount Spent for the Term"
+				type="number"
+				required={true}
 			/>
-			<FileUploadField
-				control={form.control}
-				name="uploadPaymentEvidence"
-				label="Upload Payment Evidence"
-			/>
-			<TextAreaField control={form.control} name="financialNotes" label="Financial Notes" />
+			<FileUploadField control={control} name="paymentEvidence" label="Upload Payment Evidence" />
+			<TextAreaField control={control} name="financialNotes" label="Financial Notes" />
 		</>
 	);
 }

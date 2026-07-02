@@ -7,6 +7,7 @@ import { createUseStorageState } from "@zayne-labs/toolkit-react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import {
+	AgreementField,
 	CheckboxQuestionField,
 	ComboboxField,
 	DateField,
@@ -27,7 +28,6 @@ import {
 	type GetFormStepStoreType,
 } from "@/app/(home)/-components/FormStepPartsShared";
 import { Main } from "@/app/(home)/-components/Main";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Form, useFormContext } from "@/components/ui/form";
 import { callBackendApiForQuery } from "@/lib/api/callBackendApi";
 import {
@@ -723,30 +723,11 @@ function RecommenderDetailsStepFour() {
 			<section className="flex flex-col gap-4 lg:gap-5">
 				<h2 className="leading-[1.2] lg:text-[24px]">Declaration</h2>
 
-				<Form.Field
+				<AgreementField
 					control={form.control}
 					name="declarationConfirmed"
-					className="w-full flex-row items-start gap-3 text-[12px] text-cedar-black/64 lg:text-[14px]"
-				>
-					<Form.FieldBoundController
-						render={({ field }) => (
-							<Checkbox
-								id="declaration-confirmed"
-								checked={field.value}
-								onCheckedChange={field.onChange}
-								classNames={{
-									base: `mt-[2px] size-4 rounded-[4px] border-[1.5px] border-cedar-black/40
-									bg-transparent lg:mt-[3px] data-checked:bg-transparent`,
-									icon: "size-3",
-								}}
-							/>
-						)}
-					/>
-
-					<Form.Label htmlFor="declaration-confirmed">
-						I confirm that the information provided in this registration form is true and accurate.
-					</Form.Label>
-				</Form.Field>
+					label="I confirm that the information provided in this registration form is true and accurate."
+				/>
 			</section>
 		</>
 	);

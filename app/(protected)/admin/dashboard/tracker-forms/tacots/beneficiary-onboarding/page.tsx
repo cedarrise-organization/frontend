@@ -5,9 +5,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import { toFormData } from "@zayne-labs/callapi/utils";
 import { createUseStorageState } from "@zayne-labs/toolkit-react";
-import { useForm, type Control, type FieldValues, type Path } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
+	AgreementField,
+	CheckboxQuestionField,
 	DateField,
 	FileUploadField,
 	OptionQuestionField,
@@ -26,12 +28,22 @@ import {
 	type GetFormStepStoreType,
 } from "@/app/(home)/-components/FormStepPartsShared";
 import { Main } from "@/app/(protected)/admin/dashboard/-components/Main";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Form, useFormContext } from "@/components/ui/form";
 import { callBackendApiForQuery } from "@/lib/api/callBackendApi";
 import {
 	ClassOptions,
+	NigeriaStateOptions,
+	TacotsAllergyOptions,
+	TacotsBehavioralIndicatorOptions,
+	TacotsChronicConditionOptions,
+	TacotsDiagnosedConditionOptions,
+	TacotsGeneralHealthStatusOptions,
+	TacotsImmunizationStatusOptions,
+	TacotsMentalHealthDiagnosisOptions,
+	TacotsNeedsSpecialSupportOptions,
 	TacotsOnboardingFrontendSchema,
+	TacotsPhysicalLimitationOptions,
+	TacotsSupportTypeOptions,
 	YesNoOptions,
 } from "@/lib/api/callBackendApi/apiSchema";
 import { tacotsRecommendedLookupQuery } from "@/lib/react-query/queryOptions";
@@ -39,74 +51,63 @@ import type { WithUndefined } from "@/lib/utils/type-helpers";
 
 const stepItems = defineFormStepItems([
 	{
-		StepComponent: MentalHealthStep,
+		StepComponent: MentalHealthStepOne,
 		title: "Mental health",
 		validator: TacotsOnboardingFrontendSchema.pick({
-			academicDifficulties: true,
-			angerManagement: true,
-			attendanceRegularity: true,
-			behavioralIssues: true,
-			dateOfOnboarding: true,
-			developmentalConcerns: true,
-			disabilityOrSpecialNeeds: true,
-			familyChallenges: true,
-			learningDifficulties: true,
-			lowSelfEsteem: true,
+			behavioralIndicators: true,
+			diagnosedConditions: true,
+			emotionalStabilityRating: true,
+			focusAbilityRating: true,
+			hasMentalHealthDiagnosis: true,
 			mentalHealthNotes: true,
-			mentalHealthRating: true,
-			moodSwings: true,
-			recommendedStudentId: true,
-			referralRecommended: true,
-			socialChallenges: true,
+			needsSpecialSupport: true,
+			onboardingDate: true,
+			peerInteractionRating: true,
+			receivedCounseling: true,
+			studentId: true,
 		}),
 	},
 	{
-		StepComponent: PhysicalHealthStep,
+		StepComponent: PhysicalHealthStepTwo,
 		title: "Physical health",
 		validator: TacotsOnboardingFrontendSchema.pick({
-			chronicIllness: true,
-			dentalProblem: true,
-			hearingProblem: true,
-			immunizationUpToDate: true,
-			nutritionStatus: true,
+			additionalHealthNotes: true,
+			allergies: true,
+			chronicConditions: true,
+			generalHealthStatus: true,
+			hasChronicCondition: true,
+			immunizationStatus: true,
 			physicalActivityLevel: true,
-			physicalConcernAffectsSchool: true,
-			physicalHealthNotes: true,
-			physicalHealthRating: true,
-			recentHospitalization: true,
+			physicalLimitations: true,
+			requiresMedication: true,
 		}),
 	},
 	{
-		StepComponent: SchoolConsentStep,
+		StepComponent: SchoolConsentStepThree,
 		title: "School and consent",
 		validator: TacotsOnboardingFrontendSchema.pick({
-			acceptanceConfirmed: true,
-			currentClass: true,
-			currentSchool: true,
-			guardianSignature: true,
-			localGovernmentArea: true,
+			enrolledClass: true,
+			enrolledSchoolLga: true,
+			enrolledSchoolName: true,
+			enrolledSchoolState: true,
+			enrolledSchoolTown: true,
+			parentGuardianCommitment: true,
 			parentSignature: true,
-			schoolEnrollmentDate: true,
-			schoolFeeRange: true,
-			schoolFeesPaid: true,
-			state: true,
-			studentCurrentSituation: true,
-			studentDeclarationAccepted: true,
-			supportRequired: true,
-			termsAccepted: true,
+			schoolFeesPerTerm: true,
+			studentCommitment: true,
+			termResumptionDate: true,
 		}),
 	},
 	{
-		StepComponent: DocumentationStep,
+		StepComponent: DocumentationStepFour,
 		title: "Documentation",
 		validator: TacotsOnboardingFrontendSchema.pick({
-			additionalNotes: true,
-			passportPhoto: true,
-			programOfficerName: true,
+			additionalInfo: true,
+			admissionLetter: true,
+			mentorName: true,
+			programOfficerNotes: true,
 			sponsorName: true,
-			supportType: true,
-			uploadRecommendationLetter: true,
-			witnessName: true,
+			supportTypesApproved: true,
 		}),
 	},
 ]);
@@ -119,53 +120,42 @@ const useTacotsOnboardingStorageState = createUseStorageState<GetFormStepStoreTy
 	defaultValue: {
 		currentStep: 0,
 		formStepData: {
-			academicDifficulties: "",
-			acceptanceConfirmed: undefined,
-			additionalNotes: "",
-			angerManagement: "",
-			attendanceRegularity: 0,
-			behavioralIssues: "",
-			chronicIllness: "",
-			currentClass: undefined,
-			currentSchool: "",
-			dateOfOnboarding: "",
-			dentalProblem: "",
-			developmentalConcerns: "",
-			disabilityOrSpecialNeeds: "",
-			familyChallenges: "",
-			guardianSignature: undefined,
-			hearingProblem: "",
-			immunizationUpToDate: "",
-			learningDifficulties: "",
-			localGovernmentArea: "",
-			lowSelfEsteem: "",
+			additionalHealthNotes: "",
+			additionalInfo: "",
+			admissionLetter: undefined,
+			allergies: [],
+			behavioralIndicators: [],
+			chronicConditions: [],
+			diagnosedConditions: [],
+			emotionalStabilityRating: undefined,
+			enrolledClass: undefined,
+			enrolledSchoolLga: "",
+			enrolledSchoolName: "",
+			enrolledSchoolState: undefined,
+			enrolledSchoolTown: "",
+			focusAbilityRating: undefined,
+			generalHealthStatus: undefined,
+			hasChronicCondition: undefined,
+			hasMentalHealthDiagnosis: undefined,
+			immunizationStatus: undefined,
 			mentalHealthNotes: "",
-			mentalHealthRating: undefined,
-			moodSwings: "",
-			nutritionStatus: "",
+			mentorName: "",
+			needsSpecialSupport: undefined,
+			onboardingDate: "",
+			parentGuardianCommitment: undefined,
 			parentSignature: undefined,
-			passportPhoto: undefined,
-			physicalActivityLevel: "",
-			physicalConcernAffectsSchool: "",
-			physicalHealthNotes: "",
-			physicalHealthRating: undefined,
-			programOfficerName: "",
-			recentHospitalization: "",
-			recommendedStudentId: "",
-			referralRecommended: "",
-			schoolEnrollmentDate: "",
-			schoolFeeRange: "",
-			schoolFeesPaid: "",
-			socialChallenges: "",
+			peerInteractionRating: undefined,
+			physicalActivityLevel: undefined,
+			physicalLimitations: undefined,
+			programOfficerNotes: "",
+			receivedCounseling: undefined,
+			requiresMedication: undefined,
+			schoolFeesPerTerm: undefined,
 			sponsorName: "",
-			state: "",
-			studentCurrentSituation: "",
-			studentDeclarationAccepted: undefined,
-			supportRequired: "",
-			supportType: "",
-			termsAccepted: undefined,
-			uploadRecommendationLetter: undefined,
-			witnessName: "",
+			studentCommitment: undefined,
+			studentId: "",
+			supportTypesApproved: [],
+			termResumptionDate: "",
 		} satisfies WithUndefined<FormStepDataType> as unknown as FormStepDataType,
 	},
 	key: "admin-tacots-beneficiary-onboarding-form-data",
@@ -233,24 +223,24 @@ function TacotsBeneficiaryOnboardingForm() {
 	);
 }
 
-function MentalHealthStep() {
+function MentalHealthStepOne() {
 	const { control } = useFormContext<z.input<(typeof stepItems)[0]["validator"]>>();
-	const { data: students = [] } = useQuery(tacotsRecommendedLookupQuery());
+	const tacotsRecommendedLookupQueryResult = useQuery(tacotsRecommendedLookupQuery());
+	const students = tacotsRecommendedLookupQueryResult.data ?? [];
 	const studentOptions = students.map((student) => ({ label: student.name, value: student.id }));
-	const form = { control };
 
 	return (
 		<>
 			<SelectField
-				control={form.control}
-				name="recommendedStudentId"
+				control={control}
+				name="studentId"
 				placeholder="Student Name"
 				options={studentOptions}
 				required={true}
 			/>
 			<DateField
-				control={form.control}
-				name="dateOfOnboarding"
+				control={control}
+				name="onboardingDate"
 				placeholder="Date of Onboarding"
 				required={true}
 			/>
@@ -258,280 +248,256 @@ function MentalHealthStep() {
 			<FormStepComponentSectionHeader title="Mental Health & Developmental Indicators" />
 
 			<OptionQuestionField
-				control={form.control}
-				name="developmentalConcerns"
+				control={control}
+				name="hasMentalHealthDiagnosis"
 				question="Has the student ever been diagnosed with a developmental or mental health condition?"
-				options={YesNoOptions}
+				options={TacotsMentalHealthDiagnosisOptions}
+				required={true}
 			/>
-			<OptionQuestionField
-				control={form.control}
-				name="learningDifficulties"
-				question="Any learning difficulties?"
-				options={YesNoOptions}
+			<CheckboxQuestionField
+				control={control}
+				name="diagnosedConditions"
+				question="If yes, what condition has been diagnosed?"
+				options={TacotsDiagnosedConditionOptions}
 			/>
-			<OptionQuestionField
-				control={form.control}
-				name="behavioralIssues"
-				question="Any behavioural issues?"
-				options={YesNoOptions}
-			/>
-			<OptionQuestionField
-				control={form.control}
-				name="academicDifficulties"
-				question="Difficulty concentrating in class"
-				options={YesNoOptions}
-			/>
-			<OptionQuestionField
-				control={form.control}
-				name="socialChallenges"
-				question="Difficulty socializing or relating with peers"
-				options={YesNoOptions}
-			/>
-			<OptionQuestionField
-				control={form.control}
-				name="attendanceRegularity"
-				question="Irregular attendance / lateness to class"
-				options={YesNoOptions}
-			/>
-			<OptionQuestionField
-				control={form.control}
-				name="disabilityOrSpecialNeeds"
-				question="Diagnosed disabilities / special needs"
-				options={YesNoOptions}
-			/>
-			<OptionQuestionField
-				control={form.control}
-				name="familyChallenges"
-				question="Major family challenges"
-				options={YesNoOptions}
+			<CheckboxQuestionField
+				control={control}
+				name="behavioralIndicators"
+				question="Does the student show any of the following behaviors in school or at home?"
+				options={TacotsBehavioralIndicatorOptions}
+				required={true}
 			/>
 			<RatingQuestionField
-				control={form.control}
-				name="mentalHealthRating"
-				question="Rate the young person's overall mental health condition"
-				leftLabel="1"
-				rightLabel="10"
-				maxRating={10}
+				control={control}
+				name="focusAbilityRating"
+				question="Ability to focus during school activities"
+				leftLabel="Very poor"
+				rightLabel="Excellent"
+				required={true}
+			/>
+			<RatingQuestionField
+				control={control}
+				name="emotionalStabilityRating"
+				question="Emotional stability"
+				leftLabel="Very unstable"
+				rightLabel="Very stable"
+				required={true}
+			/>
+			<RatingQuestionField
+				control={control}
+				name="peerInteractionRating"
+				question="Interaction with peers"
+				leftLabel="Very poor"
+				rightLabel="Excellent"
+				required={true}
+			/>
+			<OptionQuestionField
+				control={control}
+				name="receivedCounseling"
+				question="Has the student ever received counseling or psychological support?"
+				options={TacotsMentalHealthDiagnosisOptions}
+				required={true}
+			/>
+			<OptionQuestionField
+				control={control}
+				name="needsSpecialSupport"
+				question="Does the student currently need special learning support?"
+				options={TacotsNeedsSpecialSupportOptions}
+				required={true}
 			/>
 			<TextAreaField
-				control={form.control}
+				control={control}
 				name="mentalHealthNotes"
-				label="Additional Notes on Student's mental and emotional well being"
+				label="Additional Notes on Student's Mental or Emotional Well-being"
 			/>
 		</>
 	);
 }
 
-function PhysicalHealthStep() {
+function PhysicalHealthStepTwo() {
 	const { control } = useFormContext<z.input<(typeof stepItems)[1]["validator"]>>();
-	const form = { control };
 
 	return (
 		<>
 			<FormStepComponentSectionHeader title="Physical Health Assessment" />
 
 			<OptionQuestionField
-				control={form.control}
-				name="chronicIllness"
-				question="Known chronic illness"
-				options={YesNoOptions}
+				control={control}
+				name="generalHealthStatus"
+				question="General health status"
+				options={TacotsGeneralHealthStatusOptions}
+				required={true}
 			/>
 			<OptionQuestionField
-				control={form.control}
-				name="physicalActivityLevel"
-				question="Regular physical activities"
-				options={YesNoOptions}
+				control={control}
+				name="immunizationStatus"
+				question="Immunization status"
+				options={TacotsImmunizationStatusOptions}
+				required={true}
 			/>
 			<OptionQuestionField
-				control={form.control}
-				name="immunizationUpToDate"
-				question="Immunization status confirmed"
-				options={YesNoOptions}
+				control={control}
+				name="hasChronicCondition"
+				question="Does the student have any chronic medical condition?"
+				options={TacotsMentalHealthDiagnosisOptions}
+				required={true}
+			/>
+			<CheckboxQuestionField
+				control={control}
+				name="chronicConditions"
+				question="If yes, indicate the condition"
+				options={TacotsChronicConditionOptions}
+			/>
+			<CheckboxQuestionField
+				control={control}
+				name="allergies"
+				question="Does the student have any allergies?"
+				options={TacotsAllergyOptions}
+				required={true}
 			/>
 			<OptionQuestionField
-				control={form.control}
-				name="recentHospitalization"
-				question="Recent hospitalization or major health issue"
+				control={control}
+				name="requiresMedication"
+				question="Does the student require regular medication?"
 				options={YesNoOptions}
-			/>
-			<OptionQuestionField
-				control={form.control}
-				name="nutritionStatus"
-				question="Poor nutrition"
-				options={YesNoOptions}
-			/>
-			<OptionQuestionField
-				control={form.control}
-				name="dentalProblem"
-				question="Dental problems"
-				options={YesNoOptions}
-			/>
-			<OptionQuestionField
-				control={form.control}
-				name="hearingProblem"
-				question="Hearing problem"
-				options={YesNoOptions}
-			/>
-			<OptionQuestionField
-				control={form.control}
-				name="physicalConcernAffectsSchool"
-				question="Does the physical issue affect school participation?"
-				options={YesNoOptions}
+				required={true}
 			/>
 			<RatingQuestionField
-				control={form.control}
-				name="physicalHealthRating"
-				question="Physical health rating"
-				leftLabel="1"
-				rightLabel="10"
-				maxRating={10}
+				control={control}
+				name="physicalActivityLevel"
+				question="Physical activity level"
+				leftLabel="Low"
+				rightLabel="High"
+				required={true}
+			/>
+			<OptionQuestionField
+				control={control}
+				name="physicalLimitations"
+				question="Any physical limitations that might affect school activities?"
+				options={TacotsPhysicalLimitationOptions}
+				required={true}
 			/>
 			<TextAreaField
-				control={form.control}
-				name="physicalHealthNotes"
+				control={control}
+				name="additionalHealthNotes"
 				label="Provide any other relevant health information about the student"
 			/>
 		</>
 	);
 }
 
-function SchoolConsentStep() {
+function SchoolConsentStepThree() {
 	const { control } = useFormContext<z.input<(typeof stepItems)[2]["validator"]>>();
-	const form = { control };
 
 	return (
 		<>
-			<FormStepComponentSectionHeader title="School Enrolment Details" />
+			<FormStepComponentSectionHeader title="School Enrollment Details" />
 
 			<TextField
-				control={form.control}
-				name="currentSchool"
-				placeholder="Student Current School"
-				required={true}
-			/>
-			<TextField control={form.control} name="state" placeholder="State" required={true} />
-			<TextField
-				control={form.control}
-				name="localGovernmentArea"
-				placeholder="Local Government Area"
+				control={control}
+				name="enrolledSchoolName"
+				placeholder="School Enrolled (name)"
 				required={true}
 			/>
 			<SelectField
-				control={form.control}
-				name="currentClass"
+				control={control}
+				name="enrolledSchoolState"
+				placeholder="State"
+				options={NigeriaStateOptions}
+				required={true}
+			/>
+			<div className="grid gap-4 lg:grid-cols-2">
+				<TextField
+					control={control}
+					name="enrolledSchoolLga"
+					placeholder="Local Government Area"
+					required={true}
+				/>
+				<TextField
+					control={control}
+					name="enrolledSchoolTown"
+					placeholder="Town / city"
+					required={true}
+				/>
+			</div>
+			<SelectField
+				control={control}
+				name="enrolledClass"
 				placeholder="Class Enrolled In"
 				options={ClassOptions}
 				required={true}
 			/>
-			<TextField control={form.control} name="schoolFeeRange" placeholder="School Fee Range" />
 			<DateField
-				control={form.control}
-				name="schoolEnrollmentDate"
-				placeholder="School Fees Assumption Date"
+				control={control}
+				name="termResumptionDate"
+				placeholder="School Term Resumption Date"
 				required={true}
 			/>
 			<TextField
-				control={form.control}
-				name="schoolFeesPaid"
-				placeholder="School Fees paid / being sponsored"
+				control={control}
+				name="schoolFeesPerTerm"
+				placeholder="School Fees per Term (budgeted)"
+				inputMode="decimal"
 			/>
 
-			<FormStepComponentSectionHeader title="Student Commitment" />
+			<FormStepComponentSectionHeader title="Student Commitment (for students 14 years and above)" />
 
-			<BooleanAgreementField
-				control={form.control}
-				name="studentDeclarationAccepted"
-				label="The student agrees to attend school regularly and participate in mentoring."
+			<p className="text-[12px] text-cedar-black/64 lg:text-[14px]">
+				I understand that participation in the TACOTS program and retaining the scholarship requires
+				good conduct, regular school attendance, and participation in mentorship and community service
+				activities.
+			</p>
+			<AgreementField
+				control={control}
+				name="studentCommitment"
+				label="By checking this box, I commit to maintaining an average of 65% and above in my termly assessment, to participate in all formative activities organized by my school and the organization. I also commit to give back by offering a minimum of 30 hours of volunteer services each year."
 			/>
-			<BooleanAgreementField
-				control={form.control}
-				name="termsAccepted"
-				label="Parent/guardian understands and accepts the TACOTS programme terms."
+
+			<FormStepComponentSectionHeader title="Parent/Guardian Commitment" />
+
+			<p className="text-[12px] text-cedar-black/64 lg:text-[14px]">
+				Scholarship conditions include academic performance, personal formation, community service,
+				media consent, program monitoring, and responsible handling of beneficiary information.
+			</p>
+
+			<AgreementField
+				control={control}
+				name="parentGuardianCommitment"
+				label="I confirm that I have read and understood the scholarship conditions and agree to comply with them."
+				required={true}
 			/>
-			<BooleanAgreementField
-				control={form.control}
-				name="acceptanceConfirmed"
-				label="I confirm that the student's onboarding information is accurate."
-			/>
-			<TextAreaField
-				control={form.control}
-				name="studentCurrentSituation"
-				label="Current situation of the student"
-			/>
-			<TextField control={form.control} name="supportRequired" placeholder="Support required" />
 			<FileUploadField
-				control={form.control}
+				control={control}
 				name="parentSignature"
 				label="Upload a copy of parent's signature and name"
-			/>
-			<FileUploadField
-				control={form.control}
-				name="guardianSignature"
-				label="Upload guardian signature"
 			/>
 		</>
 	);
 }
 
-function DocumentationStep() {
+function DocumentationStepFour() {
 	const { control } = useFormContext<z.input<(typeof stepItems)[3]["validator"]>>();
-	const form = { control };
 
 	return (
 		<>
 			<FormStepComponentSectionHeader title="Documentation" />
 
 			<FileUploadField
-				control={form.control}
-				name="passportPhoto"
-				label="Upload Student Passport Photograph"
+				control={control}
+				name="admissionLetter"
+				label="Upload School Admission Letter/Prospectus (if available)"
+				allowedFileTypes={["application/pdf", "image/png", "image/jpg", "image/jpeg", "image/webp"]}
 			/>
-			<TextField
-				control={form.control}
-				name="programOfficerName"
-				placeholder="Program Officer Name"
-				required={true}
+			<TextAreaField control={control} name="programOfficerNotes" label="Program Officer Notes" />
+			<CheckboxQuestionField
+				control={control}
+				name="supportTypesApproved"
+				question="Types of Support To Be Given"
+				options={TacotsSupportTypeOptions}
 			/>
-			<TextField control={form.control} name="supportType" placeholder="Type of Support" />
-			<TextField control={form.control} name="witnessName" placeholder="Witness Name" />
-			<TextField control={form.control} name="sponsorName" placeholder="Sponsor Name" />
-			<FileUploadField
-				control={form.control}
-				name="uploadRecommendationLetter"
-				label="Upload Recommendation Letter"
-			/>
-			<TextAreaField control={form.control} name="additionalNotes" label="Any Additional Information" />
+			<TextField control={control} name="mentorName" placeholder="Mentors Name" />
+			<TextField control={control} name="sponsorName" placeholder="Sponsors Name" />
+			<TextAreaField control={control} name="additionalInfo" label="Any Additional Information" />
 		</>
-	);
-}
-
-function BooleanAgreementField<TFieldValues extends FieldValues>(props: {
-	control: Control<TFieldValues, unknown, TFieldValues>;
-	label: string;
-	name: Path<TFieldValues>;
-}) {
-	const { control, label, name } = props;
-
-	return (
-		<Form.Field
-			control={control}
-			name={name}
-			className="w-full flex-row items-start gap-3 text-[12px] text-cedar-black/64 lg:text-[14px]"
-		>
-			<Form.FieldBoundController
-				render={({ field }) => (
-					<Checkbox
-						checked={field.value}
-						onCheckedChange={field.onChange}
-						classNames={{
-							base: `mt-[2px] size-4 rounded-[4px] border-[1.5px] border-cedar-black/40
-							bg-transparent lg:mt-[3px] data-checked:bg-transparent`,
-							icon: "size-3",
-						}}
-					/>
-				)}
-			/>
-			<Form.Label>{label}</Form.Label>
-		</Form.Field>
 	);
 }

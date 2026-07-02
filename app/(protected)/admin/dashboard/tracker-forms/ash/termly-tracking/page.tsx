@@ -250,8 +250,7 @@ function PersonalDevelopmentStep() {
 				name="disciplineRating"
 				question="Level of Discipline"
 				leftLabel="1"
-				rightLabel="10"
-				maxRating={10}
+				rightLabel="5"
 				required={true}
 			/>
 
@@ -260,8 +259,7 @@ function PersonalDevelopmentStep() {
 				name="responsibilityRating"
 				question="Sense of responsibility"
 				leftLabel="1"
-				rightLabel="10"
-				maxRating={10}
+				rightLabel="5"
 				required={true}
 			/>
 
@@ -270,8 +268,7 @@ function PersonalDevelopmentStep() {
 				name="leadershipRating"
 				question="Leadership and Responsibility"
 				leftLabel="1"
-				rightLabel="10"
-				maxRating={10}
+				rightLabel="5"
 				required={true}
 			/>
 

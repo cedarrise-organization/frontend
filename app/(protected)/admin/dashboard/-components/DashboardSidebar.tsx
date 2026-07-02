@@ -1,12 +1,16 @@
 "use client";
 
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { usePathname, useRouter } from "next/navigation";
 import { CollapsibleAnimated } from "@/components/animated/ui";
 import { For, ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
 import { Logo } from "@/components/common/Logo";
 import { NavLink } from "@/components/common/NavLink";
 import { Sidebar } from "@/components/ui";
+import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/components/ui/useMobile";
+import { signoutMutation } from "@/lib/react-query/mutationOptions";
 import { dashboardNavSections, type DashboardNavItem } from "./constants";
 
 function DashboardSidebar() {
@@ -188,6 +192,36 @@ function DashboardSidebarGroupSection(props: { section: (typeof dashboardNavSect
 function DashboardSidebarLink(props: DashboardNavItem) {
 	const { icon, label, link } = props;
 
+	const content = (
+		<>
+			<span className="size-3.5 shrink-0 group-data-[state=collapsed]:mx-auto lg:size-5">
+				<IconBox icon={icon} className="size-full" />
+			</span>
+			<p
+				className="w-fit shrink-0 overflow-hidden whitespace-nowrap opacity-100
+					transition-[width,opacity] duration-200 ease-linear group-data-[state=collapsed]:absolute
+					group-data-[state=collapsed]:w-0 group-data-[state=collapsed]:opacity-0"
+			>
+				{label}
+			</p>
+		</>
+	);
+
+	const signoutMutationResult = useMutation(signoutMutation());
+	const router = useRouter();
+	const queryClient = useQueryClient();
+
+	const onSignout = () => {
+		signoutMutationResult.mutate(undefined, {
+			onSuccess: () => {
+				queryClient.clear();
+				router.replace("/");
+			},
+		});
+	};
+
+	const pathname = usePathname();
+
 	return (
 		<Sidebar.MenuButton
 			tooltip={label}
@@ -196,18 +230,14 @@ function DashboardSidebarLink(props: DashboardNavItem) {
 				data-active:bg-cedar-red data-active:text-cedar-white"
 			asChild={true}
 		>
-			<NavLink href={link}>
-				<span className="size-3.5 shrink-0 group-data-[state=collapsed]:mx-auto lg:size-5">
-					<IconBox icon={icon} className="size-full" />
-				</span>
-				<p
-					className="w-fit shrink-0 overflow-hidden whitespace-nowrap opacity-100
-						transition-[width,opacity] duration-200 ease-linear group-data-[state=collapsed]:absolute
-						group-data-[state=collapsed]:w-0 group-data-[state=collapsed]:opacity-0"
-				>
-					{label}
-				</p>
-			</NavLink>
+			{link === null ?
+				<Button unstyled="none" onClick={onSignout}>
+					{content}
+				</Button>
+			:	<NavLink href={link} data-active={pathname === link || pathname.startsWith(link)}>
+					{content}
+				</NavLink>
+			}
 		</Sidebar.MenuButton>
 	);
 }

@@ -23,6 +23,7 @@ import {
 	ashRegistrationDeleteMutation,
 	ashRegistrationStatusMutation,
 	tacotsFormDataDownloadMutation,
+	tacotsFeedbackDeleteMutation,
 	tacotsRecommendationDeleteMutation,
 	tacotsRecommendationStatusMutation,
 	volunteerFeedbackDeleteMutation,
@@ -805,12 +806,15 @@ function RowActions(props: { onViewMore: () => void; record: FormRecord; target:
 	const ashDeleteMutation = useMutation(ashRegistrationDeleteMutation(record.id));
 	const tacotsStatusMutation = useMutation(tacotsRecommendationStatusMutation(record.id));
 	const tacotsDeleteMutation = useMutation(tacotsRecommendationDeleteMutation(record.id));
+	const tacotsFeedbackDelete = useMutation(tacotsFeedbackDeleteMutation(record.id));
 	const volunteerStatusMutation = useMutation(volunteerRegistrationStatusMutation(record.id));
 	const volunteerRegistrationDelete = useMutation(volunteerRegistrationDeleteMutation(record.id));
 	const volunteerFeedbackDelete = useMutation(volunteerFeedbackDeleteMutation(record.id));
 
 	const isAshRegistration = target.program === "ash" && target.kind === "registration";
+	const isAshFeedback = target.program === "ash" && target.kind === "feedback";
 	const isTacotsRecommendation = target.program === "tacots" && target.kind === "recommendation";
+	const isTacotsFeedback = target.program === "tacots" && target.kind === "feedback";
 	const isVolunteerRegistration = target.program === "volunteer" && target.kind === "registration";
 	const isVolunteerFeedback = target.program === "volunteer" && target.kind === "feedback";
 
@@ -822,9 +826,23 @@ function RowActions(props: { onViewMore: () => void; record: FormRecord; target:
 			return;
 		}
 
+		if (isAshFeedback) {
+			void queryClient.invalidateQueries({
+				queryKey: ashFeedbackFormDataQuery().queryKey.slice(0, -1),
+			});
+			return;
+		}
+
 		if (isTacotsRecommendation) {
 			void queryClient.invalidateQueries({
 				queryKey: tacotsRecommendationFormDataQuery().queryKey.slice(0, -1),
+			});
+			return;
+		}
+
+		if (isTacotsFeedback) {
+			void queryClient.invalidateQueries({
+				queryKey: tacotsFeedbackFormDataQuery().queryKey.slice(0, -1),
 			});
 			return;
 		}
@@ -843,7 +861,7 @@ function RowActions(props: { onViewMore: () => void; record: FormRecord; target:
 		}
 	};
 
-	const reviewAction = (() => {
+	const acceptAction = (() => {
 		if (isAshRegistration) {
 			return () => ashStatusMutation.mutate("accepted", { onSuccess: invalidateListQueries });
 		}
@@ -859,16 +877,44 @@ function RowActions(props: { onViewMore: () => void; record: FormRecord; target:
 		return null;
 	})();
 
-	const canDelete = Boolean(reviewAction) || isVolunteerFeedback;
+	const rejectAction = (() => {
+		if (isAshRegistration) {
+			return () => ashStatusMutation.mutate("rejected", { onSuccess: invalidateListQueries });
+		}
+
+		if (isTacotsRecommendation) {
+			return () => tacotsStatusMutation.mutate("NOT SELECTED", { onSuccess: invalidateListQueries });
+		}
+
+		if (isVolunteerRegistration) {
+			return () => volunteerStatusMutation.mutate("rejected", { onSuccess: invalidateListQueries });
+		}
+
+		return null;
+	})();
+
+	const rejectLabel = (() => {
+		if (isTacotsRecommendation) return "Not Selected";
+
+		return "Reject";
+	})();
+
+	const canDelete =
+		Boolean(acceptAction) || isAshFeedback || isTacotsFeedback || isVolunteerFeedback;
 
 	const handleDelete = () => {
-		if (isAshRegistration) {
+		if (isAshRegistration || isAshFeedback) {
 			ashDeleteMutation.mutate(undefined, { onSuccess: invalidateListQueries });
 			return;
 		}
 
 		if (isTacotsRecommendation) {
 			tacotsDeleteMutation.mutate(undefined, { onSuccess: invalidateListQueries });
+			return;
+		}
+
+		if (isTacotsFeedback) {
+			tacotsFeedbackDelete.mutate(undefined, { onSuccess: invalidateListQueries });
 			return;
 		}
 
@@ -894,12 +940,20 @@ function RowActions(props: { onViewMore: () => void; record: FormRecord; target:
 				<DropdownMenu.Item className="justify-center" onClick={onViewMore}>
 					View More
 				</DropdownMenu.Item>
-				{reviewAction && (
+				{acceptAction && (
 					<DropdownMenu.Item
 						className="justify-center text-cedar-yellow focus:text-cedar-yellow"
-						onClick={reviewAction}
+						onClick={acceptAction}
 					>
 						Accept
+					</DropdownMenu.Item>
+				)}
+				{rejectAction && (
+					<DropdownMenu.Item
+						className="justify-center text-cedar-red focus:text-cedar-red"
+						onClick={rejectAction}
+					>
+						{rejectLabel}
 					</DropdownMenu.Item>
 				)}
 				{canDelete && (

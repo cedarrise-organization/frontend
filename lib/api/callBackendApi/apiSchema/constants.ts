@@ -47,7 +47,6 @@ export const OutreachTypeOptions = defineEnum([
 ]);
 
 export const AcademicSessionOptions = defineEnum([
-	"2024/25",
 	"2025/26",
 	"2026/27",
 	"2027/28",
@@ -59,9 +58,103 @@ export const AshTermOptions = defineEnum(["TERM 1", "TERM 2", "TERM 3"]);
 
 export const TacotsAcademicTermOptions = defineEnum(["1ST TERM", "2ND TERM", "3RD TERM"]);
 
-export const TacotsAssessmentPeriodOptions = defineEnum(["MID TERM", "END OF TERM"]);
+export const TacotsAssessmentPeriodOptions = defineEnum(["MIDTERM", "END OF TERM"]);
 
-export const TacotsMentorshipModeOptions = defineEnum(["PHYSICAL", "PHONE"]);
+export const TacotsMentalHealthDiagnosisOptions = defineEnum(["YES", "NO", "NOT SURE"]);
+
+export const TacotsDiagnosedConditionOptions = defineEnum([
+	"ADHD",
+	"AUTISM SPECTRUM",
+	"LEARNING DIFFICULTY",
+	"INTELLECTUAL DISABILITY",
+	"EMOTIONAL / BEHAVIORAL DISORDER",
+	"SPEECH OR LANGUAGE DELAY",
+	"ANXIETY OR DEPRESSION",
+	"NONE DIAGNOSED",
+	"OTHER",
+]);
+
+export const TacotsBehavioralIndicatorOptions = defineEnum([
+	"DIFFICULTY CONCENTRATING",
+	"EASILY DISTRACTED",
+	"RESTLESS / HYPERACTIVE",
+	"DIFFICULTY UNDERSTANDING LESSONS",
+	"DIFFICULTY READING OR WRITING",
+	"DIFFICULTY FOLLOWING INSTRUCTIONS",
+	"FREQUENT EMOTIONAL OUTBURSTS",
+	"SOCIAL WITHDRAWAL",
+	"AGGRESSIVE BEHAVIOR",
+	"NONE OF THE ABOVE",
+	"OTHER",
+]);
+
+export const TacotsNeedsSpecialSupportOptions = defineEnum(["YES", "NO", "POSSIBLY / NEEDS ASSESSMENT"]);
+
+export const TacotsGeneralHealthStatusOptions = defineEnum(["EXCELLENT", "GOOD", "FAIR", "POOR"]);
+
+export const TacotsImmunizationStatusOptions = defineEnum([
+	"FULLY IMMUNIZED",
+	"PARTIALLY IMMUNIZED",
+	"NOT IMMUNIZED",
+	"STATUS UNKNOWN",
+]);
+
+export const TacotsChronicConditionOptions = defineEnum([
+	"ASTHMA",
+	"DIABETES",
+	"EPILEPSY",
+	"SICKLE CELL DISEASE",
+	"HEART CONDITION",
+	"PHYSICAL DISABILITY",
+	"VISION IMPAIRMENT",
+	"HEARING IMPAIRMENT",
+	"OTHER",
+]);
+
+export const TacotsAllergyOptions = defineEnum([
+	"NO KNOWN ALLERGIES",
+	"FOOD ALLERGIES",
+	"DRUG ALLERGIES",
+	"ENVIRONMENTAL ALLERGIES",
+	"OTHER",
+]);
+
+export const TacotsPhysicalLimitationOptions = defineEnum([
+	"NONE",
+	"DIFFICULTY WALKING OR RUNNING",
+	"DIFFICULTY SEEING",
+	"DIFFICULTY HEARING",
+	"OTHER",
+]);
+
+export const TacotsMentorshipModeOptions = defineEnum(["PHYSICAL (IN-PERSON)", "VIRTUAL (ONLINE)"]);
+
+export const TacotsMentorshipDurationOptions = defineEnum([
+	"15 MINUTES",
+	"30 MINUTES",
+	"45 MINUTES",
+	"60 MINUTES",
+	"MORE THAN 60 MINUTES",
+]);
+
+export const TacotsServiceActivityTypeOptions = defineEnum([
+	"ENVIRONMENTAL SANITATION",
+	"TEACHING YOUNGER CHILDREN",
+	"CHURCH / COMMUNITY SUPPORT",
+	"HELPING ELDERLY PERSONS",
+	"SCHOOL VOLUNTEERING",
+	"OTHER",
+]);
+
+export const TacotsServiceDurationOptions = defineEnum([
+	"30 MINS",
+	"1 HOUR",
+	"2 HOURS",
+	"3 HOURS",
+	"4 HOURS",
+	"5 HOURS",
+	"MORE THAN 5 HOURS",
+]);
 
 export const AshTrackingSortByOptions = defineEnum([
 	"firstName",

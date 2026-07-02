@@ -6,10 +6,10 @@ import { createUseStorageState } from "@zayne-labs/toolkit-react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import {
+	AgreementField,
 	CheckboxQuestionField,
 	ComboboxField,
 	DateField,
-	FormErrorMessageShared,
 	OptionQuestionField,
 	SelectField,
 	TextAreaField,
@@ -25,7 +25,6 @@ import {
 	type GetFormStepStoreType,
 } from "@/app/(home)/-components/FormStepPartsShared";
 import { Main } from "@/app/(home)/-components/Main";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Form, useFormContext } from "@/components/ui/form";
 import { callBackendApiForQuery } from "@/lib/api/callBackendApi";
 import {
@@ -366,35 +365,11 @@ function VolunteerInterestStepTwo() {
 					and videos that may be captured of me during the program.
 				</p>
 
-				<Form.Field
+				<AgreementField
 					control={control}
 					name="mediaConsent"
-					className="w-full flex-row items-start gap-3 text-[12px] text-cedar-black/64 lg:text-[14px]"
-				>
-					<Form.FieldBoundController
-						render={({ field, fieldContext }) => (
-							<>
-								<Checkbox
-									id={fieldContext.formItemId}
-									checked={field.value}
-									onCheckedChange={field.onChange}
-									classNames={{
-										base: `mt-[2px] size-4 rounded-[4px] border-[1.5px] border-cedar-black/40
-										bg-transparent lg:mt-[3px] data-checked:bg-transparent`,
-										icon: "size-3",
-									}}
-								/>
-								<Form.Label htmlFor={fieldContext.formItemId}>
-									Usage: These materials may be used for promotional, educational, reporting and
-									evaluation purposes on websites, social media platforms, and in digital or
-									printed publications.
-								</Form.Label>
-							</>
-						)}
-					/>
-
-					<FormErrorMessageShared />
-				</Form.Field>
+					label="Usage: These materials may be used for promotional, educational, reporting and evaluation purposes on websites, social media platforms, and in digital or printed publications."
+				/>
 			</section>
 		</>
 	);

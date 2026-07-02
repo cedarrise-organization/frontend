@@ -29,7 +29,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import type { DashboardChartDataset, DashboardLineData } from "@/lib/api/callBackendApi/apiSchema";
-import { dismissDashboardNotificationMutation } from "@/lib/react-query/mutationOptions";
+import {
+	dashboardProjectStatusMutation,
+	dismissDashboardNotificationMutation,
+} from "@/lib/react-query/mutationOptions";
 import {
 	dashboardCardsQuery,
 	dashboardEnrollmentQuery,
@@ -159,7 +162,6 @@ function DashboardPage() {
 				<SectionHeader
 					title="Ongoing Projects"
 					description={`${projectsQueryResult.data?.length ?? 0} active community initiatives`}
-					action="View more"
 				/>
 
 				<Carousel.Root options={{ align: "start", loop: false }}>
@@ -196,16 +198,18 @@ function DashboardPage() {
 					/>
 				</article>
 
-				<DashboardChartCard
-					title="Pre/Mid/Post-test Scores by Term"
-					description="Average test performance by term"
-					dataset={studentPerformance?.c_testScores}
-				/>
-				<DashboardChartCard
-					title="TACOTS Mid-term & End-of-term Scores"
-					description="Average TACOTS student score by assessment period"
-					dataset={studentPerformance?.c_tacots_scores}
-				/>
+				<article className="flex w-full min-w-0 flex-col gap-3 lg:flex-row">
+					<DashboardChartCard
+						title="Pre/Mid/Post-test Scores by Term"
+						description="Average test performance by term"
+						dataset={studentPerformance?.c_testScores}
+					/>
+					<DashboardChartCard
+						title="TACOTS Mid-term & End-of-term Scores"
+						description="Average TACOTS student score by assessment period"
+						dataset={studentPerformance?.c_tacots_scores}
+					/>
+				</article>
 
 				<article className="flex w-full min-w-0 flex-col gap-3 lg:flex-row">
 					<DashboardChartCard
@@ -295,26 +299,13 @@ function DashboardPage() {
 
 export default DashboardPage;
 
-function SectionHeader(props: { action?: string; description?: string; title: string }) {
-	const { action, description, title } = props;
+function SectionHeader(props: { description?: string; title: string }) {
+	const { description, title } = props;
 
 	return (
-		<header className="flex items-center justify-between gap-4">
-			<div className="flex flex-col gap-1">
-				<h2 className="text-[20px]/[1.2] lg:text-[24px]">{title}</h2>
-				{description && <p className="text-[12px] text-cedar-black/56">{description}</p>}
-			</div>
-
-			{action && (
-				<Button
-					unstyled={true}
-					type="button"
-					className="rounded-full border border-cedar-black/10 bg-cedar-white px-4 py-2 text-[11px]
-						font-medium transition-colors hover:bg-cedar-black hover:text-cedar-white"
-				>
-					{action}
-				</Button>
-			)}
+		<header className="flex flex-col gap-1">
+			<h2 className="text-[20px]/[1.2] lg:text-[24px]">{title}</h2>
+			{description && <p className="text-[12px] text-cedar-black/56">{description}</p>}
 		</header>
 	);
 }
@@ -486,6 +477,8 @@ function AlertsPanel() {
 function ProjectCard(props: { project: DashboardProjectsQueryResult[number] }) {
 	const { project } = props;
 	const isCompleted = project.status === "completed";
+	const projectStatusMutation = useMutation(dashboardProjectStatusMutation(project.id));
+	const queryClient = useQueryClient();
 	const projectDate =
 		project.createdAt ?
 			new Intl.DateTimeFormat("en", { month: "short", year: "numeric" }).format(
@@ -524,24 +517,48 @@ function ProjectCard(props: { project: DashboardProjectsQueryResult[number] }) {
 					<p className="shrink-0 text-[12px] text-cedar-black">{projectDate}</p>
 
 					<div className="flex h-7 grow items-center rounded-[8px] bg-cedar-yellow/18">
-						<span
+						<Button
+							unstyled={true}
+							type="button"
+							isDisabled={projectStatusMutation.isPending}
 							className={cnMerge(
 								`flex size-full items-center justify-center rounded-[8px] px-3 text-[14px]
 								font-medium text-cedar-yellow`,
 								!isCompleted && "bg-cedar-yellow text-cedar-white"
 							)}
+							onClick={() =>
+								projectStatusMutation.mutate("ongoing", {
+									onSuccess: () => {
+										void queryClient.invalidateQueries({
+											queryKey: dashboardProjectsQuery().queryKey,
+										});
+									},
+								})
+							}
 						>
 							Ongoing
-						</span>
-						<span
+						</Button>
+						<Button
+							unstyled={true}
+							type="button"
+							isDisabled={projectStatusMutation.isPending}
 							className={cnMerge(
 								`flex size-full items-center justify-center rounded-[8px] px-3 text-[14px]
 								font-medium text-cedar-yellow`,
 								isCompleted && "bg-cedar-black text-cedar-white"
 							)}
+							onClick={() =>
+								projectStatusMutation.mutate("completed", {
+									onSuccess: () => {
+										void queryClient.invalidateQueries({
+											queryKey: dashboardProjectsQuery().queryKey,
+										});
+									},
+								})
+							}
 						>
 							Completed
-						</span>
+						</Button>
 					</div>
 				</Card.Footer>
 			</Card.Content>
@@ -581,7 +598,7 @@ function DashboardChartCard(props: {
 				<ScrollArea.Root
 					orientation="horizontal"
 					classNames={{
-						base: "w-full max-w-full overflow-hidden",
+						base: "w-full overflow-hidden",
 						scrollbar: "h-1",
 						thumb: "bg-cedar-grey",
 						viewport: "w-full pb-3",
@@ -795,7 +812,7 @@ function renderChart(props: { dataset: DashboardChartDataset | undefined; title:
 		} satisfies Chart.ChartConfig;
 
 		return (
-			<Chart.Container config={communityServiceConfig} className="h-[260px] w-[760px]">
+			<Chart.Container config={communityServiceConfig} className="h-[260px] w-[520px]">
 				<ComposedChart data={chartData}>
 					<CartesianGrid vertical={true} strokeDasharray="3 3" />
 					<XAxis dataKey="label" tickLine={false} axisLine={false} tickMargin={8} />
@@ -871,7 +888,7 @@ function renderChart(props: { dataset: DashboardChartDataset | undefined; title:
 
 	if (title === "TACOTS Mid-term & End-of-term Scores") {
 		return (
-			<Chart.Container config={config} className="h-[220px] w-[760px] lg:h-[240px]">
+			<Chart.Container config={config} className="h-[220px] w-[520px] lg:h-[240px]">
 				<BarChart data={chartData}>
 					<CartesianGrid vertical={true} strokeDasharray="3 3" />
 					<XAxis dataKey="label" tickLine={false} axisLine={false} tickMargin={8} />

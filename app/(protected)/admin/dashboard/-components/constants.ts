@@ -5,7 +5,7 @@ export const EMPTY_VALUE_PLACEHOLDER = "---";
 export type DashboardNavItem = {
 	icon: string;
 	label: string;
-	link: MainAppRoutes;
+	link: MainAppRoutes | null;
 };
 
 export const placeholderHref = "#";
@@ -75,10 +75,13 @@ export const dashboardNavSections = [
 			},
 			{
 				icon: "solar:login-2-linear",
+
 				label: "Logout",
-				link: placeholderHref,
+				link: null,
 			},
 		],
 		label: "System",
 	},
 ] satisfies Array<DashboardNavItem | { children: DashboardNavItem[]; label: string }>;
+
+export type DashboardNavSectionType = (typeof dashboardNavSections)[number];
