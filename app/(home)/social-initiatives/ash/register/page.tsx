@@ -472,26 +472,21 @@ function WellbeingConsentStepFour() {
 			</section>
 
 			<section className="flex flex-col gap-4 lg:gap-5">
-				<h2 className="leading-[1.2] lg:text-[24px]">Consent & Program Agreement</h2>
-
-				<p className="text-[12px] text-cedar-black/64 lg:text-[14px]">
-					I hereby grant consent for my child to participate in the program and all related
-					activities. I understand that they may be photographed or recorded during the program.
-				</p>
-
 				<AgreementField
 					control={form.control}
 					name="parentConsent"
+					title="Consent & Program Agreement"
+					description="I hereby grant consent for my child to participate in the program and all related
+					activities. I understand that they may be photographed or recorded during the program."
 					label="By checking the box, I agree to the use of these images, recordings, and provided information by the organizers and their authorized representatives for communication, educational, promotional, reporting, and evaluation purposes, including on websites, social media, and print materials. I understand that all personal data will be handled confidentially and used responsibly."
 				/>
 			</section>
 
 			<section className="flex flex-col gap-4 lg:gap-5">
-				<h2 className="leading-[1.2] lg:text-[24px]">Declaration</h2>
-
 				<AgreementField
 					control={form.control}
 					name="declarationConfirmed"
+					title="Declaration"
 					label="I confirm that the information provided in this registration form is true and accurate."
 				/>
 

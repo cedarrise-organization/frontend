@@ -442,27 +442,22 @@ function SchoolConsentStepThree() {
 
 			<FormStepComponentSectionHeader title="Student Commitment (for students 14 years and above)" />
 
-			<p className="text-[12px] text-cedar-black/64 lg:text-[14px]">
-				I understand that participation in the TACOTS program and retaining the scholarship requires
-				good conduct, regular school attendance, and participation in mentorship and community service
-				activities.
-			</p>
 			<AgreementField
 				control={control}
 				name="studentCommitment"
+				description="I understand that participation in the TACOTS program and retaining the scholarship requires
+				good conduct, regular school attendance, and participation in mentorship and community service
+				activities."
 				label="By checking this box, I commit to maintaining an average of 65% and above in my termly assessment, to participate in all formative activities organized by my school and the organization. I also commit to give back by offering a minimum of 30 hours of volunteer services each year."
 			/>
 
 			<FormStepComponentSectionHeader title="Parent/Guardian Commitment" />
 
-			<p className="text-[12px] text-cedar-black/64 lg:text-[14px]">
-				Scholarship conditions include academic performance, personal formation, community service,
-				media consent, program monitoring, and responsible handling of beneficiary information.
-			</p>
-
 			<AgreementField
 				control={control}
 				name="parentGuardianCommitment"
+				description="Scholarship conditions include academic performance, personal formation, community service,
+				media consent, program monitoring, and responsible handling of beneficiary information."
 				label="I confirm that I have read and understood the scholarship conditions and agree to comply with them."
 				required={true}
 			/>

@@ -358,15 +358,11 @@ function VolunteerInterestStepTwo() {
 			</section>
 
 			<section className="flex flex-col gap-4 lg:gap-5">
-				<h2 className="leading-[1.2] lg:text-[24px]">Media Consent</h2>
-				<p className="text-[12px] text-cedar-black/64 lg:text-[14px]">
-					I commit to volunteer actively in any programme I have signed up. I hereby grant the
-					organizers and their authorized representatives permission to use information, photographs
-					and videos that may be captured of me during the program.
-				</p>
-
 				<AgreementField
 					control={control}
+					description="I commit to volunteer actively in any programme I have signed up. I hereby grant the
+					organizers and their authorized representatives permission to use information, photographs
+					and videos that may be captured of me during the program."
 					name="mediaConsent"
 					label="Usage: These materials may be used for promotional, educational, reporting and evaluation purposes on websites, social media platforms, and in digital or printed publications."
 				/>

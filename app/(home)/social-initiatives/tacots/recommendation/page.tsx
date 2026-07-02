@@ -721,11 +721,10 @@ function RecommenderDetailsStepFour() {
 			</section>
 
 			<section className="flex flex-col gap-4 lg:gap-5">
-				<h2 className="leading-[1.2] lg:text-[24px]">Declaration</h2>
-
 				<AgreementField
 					control={form.control}
 					name="declarationConfirmed"
+					title="Declaration"
 					label="I confirm that the information provided in this registration form is true and accurate."
 				/>
 			</section>

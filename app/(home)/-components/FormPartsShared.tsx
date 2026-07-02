@@ -226,40 +226,46 @@ export function CheckboxQuestionField<TFieldValues extends FieldValues, TTransfo
 
 export function AgreementField<TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
 	props: SharedFieldProps<TFieldValues, TTransformedValues> & {
+		description?: string;
 		label: string;
+		title?: string;
 	}
 ) {
-	const { control, label, name, required } = props;
+	const { control, description, label, name, required, title } = props;
 
 	return (
-		<Form.Field
-			control={control}
-			name={name}
-			className="w-full text-[12px] text-cedar-black/64 lg:text-[14px]"
-		>
-			<FormRequiredIndicator required={required} />
+		<>
+			{title && <h2 className="leading-[1.2] lg:text-[24px]">{title}</h2>}
+			{description && <p className="text-[12px] text-cedar-black/64 lg:text-[14px]">{description}</p>}
 
-			<Form.FieldBoundController
-				render={({ field, fieldContext }) => (
-					<Form.InputGroup className="items-start gap-3">
-						<Checkbox
-							id={fieldContext.formItemId}
-							checked={field.value}
-							onCheckedChange={field.onChange}
-							classNames={{
-								base: `mt-[2px] size-4 rounded-[4px] border-[1.5px] border-cedar-black/40
-								bg-transparent lg:mt-[3px] data-checked:bg-transparent`,
-								icon: "size-3",
-							}}
-						/>
+			<Form.Field
+				control={control}
+				name={name}
+				className="w-full text-[12px] text-cedar-black/64 lg:text-[14px]"
+			>
+				<FormRequiredIndicator required={required} />
 
-						<Form.Label htmlFor={fieldContext.formItemId}>{label}</Form.Label>
-					</Form.InputGroup>
-				)}
-			/>
+				<div className="flex items-start gap-3">
+					<Form.FieldBoundController
+						render={({ field, fieldContext }) => (
+							<Checkbox
+								id={fieldContext.formItemId}
+								checked={field.value}
+								onCheckedChange={field.onChange}
+								classNames={{
+									base: `mt-[2px] size-4 rounded-[4px] border-[1.5px] border-cedar-black/40
+									bg-transparent lg:mt-[3px] data-checked:bg-transparent`,
+									icon: "size-3",
+								}}
+							/>
+						)}
+					/>
+					<Form.Label>{label}</Form.Label>
+				</div>
 
-			<FormErrorMessageShared />
-		</Form.Field>
+				<FormErrorMessageShared />
+			</Form.Field>
+		</>
 	);
 }
 
@@ -367,7 +373,7 @@ export function TextAreaField<TFieldValues extends FieldValues, TTransformedValu
 
 export function SelectField<TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
 	props: SharedFieldProps<TFieldValues, TTransformedValues> & {
-		classNames?: { base?: string; trigger?: string; item?: string };
+		classNames?: { base?: string; item?: string; trigger?: string };
 		label?: string;
 		options: readonly SharedOption[];
 		placeholder: string;
