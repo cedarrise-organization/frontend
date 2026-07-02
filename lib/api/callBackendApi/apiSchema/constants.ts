@@ -46,13 +46,7 @@ export const OutreachTypeOptions = defineEnum([
 	"EDUCATIONAL",
 ]);
 
-export const AcademicSessionOptions = defineEnum([
-	"2025/26",
-	"2026/27",
-	"2027/28",
-	"2028/29",
-	"2029/30",
-]);
+export const AcademicSessionOptions = defineEnum(["2025/26", "2026/27", "2027/28", "2028/29", "2029/30"]);
 
 export const AshTermOptions = defineEnum(["TERM 1", "TERM 2", "TERM 3"]);
 

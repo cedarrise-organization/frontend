@@ -1435,7 +1435,10 @@ export const TacotsStudentTrackingFrontendSchema = z.object({
 	serviceSupervisor: RequiredStringSchema,
 	socialBehaviorRating: getRatingSchema(),
 	studentAveragePct: stringWithNumberValidation(
-		z.number("Enter a valid average.").min(0, "Average cannot be below 0.").max(100, "Average cannot exceed 100.")
+		z
+			.number("Enter a valid average.")
+			.min(0, "Average cannot be below 0.")
+			.max(100, "Average cannot exceed 100.")
 	),
 	studentId: z.uuid("Invalid ID."),
 	studentPositionInClass: RequiredStringSchema,

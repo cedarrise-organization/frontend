@@ -22,8 +22,8 @@ import {
 	ashFormDataDownloadMutation,
 	ashRegistrationDeleteMutation,
 	ashRegistrationStatusMutation,
-	tacotsFormDataDownloadMutation,
 	tacotsFeedbackDeleteMutation,
+	tacotsFormDataDownloadMutation,
 	tacotsRecommendationDeleteMutation,
 	tacotsRecommendationStatusMutation,
 	volunteerFeedbackDeleteMutation,
@@ -899,8 +899,7 @@ function RowActions(props: { onViewMore: () => void; record: FormRecord; target:
 		return "Reject";
 	})();
 
-	const canDelete =
-		Boolean(acceptAction) || isAshFeedback || isTacotsFeedback || isVolunteerFeedback;
+	const canDelete = Boolean(acceptAction) || isAshFeedback || isTacotsFeedback || isVolunteerFeedback;
 
 	const handleDelete = () => {
 		if (isAshRegistration || isAshFeedback) {
