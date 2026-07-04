@@ -318,7 +318,7 @@ const GoogleFormSchema = z.object({
 });
 
 const TimestampSchema = z.object({
-	createdAt: z.string(),
+	createdAt: z.string().nullable().optional(),
 	deletedAt: z.string().nullable().optional(),
 	updatedAt: z.string().nullable().optional(),
 });
@@ -963,6 +963,12 @@ const DashboardCardsSchema = z.object({
 		participantsImpacted: z.number(),
 		volunteersEngaged: z.number(),
 		workshopsConducted: z.number(),
+	}),
+	home: z.object({
+		communitiesImpacted: z.number(),
+		totalBeneficiaries: z.number(),
+		volunteersEngaged: z.number(),
+		yearsOfImpact: z.number(),
 	}),
 	outreaches: z.object({
 		beneficiariesReached: z.number(),

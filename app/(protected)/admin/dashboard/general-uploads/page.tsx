@@ -39,6 +39,7 @@ import {
 	generalMetadataQuery,
 } from "@/lib/react-query/queryOptions";
 import { cnMerge } from "@/lib/utils/cn";
+import { EMPTY_VALUE_PLACEHOLDER } from "../-components/constants";
 import { Main } from "../-components/Main";
 
 type GeneralGoogleFormQueryResult = Awaited<
@@ -67,10 +68,19 @@ function GeneralUploadsPage() {
 	const googleFormQuery = useQuery(generalGoogleFormQuery());
 
 	const stats = [
-		{ label: "Photos Uploaded", value: metadataQuery.data?.data.photosUploaded ?? 0 },
-		{ label: "Active projects", value: metadataQuery.data?.data.activeProjects ?? 0 },
-		{ label: "Receipts logged", value: metadataQuery.data?.data.receiptsLogged ?? 0 },
-		{ label: "System users", value: metadataQuery.data?.data.systemUsers ?? 0 },
+		{
+			label: "Photos Uploaded",
+			value: metadataQuery.data?.data.photosUploaded ?? EMPTY_VALUE_PLACEHOLDER,
+		},
+		{
+			label: "Active projects",
+			value: metadataQuery.data?.data.activeProjects ?? EMPTY_VALUE_PLACEHOLDER,
+		},
+		{
+			label: "Receipts logged",
+			value: metadataQuery.data?.data.receiptsLogged ?? EMPTY_VALUE_PLACEHOLDER,
+		},
+		{ label: "System users", value: metadataQuery.data?.data.systemUsers ?? EMPTY_VALUE_PLACEHOLDER },
 	] as const;
 
 	const queryClient = useQueryClient();
@@ -130,7 +140,7 @@ function GeneralUploadsPage() {
 
 export default GeneralUploadsPage;
 
-function StatsGrid(props: { stats: ReadonlyArray<{ label: string; value: number }> }) {
+function StatsGrid(props: { stats: ReadonlyArray<{ label: string; value: number | string }> }) {
 	const { stats } = props;
 
 	return (

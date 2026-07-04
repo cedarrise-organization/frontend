@@ -89,7 +89,7 @@ const ASH_TRACKER_DATA_QUERY_KEYS = {
 		joinOperator: "ashAttendanceJoinOperator",
 		page: "ashAttendancePage",
 		perPage: "ashAttendancePerPage",
-		search: "ashTrackerDataSearch",
+		search: "ashAttendanceSearch",
 		sort: "ashAttendanceSort",
 	},
 	exit: {
@@ -97,7 +97,7 @@ const ASH_TRACKER_DATA_QUERY_KEYS = {
 		joinOperator: "ashExitJoinOperator",
 		page: "ashExitPage",
 		perPage: "ashExitPerPage",
-		search: "ashTrackerDataSearch",
+		search: "ashExitSearch",
 		sort: "ashExitSort",
 	},
 	tracking: {
@@ -116,7 +116,7 @@ const TACOTS_TRACKER_DATA_QUERY_KEYS = {
 		joinOperator: "tacotsExitJoinOperator",
 		page: "tacotsExitPage",
 		perPage: "tacotsExitPerPage",
-		search: "tacotsTrackerDataSearch",
+		search: "tacotsExitSearch",
 		sort: "tacotsExitSort",
 	},
 	onboarding: {
@@ -124,7 +124,7 @@ const TACOTS_TRACKER_DATA_QUERY_KEYS = {
 		joinOperator: "tacotsOnboardingJoinOperator",
 		page: "tacotsOnboardingPage",
 		perPage: "tacotsOnboardingPerPage",
-		search: "tacotsTrackerDataSearch",
+		search: "tacotsOnboardingSearch",
 		sort: "tacotsOnboardingSort",
 	},
 	tracking: {
@@ -160,6 +160,7 @@ const ASH_TRACKING_SORT_OPTIONS = [
 	{ label: "School Name", value: "schoolName" },
 	{ label: "Term", value: "term" },
 	{ label: "Assigned Mentor", value: "mentorName" },
+	{ label: "Created At", value: "createdAt" },
 ] as const satisfies ReadonlyArray<{
 	label: string;
 	value: (typeof AshTrackingRecordSortByOptions)[number];
@@ -169,12 +170,14 @@ const ASH_EXIT_SORT_OPTIONS = [
 	{ label: "School Name", value: "schoolName" },
 	{ label: "Class at Exit", value: "classAtExit" },
 	{ label: "Exit Date", value: "exitDate" },
+	{ label: "Created At", value: "createdAt" },
 ] as const satisfies ReadonlyArray<{ label: string; value: (typeof AshExitSortByOptions)[number] }>;
 
 const TACOTS_TRACKING_SORT_OPTIONS = [
 	{ label: "Academic Session", value: "academicSession" },
 	{ label: "Assessment Period", value: "assessmentPeriod" },
 	{ label: "Term", value: "academicTerm" },
+	{ label: "Created At", value: "createdAt" },
 ] as const satisfies ReadonlyArray<{
 	label: string;
 	value: (typeof TacotsTrackingRecordSortByOptions)[number];
@@ -186,6 +189,7 @@ const TACOTS_ONBOARDING_SORT_OPTIONS = [
 	{ label: "General Health Status", value: "generalHealthStatus" },
 	{ label: "State", value: "enrolledSchoolState" },
 	{ label: "Class", value: "enrolledClass" },
+	{ label: "Created At", value: "createdAt" },
 ] as const satisfies ReadonlyArray<{
 	label: string;
 	value: (typeof TacotsOnboardingSortByOptions)[number];
@@ -195,6 +199,7 @@ const TACOTS_EXIT_SORT_OPTIONS = [
 	{ label: "Year of Exit", value: "yearOfExit" },
 	{ label: "School Attended", value: "schoolAttendedDuringProgram" },
 	{ label: "Reason for Exit", value: "exitReason" },
+	{ label: "Created At", value: "createdAt" },
 ] as const satisfies ReadonlyArray<{
 	label: string;
 	value: (typeof TacotsExitSortByOptions)[number];
@@ -205,6 +210,7 @@ const OUTREACH_SORT_OPTIONS = [
 	{ label: "End Date", value: "outreachEndDate" },
 	{ label: "State", value: "outreachState" },
 	{ label: "Outreach Type", value: "outreachType" },
+	{ label: "Created At", value: "createdAt" },
 ] as const satisfies ReadonlyArray<{ label: string; value: (typeof OutreachSortByOptions)[number] }>;
 
 const CAPACITY_SORT_OPTIONS = [
@@ -212,6 +218,8 @@ const CAPACITY_SORT_OPTIONS = [
 	{ label: "Program Type", value: "programType" },
 	{ label: "Program Date", value: "programDate" },
 	{ label: "Location", value: "location" },
+	{ label: "Program Coordinator", value: "programCoordinator" },
+	{ label: "Created At", value: "createdAt" },
 ] as const satisfies ReadonlyArray<{
 	label: string;
 	value: (typeof CapacityEvaluationSortByOptions)[number];
@@ -404,17 +412,22 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 		sortKey: ASH_TRACKER_DATA_QUERY_KEYS.exit.sort,
 	});
 
-	const [search] = useQueryState(
+	const [trackingSearch] = useQueryState(
 		ASH_TRACKER_DATA_QUERY_KEYS.tracking.search,
 		parseAsString.withDefault("")
 	);
+	const [attendanceSearch] = useQueryState(
+		ASH_TRACKER_DATA_QUERY_KEYS.attendance.search,
+		parseAsString.withDefault("")
+	);
+	const [exitSearch] = useQueryState(ASH_TRACKER_DATA_QUERY_KEYS.exit.search, parseAsString.withDefault(""));
 
 	const trackingQueryResult = useQuery(
 		ashTrackingTrackerDataQuery({
 			limit: trackingQuery.limit,
 			orderBy: trackingQuery.orderBy,
 			page: trackingQuery.page,
-			...(search && { search }),
+			...(trackingSearch && { search: trackingSearch }),
 			...(trackingQuery.sortBy && { sortBy: trackingQuery.sortBy }),
 		})
 	);
@@ -423,7 +436,7 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 		ashAttendanceTrackerDataQuery({
 			limit: attendanceQuery.limit,
 			page: attendanceQuery.page,
-			...(search && { search }),
+			...(attendanceSearch && { search: attendanceSearch }),
 		})
 	);
 
@@ -432,7 +445,7 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 			limit: exitQuery.limit,
 			orderBy: exitQuery.orderBy,
 			page: exitQuery.page,
-			...(search && { search }),
+			...(exitSearch && { search: exitSearch }),
 			...(exitQuery.sortBy && { sortBy: exitQuery.sortBy }),
 		})
 	);
@@ -445,19 +458,23 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 	const stats = [
 		{
 			label: "Total Records",
-			value: metadata?.totalRecords ?? 0,
+			value: metadata?.totalRecords ?? EMPTY_VALUE_PLACEHOLDER,
 		},
 		{
 			label: "High-risk beneficiary",
-			value: metadata?.highRiskStudents ?? 0,
+			value: metadata?.highRiskStudents ?? EMPTY_VALUE_PLACEHOLDER,
 		},
 		{
 			label: "Avg. Attendance",
-			value: `${metadata?.avgAttendanceRate ?? 0}%`,
+			value: (() => {
+				if (metadata?.avgAttendanceRate == null) return EMPTY_VALUE_PLACEHOLDER;
+
+				return `${metadata.avgAttendanceRate}%`;
+			})(),
 		},
 		{
 			label: "Completed",
-			value: metadata?.completed ?? 0,
+			value: metadata?.completed ?? EMPTY_VALUE_PLACEHOLDER,
 		},
 	] as const;
 
@@ -630,8 +647,16 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 		sortKey: TACOTS_TRACKER_DATA_QUERY_KEYS.exit.sort,
 	});
 
-	const [search] = useQueryState(
+	const [trackingSearch] = useQueryState(
 		TACOTS_TRACKER_DATA_QUERY_KEYS.tracking.search,
+		parseAsString.withDefault("")
+	);
+	const [onboardingSearch] = useQueryState(
+		TACOTS_TRACKER_DATA_QUERY_KEYS.onboarding.search,
+		parseAsString.withDefault("")
+	);
+	const [exitSearch] = useQueryState(
+		TACOTS_TRACKER_DATA_QUERY_KEYS.exit.search,
 		parseAsString.withDefault("")
 	);
 
@@ -640,7 +665,7 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 			limit: trackingQuery.limit,
 			orderBy: trackingQuery.orderBy,
 			page: trackingQuery.page,
-			...(search && { search }),
+			...(trackingSearch && { search: trackingSearch }),
 			...(trackingQuery.sortBy && { sortBy: trackingQuery.sortBy }),
 		})
 	);
@@ -650,7 +675,7 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 			limit: onboardingQuery.limit,
 			orderBy: onboardingQuery.orderBy,
 			page: onboardingQuery.page,
-			...(search && { search }),
+			...(onboardingSearch && { search: onboardingSearch }),
 			...(onboardingQuery.sortBy && { sortBy: onboardingQuery.sortBy }),
 		})
 	);
@@ -660,7 +685,7 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 			limit: exitQuery.limit,
 			orderBy: exitQuery.orderBy,
 			page: exitQuery.page,
-			...(search && { search }),
+			...(exitSearch && { search: exitSearch }),
 			...(exitQuery.sortBy && { sortBy: exitQuery.sortBy }),
 		})
 	);
@@ -673,19 +698,23 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 	const stats = [
 		{
 			label: "Total Records",
-			value: metadata?.totalRecords ?? 0,
+			value: metadata?.totalRecords ?? EMPTY_VALUE_PLACEHOLDER,
 		},
 		{
 			label: "High-risk beneficiary",
-			value: metadata?.highRiskStudents ?? 0,
+			value: metadata?.highRiskStudents ?? EMPTY_VALUE_PLACEHOLDER,
 		},
 		{
 			label: "Onboarding Rate",
-			value: `${Math.round(metadata?.onboardingRate ?? 0)}%`,
+			value: (() => {
+				if (metadata?.onboardingRate == null) return EMPTY_VALUE_PLACEHOLDER;
+
+				return `${Math.round(metadata.onboardingRate)}%`;
+			})(),
 		},
 		{
 			label: "Completed",
-			value: metadata?.completed ?? 0,
+			value: metadata?.completed ?? EMPTY_VALUE_PLACEHOLDER,
 		},
 	] as const;
 
@@ -808,19 +837,19 @@ function OutreachTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRec
 	const stats = [
 		{
 			label: "Communities Engaged",
-			value: metadata?.communitiesEngaged ?? 0,
+			value: metadata?.communitiesEngaged ?? EMPTY_VALUE_PLACEHOLDER,
 		},
 		{
 			label: "Beneficiaries Reached",
-			value: metadata?.beneficiariesReached ?? 0,
+			value: metadata?.beneficiariesReached ?? EMPTY_VALUE_PLACEHOLDER,
 		},
 		{
 			label: "Volunteers",
-			value: metadata?.volunteers ?? 0,
+			value: metadata?.volunteers ?? EMPTY_VALUE_PLACEHOLDER,
 		},
 		{
 			label: "Outreach Events",
-			value: metadata?.outreachEvents ?? 0,
+			value: metadata?.outreachEvents ?? EMPTY_VALUE_PLACEHOLDER,
 		},
 	] as const;
 	const table = useDataTable<OutreachRecord>({
@@ -900,19 +929,19 @@ function CapacityBuildingTrackerDataTab(props: { onViewMore: (record: SelectedTr
 	const stats = [
 		{
 			label: "Participants Impacted",
-			value: metadata?.participantsImpacted ?? 0,
+			value: metadata?.participantsImpacted ?? EMPTY_VALUE_PLACEHOLDER,
 		},
 		{
 			label: "Organizations Partnered with",
-			value: metadata?.organizationsPartneredWith ?? 0,
+			value: metadata?.organizationsPartneredWith ?? EMPTY_VALUE_PLACEHOLDER,
 		},
 		{
 			label: "Volunteers Engaged",
-			value: metadata?.volunteersEngaged ?? 0,
+			value: metadata?.volunteersEngaged ?? EMPTY_VALUE_PLACEHOLDER,
 		},
 		{
 			label: "Workshops Conducted",
-			value: metadata?.workshopsConducted ?? 0,
+			value: metadata?.workshopsConducted ?? EMPTY_VALUE_PLACEHOLDER,
 		},
 	] as const;
 

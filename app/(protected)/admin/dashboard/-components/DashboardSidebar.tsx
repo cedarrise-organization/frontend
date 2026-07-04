@@ -148,47 +148,6 @@ function DashboardSidebarGroupSection(props: { section: (typeof dashboardNavSect
 	);
 }
 
-// function DashboardSidebarFooterSection() {
-// 	return (
-//  <Sidebar.Footer
-// 						className="mt-5 border-t border-t-cedar-white/20 px-4 pt-5
-// 							group-data-[state=collapsed]:px-2 lg:mt-[80px] lg:px-8 lg:pt-8.5"
-// 					>
-// 		<article
-// 			className="rounded-[20px] bg-[hsl(240,4%,5%)] px-3 pt-5 pb-3 group-data-[state=collapsed]:px-1.5"
-// 		>
-// 			<h3 className="text-[14px] text-cedar-white group-data-[state=collapsed]:hidden lg:text-base">
-// 				Impact Report 2025
-// 			</h3>
-
-// 			<p
-// 				className="mt-3 text-[10px]/[1.2] text-cedar-white/64 group-data-[state=collapsed]:hidden
-// 					lg:text-[12px]"
-// 			>
-// 				Generate your annual outreach & donor summary
-// 			</p>
-
-// 			<NavLink
-// 				href={placeholderHref}
-// 				className="relative mt-5 flex min-h-[126px] items-center justify-center rounded-[12px]
-// 					bg-cedar-yellow px-1 py-5 text-cedar-black transition-opacity hover:opacity-90"
-// 			>
-// 				<IconBox
-// 					icon="radix-icons:download"
-// 					className="size-[88px] shrink-0 group-data-[state=collapsed]:size-10"
-// 				/>
-// 				<p
-// 					className="absolute top-3 right-3 max-w-[50px] text-[12px]/[1.2]
-// 						group-data-[state=collapsed]:hidden lg:text-[14px]"
-// 				>
-// 					Export Report
-// 				</p>
-// 			</NavLink>
-// 		</article>
-// </Sidebar.Footer>
-// 	);
-// }
-
 function DashboardSidebarLink(props: DashboardNavItem) {
 	const { icon, label, link } = props;
 
@@ -225,16 +184,26 @@ function DashboardSidebarLink(props: DashboardNavItem) {
 	return (
 		<Sidebar.MenuButton
 			tooltip={label}
-			className="h-9 gap-3 rounded-[12px] p-0 px-5 text-[12px] text-cedar-white
+
+			classNames={{
+				base: `h-9 gap-3 rounded-[12px] p-0 px-5 text-[12px] text-cedar-white
 				group-data-[state=collapsed]:px-0 hover:bg-cedar-white/8 lg:h-12 lg:text-[14px]
-				data-active:bg-cedar-red data-active:text-cedar-white"
+				data-active:bg-cedar-red data-active:text-cedar-white hover:data-active:bg-cedar-red/80`,
+				tooltipArrow: "fill-cedar-black",
+				tooltipContent: "bg-cedar-black",
+			}}
 			asChild={true}
 		>
 			{link === null ?
 				<Button unstyled="none" onClick={onSignout}>
 					{content}
 				</Button>
-			:	<NavLink href={link} data-active={pathname === link || pathname.startsWith(link)}>
+			:	<NavLink
+					href={link}
+					data-active={
+						pathname === link || (link !== "/admin/dashboard" && pathname.startsWith(link))
+					}
+				>
 					{content}
 				</NavLink>
 			}

@@ -75,7 +75,7 @@ const ASH_FORM_DATA_QUERY_KEYS = {
 		joinOperator: "ashFeedbackJoinOperator",
 		page: "ashFeedbackPage",
 		perPage: "ashFeedbackPerPage",
-		search: "ashFormDataSearch",
+		search: "ashFeedbackSearch",
 		sort: "ashFeedbackSort",
 	},
 	registration: {
@@ -95,7 +95,7 @@ const TACOTS_FORM_DATA_QUERY_KEYS = {
 		joinOperator: "tacotsFeedbackJoinOperator",
 		page: "tacotsFeedbackPage",
 		perPage: "tacotsFeedbackPerPage",
-		search: "tacotsFormDataSearch",
+		search: "tacotsFeedbackSearch",
 		sort: "tacotsFeedbackSort",
 	},
 	recommendation: {
@@ -115,7 +115,7 @@ const VOLUNTEER_FORM_DATA_QUERY_KEYS = {
 		joinOperator: "volunteerFeedbackJoinOperator",
 		page: "volunteerFeedbackPage",
 		perPage: "volunteerFeedbackPerPage",
-		search: "volunteerFormDataSearch",
+		search: "volunteerFeedbackSearch",
 		sort: "volunteerFeedbackSort",
 	},
 	registration: {
@@ -138,6 +138,11 @@ const FORM_DATA_TABSANIMATED = [
 const ASH_SORT_OPTIONS = [
 	{ label: "First Name", value: "firstName" },
 	{ label: "Surname", value: "surname" },
+	{ label: "Gender", value: "gender" },
+	{ label: "School State", value: "schoolState" },
+	{ label: "Current Class", value: "currentClass" },
+	{ label: "Assigned Mentor", value: "assignedMentor" },
+	{ label: "Created At", value: "createdAt" },
 ] as const satisfies ReadonlyArray<{
 	label: string;
 	value: (typeof AshTrackingSortByOptions)[number];
@@ -149,6 +154,7 @@ const TACOTS_RECOMMENDATION_SORT_OPTIONS = [
 	{ label: "Gender", value: "gender" },
 	{ label: "School Name", value: "schoolName" },
 	{ label: "Last Class", value: "lastClass" },
+	{ label: "Created At", value: "createdAt" },
 ] as const satisfies ReadonlyArray<{
 	label: string;
 	value: (typeof TacotsRecommendationSortByOptions)[number];
@@ -158,8 +164,10 @@ const VOLUNTEER_SORT_OPTIONS = [
 	{ label: "First Name", value: "firstName" },
 	{ label: "Surname", value: "surname" },
 	{ label: "Email", value: "emailAddress" },
+	{ label: "Phone Number", value: "phoneNumber" },
 	{ label: "State", value: "state" },
 	{ label: "Volunteer Area", value: "volunteerAreas" },
+	{ label: "Created At", value: "createdAt" },
 ] as const satisfies ReadonlyArray<{
 	label: string;
 	value: (typeof VolunteerSortByOptions)[number];
@@ -201,6 +209,7 @@ type AshSelectedRecord = {
 	id: string;
 	kind: AshFormKind;
 	program: "ash";
+	status?: string | null;
 	title: string;
 };
 
@@ -208,6 +217,7 @@ type TacotsSelectedRecord = {
 	id: string;
 	kind: TacotsFormKind;
 	program: "tacots";
+	status?: string | null;
 	title: string;
 };
 
@@ -215,6 +225,7 @@ type VolunteerSelectedRecord = {
 	id: string;
 	kind: VolunteerFormKind;
 	program: "volunteer";
+	status?: string | null;
 	title: string;
 };
 
@@ -340,8 +351,12 @@ function AshFormDataTab(props: { onViewMore: (record: SelectedRecord) => void })
 		sortKey: ASH_FORM_DATA_QUERY_KEYS.feedback.sort,
 	});
 
-	const [search] = useQueryState(
+	const [registrationSearch] = useQueryState(
 		ASH_FORM_DATA_QUERY_KEYS.registration.search,
+		parseAsString.withDefault("")
+	);
+	const [feedbackSearch] = useQueryState(
+		ASH_FORM_DATA_QUERY_KEYS.feedback.search,
 		parseAsString.withDefault("")
 	);
 	const [statusFilter] = useQueryState(
@@ -354,7 +369,7 @@ function AshFormDataTab(props: { onViewMore: (record: SelectedRecord) => void })
 			limit: registrationQuery.limit,
 			orderBy: registrationQuery.orderBy,
 			page: registrationQuery.page,
-			...(search && { search }),
+			...(registrationSearch && { search: registrationSearch }),
 			...(registrationQuery.sortBy && { sortBy: registrationQuery.sortBy }),
 			...(statusFilter[0] && { status: statusFilter[0] }),
 		})
@@ -364,7 +379,7 @@ function AshFormDataTab(props: { onViewMore: (record: SelectedRecord) => void })
 		ashFeedbackFormDataQuery({
 			limit: feedbackQuery.limit,
 			page: feedbackQuery.page,
-			...(search && { search }),
+			...(feedbackSearch && { search: feedbackSearch }),
 		})
 	);
 
@@ -378,10 +393,13 @@ function AshFormDataTab(props: { onViewMore: (record: SelectedRecord) => void })
 	const feedbackPagination = feedbackQueryResult.data?.meta.pagination;
 
 	const dashboardStats = [
-		{ label: "Total Submissions", value: registrationMetadata?.totalSubmissions ?? 0 },
-		{ label: "Pending Review", value: registrationMetadata?.pendingStudents ?? 0 },
-		{ label: "Accepted", value: registrationMetadata?.acceptedStudents ?? 0 },
-		{ label: "Rejected", value: registrationMetadata?.rejectedStudents ?? 0 },
+		{
+			label: "Total Submissions",
+			value: registrationMetadata?.totalSubmissions ?? EMPTY_VALUE_PLACEHOLDER,
+		},
+		{ label: "Pending Review", value: registrationMetadata?.pendingStudents ?? EMPTY_VALUE_PLACEHOLDER },
+		{ label: "Accepted", value: registrationMetadata?.acceptedStudents ?? EMPTY_VALUE_PLACEHOLDER },
+		{ label: "Rejected", value: registrationMetadata?.rejectedStudents ?? EMPTY_VALUE_PLACEHOLDER },
 	] as const;
 
 	const registrationTable = useDataTable<AshRegistrationFormRecord>({
@@ -482,8 +500,12 @@ function TacotsFormDataTab(props: { onViewMore: (record: SelectedRecord) => void
 		sortKey: TACOTS_FORM_DATA_QUERY_KEYS.feedback.sort,
 	});
 
-	const [search] = useQueryState(
+	const [recommendationSearch] = useQueryState(
 		TACOTS_FORM_DATA_QUERY_KEYS.recommendation.search,
+		parseAsString.withDefault("")
+	);
+	const [feedbackSearch] = useQueryState(
+		TACOTS_FORM_DATA_QUERY_KEYS.feedback.search,
 		parseAsString.withDefault("")
 	);
 	const [statusFilter] = useQueryState(
@@ -496,7 +518,7 @@ function TacotsFormDataTab(props: { onViewMore: (record: SelectedRecord) => void
 			limit: recommendationQuery.limit,
 			orderBy: recommendationQuery.orderBy,
 			page: recommendationQuery.page,
-			...(search && { search }),
+			...(recommendationSearch && { search: recommendationSearch }),
 			...(recommendationQuery.sortBy && { sortBy: recommendationQuery.sortBy }),
 			...(statusFilter[0] && { status: statusFilter[0] }),
 		})
@@ -506,7 +528,7 @@ function TacotsFormDataTab(props: { onViewMore: (record: SelectedRecord) => void
 		tacotsFeedbackFormDataQuery({
 			limit: feedbackQuery.limit,
 			page: feedbackQuery.page,
-			...(search && { search }),
+			...(feedbackSearch && { search: feedbackSearch }),
 		})
 	);
 
@@ -520,10 +542,16 @@ function TacotsFormDataTab(props: { onViewMore: (record: SelectedRecord) => void
 	const feedbackPagination = feedbackQueryResult.data?.meta.pagination;
 
 	const dashboardStats = [
-		{ label: "Total Submissions", value: recommendationMetadata?.totalSubmissions ?? 0 },
-		{ label: "Pending Review", value: recommendationMetadata?.pendingStudents ?? 0 },
-		{ label: "Accepted", value: recommendationMetadata?.acceptedStudents ?? 0 },
-		{ label: "Rejected", value: recommendationMetadata?.rejectedStudents ?? 0 },
+		{
+			label: "Total Submissions",
+			value: recommendationMetadata?.totalSubmissions ?? EMPTY_VALUE_PLACEHOLDER,
+		},
+		{
+			label: "Pending Review",
+			value: recommendationMetadata?.pendingStudents ?? EMPTY_VALUE_PLACEHOLDER,
+		},
+		{ label: "Accepted", value: recommendationMetadata?.acceptedStudents ?? EMPTY_VALUE_PLACEHOLDER },
+		{ label: "Rejected", value: recommendationMetadata?.rejectedStudents ?? EMPTY_VALUE_PLACEHOLDER },
 	] as const;
 
 	const recommendationTable = useDataTable<TacotsRecommendationFormRecord>({
@@ -637,8 +665,12 @@ function VolunteerFormDataTab(props: { onViewMore: (record: SelectedRecord) => v
 		sortKey: VOLUNTEER_FORM_DATA_QUERY_KEYS.feedback.sort,
 	});
 
-	const [search] = useQueryState(
+	const [registrationSearch] = useQueryState(
 		VOLUNTEER_FORM_DATA_QUERY_KEYS.registration.search,
+		parseAsString.withDefault("")
+	);
+	const [feedbackSearch] = useQueryState(
+		VOLUNTEER_FORM_DATA_QUERY_KEYS.feedback.search,
 		parseAsString.withDefault("")
 	);
 	const [statusFilter] = useQueryState(
@@ -651,7 +683,7 @@ function VolunteerFormDataTab(props: { onViewMore: (record: SelectedRecord) => v
 			limit: registrationQuery.limit,
 			orderBy: registrationQuery.orderBy,
 			page: registrationQuery.page,
-			...(search && { search }),
+			...(registrationSearch && { search: registrationSearch }),
 			...(registrationQuery.sortBy && { sortBy: registrationQuery.sortBy }),
 			...(statusFilter[0] && { status: statusFilter[0] }),
 		})
@@ -661,7 +693,7 @@ function VolunteerFormDataTab(props: { onViewMore: (record: SelectedRecord) => v
 		volunteerFeedbackFormDataQuery({
 			limit: feedbackQuery.limit,
 			page: feedbackQuery.page,
-			...(search && { search }),
+			...(feedbackSearch && { search: feedbackSearch }),
 		})
 	);
 
@@ -675,10 +707,13 @@ function VolunteerFormDataTab(props: { onViewMore: (record: SelectedRecord) => v
 	const feedbackPagination = feedbackQueryResult.data?.meta.pagination;
 
 	const dashboardStats = [
-		{ label: "Total Submissions", value: registrationMetadata?.totalSubmissions ?? 0 },
-		{ label: "Pending Review", value: registrationMetadata?.pendingStudents ?? 0 },
-		{ label: "Accepted", value: registrationMetadata?.acceptedStudents ?? 0 },
-		{ label: "Rejected", value: registrationMetadata?.rejectedStudents ?? 0 },
+		{
+			label: "Total Submissions",
+			value: registrationMetadata?.totalSubmissions ?? EMPTY_VALUE_PLACEHOLDER,
+		},
+		{ label: "Pending Review", value: registrationMetadata?.pendingStudents ?? EMPTY_VALUE_PLACEHOLDER },
+		{ label: "Accepted", value: registrationMetadata?.acceptedStudents ?? EMPTY_VALUE_PLACEHOLDER },
+		{ label: "Rejected", value: registrationMetadata?.rejectedStudents ?? EMPTY_VALUE_PLACEHOLDER },
 	] as const;
 
 	const registrationTable = useDataTable<VolunteerRegistrationFormRecord>({
@@ -764,26 +799,44 @@ const getActionsColumn = <TRecord extends FormRecord>(
 						"firstName" in row.original ? row.original.firstName : row.original.studentFirstName;
 					const surname =
 						"surname" in row.original ? row.original.surname : row.original.studentSurname;
-					const title = [firstName, surname].join(" ") || EMPTY_VALUE_PLACEHOLDER;
+					const title = `${firstName || EMPTY_VALUE_PLACEHOLDER} ${surname || EMPTY_VALUE_PLACEHOLDER}`;
+
 					const id = row.original.id;
+
+					const getStatus = () => {
+						if ("status" in row.original) {
+							return row.original.status;
+						}
+
+						if ("adminStatus" in row.original) {
+							return row.original.adminStatus;
+						}
+
+						return null;
+					};
+
+					const status = getStatus();
 
 					const selectedRecordByProgram = {
 						ash: {
 							id,
 							kind: target.program === "ash" ? target.kind : "feedback",
 							program: "ash",
+							status,
 							title,
 						},
 						tacots: {
 							id,
 							kind: target.program === "tacots" ? target.kind : "feedback",
 							program: "tacots",
+							status,
 							title,
 						},
 						volunteer: {
 							id,
 							kind: target.program === "volunteer" ? target.kind : "feedback",
 							program: "volunteer",
+							status,
 							title,
 						},
 					} satisfies Record<SelectedRecord["program"], SelectedRecord>;
@@ -893,12 +946,6 @@ function RowActions(props: { onViewMore: () => void; record: FormRecord; target:
 		return null;
 	})();
 
-	const rejectLabel = (() => {
-		if (isTacotsRecommendation) return "Not Selected";
-
-		return "Reject";
-	})();
-
 	const canDelete = Boolean(acceptAction) || isAshFeedback || isTacotsFeedback || isVolunteerFeedback;
 
 	const handleDelete = () => {
@@ -952,7 +999,7 @@ function RowActions(props: { onViewMore: () => void; record: FormRecord; target:
 						className="justify-center text-cedar-red focus:text-cedar-red"
 						onClick={rejectAction}
 					>
-						{rejectLabel}
+						Reject
 					</DropdownMenu.Item>
 				)}
 				{canDelete && (
@@ -973,6 +1020,7 @@ function FormDataDetailsDialog(props: {
 	selectedRecord: SelectedRecord | null;
 }) {
 	const { onOpenChange, selectedRecord } = props;
+	const queryClient = useQueryClient();
 
 	const selectedRecordId = selectedRecord?.id ?? "";
 
@@ -1006,6 +1054,13 @@ function FormDataDetailsDialog(props: {
 		enabled: selectedRecord?.program === "volunteer" && selectedRecord.kind === "feedback",
 	});
 
+	const ashStatusMutation = useMutation(ashRegistrationStatusMutation(selectedRecordId));
+	const ashDeleteMutation = useMutation(ashRegistrationDeleteMutation(selectedRecordId));
+	const tacotsStatusMutation = useMutation(tacotsRecommendationStatusMutation(selectedRecordId));
+	const tacotsDeleteMutation = useMutation(tacotsRecommendationDeleteMutation(selectedRecordId));
+	const volunteerStatusMutation = useMutation(volunteerRegistrationStatusMutation(selectedRecordId));
+	const volunteerDeleteMutation = useMutation(volunteerRegistrationDeleteMutation(selectedRecordId));
+
 	const record = (() => {
 		if (selectedRecord?.program === "ash" && selectedRecord.kind === "registration") {
 			return ashRegistrationDetailQueryResult.data?.data;
@@ -1036,19 +1091,21 @@ function FormDataDetailsDialog(props: {
 
 	const rows = getDashboardDetailRows(record);
 
-	const status = (() => {
-		if (!record) return;
+	const status =
+		(() => {
+			if (!record) return;
 
-		if ("status" in record) {
-			return record.status;
-		}
+			if ("status" in record) {
+				return record.status;
+			}
 
-		if ("adminStatus" in record) {
-			return record.adminStatus;
-		}
+			if ("adminStatus" in record) {
+				return record.adminStatus;
+			}
 
-		return null;
-	})();
+			return selectedRecord?.status;
+		})() ?? selectedRecord?.status;
+	const statusLabel = status === "NOT SELECTED" ? "Reject" : status;
 
 	const submittedAt = record?.createdAt;
 
@@ -1066,21 +1123,88 @@ function FormDataDetailsDialog(props: {
 		|| (selectedRecord?.program === "tacots" && selectedRecord.kind === "recommendation")
 		|| (selectedRecord?.program === "volunteer" && selectedRecord.kind === "registration");
 
-	let detailDescription = "";
+	const invalidateListQueries = () => {
+		if (selectedRecord?.program === "ash" && selectedRecord.kind === "registration") {
+			void queryClient.invalidateQueries({
+				queryKey: ashRegistrationFormDataQuery().queryKey.slice(0, -1),
+			});
+			return;
+		}
 
-	if (selectedRecord?.program === "ash") {
-		detailDescription = selectedRecord.kind === "registration" ? "ASH Registration" : "ASH Feedback";
-	}
+		if (selectedRecord?.program === "tacots" && selectedRecord.kind === "recommendation") {
+			void queryClient.invalidateQueries({
+				queryKey: tacotsRecommendationFormDataQuery().queryKey.slice(0, -1),
+			});
+			return;
+		}
 
-	if (selectedRecord?.program === "tacots") {
-		detailDescription =
-			selectedRecord.kind === "recommendation" ? "TACOTS Recommendation" : "TACOTS Feedback";
-	}
+		if (selectedRecord?.program === "volunteer" && selectedRecord.kind === "registration") {
+			void queryClient.invalidateQueries({
+				queryKey: volunteerRegistrationFormDataQuery().queryKey.slice(0, -1),
+			});
+		}
+	};
 
-	if (selectedRecord?.program === "volunteer") {
-		detailDescription =
-			selectedRecord.kind === "registration" ? "Volunteer Registration" : "Volunteer Feedback";
-	}
+	const onDetailActionSuccess = () => {
+		invalidateListQueries();
+		onOpenChange(null);
+	};
+
+	const handleAccept = () => {
+		if (selectedRecord?.program === "ash" && selectedRecord.kind === "registration") {
+			ashStatusMutation.mutate("accepted", { onSuccess: onDetailActionSuccess });
+			return;
+		}
+
+		if (selectedRecord?.program === "tacots" && selectedRecord.kind === "recommendation") {
+			tacotsStatusMutation.mutate("SELECTED", { onSuccess: onDetailActionSuccess });
+			return;
+		}
+
+		if (selectedRecord?.program === "volunteer" && selectedRecord.kind === "registration") {
+			volunteerStatusMutation.mutate("accepted", { onSuccess: onDetailActionSuccess });
+		}
+	};
+
+	const handleDelete = () => {
+		if (selectedRecord?.program === "ash" && selectedRecord.kind === "registration") {
+			ashDeleteMutation.mutate(undefined, { onSuccess: onDetailActionSuccess });
+			return;
+		}
+
+		if (selectedRecord?.program === "tacots" && selectedRecord.kind === "recommendation") {
+			tacotsDeleteMutation.mutate(undefined, { onSuccess: onDetailActionSuccess });
+			return;
+		}
+
+		if (selectedRecord?.program === "volunteer" && selectedRecord.kind === "registration") {
+			volunteerDeleteMutation.mutate(undefined, { onSuccess: onDetailActionSuccess });
+		}
+	};
+
+	const isActionPending =
+		ashStatusMutation.isPending
+		|| ashDeleteMutation.isPending
+		|| tacotsStatusMutation.isPending
+		|| tacotsDeleteMutation.isPending
+		|| volunteerStatusMutation.isPending
+		|| volunteerDeleteMutation.isPending;
+
+	const detailDescription = (() => {
+		if (selectedRecord?.program === "ash") {
+			return selectedRecord.kind === "registration" ? "ASH Registration" : "ASH Feedback";
+		}
+
+		if (selectedRecord?.program === "tacots") {
+			return selectedRecord.kind === "recommendation" ? "TACOTS Recommendation" : "TACOTS Feedback";
+		}
+
+		if (selectedRecord?.program === "volunteer") {
+			return selectedRecord.kind === "registration" ? "Volunteer Registration" : "Volunteer Feedback";
+		}
+
+		return "";
+	})();
 
 	return (
 		<DialogAnimated.Root
@@ -1090,40 +1214,43 @@ function FormDataDetailsDialog(props: {
 			<DialogAnimated.Content
 				withCloseButton={false}
 				className="flex max-h-[92vh] w-[min(calc(100vw-32px),760px)] flex-col overflow-hidden
-					rounded-[28px] border-0 bg-cedar-white p-0 lg:w-[760px]"
+					rounded-[28px] border-0 bg-cedar-white p-0 shadow-[0_24px_80px_hsl(0,0%,0%,0.24)]
+					lg:w-[760px]"
 			>
 				{selectedRecord && (
 					<>
 						<DialogAnimated.Header
-							className="shrink-0 flex-row items-start justify-between gap-6 border-b
-								border-cedar-black/10 px-7 pt-7 pb-6 text-left lg:px-10 lg:pt-10"
+							className="shrink-0 flex-row items-start justify-between gap-5 border-b
+								border-cedar-black/10 bg-cedar-white px-7 pt-7 pb-6 text-left lg:px-10 lg:pt-10"
 						>
 							<div className="flex flex-col gap-1">
 								<DialogAnimated.Title className="text-[22px] text-cedar-black">
 									{selectedRecord.title}
 								</DialogAnimated.Title>
-								<DialogAnimated.Description className="text-[16px] text-cedar-black/64">
+								<DialogAnimated.Description
+									className="text-[15px] text-cedar-black/56 lg:text-[16px]"
+								>
 									{detailDescription} - {submittedDate}
 								</DialogAnimated.Description>
 							</div>
-							{status && <StatusPill status={status} />}
+							{statusLabel && <StatusPill status={statusLabel} />}
 						</DialogAnimated.Header>
 
 						<ForWithWrapper
-							className="grow overflow-x-hidden overflow-y-auto px-7 py-4 lg:px-10"
+							className="grow overflow-x-hidden overflow-y-auto bg-cedar-grey/24 p-5 lg:px-8"
 							each={rows}
 							renderItem={(row) => (
 								<li
 									key={row.label}
-									className="grid grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] items-start gap-6
-										border-b border-cedar-black/10 py-3 text-[15px] last:border-b-0
-										lg:text-[17px]"
+									className="grid grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] items-start gap-5
+										border-b border-cedar-black/8 bg-cedar-white px-5 py-4 text-[14px]
+										first:rounded-t-[18px] last:rounded-b-[18px] last:border-b-0 lg:text-[16px]"
 								>
 									<span className="min-w-0 wrap-break-word text-cedar-black/72 capitalize">
 										{row.label}
 									</span>
 									<span
-										className="min-w-0 text-right font-medium wrap-break-word
+										className="min-w-0 text-right font-semibold wrap-break-word
 											text-cedar-black/72"
 									>
 										{row.url ?
@@ -1142,21 +1269,25 @@ function FormDataDetailsDialog(props: {
 						/>
 
 						<DialogAnimated.Footer
-							className="shrink-0 gap-5 border-t border-cedar-black/10 px-7 pt-5 pb-7 lg:px-10
-								lg:pb-10"
+							className="shrink-0 gap-4 border-t border-cedar-black/10 bg-cedar-white px-7 pt-5 pb-7
+								lg:px-10 lg:pb-10"
 						>
 							{isReviewableRecord && (
-								<div className="grid gap-4 sm:grid-cols-3">
+								<div className="flex gap-4">
 									<Button
-										className="h-12 rounded-[12px] px-6 text-[15px] lg:h-12 lg:px-6
+										isDisabled={isActionPending}
+										className="h-12 w-full rounded-[12px] px-6 text-[15px] lg:h-12 lg:px-6
 											lg:text-[15px]"
+										onClick={handleAccept}
 									>
 										Accept
 									</Button>
 									<Button
 										theme="secondary"
-										className="h-12 rounded-[12px] px-6 text-[15px] lg:h-12 lg:px-6
+										isDisabled={isActionPending}
+										className="h-12 w-full rounded-[12px] px-6 text-[15px] lg:h-12 lg:px-6
 											lg:text-[15px]"
+										onClick={handleDelete}
 									>
 										Delete
 									</Button>
@@ -1164,7 +1295,7 @@ function FormDataDetailsDialog(props: {
 							)}
 
 							<DialogAnimated.Close
-								className="h-12 rounded-[12px] border border-cedar-red text-[15px] font-medium
+								className="h-12 rounded-[12px] border border-cedar-red text-[15px] font-semibold
 									text-cedar-red transition-colors hover:bg-cedar-red hover:text-cedar-white"
 							>
 								Close

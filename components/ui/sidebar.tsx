@@ -640,11 +640,12 @@ function SidebarMenuButton(
 	props: React.ComponentProps<"button">
 		& VariantProps<typeof sidebarMenuButtonVariants> & {
 			asChild?: boolean;
+			classNames?: { base?: string; tooltipArrow?: string; tooltipContent?: string };
 			isActive?: boolean;
 			tooltip?: string | React.ComponentProps<typeof Tooltip.Content>;
 		}
 ) {
-	let { asChild, className, isActive, size, tooltip, variant, ...restOfProps } = props;
+	let { asChild, className, classNames, isActive, size, tooltip, variant, ...restOfProps } = props;
 
 	const { isMobile, state } = useSidebarContext();
 
@@ -656,7 +657,7 @@ function SidebarMenuButton(
 			data-sidebar="menu-button"
 			data-size={size}
 			{...(isActive != null && { "data-active": isActive })}
-			className={cnMerge(sidebarMenuButtonVariants({ size, variant }), className)}
+			className={cnMerge(sidebarMenuButtonVariants({ size, variant }), className, classNames?.base)}
 			{...restOfProps}
 		/>
 	);
@@ -679,6 +680,10 @@ function SidebarMenuButton(
 				side="right"
 				align="center"
 				hidden={state !== "collapsed" || isMobile}
+				classNames={{
+					arrow: classNames?.tooltipArrow,
+					base: classNames?.tooltipContent,
+				}}
 				{...tooltip}
 			/>
 		</Tooltip.Root>

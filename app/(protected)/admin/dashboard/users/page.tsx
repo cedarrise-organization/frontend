@@ -21,6 +21,7 @@ import {
 	DashboardDataTableQueryToolbar,
 	useDashboardDataTableQueryState,
 } from "../-components/DashboardDataTableShared";
+import { EMPTY_VALUE_PLACEHOLDER } from "../-components/constants";
 import { Main } from "../-components/Main";
 
 type UsersQueryResult = Awaited<
@@ -211,7 +212,7 @@ function UserRolesDialog(props: {
 								Assigned roles
 							</p>
 							<p className="mt-1 text-[15px] font-semibold text-cedar-black">
-								{rolesQueryResult.data?.data.length ?? 0}
+								{rolesQueryResult.data?.data.length ?? EMPTY_VALUE_PLACEHOLDER}
 							</p>
 						</div>
 					</div>

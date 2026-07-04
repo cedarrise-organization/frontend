@@ -18,6 +18,7 @@ import {
 	useRef,
 	useState,
 } from "react";
+import { cnMerge } from "@/lib/utils/cn";
 import * as HighlightPrimitive from "./effects/highlight";
 import { Slot, type WithAsChild } from "./slot";
 
@@ -182,11 +183,12 @@ function TabsTrigger(props: TabsTriggerProps) {
 
 type TabsContentsProps = HTMLMotionProps<"div"> & {
 	children: React.ReactNode;
+	classNames?: { listContainer?: string; listItem?: string };
 	transition?: Transition;
 };
 
 function TabsContentList(props: TabsContentsProps) {
-	const { children, transition, ...restOfProps } = props;
+	const { children, className, classNames, transition, ...restOfProps } = props;
 	const { activeValue } = useTabsContext();
 	const childrenArray = toArray(children);
 	const activeIndex = childrenArray.findIndex(
@@ -199,7 +201,7 @@ function TabsContentList(props: TabsContentsProps) {
 	);
 
 	const containerRef = useRef<HTMLDivElement | null>(null);
-	const itemsRef = useRef<Array<HTMLDivElement | null>>([]);
+	const itemsRef = useRef<Array<HTMLLIElement | null>>([]);
 	const [height, setHeight] = useState(0);
 	const roRef = useRef<ResizeObserver | null>(null);
 
@@ -265,29 +267,29 @@ function TabsContentList(props: TabsContentsProps) {
 		<motion.div
 			ref={containerRef}
 			data-slot="tabs-content-list"
-			style={{ overflow: "hidden" }}
+			className={cnMerge("overflow-hidden", className)}
 			animate={{ height }}
 			transition={transition}
 			{...restOfProps}
 		>
-			<motion.div
-				className="-mx-2 flex"
+			<motion.ul
+				className={cnMerge("-mx-2 flex items-start", classNames?.listContainer)}
 				animate={{ x: `${activeIndex * -100}%` }}
 				transition={transition}
 			>
 				{childrenArray.map((child, index) => (
-					<div
+					<li
 						// eslint-disable-next-line react/no-array-index-key
 						key={index}
 						ref={(el) => {
 							itemsRef.current[index] = el;
 						}}
-						className="size-full shrink-0 px-2"
+						className={cnMerge("w-full shrink-0 px-2", classNames?.listItem)}
 					>
 						{child}
-					</div>
+					</li>
 				))}
-			</motion.div>
+			</motion.ul>
 		</motion.div>
 	);
 }
@@ -299,7 +301,8 @@ type TabsContentProps = WithAsChild<
 	}
 >;
 
-function TabsContent({ asChild = false, style, value, ...props }: TabsContentProps) {
+function TabsContent(props: TabsContentProps) {
+	const { asChild, className, value, ...restOfProps } = props;
 	const { activeValue } = useTabsContext();
 	const isActive = activeValue === value;
 
@@ -310,12 +313,12 @@ function TabsContent({ asChild = false, style, value, ...props }: TabsContentPro
 			role="tabpanel"
 			data-slot="tabs-content"
 			inert={!isActive}
-			style={{ overflow: "hidden", ...style }}
+			className={cnMerge("overflow-hidden", className)}
 			initial={{ filter: "blur(0px)" }}
 			animate={{ filter: isActive ? "blur(0px)" : "blur(4px)" }}
 			exit={{ filter: "blur(0px)" }}
 			transition={{ damping: 25, stiffness: 200, type: "spring" }}
-			{...props}
+			{...restOfProps}
 		/>
 	);
 }

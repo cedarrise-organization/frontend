@@ -164,8 +164,6 @@ export const TacotsRecommendationSortByOptions = defineEnum([
 	"firstName",
 	"surname",
 	"createdAt",
-	"stateOfOrigin",
-	"lga",
 	"schoolName",
 	"gender",
 	"lastClass",

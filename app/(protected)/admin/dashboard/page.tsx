@@ -2,7 +2,6 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { tw } from "@zayne-labs/toolkit-core";
-import { formatDistanceToNowStrict } from "date-fns";
 import Image from "next/image";
 import {
 	Area,
@@ -29,15 +28,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import type { DashboardChartDataset, DashboardLineData } from "@/lib/api/callBackendApi/apiSchema";
-import {
-	dashboardProjectStatusMutation,
-	dismissDashboardNotificationMutation,
-} from "@/lib/react-query/mutationOptions";
+import { dashboardProjectStatusMutation } from "@/lib/react-query/mutationOptions";
 import {
 	dashboardCardsQuery,
 	dashboardEnrollmentQuery,
 	dashboardInstitutionalEffectivenessQuery,
-	dashboardNotificationsQuery,
 	dashboardProjectsQuery,
 	dashboardStudentPerformanceQuery,
 	type DashboardProjectsQueryResult,
@@ -65,15 +60,9 @@ const chartScopesByTitle = {
 	"Total Community Service Hours": "TACOTS",
 } as const satisfies Record<string, "ASH" | "ASH + TACOTS" | "TACOTS">;
 
-const notificationSeverityClassNames = {
-	critical: tw`bg-cedar-red`,
-	high: tw`bg-cedar-red`,
-	low: tw`bg-cedar-yellow`,
-	medium: tw`bg-cedar-black`,
-} as const;
-
 type ChartTitles = keyof typeof chartScopesByTitle;
 
+// eslint-disable-next-line complexity
 function DashboardPage() {
 	const cardsQueryResult = useQuery(dashboardCardsQuery());
 	const projectsQueryResult = useQuery(dashboardProjectsQuery());
@@ -89,6 +78,17 @@ function DashboardPage() {
 	return (
 		<Main className="gap-6 lg:gap-8">
 			<section className="grid grow gap-3 md:grid-cols-2 xl:grid-cols-3">
+				<DashboardStatCard
+					icon="solar:home-2-outline"
+					title="Home"
+					stats={[
+						{ label: "Total Beneficiaries", value: cards?.home.totalBeneficiaries },
+						{ label: "Communities Impacted", value: cards?.home.communitiesImpacted },
+						{ label: "Years of Impact", value: cards?.home.yearsOfImpact },
+						{ label: "Volunteers engaged", value: cards?.home.volunteersEngaged },
+					]}
+				/>
+
 				<DashboardStatCard
 					icon="solar:user-check-rounded-outline"
 					title="Volunteers"
@@ -154,14 +154,12 @@ function DashboardPage() {
 						{ label: "Graduated", value: cards?.tacots.graduated },
 					]}
 				/>
-
-				<AlertsPanel />
 			</section>
 
 			<section className="flex min-w-0 flex-col gap-3 overflow-hidden">
 				<SectionHeader
 					title="Ongoing Projects"
-					description={`${projectsQueryResult.data?.length ?? 0} active community initiatives`}
+					description={`${formatNumber(projectsQueryResult.data?.length)} active community initiatives`}
 				/>
 
 				<Carousel.Root options={{ align: "start", loop: false }}>
@@ -365,118 +363,8 @@ function DashboardStatCard(props: {
 	);
 }
 
-function AlertsPanel() {
-	const notificationsQueryResult = useQuery(
-		dashboardNotificationsQuery({ limit: 20, page: 1, status: "active" })
-	);
-
-	const dismissNotificationMutation = useMutation(dismissDashboardNotificationMutation());
-
-	const queryClient = useQueryClient();
-
-	const onDismissNotification = (id: string) => {
-		dismissNotificationMutation.mutate(id, {
-			onSuccess: () => {
-				void queryClient.invalidateQueries({ queryKey: dashboardNotificationsQuery().queryKey });
-			},
-		});
-	};
-
-	const notifications = notificationsQueryResult.data?.data ?? [];
-
-	return (
-		<Card.Root
-			className="flex flex-col gap-5 rounded-[20px] bg-cedar-white p-4
-				shadow-[0_1px_0_hsl(0,0%,0%,0.04)]"
-		>
-			<Card.Header
-				className="flex items-center justify-center gap-3 rounded-[10px] bg-cedar-red px-8 py-3
-					text-cedar-white lg:rounded-[12px]"
-			>
-				<span className="size-4 shrink-0 lg:size-5">
-					<IconBox icon="lucide:bell" className="size-full" />
-				</span>
-				<Card.Title className="shrink-0 text-center text-base/[1.2] lg:text-[24px]">
-					Alerts & Notifications
-				</Card.Title>
-			</Card.Header>
-
-			<Card.Content>
-				<ScrollArea.Root classNames={{ base: "h-[276px]", viewport: "overscroll-contain" }}>
-					{notificationsQueryResult.isPending && (
-						<ForWithWrapper
-							className="flex flex-col gap-5"
-							each={4}
-							renderItem={(index) => (
-								<li key={index} className="flex items-center gap-3">
-									<Skeleton className="h-12 w-1 rounded-full" />
-									<div className="flex grow flex-col gap-2">
-										<Skeleton className="h-3 w-4/5" />
-										<Skeleton className="h-2.5 w-3/5" />
-									</div>
-								</li>
-							)}
-						/>
-					)}
-
-					{!notificationsQueryResult.isPending && notifications.length === 0 && (
-						<p className="py-8 text-center text-[12px] text-cedar-black/48">
-							No active notifications.
-						</p>
-					)}
-
-					<ForWithWrapper
-						className="flex flex-col gap-5"
-						each={notifications}
-						renderItem={(notification) => (
-							<li
-								key={notification.id}
-								className="grid grid-cols-[4px_1fr_24px] items-center gap-3"
-							>
-								<span
-									className={cnJoin(
-										"h-full min-h-10 rounded-full",
-										notificationSeverityClassNames[notification.severity]
-									)}
-								/>
-
-								<div className="flex min-w-0 flex-col gap-1">
-									<p className="text-[12px]/[1.35] text-cedar-black lg:text-[14px]">
-										{notification.title}
-									</p>
-									<p className="text-[10px]/[1.4] text-cedar-black/48 lg:text-[11px]">
-										{notification.message} -{` `}
-										{formatDistanceToNowStrict(new Date(notification.createdAt), {
-											addSuffix: true,
-										})}
-									</p>
-								</div>
-
-								<Button
-									unstyled={true}
-									aria-label={`Dismiss ${notification.title}`}
-									isDisabled={
-										dismissNotificationMutation.isPending
-										&& dismissNotificationMutation.variables === notification.id
-									}
-									className="grid size-6 place-content-center text-cedar-black transition-opacity
-										hover:opacity-56"
-									onClick={() => onDismissNotification(notification.id)}
-								>
-									<IconBox icon="lucide:x" className="size-5" />
-								</Button>
-							</li>
-						)}
-					/>
-				</ScrollArea.Root>
-			</Card.Content>
-		</Card.Root>
-	);
-}
-
 function ProjectCard(props: { project: DashboardProjectsQueryResult[number] }) {
 	const { project } = props;
-	const isCompleted = project.status === "completed";
 	const projectStatusMutation = useMutation(dashboardProjectStatusMutation(project.id));
 	const queryClient = useQueryClient();
 	const projectDate =
@@ -516,15 +404,22 @@ function ProjectCard(props: { project: DashboardProjectsQueryResult[number] }) {
 				<Card.Footer className="mt-6 flex items-center gap-4">
 					<p className="shrink-0 text-[12px] text-cedar-black">{projectDate}</p>
 
-					<div className="flex h-7 grow items-center rounded-[8px] bg-cedar-yellow/18">
+					<div
+						className={cnJoin(
+							"flex h-7 grow items-center rounded-[8px]",
+							project.status === "ongoing" ? "bg-cedar-yellow/16" : "bg-cedar-black/16"
+						)}
+					>
 						<Button
 							unstyled={true}
 							type="button"
 							isDisabled={projectStatusMutation.isPending}
-							className={cnMerge(
+							className={cnJoin(
 								`flex size-full items-center justify-center rounded-[8px] px-3 text-[14px]
-								font-medium text-cedar-yellow`,
-								!isCompleted && "bg-cedar-yellow text-cedar-white"
+								font-medium`,
+								project.status === "ongoing" ?
+									"bg-cedar-yellow text-cedar-white"
+								:	"text-cedar-black/40"
 							)}
 							onClick={() =>
 								projectStatusMutation.mutate("ongoing", {
@@ -542,10 +437,12 @@ function ProjectCard(props: { project: DashboardProjectsQueryResult[number] }) {
 							unstyled={true}
 							type="button"
 							isDisabled={projectStatusMutation.isPending}
-							className={cnMerge(
+							className={cnJoin(
 								`flex size-full items-center justify-center rounded-[8px] px-3 text-[14px]
-								font-medium text-cedar-yellow`,
-								isCompleted && "bg-cedar-black text-cedar-white"
+								font-medium`,
+								project.status === "completed" ?
+									"bg-cedar-black text-cedar-white"
+								:	"text-cedar-yellow/64"
 							)}
 							onClick={() =>
 								projectStatusMutation.mutate("completed", {
@@ -567,20 +464,16 @@ function ProjectCard(props: { project: DashboardProjectsQueryResult[number] }) {
 }
 
 function DashboardChartCard(props: {
-	className?: string;
 	dataset: DashboardChartDataset | undefined;
 	description: string;
 	title: ChartTitles;
 }) {
-	const { className, dataset, description, title } = props;
+	const { dataset, description, title } = props;
 
 	return (
 		<Card.Root
-			className={cnMerge(
-				`flex w-full min-w-0 flex-col gap-3 rounded-[18px] bg-cedar-white p-4
-				shadow-[0_1px_0_hsl(0,0%,0%,0.04)]`,
-				className
-			)}
+			className="flex w-full min-w-0 flex-col gap-3 rounded-[18px] bg-cedar-white p-4
+				shadow-[0_1px_0_hsl(0,0%,0%,0.04)]"
 		>
 			<Card.Header className="flex flex-row items-start justify-between gap-3">
 				<div className="flex flex-col gap-1">
@@ -620,7 +513,7 @@ const chartColorGroups = {
 	red: ["var(--color-cedar-red)"],
 	redBlack: ["var(--color-cedar-red)", "var(--color-cedar-black)"],
 	redYellow: ["var(--color-cedar-red)", "var(--color-cedar-yellow)"],
-	single: ["var(--color-cedar-yellow)"],
+	yellow: ["var(--color-cedar-yellow)"],
 	yellowRed: ["var(--color-cedar-yellow)", "var(--color-cedar-red)"],
 } as const;
 
@@ -630,15 +523,15 @@ const chartColorsByTitle = {
 	"Attendance Trend - Monthly Sessions": chartColorGroups.red,
 	"Average Mentorship Hours": chartColorGroups.red,
 	"Average Spend per Student": chartColorGroups.blackRedYellow,
-	"Class/Age Distribution": chartColorGroups.black,
-	"Dropout Trend - Monthly": ["hsl(350, 43%, 56%)"],
+	"Class/Age Distribution": chartColorGroups.yellow,
+	"Dropout Trend - Monthly": ["color-mix(in hsl, var(--color-cedar-red) 64%, transparent)"],
 	"Gender Diversity": chartColorGroups.redBlack,
 	"Graduation Rate Trend": chartColorGroups.yellowRed,
 	"Pre/Mid/Post-test Scores by Term": chartColorGroups.blackRedYellow,
 	"Students Meeting Benchmark": [
-		"hsl(351, 96%, 30%, 0.48)",
-		"hsl(351, 96%, 30%, 0.64)",
-		"hsl(351, 96%, 30%, 0.8)",
+		"color-mix(in hsl, var(--color-cedar-red) 48%, transparent)",
+		"color-mix(in hsl, var(--color-cedar-red) 64%, transparent)",
+		"color-mix(in hsl, var(--color-cedar-red) 80%, transparent)",
 	],
 	"TACOTS Mid-term & End-of-term Scores": chartColorGroups.redYellow,
 	"Total Community Service Hours": chartColorGroups.redYellow,
@@ -713,6 +606,7 @@ function renderChart(props: { dataset: DashboardChartDataset | undefined; title:
 			fill:
 				label.toLowerCase().includes("low") ? "var(--color-cedar-yellow)" : "var(--color-cedar-red)",
 			label,
+			rawValue: dataset.datasets[0]?.data[index],
 			value: dataset.datasets[0]?.data[index] ?? 0,
 		}));
 
@@ -728,7 +622,7 @@ function renderChart(props: { dataset: DashboardChartDataset | undefined; title:
 							<span className="size-3.5 rounded-[3px]" style={{ backgroundColor: item.fill }} />
 							<span className="text-[14px]/[1.2] text-cedar-black/56">{item.label}</span>
 							<span className="text-[12px]/[1.2] font-semibold" style={{ color: item.fill }}>
-								{formatNumber(item.value)} ({formatPercent(item.value, totalAmount)})
+								{formatNumber(item.rawValue)} ({formatPercent(item.rawValue, totalAmount)})
 							</span>
 						</li>
 					)}
@@ -736,6 +630,7 @@ function renderChart(props: { dataset: DashboardChartDataset | undefined; title:
 
 				<Chart.Container config={RISK_CHART_CONFIG} className="h-[150px] w-[170px] shrink-0">
 					<PieChart>
+						<Chart.Tooltip content={HIDDEN_LABEL_CHART_TOOLTIP_CONTENT} />
 						<Pie
 							data={riskData}
 							dataKey="value"
@@ -757,6 +652,7 @@ function renderChart(props: { dataset: DashboardChartDataset | undefined; title:
 			fill:
 				label.toLowerCase().includes("female") ? "var(--color-cedar-red)" : "var(--color-cedar-black)",
 			label,
+			rawValue: dataset.datasets[0]?.data[index],
 			value: dataset.datasets[0]?.data[index] ?? 0,
 		}));
 		const totalAmount = genderData.reduce((total, item) => total + item.value, 0);
@@ -771,7 +667,7 @@ function renderChart(props: { dataset: DashboardChartDataset | undefined; title:
 							<span className="size-3 rounded-[3px]" style={{ backgroundColor: item.fill }} />
 							<span className="text-[14px] text-cedar-black/56">{item.label}</span>
 							<span className="text-[12px] font-medium text-cedar-red">
-								{formatPercent(item.value, totalAmount)}
+								{formatPercent(item.rawValue, totalAmount)}
 							</span>
 						</li>
 					)}
@@ -782,6 +678,7 @@ function renderChart(props: { dataset: DashboardChartDataset | undefined; title:
 					className="h-[150px] w-[180px] shrink-0"
 				>
 					<PieChart>
+						<Chart.Tooltip content={HIDDEN_LABEL_CHART_TOOLTIP_CONTENT} />
 						<Pie data={genderData} dataKey="value" nameKey="label" />
 					</PieChart>
 				</Chart.Container>
@@ -812,7 +709,7 @@ function renderChart(props: { dataset: DashboardChartDataset | undefined; title:
 		} satisfies Chart.ChartConfig;
 
 		return (
-			<Chart.Container config={communityServiceConfig} className="h-[260px] w-[520px]">
+			<Chart.Container config={communityServiceConfig} className="h-[260px] w-[720px]">
 				<ComposedChart data={chartData}>
 					<CartesianGrid vertical={true} strokeDasharray="3 3" />
 					<XAxis dataKey="label" tickLine={false} axisLine={false} tickMargin={8} />
@@ -933,7 +830,13 @@ function renderChart(props: { dataset: DashboardChartDataset | undefined; title:
 	})();
 
 	return (
-		<Chart.Container config={config} className="h-[220px] w-[520px] lg:h-[240px]">
+		<Chart.Container
+			config={config}
+			className={cnMerge(
+				"h-[220px] w-[520px] lg:h-[240px]",
+				title === "Application Numbers Over Time" && "w-[720px]"
+			)}
+		>
 			{dataset.type === "bar" && (
 				<BarChart data={chartData}>
 					<CartesianGrid vertical={false} strokeDasharray="3 3" />
@@ -1167,12 +1070,14 @@ function getSeriesColor(context: {
 	return colors[index % colors.length] ?? chartColorGroups.default[0];
 }
 
-const formatNumber = (value: number | undefined) => {
+const formatNumber = (value: number | null | undefined) => {
 	return value == null || Number.isNaN(value) ?
 			EMPTY_VALUE_PLACEHOLDER
 		:	Math.round(value).toLocaleString();
 };
 
-const formatPercent = (value: number, total: number) => {
-	return `${total === 0 ? "0" : Math.round((value / total) * 100)}%`;
+const formatPercent = (value: number | null | undefined, total: number) => {
+	if (value == null || Number.isNaN(value) || total === 0) return EMPTY_VALUE_PLACEHOLDER;
+
+	return `${Math.round((value / total) * 100)}%`;
 };

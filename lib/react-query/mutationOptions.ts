@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/no-nested-ternary */
 import { mutationOptions } from "@tanstack/react-query";
 import type { ExtractUnion } from "@zayne-labs/toolkit-type-helpers";
 import { callBackendApiForQuery } from "../api/callBackendApi";
@@ -100,17 +99,20 @@ export const ashRegistrationDeleteMutation = (id: string) => {
 };
 
 export const ashTrackerDataDownloadMutation = (kind: AshTrackerDataKind) => {
-	const filename =
-		kind === "attendance" ? "ash_weekly_attendance"
-		: kind === "exit" ? "ash_exit"
-		: "ash_termly_tracking";
+	const filename = (() => {
+		if (kind === "attendance") return "ash_weekly_attendance";
+		if (kind === "exit") return "ash_exit";
+		return "ash_termly_tracking";
+	})();
 
 	return mutationOptions({
 		mutationFn: () => {
 			return callBackendApiForQuery(
-				kind === "attendance" ? "@get/forms/ash/download/ashattendance"
-				: kind === "exit" ? "@get/forms/ash/download/ashexit"
-				: "@get/forms/ash/download/ashtracking",
+				(() => {
+					if (kind === "attendance") return "@get/forms/ash/download/ashattendance";
+					if (kind === "exit") return "@get/forms/ash/download/ashexit";
+					return "@get/forms/ash/download/ashtracking";
+				})(),
 				{
 					onSuccess: (ctx) => forceDownload(ctx.data, filename),
 					responseType: "blob",
@@ -206,17 +208,20 @@ export const tacotsFeedbackDeleteMutation = (id: string) => {
 };
 
 export const tacotsTrackerDataDownloadMutation = (kind: TacotsTrackerDataKind) => {
-	const filename =
-		kind === "exit" ? "tacots_exit"
-		: kind === "onboarding" ? "tacots_onboarding"
-		: "tacots_tracking";
+	const filename = (() => {
+		if (kind === "exit") return "tacots_exit";
+		if (kind === "onboarding") return "tacots_onboarding";
+		return "tacots_tracking";
+	})();
 
 	return mutationOptions({
 		mutationFn: () => {
 			return callBackendApiForQuery(
-				kind === "exit" ? "@get/forms/tacots/download/tacotsexit"
-				: kind === "onboarding" ? "@get/forms/tacots/download/tacotsonboarding"
-				: "@get/forms/tacots/download/tacotstracking",
+				(() => {
+					if (kind === "exit") return "@get/forms/tacots/download/tacotsexit";
+					if (kind === "onboarding") return "@get/forms/tacots/download/tacotsonboarding";
+					return "@get/forms/tacots/download/tacotstracking";
+				})(),
 				{
 					onSuccess: (ctx) => forceDownload(ctx.data, filename),
 					responseType: "blob",

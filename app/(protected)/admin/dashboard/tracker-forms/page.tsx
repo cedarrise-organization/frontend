@@ -64,18 +64,18 @@ const TRACKER_FORM_SECTIONS = {
 			title: "TACOTS - Student Tracking Form",
 		},
 		{
-			color: "red",
-			description:
-				"Document completion status, oucomes, and referrals when a TACOTS Student exits the program",
-			href: "/admin/dashboard/tracker-forms/tacots/exit-completion",
-			title: "TACOTS - Exit Completion Form",
-		},
-		{
 			color: "yellow",
 			description:
 				"Capture new beneficiary intake details, demographics, guardian info, program assignment, and initial assessments",
 			href: "/admin/dashboard/tracker-forms/tacots/beneficiary-onboarding",
 			title: "TACOTS - Beneficiary Onboarding Form",
+		},
+		{
+			color: "red",
+			description:
+				"Document completion status, oucomes, and referrals when a TACOTS Student exits the program",
+			href: "/admin/dashboard/tracker-forms/tacots/exit-completion",
+			title: "TACOTS - Exit Completion Form",
 		},
 	],
 } as const satisfies Record<

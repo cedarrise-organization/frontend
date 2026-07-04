@@ -177,15 +177,9 @@ function DashboardColumnFilter<TRecord>(props: { column: Column<TRecord> }) {
 	const filterValue = column.getFilterValue();
 
 	if (meta?.variant === "text") {
-		const value =
-			isArray(filterValue) ?
-				filterValue.join(" ")
-			:	String((filterValue as PropertyKey | undefined) ?? "");
-
 		return (
 			<DashboardToolbarSearch
 				placeholder={meta.placeholder ?? meta.label}
-				value={value}
 				onValueChange={(nextValue) => column.setFilterValue(nextValue || undefined)}
 			/>
 		);
@@ -435,7 +429,6 @@ function DashboardDataTableQueryToolbarControls(props: {
 			<DashboardToolbarSearch
 				className={classNames?.search}
 				placeholder={searchPlaceholder}
-				value={toolbar.search}
 				onValueChange={toolbar.handleSearchValueChange}
 			/>
 
@@ -468,11 +461,10 @@ function DashboardToolbarSearch(props: {
 	className?: string;
 	onValueChange: (value: string) => void;
 	placeholder?: string;
-	value: string;
 }) {
-	const { className, onValueChange, placeholder = "search this section", value } = props;
+	const { className, onValueChange, placeholder = "search this section" } = props;
 
-	const handleChangeDebounced = useDebouncedFn(onValueChange, 500);
+	const handleChangeDebounced = useDebouncedFn(onValueChange, 300);
 
 	return (
 		<Form.InputGroup
@@ -490,7 +482,6 @@ function DashboardToolbarSearch(props: {
 				type="search"
 				placeholder={placeholder}
 				className="w-full bg-transparent outline-none placeholder:text-cedar-black/36"
-				value={value}
 				onChange={(event) => handleChangeDebounced(event.target.value)}
 			/>
 		</Form.InputGroup>

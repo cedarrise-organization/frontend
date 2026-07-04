@@ -64,6 +64,13 @@ export const getDashboardDetailRows = <
 		.map(([key, value]) => ({
 			label: key.split(/(?=[A-Z])/).join(" "),
 			url: key.endsWith("Url") && isString(value) ? value : undefined,
-			value: formatDashboardDetailValue(value),
+			value:
+				isString(value) && (key.endsWith("At") || key.endsWith("Date")) ?
+					new Intl.DateTimeFormat("en", {
+						day: "numeric",
+						month: "short",
+						year: "numeric",
+					}).format(new Date(value))
+				:	formatDashboardDetailValue(value),
 		}));
 };

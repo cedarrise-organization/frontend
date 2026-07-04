@@ -49,16 +49,18 @@ export function getFilterOperators(filterVariant: FilterVariant) {
 export function getDefaultFilterOperator(filterVariant: FilterVariant) {
 	const operators = getFilterOperators(filterVariant);
 
-	return operators[0]?.value;
+	return operators[0]?.value ?? (filterVariant === "text" ? "iLike" : "eq");
 }
 
 export function getValidFilters<TData>(
 	filters: Array<ExtendedColumnFilter<TData>>
 ): Array<ExtendedColumnFilter<TData>> {
-	return filters.filter(
-		(filter) =>
-			filter.operator === "isEmpty"
-			|| filter.operator === "isNotEmpty"
-			|| (Array.isArray(filter.value) ? filter.value.length > 0 : filter.value !== "")
-	);
+	return filters.filter((filter) => {
+		if (filter.operator === "isEmpty" || filter.operator === "isNotEmpty") return true;
+
+		if (Array.isArray(filter.value)) return filter.value.length > 0;
+
+		// eslint-disable-next-line ts-eslint/no-unnecessary-condition
+		return filter.value !== "" && filter.value !== null && filter.value !== undefined;
+	});
 }
