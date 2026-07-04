@@ -420,7 +420,10 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 		ASH_TRACKER_DATA_QUERY_KEYS.attendance.search,
 		parseAsString.withDefault("")
 	);
-	const [exitSearch] = useQueryState(ASH_TRACKER_DATA_QUERY_KEYS.exit.search, parseAsString.withDefault(""));
+	const [exitSearch] = useQueryState(
+		ASH_TRACKER_DATA_QUERY_KEYS.exit.search,
+		parseAsString.withDefault("")
+	);
 
 	const trackingQueryResult = useQuery(
 		ashTrackingTrackerDataQuery({
