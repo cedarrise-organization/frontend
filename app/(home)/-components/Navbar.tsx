@@ -1,7 +1,6 @@
 "use client";
 
 import { useScrollObserver, useToggle } from "@zayne-labs/toolkit-react";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Fragment } from "react";
 import { CollapsibleAnimated } from "@/components/animated/ui";
@@ -9,8 +8,8 @@ import { For, ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
 import { Logo } from "@/components/common/Logo";
 import { NavLink, type MainAppRoutes } from "@/components/common/NavLink";
-import { hamburgerIcon, xIcon } from "@/components/icons";
-import { DropdownMenu } from "@/components/ui";
+import { HamburgerCloseIcon, HamburgerOpenIcon } from "@/components/icons/Hamburger";
+import { Popover } from "@/components/ui";
 import { Button } from "@/components/ui/button";
 import { cnJoin, cnMerge } from "@/lib/utils/cn";
 
@@ -23,17 +22,34 @@ function NavBar() {
 		<header
 			ref={observedElementRef}
 			className={cnJoin(
-				`sticky top-0 isolate z-10 flex w-full scrollbar-thin items-center justify-between gap-10 px-4
-				py-3 transition-shadow duration-300 ease-[ease] lg:overflow-x-auto lg:px-[50px]`,
-				isScrolled && "shadow-[0_2px_4px_hsl(0,0%,0%,0.05)]"
+				`fixed top-0 isolate z-10 flex w-full scrollbar-thin items-center justify-between gap-10 px-4
+				py-3 transition-shadow duration-300 ease-[ease] lg:overflow-x-auto lg:px-[50px] lg:py-5`,
+				isScrolled ? "shadow-[0_2px_4px_hsl(0,0%,0%,0.05)]" : "text-cedar-white"
 			)}
 		>
-			<span className="absolute inset-0 -z-1 bg-cedar-white/90 backdrop-blur-2xl" />
-			<Logo />
+			{isScrolled && <span className="absolute inset-0 -z-1 bg-cedar-white/90 backdrop-blur-2xl" />}
+
+			<Logo variant={isScrolled ? "regular" : "yellow"} />
 
 			<DesktopNavigation className="max-lg:hidden" />
 
-			<MobileNavigation className="lg:hidden" />
+			<MobileNavigation className="lg:hidden">
+				{({ className, isNavShow, toggleNavShow }) => (
+					<Button
+						unstyled={true}
+						className={cnJoin(
+							"z-10 size-5",
+							!isScrolled && !isNavShow ? "text-cedar-white" : "text-cedar-black",
+							className
+						)}
+						onClick={toggleNavShow}
+					>
+						{isNavShow ?
+							<HamburgerCloseIcon className="size-full" />
+						:	<HamburgerOpenIcon className="size-full" />}
+					</Button>
+				)}
+			</MobileNavigation>
 		</header>
 	);
 }
@@ -82,21 +98,22 @@ function DesktopNavigation(props: { className?: string }) {
 							<NavLink
 								href={item.link}
 								className="inline-flex h-[56px] shrink-0 items-center justify-center rounded-[20px]
-									p-5 transition-colors hover:bg-cedar-grey hover:text-cedar-red
-									data-active:bg-cedar-yellow data-active:text-cedar-white"
+									px-5 transition-colors hover:not-data-active:bg-cedar-grey
+									hover:not-data-active:text-cedar-red data-active:bg-cedar-yellow
+									data-active:text-cedar-white"
 							>
 								{item.label}
 							</NavLink>
 						)}
 
 						{item.children && (
-							<DropdownMenu.Root modal={false}>
-								<DropdownMenu.Trigger
+							<Popover.Root modal={false}>
+								<Popover.Trigger
 									data-active={item.children.some((childItem) => childItem.link === pathname)}
 									className="group inline-flex h-[56px] shrink-0 items-center justify-center
-										gap-1.5 rounded-[20px] p-5 transition-colors hover:bg-cedar-grey
-										hover:text-cedar-red data-active:bg-cedar-yellow
-										data-active:text-cedar-white"
+										gap-1.5 rounded-[20px] px-5 transition-colors
+										hover:not-data-active:bg-cedar-grey hover:not-data-active:text-cedar-red
+										data-active:bg-cedar-yellow data-active:text-cedar-white"
 								>
 									{item.label}
 									<span
@@ -105,36 +122,34 @@ function DesktopNavigation(props: { className?: string }) {
 									>
 										<IconBox icon="lucide:chevron-down" className="size-full" />
 									</span>
-								</DropdownMenu.Trigger>
+								</Popover.Trigger>
 
-								<DropdownMenu.Content
+								<Popover.Content
 									align="start"
 									sideOffset={6}
-									className="min-w-[288px] rounded-[24px] border-cedar-black/5 bg-cedar-white/90
-										p-3 shadow-[0_8px_24px_theme(--color-cedar-black/0.06)] backdrop-blur-xl"
+									className="flex min-w-[288px] flex-col gap-1.5 rounded-[24px]
+										border-cedar-black/5 bg-cedar-white/90 p-3
+										shadow-[0_8px_24px_theme(--color-cedar-black/0.06)] backdrop-blur-xl"
 								>
-									<DropdownMenu.Group className="flex flex-col gap-1.5">
-										<For
-											each={item.children}
-											renderItem={(childItem) => (
-												<DropdownMenu.Item
-													asChild={true}
-													key={childItem.label}
-													className="group flex min-h-[56px] items-center justify-between
-														gap-4 rounded-[18px] p-0 px-4 text-[14px] transition-colors
-														focus:bg-[hsl(0,0%,84%)] focus:text-cedar-red
-														data-active:bg-cedar-black data-active:text-cedar-white"
-												>
-													<NavLink href={childItem.link}>
-														<p>{childItem.label}</p>
-														<LinkIndicator />
-													</NavLink>
-												</DropdownMenu.Item>
-											)}
-										/>
-									</DropdownMenu.Group>
-								</DropdownMenu.Content>
-							</DropdownMenu.Root>
+									<For
+										each={item.children}
+										renderItem={(childItem) => (
+											<NavLink
+												href={childItem.link}
+												key={childItem.label}
+												className="group flex h-[56px] items-center justify-between gap-4
+													rounded-[18px] px-4 text-[14px] transition-colors
+													hover:not-data-active:bg-[hsl(0,0%,84%)]
+													hover:not-data-active:text-cedar-red data-active:bg-cedar-black
+													data-active:text-cedar-white"
+											>
+												<p>{childItem.label}</p>
+												<LinkIndicator />
+											</NavLink>
+										)}
+									/>
+								</Popover.Content>
+							</Popover.Root>
 						)}
 					</Fragment>
 				)}
@@ -143,22 +158,30 @@ function DesktopNavigation(props: { className?: string }) {
 	);
 }
 
-function MobileNavigation(props: { className?: string }) {
-	const { className } = props;
+function MobileNavigation(props: {
+	children: (state: {
+		className: string | undefined;
+		isNavShow: boolean;
+		toggleNavShow: () => void;
+	}) => React.ReactNode;
+	className?: string;
+}) {
+	const { children, className } = props;
 
 	const [isNavShow, toggleNavShow] = useToggle(false);
 
 	const pathname = usePathname();
 
+	const resolvedChildren = children({ className, isNavShow, toggleNavShow });
+
 	return (
 		<>
 			<section
 				className={cnMerge(
-					`fixed inset-[0_0_0_auto] flex flex-col items-center gap-7 overflow-x-hidden pt-8
-					transition-[width] ease-[cubic-bezier(0.32,0.72,0,1)]`,
-					isNavShow ?
-						"w-full bg-cedar-white/80 backdrop-blur-3xl duration-500"
-					:	"w-0 bg-cedar-white duration-750",
+					`fixed inset-[0_0_0_auto] flex flex-col items-center gap-7 overflow-x-hidden
+					bg-cedar-white/80 pt-8 text-cedar-black backdrop-blur-3xl transition-[width]
+					ease-[cubic-bezier(0.32,0.72,0,1)]`,
+					isNavShow ? "w-full duration-500" : "w-0 duration-750",
 					className
 				)}
 			>
@@ -176,8 +199,9 @@ function MobileNavigation(props: { className?: string }) {
 									key={linkItem.label}
 									href={linkItem.link}
 									className="group flex h-12 items-center justify-between gap-4 rounded-[14px]
-										px-4 transition-colors hover:bg-cedar-grey hover:text-cedar-red
-										data-active:bg-cedar-black data-active:text-cedar-white"
+										px-4 transition-colors hover:not-data-active:bg-cedar-grey
+										hover:not-data-active:text-cedar-red data-active:bg-cedar-black
+										data-active:text-cedar-white"
 								>
 									{linkItem.label}
 								</NavLink>
@@ -195,8 +219,8 @@ function MobileNavigation(props: { className?: string }) {
 											(childLinkItem) => childLinkItem.link === pathname
 										)}
 										className="flex h-12 w-full items-center justify-between rounded-[14px] px-4
-											hover:bg-cedar-grey hover:text-cedar-red data-active:bg-cedar-yellow
-											data-active:text-cedar-white"
+											hover:not-data-active:bg-cedar-grey hover:not-data-active:text-cedar-red
+											data-active:bg-cedar-yellow data-active:text-cedar-white"
 									>
 										<span>{linkItem.label}</span>
 										<IconBox
@@ -215,8 +239,9 @@ function MobileNavigation(props: { className?: string }) {
 													key={childItem.label}
 													href={childItem.link}
 													className="group flex h-12 items-center justify-between gap-3
-														rounded-[12px] px-4 transition-colors hover:bg-cedar-grey
-														hover:text-cedar-red data-active:bg-cedar-black
+														rounded-[12px] px-4 transition-colors
+														hover:not-data-active:bg-cedar-grey
+														hover:not-data-active:text-cedar-red data-active:bg-cedar-black
 														data-active:text-cedar-white"
 												>
 													<p>{childItem.label}</p>
@@ -232,16 +257,7 @@ function MobileNavigation(props: { className?: string }) {
 				/>
 			</section>
 
-			<Button unstyled={true} className={cnMerge("z-10 size-5", className)} onClick={toggleNavShow}>
-				<Image
-					src={isNavShow ? xIcon : hamburgerIcon}
-					alt={isNavShow ? "X" : "Hamburger"}
-					width={20}
-					height={20}
-					priority={true}
-					className="size-full"
-				/>
-			</Button>
+			{resolvedChildren}
 		</>
 	);
 }

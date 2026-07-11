@@ -11,8 +11,6 @@ export type ButtonProps = InferProps<"button">
 	& Prettify<
 		VariantProps<typeof buttonVariants> & {
 			asChild?: boolean;
-			isLoading?: boolean;
-			loadingStyle?: "replace-content" | "side-by-side";
 			unstyled?: "none" | true;
 		}
 	>;
@@ -61,6 +59,7 @@ export const buttonVariants = tv({
 	],
 
 	defaultVariants: {
+		loadingStyle: "replace-content",
 		rounded: "regular",
 		size: "medium",
 		theme: "primary",
@@ -127,7 +126,7 @@ function Button<TElement extends React.ElementType>(props: PolymorphicPropsStric
 		isDisabled = false,
 		disabled = isDisabled,
 		isLoading = false,
-		loadingStyle = "replace-content",
+		loadingStyle,
 		rounded = defaultVariantValue,
 		size = defaultVariantValue,
 		theme = defaultVariantValue,

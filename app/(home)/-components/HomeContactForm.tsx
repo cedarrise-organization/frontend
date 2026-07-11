@@ -33,14 +33,14 @@ function HomeContactForm() {
 		<Form.Root
 			form={form}
 			onSubmit={(event) => void onSubmit(event)}
-			className="flex w-full flex-col gap-4 lg:max-w-[590px] lg:gap-5"
+			className="flex w-full max-w-[590px] flex-col gap-4 lg:gap-5"
 		>
 			<TextField control={form.control} name="email" type="email" placeholder="E-mail" />
 
 			<TextAreaField control={form.control} name="feedback" label="Feedback" />
 
 			<Form.Submit asChild={true}>
-				<Button className="px-8 lg:self-end">Submit</Button>
+				<Button className="px-8 lg:self-start">Submit Feedback</Button>
 			</Form.Submit>
 		</Form.Root>
 	);

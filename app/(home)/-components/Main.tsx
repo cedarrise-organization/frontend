@@ -1,18 +1,35 @@
+import { tw } from "@zayne-labs/toolkit-core";
 import type { InferProps } from "@zayne-labs/toolkit-react/utils";
-import { cnMerge } from "@/lib/utils/cn";
+import { isFunction } from "@zayne-labs/toolkit-type-helpers";
+import { cnJoin, cnMerge } from "@/lib/utils/cn";
 
-function Main(props: InferProps<"main">) {
-	const { className, ...restOfProps } = props;
+function Main(
+	props: Omit<InferProps<"main">, "children"> & {
+		children: React.ReactNode | ((props: { constrainedClassName: string }) => React.ReactNode);
+		layout?: "constrained" | "full";
+	}
+) {
+	const { children, className, layout = "constrained", ...restOfProps } = props;
+
+	const constrainedClassName = cnJoin(
+		tw`flex w-full max-w-[412px] grow flex-col px-4 lg:max-w-[1300px] lg:px-[50px] lg:pt-8 lg:pb-[80px]`,
+		className
+	);
+
+	const resolvedChildren = isFunction(children) ? children({ constrainedClassName }) : children;
 
 	return (
 		<main
 			className={cnMerge(
-				`flex w-full max-w-[412px] grow flex-col px-4 pt-6 pb-12 lg:max-w-[1300px] lg:px-[50px] lg:pt-8
-				lg:pb-[80px]`,
+				"flex grow flex-col items-center",
+				layout === "full" && "w-full",
+				layout === "constrained" && constrainedClassName,
 				className
 			)}
 			{...restOfProps}
-		/>
+		>
+			{resolvedChildren}
+		</main>
 	);
 }
 

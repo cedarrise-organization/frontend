@@ -1,6 +1,6 @@
 import type { InferProps } from "@zayne-labs/toolkit-react/utils";
 import Image from "next/image";
-import { logo, logoWhite } from "@/assets/images";
+import { logo, logoWhite, logoYellow } from "@/assets/images";
 import { cnMerge } from "@/lib/utils/cn";
 import { NavLink } from "./NavLink";
 
@@ -9,7 +9,7 @@ function Logo(
 		as?: "div" | typeof NavLink;
 		children?: React.ReactNode;
 		classNames?: { base?: string; image?: string };
-		variant?: "regular" | "white";
+		variant?: "regular" | "white" | "yellow";
 	}
 ) {
 	const {
@@ -24,15 +24,29 @@ function Logo(
 
 	const defaultChild = <h3 className="text-[24px] lg:text-[32px]">CedarRise</h3>;
 
+	const logoSrc = () => {
+		switch (variant) {
+			case "white": {
+				return logoWhite;
+			}
+			case "yellow": {
+				return logoYellow;
+			}
+			default: {
+				return logo;
+			}
+		}
+	};
+
 	return (
 		<Element href="/" className={cnMerge("flex items-center gap-3 lg:gap-4", classNames?.base)}>
 			<Image
-				src={src ?? (variant === "white" ? logoWhite : logo)}
+				src={src ?? logoSrc()}
 				alt="Logo"
 				priority={true}
 				width={48}
 				height={52}
-				className={cnMerge("w-12 shrink-0 lg:w-[72px]", className, classNames?.image)}
+				className={cnMerge("w-12 shrink-0 lg:w-[56px]", className, classNames?.image)}
 				{...restOfProps}
 			/>
 			{children ?? defaultChild}

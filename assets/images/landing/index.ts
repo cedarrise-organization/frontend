@@ -4,3 +4,8 @@ export { default as programmeTwo } from "./programme-two.svg?override";
 export { default as programmeThree } from "./programme-three.svg?override";
 export { default as programmeFour } from "./programme-four.svg?override";
 export { default as ctaOneImg } from "./cta-one-img.svg?override";
+export { default as homeCarousel1 } from "./home-carousel-1.svg?override";
+export { default as homeCarousel2 } from "./home-carousel-2.svg?override";
+export { default as homeCarousel3 } from "./home-carousel-3.svg?override";
+export { default as homeCarousel4 } from "./home-carousel-4.svg?override";
+export { default as homeCarousel5 } from "./home-carousel-5.svg?override";
