@@ -74,9 +74,7 @@ function DashboardSidebarHeaderSection() {
 					}}
 				>
 					<div className="flex shrink-0 flex-col gap-1 leading-none">
-						<h3 className="text-[18px] text-cedar-white lg:text-[24px]">
-							{siteConfig.name}
-						</h3>
+						<h3 className="text-[18px] text-cedar-white lg:text-[24px]">{siteConfig.name}</h3>
 						<p className="text-[12px] text-cedar-yellow lg:text-[14px]">Admin Dashboard</p>
 					</div>
 				</Logo>
