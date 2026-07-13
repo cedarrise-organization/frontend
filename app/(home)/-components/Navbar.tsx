@@ -13,35 +13,34 @@ import { Popover } from "@/components/ui";
 import { Button } from "@/components/ui/button";
 import { cnJoin, cnMerge } from "@/lib/utils/cn";
 
+const excludedRoutesFromNavTransition = ["/about"] satisfies MainAppRoutes[];
+
 function NavBar() {
-	const { isScrolled, observedElementRef } = useScrollObserver({
-		rootMargin: "0px",
-	});
+	const { isScrolled, observedElementRef } = useScrollObserver({ rootMargin: "0px" });
+	const pathname = usePathname();
+
+	const isExcludedFromTransition = excludedRoutesFromNavTransition.includes(pathname);
 
 	return (
 		<header
 			ref={observedElementRef}
 			className={cnJoin(
 				`fixed top-0 isolate z-10 flex w-full scrollbar-thin items-center justify-between gap-10 px-4
-				py-3 transition-[color,box-shadow] duration-300 ease-[ease] lg:overflow-x-auto lg:px-[50px]
-				lg:py-5`,
-				isScrolled ? "shadow-[0_2px_4px_hsl(0,0%,0%,0.05)]" : "text-cedar-white"
+				py-3 transition-shadow duration-300 ease-[ease] lg:overflow-x-auto lg:px-[50px] lg:py-5`,
+				isExcludedFromTransition ? "sticky" : "fixed",
+				!isExcludedFromTransition && !isScrolled && "text-cedar-white",
+				isScrolled && "shadow-[0_2px_4px_theme(--color-cedar-black/0.05)]"
 			)}
 		>
 			<span
 				className={cnJoin(
 					`absolute inset-0 -z-1 bg-cedar-white/90 backdrop-blur-2xl transition-opacity duration-300
 					ease-[ease]`,
-					isScrolled ? "opacity-100" : "opacity-0"
+					!isExcludedFromTransition && !isScrolled ? "opacity-0" : "opacity-100"
 				)}
 			/>
 
-			<Logo
-				variant={isScrolled ? "regular" : "yellow"}
-				classNames={{
-					text: "transition-colors duration-300 ease-[ease]",
-				}}
-			/>
+			<Logo variant={!isExcludedFromTransition && !isScrolled ? "yellow" : "regular"} classNames={{}} />
 
 			<DesktopNavigation className="max-lg:hidden" />
 
@@ -50,8 +49,10 @@ function NavBar() {
 					<Button
 						unstyled={true}
 						className={cnJoin(
-							"z-10 size-5 transition-colors duration-300 ease-[ease]",
-							!isScrolled && !ctx.isNavShow ? "text-cedar-white" : "text-cedar-black",
+							"z-10 size-5",
+							!isExcludedFromTransition && !isScrolled && !ctx.isNavShow ?
+								"text-cedar-white"
+							:	"text-cedar-black",
 							ctx.className
 						)}
 						onClick={ctx.toggleNavShow}

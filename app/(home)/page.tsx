@@ -56,8 +56,8 @@ const impactStats = [
 function HeroSection() {
 	return (
 		<section
-			className="relative isolate px-4 pt-[148px] pb-12 text-cedar-white lg:px-[50px] lg:pt-[198px]
-				lg:pb-[54px]"
+			className="relative isolate w-full px-4 pt-[148px] pb-12 text-cedar-white lg:px-[50px]
+				lg:pt-[198px] lg:pb-[54px]"
 		>
 			<h1 className="max-w-[380px] text-[40px]/12 lg:max-w-[640px] lg:text-[64px]/[72px]">
 				Nurturing Minds, Transforming Communities
@@ -113,9 +113,7 @@ const offers: Array<{ description: string; icon: string; title: string }> = [
 
 function WhatWeDoSection() {
 	return (
-		<section
-			className="bg-cedar-black px-5 pt-7.5 pb-10 lg:w-fit lg:px-[80px] lg:pt-[80px] lg:pb-[148px]"
-		>
+		<section className="w-full bg-cedar-black px-5 pt-7.5 pb-10 lg:px-[80px] lg:pt-[80px] lg:pb-[148px]">
 			<h2 className="text-center text-[24px]/[1.2] text-cedar-yellow lg:text-[36px]">What we do</h2>
 
 			<ForWithWrapper
@@ -247,7 +245,7 @@ function OurProgrammesSection() {
 							<Image
 								src={initiative.image}
 								alt="Initiative"
-								className="absolute inset-0 size-full rounded-[inherit] object-cover"
+								className="size-full rounded-[inherit] object-cover"
 							/>
 							<span
 								className="absolute inset-x-0 bottom-0 h-1/2 rounded-b-[inherit]
@@ -387,7 +385,7 @@ function SustainableImpactSection() {
 								alt="bgImage"
 								width={380}
 								height={424}
-								className="absolute inset-0 size-full rounded-[inherit] object-cover"
+								className="size-full rounded-[inherit] object-cover"
 							/>
 
 							<span

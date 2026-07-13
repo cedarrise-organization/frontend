@@ -53,7 +53,7 @@ export function HomeHeroCarousel() {
 			options={{ loop: false }}
 			plugins={[
 				autoplay({
-					delay: 10000,
+					delay: 6000,
 					stopOnInteraction: false,
 				}),
 			]}
@@ -68,7 +68,7 @@ export function HomeHeroCarousel() {
 								width={412}
 								height={570}
 								alt=""
-								className="absolute inset-0 size-full object-cover"
+								className="size-full object-cover"
 							/>
 
 							<span

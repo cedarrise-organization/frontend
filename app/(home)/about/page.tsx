@@ -16,13 +16,19 @@ import { Main } from "../-components/Main";
 
 function AboutPage() {
 	return (
-		<Main className="gap-10 lg:gap-16">
-			<HeroSection />
-			<WhoWeAreSection />
-			<MissionVisionSection />
-			<CoreValuesSection />
-			<TeamSection />
-			<FinalCTASection />
+		<Main layout="full" className="gap-10 lg:gap-16">
+			{(ctx) => (
+				<>
+					<HeroSection />
+					<WhoWeAreSection />
+					<div className={ctx.constrainedClassName}>
+						<MissionVisionSection />
+						<CoreValuesSection />
+						<TeamSection />
+						<FinalCTASection />
+					</div>
+				</>
+			)}
 		</Main>
 	);
 }
@@ -46,24 +52,23 @@ function HeroSection() {
 
 function WhoWeAreSection() {
 	return (
-		<section
-			className="grid overflow-hidden rounded-[20px] bg-cedar-black lg:grid-cols-2 lg:rounded-[24px]"
-		>
-			<article className="p-6 text-cedar-white lg:p-10">
-				<h2 className="text-[28px]/[1.2] lg:text-[40px]/[1.2]">Who We Are</h2>
+		<section className="flex w-full overflow-hidden bg-cedar-black lg:flex-row">
+			<article className="flex w-full flex-col justify-center gap-6 pl-[54px] lg:pl-[120px]">
+				<h2 className="text-[28px]/[1.2] text-cedar-white lg:text-[40px]/[1.2]">Who We Are</h2>
 
-				<div className="mt-6 space-y-4 text-[12px]/[1.6] lg:text-base/7">
+				<div
+					className="max-w-[320px] text-[12px]/[1.6] text-cedar-white/80 lg:max-w-[554px]
+						lg:text-base/7"
+				>
 					<p>
 						CedarRise Initiative for Human Development is a non-profit organization dedicated to
 						strengthening individuals and communities through education, professional development,
 						skills training, and social impact programs.
 					</p>
-
 					<p>
 						Inspired by the resilience of the cedar tree, we equip people with the knowledge, skills,
 						and opportunities they need to grow and thrive.
 					</p>
-
 					<p>
 						Our work supports diverse groups—including students, educators, professionals, and
 						underserved communities—with a strong focus on children and women.
@@ -71,12 +76,18 @@ function WhoWeAreSection() {
 				</div>
 			</article>
 
-			<Image
-				src={aboutHeroImg}
-				alt="CedarRise participants holding certificates"
-				className="h-[260px] w-full object-cover lg:h-full"
-				priority={true}
-			/>
+			<div className="relative h-[260px] w-full lg:h-[420px]">
+				<Image
+					src={aboutHeroImg}
+					alt="CedarRise participants holding certificates"
+					className="size-full object-cover"
+					priority={true}
+				/>
+				<span
+					className="absolute inset-0
+						bg-linear-[180deg,theme(--color-cedar-red/0)_0%,theme(--color-cedar-red/0.8)_100%]"
+				/>
+			</div>
 		</section>
 	);
 }
@@ -128,19 +139,19 @@ function CoreValuesSection() {
 }
 
 const teamMembers = [
-	{ image: teamMemberOneImg, name: "Emmanuella Aguenu", role: "Managing Director" },
-	{ image: teamMemberTwoImg, name: "Ogechukwu Igwe", role: "Asst. Coordinator" },
-	{ image: teamMemberThreeImg, name: "Uchechukwu Onyijechi", role: "Academic Coordinator" },
-	{ image: teamMemberFourImg, name: "Ylenor Abang", role: "Treasurer" },
-] as const;
+	{ image: teamMemberOneImg, name: "Emmanuella Aguenu" },
+	{ image: teamMemberTwoImg, name: "Ogechukwu Igwe" },
+	{ image: teamMemberThreeImg, name: "Uchechukwu Onyechi" },
+	{ image: teamMemberFourImg, name: "Ylenor Abang" },
+];
 
 function TeamSection() {
 	return (
 		<section className="flex flex-col gap-8 lg:gap-12">
-			<header className="max-w-[620px]">
+			<header className="">
 				<h2 className="text-[28px]/[1.2] lg:text-[40px]/[1.2]">Our Team</h2>
 
-				<p className="mt-4 text-[12px]/[1.6] lg:text-base/7">
+				<p className="mt-4 max-w-[338px] text-[10px]/4 lg:max-w-[568px] lg:text-[14px]/6">
 					CedarRise is driven by a team of passionate individuals committed to creating impact.
 					Together, we bring diverse expertise, shared values and a deep dedication to empowering
 					communities.
@@ -154,18 +165,15 @@ function TeamSection() {
 						<Card.Root
 							as="li"
 							key={member.name}
-							className="h-full min-h-[180px] overflow-hidden rounded-[18px] bg-cedar-black p-0
-								text-cedar-white lg:min-h-[280px] lg:rounded-[24px]"
+							className="h-full min-h-[180px] overflow-hidden rounded-[18px] p-0 text-cedar-white
+								lg:min-h-[280px] lg:rounded-[24px]"
 						>
 							<Card.Header className="aspect-[1.12] w-full">
 								<Image src={member.image} alt={member.name} className="size-full object-cover" />
 							</Card.Header>
 
-							<Card.Content className="flex flex-col gap-1 p-3 lg:p-4">
+							<Card.Content className="flex flex-col gap-1 bg-cedar-black p-3 lg:p-4">
 								<Card.Title className="text-[14px]/[1.2]">{member.name}</Card.Title>
-								<Card.Description className="text-[10px]/[1.2] text-cedar-white/80">
-									{member.role}
-								</Card.Description>
 							</Card.Content>
 						</Card.Root>
 					)}

@@ -4,7 +4,7 @@ import { Logo } from "@/components/common/Logo";
 import { NavLink, NavLinkEphemeral, type MainAppRoutes } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/lib/config/site";
-import { HomeContactForm } from "./HomeContactForm";
+import { HomeFeedbackForm } from "./HomeFeedbackForm";
 
 const quickLinks = [
 	{ href: "/", label: "Home" },
@@ -68,7 +68,7 @@ function Footer() {
 			<section className="flex w-full flex-col gap-12 lg:flex-row lg:justify-between">
 				<article className="flex w-full flex-col gap-6">
 					<h2 className="text-[24px]/none lg:text-[32px]">We’d Love Your Feedback</h2>
-					<HomeContactForm />
+					<HomeFeedbackForm />
 				</article>
 
 				<article className="flex w-full flex-col gap-5 lg:gap-10">

@@ -8,15 +8,15 @@ import { callBackendApiForQuery } from "@/lib/api/callBackendApi";
 import { backendApiSchemaRoutes } from "@/lib/api/callBackendApi/apiSchema";
 import { TextAreaField, TextField } from "./FormPartsShared";
 
-const ContactFormSchema = backendApiSchemaRoutes["@post/feedback/home"].body;
+const HomeFeedbackFormSchema = backendApiSchemaRoutes["@post/feedback/home"].body;
 
-function HomeContactForm() {
+function HomeFeedbackForm() {
 	const form = useForm({
 		defaultValues: {
 			email: "",
 			feedback: "",
 		},
-		resolver: zodResolver(ContactFormSchema),
+		resolver: zodResolver(HomeFeedbackFormSchema),
 	});
 
 	const onSubmit = form.handleSubmit(async (data) => {
@@ -40,10 +40,10 @@ function HomeContactForm() {
 			<TextAreaField control={form.control} name="feedback" label="Feedback" />
 
 			<Form.Submit asChild={true}>
-				<Button className="px-8 lg:self-start">Submit Feedback</Button>
+				<Button className="px-8 lg:self-start lg:px-10.5">Submit Feedback</Button>
 			</Form.Submit>
 		</Form.Root>
 	);
 }
 
-export { HomeContactForm };
+export { HomeFeedbackForm };
