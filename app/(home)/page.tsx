@@ -1,15 +1,15 @@
 import Image from "next/image";
 import {
-	ctaOneImg,
-	heroImg,
 	programmeFour,
 	programmeOne,
 	programmeThree,
 	programmeTwo,
+	sustainableImpact1,
+	sustainableImpact2,
 } from "@/assets/images/landing";
 import { ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
-import { NavLink, NavLinkEphemeral, type MainAppRoutes } from "@/components/common/NavLink";
+import { NavLinkEphemeral, type MainAppRoutes } from "@/components/common/NavLink";
 import {
 	communityOutReachIcon,
 	educationIcon,
@@ -17,6 +17,7 @@ import {
 	mentorshipIcon,
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
+import { siteConfig } from "@/lib/config/site";
 import { cnJoin } from "@/lib/utils/cn";
 import { FinalCTASection } from "./-components/FinalCTASectionShared";
 import { HomeHeroCarousel, HomeTestimonialCarousel } from "./-components/HomesCarousels";
@@ -33,7 +34,7 @@ function HomePage() {
 					</div>
 					<div className={props.constrainedClassName}>
 						<OurProgrammesSection />
-						<CtaSectionOne />
+						<SustainableImpactSection />
 						<TestimonialsSection />
 						<FinalCTASection />
 					</div>
@@ -115,9 +116,7 @@ function WhatWeDoSection() {
 		<section
 			className="bg-cedar-black px-5 pt-7.5 pb-10 lg:w-fit lg:px-[80px] lg:pt-[80px] lg:pb-[148px]"
 		>
-			<h2 className="text-center text-[24px] leading-[1.2] text-cedar-yellow lg:text-[36px]">
-				What we do
-			</h2>
+			<h2 className="text-center text-[24px]/[1.2] text-cedar-yellow lg:text-[36px]">What we do</h2>
 
 			<ForWithWrapper
 				className="mt-9.5 grid grid-cols-2 gap-2 lg:mt-[52px]
@@ -287,7 +286,72 @@ function TestimonialsSection() {
 	);
 }
 
-function CtaSectionOne() {
+const sustainableImpactInitatives: Array<{
+	bgImage: string;
+	ctaButton: React.ReactNode;
+	description: React.ReactNode;
+	title: string;
+}> = [
+	{
+		bgImage: sustainableImpact1,
+		ctaButton: (
+			<NavLinkEphemeral href="/social-initiatives/ash/register">
+				<Button>Enroll now</Button>
+			</NavLinkEphemeral>
+		),
+		description: (
+			<>
+				<p>
+					Learning support that empowers students and communities. ASH Online Tutorials provides
+					structured academic support for students who need additional guidance outside the classroom.
+					Through experienced tutors and personalized sessions, we help learners strengthen their
+					understanding, confidence, and academic performance.
+				</p>
+				<p>
+					The program also supports the broader ASH initiative, enabling CedarRise to extend
+					after-school academic support and holistic learning opportunities to underserved youth. By
+					enrolling in ASH Online Tutorials, families receive quality learning support while helping
+					expand access to education for children in need.
+				</p>
+			</>
+		),
+		title: "ASH Online Tutorials",
+	},
+	{
+		bgImage: sustainableImpact2,
+		ctaButton: (
+			<a
+				rel="noopener noreferrer"
+				target="_blank"
+				href={siteConfig.contact.phone.whatsAppUrl}
+				className="contents"
+			>
+				<Button>
+					<p>View Collection</p>
+					<IconBox icon="ph:arrow-right" className="size-4 lg:size-7.5" />
+				</Button>
+			</a>
+		),
+		description: (
+			<>
+				<p>
+					Gifts by CedarRise curates beautiful and thoughtful gift packages for celebrations,
+					corporate events, milestones, and special occasions. Each gift is carefully assembled to
+					create memorable experiences while supporting a greater cause. Every purchase contributes
+					directly to TACOTS (Take A Child Off The Street), helping provide educational support and
+					mentorship to vulnerable children.
+				</p>
+				<p>
+					By choosing Gifts by CedarRise, you are not only celebrating life’s special moments, you are
+					also helping a child access education and opportunity
+				</p>
+			</>
+		),
+		title: "Gifts by CedarRises",
+	},
+];
+
+function SustainableImpactSection() {
 	return (
 		<section className="flex flex-col gap-6 lg:gap-10">
 			<header className="flex flex-col items-center gap-2.5 text-center lg:gap-4">
@@ -301,7 +365,39 @@ function CtaSectionOne() {
 				</p>
 			</header>
 
-			<div className="flex- flex gap-4 lg:flex-row lg:justify-between lg:gap-5"></div>
+			<ForWithWrapper
+				each={sustainableImpactInitatives}
+				className="grid gap-4 lg:grid-cols-2 lg:justify-between lg:gap-5"
+				renderItem={(initiative) => (
+					<li
+						key={initiative.title}
+						className="relative isolate flex min-h-[424px] flex-col gap-2 rounded-[24px] px-8
+							pt-[114px] pb-8 lg:min-h-[560px] lg:gap-4 lg:px-11.5 lg:pt-[152px] lg:pb-11.5"
+					>
+						<h3 className="text-[24px] text-cedar-white lg:text-[32px]">{initiative.title}</h3>
+						<div className="max-w-[458px] grow text-[10px]/[1.4] text-cedar-white/80 lg:text-[14px]">
+							{initiative.description}
+						</div>
+
+						{initiative.ctaButton}
+
+						<div className="absolute inset-0 -z-1 rounded-[inherit]">
+							<Image
+								src={initiative.bgImage}
+								alt="bgImage"
+								width={380}
+								height={424}
+								className="absolute inset-0 size-full rounded-[inherit] object-cover"
+							/>
+
+							<span
+								className="absolute inset-0 rounded-[inherit]
+									bg-linear-[180deg,theme(--color-cedar-red/0)_0%,theme(--color-cedar-red/0.8)_100%]"
+							/>
+						</div>
+					</li>
+				)}
+			/>
 		</section>
 	);
 }

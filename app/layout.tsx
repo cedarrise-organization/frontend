@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import localFont from "next/font/local";
 import { SonnerToaster } from "@/components/common/Toaster";
+import { siteConfig } from "@/lib/config/site";
 import { cnJoin } from "@/lib/utils/cn";
 import { Providers } from "./Providers";
 import "../tailwind.css";
@@ -19,8 +20,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-	description: "Nurturing Minds, Transforming Communities",
-	title: "CedarRise",
+	description: siteConfig.description,
+	title: siteConfig.name,
 };
 
 function RootLayout({ children }: LayoutProps<"/">) {

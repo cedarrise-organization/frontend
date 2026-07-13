@@ -23,28 +23,40 @@ function NavBar() {
 			ref={observedElementRef}
 			className={cnJoin(
 				`fixed top-0 isolate z-10 flex w-full scrollbar-thin items-center justify-between gap-10 px-4
-				py-3 transition-shadow duration-300 ease-[ease] lg:overflow-x-auto lg:px-[50px] lg:py-5`,
+				py-3 transition-[color,box-shadow] duration-300 ease-[ease] lg:overflow-x-auto lg:px-[50px]
+				lg:py-5`,
 				isScrolled ? "shadow-[0_2px_4px_hsl(0,0%,0%,0.05)]" : "text-cedar-white"
 			)}
 		>
-			{isScrolled && <span className="absolute inset-0 -z-1 bg-cedar-white/90 backdrop-blur-2xl" />}
+			<span
+				className={cnJoin(
+					`absolute inset-0 -z-1 bg-cedar-white/90 backdrop-blur-2xl transition-opacity duration-300
+					ease-[ease]`,
+					isScrolled ? "opacity-100" : "opacity-0"
+				)}
+			/>
 
-			<Logo variant={isScrolled ? "regular" : "yellow"} />
+			<Logo
+				variant={isScrolled ? "regular" : "yellow"}
+				classNames={{
+					text: "transition-colors duration-300 ease-[ease]",
+				}}
+			/>
 
 			<DesktopNavigation className="max-lg:hidden" />
 
 			<MobileNavigation className="lg:hidden">
-				{({ className, isNavShow, toggleNavShow }) => (
+				{(ctx) => (
 					<Button
 						unstyled={true}
 						className={cnJoin(
-							"z-10 size-5",
-							!isScrolled && !isNavShow ? "text-cedar-white" : "text-cedar-black",
-							className
+							"z-10 size-5 transition-colors duration-300 ease-[ease]",
+							!isScrolled && !ctx.isNavShow ? "text-cedar-white" : "text-cedar-black",
+							ctx.className
 						)}
-						onClick={toggleNavShow}
+						onClick={ctx.toggleNavShow}
 					>
-						{isNavShow ?
+						{ctx.isNavShow ?
 							<HamburgerCloseIcon className="size-full" />
 						:	<HamburgerOpenIcon className="size-full" />}
 					</Button>

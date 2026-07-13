@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { logo } from "@/assets/images";
+import { siteConfig } from "@/lib/config/site";
 
 function LoadingScreen(props: { text?: string }) {
 	const { text = "Preparing your dashboard" } = props;
@@ -25,7 +26,9 @@ function LoadingScreen(props: { text?: string }) {
 			</div>
 
 			<div className="flex flex-col gap-2">
-				<h3 className="text-[28px] font-semibold text-cedar-black lg:text-[34px]">CedarRise</h3>
+				<h3 className="text-[28px] font-semibold text-cedar-black lg:text-[34px]">
+					{siteConfig.name}
+				</h3>
 				<p className="text-[13px] text-cedar-black/56 lg:text-[14px]">{text}</p>
 			</div>
 

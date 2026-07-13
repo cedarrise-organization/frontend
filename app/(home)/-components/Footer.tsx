@@ -1,10 +1,9 @@
-import Image from "next/image";
-import { bgVector } from "@/assets/images";
 import { ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
 import { Logo } from "@/components/common/Logo";
 import { NavLink, NavLinkEphemeral, type MainAppRoutes } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
+import { siteConfig } from "@/lib/config/site";
 import { HomeContactForm } from "./HomeContactForm";
 
 const quickLinks = [
@@ -22,36 +21,57 @@ const socialInitiatives = [
 ] satisfies Array<{ href: MainAppRoutes; label: string }>;
 
 const socialLinks = [
-	{ href: "tel:09039377669", icon: "ph:phone-fill", label: "Phone" },
-	{ href: "mailto:info@cedarriseinitiative", icon: "solar:letter-linear", label: "Email" },
+	{ href: siteConfig.contact.phone.href, icon: "ph:phone-fill", label: "Phone" },
 	{
-		href: "https://www.instagram.com/cedarriseinitiative",
+		href: siteConfig.contact.email.href,
+		icon: "solar:letter-linear",
+		label: "Email",
+	},
+	{
+		href: siteConfig.social.instagram,
 		icon: "ph:instagram-logo-bold",
 		label: "Instagram",
 	},
-	{ href: "#", icon: "ri:linkedin-fill", label: "LinkedIn" },
 	{
-		href: "https://api.whatsapp.com/send/?phone=%2B2349039377669&text&type=phone_number&app_absent=0",
+		href: siteConfig.social.linkedIn,
+		icon: "ri:linkedin-fill",
+		label: "LinkedIn",
+	},
+	{
+		href: siteConfig.contact.phone.whatsAppUrl,
 		icon: "ic:baseline-whatsapp",
 		label: "WhatsApp",
 	},
-	{ href: "#", icon: "ph:youtube-logo-fill", label: "YouTube" },
-	{ href: "#", icon: "ri:tumblr-fill", label: "Tumblr" },
+	{
+		href: siteConfig.websiteUrl,
+		icon: "lucide:globe",
+		label: "Website",
+	},
+	{
+		href: siteConfig.social.youTube,
+		icon: "ph:youtube-logo-fill",
+		label: "YouTube",
+	},
+	{
+		href: siteConfig.social.tikTok,
+		icon: "ic:baseline-tiktok",
+		label: "TikTok",
+	},
 ] satisfies Array<{ href: string; icon: string; label: string }>;
 
 function Footer() {
 	return (
 		<footer
-			className="flex w-full flex-col items-center gap-10 bg-cedar-white px-4 py-8 lg:gap-20
-				lg:px-[100px] lg:py-[60px]"
+			className="flex w-full flex-col items-center gap-10 bg-cedar-white px-4 py-8 max-lg:max-w-[412px]
+				lg:gap-20 lg:px-[100px] lg:py-[60px]"
 		>
 			<section className="flex w-full flex-col gap-12 lg:flex-row lg:justify-between">
 				<article className="flex w-full flex-col gap-6">
-					<h2 className="text-[24px]/[1.2] lg:text-[32px]">We’d Love Your Feedback</h2>
+					<h2 className="text-[24px]/none lg:text-[32px]">We’d Love Your Feedback</h2>
 					<HomeContactForm />
 				</article>
 
-				<article className="flex w-full flex-col gap-5 max-lg:items-center lg:max-w-[500px] lg:gap-10">
+				<article className="flex w-full flex-col gap-5 lg:gap-10">
 					<div className="flex flex-wrap gap-12 lg:justify-between lg:gap-[90px]">
 						<div className="flex flex-col gap-2 lg:gap-3.5">
 							<h3 className="text-[12px] font-medium lg:text-[20px]">Quick Links</h3>
@@ -115,7 +135,8 @@ function Footer() {
 			</section>
 
 			<section
-				className="mt-[50px] flex w-full flex-col gap-10 lg:mt-[90px] lg:flex-row lg:justify-between"
+				className="mt-[50px] flex w-full flex-col gap-10 lg:mt-[90px] lg:flex-row lg:items-center
+					lg:justify-between"
 			>
 				<div className="flex w-full items-center gap-5 lg:justify-between lg:gap-[74px]">
 					<Logo />
@@ -137,7 +158,7 @@ function Footer() {
 			</section>
 
 			<p className="mt-8 text-[10px] lg:mt-10 lg:text-[14px]">
-				© 2026 CedarRise Initiative. All rights reserved.
+				© {siteConfig.copyrightYear} {siteConfig.organizationName}. All rights reserved.
 			</p>
 		</footer>
 	);

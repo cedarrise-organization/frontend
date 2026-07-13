@@ -1,6 +1,7 @@
 import type { InferProps } from "@zayne-labs/toolkit-react/utils";
 import Image from "next/image";
 import { logo, logoWhite, logoYellow } from "@/assets/images";
+import { siteConfig } from "@/lib/config/site";
 import { cnMerge } from "@/lib/utils/cn";
 import { NavLink } from "./NavLink";
 
@@ -8,7 +9,7 @@ function Logo(
 	props: Pick<Partial<InferProps<typeof Image>>, "className" | "src" | "width"> & {
 		as?: "div" | typeof NavLink;
 		children?: React.ReactNode;
-		classNames?: { base?: string; image?: string };
+		classNames?: { base?: string; image?: string; text?: string };
 		variant?: "regular" | "white" | "yellow";
 	}
 ) {
@@ -22,7 +23,9 @@ function Logo(
 		...restOfProps
 	} = props;
 
-	const defaultChild = <h3 className="text-[24px] lg:text-[32px]">CedarRise</h3>;
+	const defaultChild = (
+		<h3 className={cnMerge("text-[24px] lg:text-[32px]", classNames?.text)}>{siteConfig.name}</h3>
+	);
 
 	const logoSrc = () => {
 		switch (variant) {

@@ -9,3 +9,5 @@ export { default as homeCarousel2 } from "./home-carousel-2.svg?override";
 export { default as homeCarousel3 } from "./home-carousel-3.svg?override";
 export { default as homeCarousel4 } from "./home-carousel-4.svg?override";
 export { default as homeCarousel5 } from "./home-carousel-5.svg?override";
+export { default as sustainableImpact1 } from "./sustainable-impact-1.svg?override";
+export { default as sustainableImpact2 } from "./sustainable-impact-2.svg?override";
