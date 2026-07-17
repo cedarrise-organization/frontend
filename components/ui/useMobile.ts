@@ -4,7 +4,9 @@ import { useLayoutEffect, useState } from "react";
 const useIsMobile = (options?: { enable?: boolean; mobileBreakpoint?: number }) => {
 	const { enable = true, mobileBreakpoint = 768 } = options ?? {};
 
-	const [isMobile, setIsMobile] = useState(() => isBrowser() && window.innerWidth < mobileBreakpoint);
+	const [isMobile, setIsMobile] = useState(
+		() => enable && isBrowser() && window.innerWidth < mobileBreakpoint
+	);
 
 	useLayoutEffect(() => {
 		if (!enable) return;

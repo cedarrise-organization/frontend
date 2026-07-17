@@ -55,7 +55,9 @@ function HeroSection() {
 function WhoWeAreSection() {
 	return (
 		<section className="flex w-full overflow-hidden bg-cedar-black lg:flex-row">
-			<article className="flex w-full flex-col justify-center gap-6 pl-[54px] lg:pl-[120px]">
+			<article
+				className="flex w-full flex-col justify-center gap-6 py-6 pl-[54px] lg:py-8 lg:pl-[120px]"
+			>
 				<h2 className="text-[28px]/[1.2] text-cedar-white lg:text-[40px]/[1.2]">Who We Are</h2>
 
 				<div
@@ -78,7 +80,7 @@ function WhoWeAreSection() {
 				</div>
 			</article>
 
-			<div className="relative h-[260px] w-full lg:h-[420px]">
+			<div className="relative min-h-[260px] w-full lg:min-h-[420px]">
 				<Image
 					src={aboutHeroImg}
 					alt="CedarRise participants holding certificates"

@@ -36,8 +36,8 @@ function HomePage() {
 						<OurProgrammesSection />
 						<SustainableImpactSection />
 						<TestimonialsSection />
-						<FinalCTASection />
 					</div>
+					<FinalCTASection />
 				</>
 			)}
 		</Main>
