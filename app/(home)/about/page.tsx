@@ -27,8 +27,8 @@ function AboutPage() {
 						<MissionVisionSection />
 						<CoreValuesSection />
 						<TeamSection />
-						<FinalCTASection />
 					</div>
+					<FinalCTASection />
 				</>
 			)}
 		</Main>

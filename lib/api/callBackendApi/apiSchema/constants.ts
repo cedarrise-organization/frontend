@@ -7,6 +7,18 @@ export const YesNoOptions = defineEnum(["YES", "NO"]);
 
 export const YesMaybeNoOptions = defineEnum(["YES", "MAYBE", "NO"]);
 
+export const ProgramLinkProgramOptions = defineEnum(["ASH", "TACOTS", "VOLUNTEER"]);
+
+export const ProgramLinkTypeOptions = defineEnum(["REGISTRATION", "FEEDBACK"]);
+
+export const PartnerInterestOptions = defineEnum([
+	"CO_HOST_PROGRAMS",
+	"PROVIDE_RESOURCES",
+	"SPONSOR_INITIATIVES",
+	"OFFER_EXPERTISE",
+	"OTHER",
+]);
+
 export const AshProgramTypeOptions = defineEnum(["ONLINE", "OFFLINE"]);
 
 export const AdminRoleActionOptions = defineEnum(["assign", "revoke"]);

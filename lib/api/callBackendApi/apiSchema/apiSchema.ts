@@ -45,8 +45,11 @@ import {
 	OutreachSortByOptions,
 	OutreachTypeOptions,
 	ParentGuardianRelationshipOptions,
+	PartnerInterestOptions,
 	PositiveChangeNoticedOptions,
 	PrimaryLanguageOptions,
+	ProgramLinkProgramOptions,
+	ProgramLinkTypeOptions,
 	ProjectStatusOptions,
 	ReceiptSortByOptions,
 	ReviewStatusOptions,
@@ -851,28 +854,6 @@ const clientSideRoutes = defineSchemaRoutes({
 		query: PaginatedQuerySchema.pick({ limit: true }).optional(),
 	},
 
-	"@get/donate/callback": {
-		data: withBaseSuccessResponse({
-			data: z.object({
-				data: z.object({
-					amount: z.number(),
-					customer: z
-						.object({
-							email: z.email().optional(),
-						})
-						.optional(),
-					reference: z.string(),
-					status: z.string(),
-				}),
-				message: z.string(),
-				status: z.boolean(),
-			}),
-		}),
-		query: z.object({
-			reference: RequiredStringSchema,
-		}),
-	},
-
 	"@post/donate": {
 		body: z.object({
 			amount: stringWithNumberValidation(
@@ -895,29 +876,6 @@ const clientSideRoutes = defineSchemaRoutes({
 		}),
 	},
 
-	"@post/donate/webhook": {
-		body: z.object({
-			data: z.object({
-				amount: z.number(),
-				customer: z
-					.object({
-						email: z.email().optional(),
-					})
-					.optional(),
-				metadata: z
-					.object({
-						comment: z.string().optional(),
-						name: z.string().optional(),
-					})
-					.optional(),
-				reference: z.string(),
-				status: z.string(),
-			}),
-			event: z.string(),
-		}),
-		data: withBaseSuccessResponse({ data: z.null() }),
-	},
-
 	"@post/feedback/home": {
 		body: z.object({
 			email: z.email("Enter a valid email address."),
@@ -925,6 +883,27 @@ const clientSideRoutes = defineSchemaRoutes({
 				.string()
 				.min(10, "Enter at least 10 characters.")
 				.max(500, "Keep this under 500 characters."),
+		}),
+		data: withBaseSuccessResponse({ data: z.null() }),
+	},
+
+	"@post/send-links/initiatives": {
+		body: z.object({
+			email: z.email("Enter a valid email address."),
+			name: z.string().min(3, "Enter at least 3 characters.").max(256),
+		}),
+		data: withBaseSuccessResponse({ data: z.null() }),
+		query: z.object({
+			program: getRequiredEnumSchema(ProgramLinkProgramOptions),
+			type: getRequiredEnumSchema(ProgramLinkTypeOptions),
+		}),
+	},
+
+	"@post/send-links/partners": {
+		body: z.object({
+			email: z.email("Enter a valid email address."),
+			name: z.string().min(3, "Enter at least 3 characters.").max(256),
+			option: getRequiredEnumArraySchema(PartnerInterestOptions),
 		}),
 		data: withBaseSuccessResponse({ data: z.null() }),
 	},
