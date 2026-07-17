@@ -9,19 +9,19 @@ import { Button } from "@/components/ui/button";
 const registrationLinks = [
 	{
 		href: "#",
-		label: "Capacity Building for Undergraduates Registration Form",
+		label: "Are you a secondary school student?",
 	},
 	{
 		href: "#",
-		label: "Capacity Building for Secondary School Students- Registration Form",
+		label: "Are you an undergraduate?",
 	},
 	{
 		href: "#",
-		label: "Capacity Building for Professionals- Registration Form",
+		label: "Are you a professional?",
 	},
 	{
 		href: "#",
-		label: "Form",
+		label: "Are you attending a specific program?",
 	},
 ] satisfies Array<{ href: MainAppRoutes; label: string }>;
 

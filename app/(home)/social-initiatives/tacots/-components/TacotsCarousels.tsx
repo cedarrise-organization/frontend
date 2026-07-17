@@ -11,10 +11,10 @@ const stories = [
 		quote: "Since my son began this scholarship, I have seen remarkable changes in him—he has grown, is eager to learn, and even asked to join a holiday learning program. I am grateful to God and the sponsors, and I pray they are blessed with good health and more opportunities to do good",
 		title: "N.C (Father of Beneficiary)",
 	},
-	{
-		quote: "After losing my husband, I could not imagine how to train my daughter, but this scholarship came as God’s answer to my prayers. My daughter has changed positively—she is calmer, listens to corrections, and reads more, though still playful as a child. I am deeply thankful to the sponsors for remembering families like mine and pray that God strengthens and blesses them for all they have done.",
-		title: "A.I (Mother of Beneficiary)",
-	},
+	// {
+	// 	quote: "After losing my husband, I could not imagine how to train my daughter, but this scholarship came as God’s answer to my prayers. My daughter has changed positively—she is calmer, listens to corrections, and reads more, though still playful as a child. I am deeply thankful to the sponsors for remembering families like mine and pray that God strengthens and blesses them for all they have done.",
+	// 	title: "A.I (Mother of Beneficiary)",
+	// },
 	{
 		quote: "This sponsorship has helped my parents by paying my school fees, and I am happy to be in JSS2. I thank my sponsors for supporting me, and I always keep them in my prayers.",
 		title: "C. E (Student, St. Vincent de Paul Seminary, JSS2)",

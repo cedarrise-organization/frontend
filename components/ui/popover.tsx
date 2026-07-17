@@ -1,6 +1,6 @@
 "use client";
 
-import { Popover as PopoverPrimitive } from "radix-ui";
+import { Popover, Popover as PopoverPrimitive } from "radix-ui";
 import { cnMerge } from "@/lib/utils/cn";
 
 function PopoverRoot(props: React.ComponentProps<typeof PopoverPrimitive.Root>) {
@@ -39,9 +39,12 @@ function PopoverAnchor(props: React.ComponentProps<typeof PopoverPrimitive.Ancho
 	return <PopoverPrimitive.Anchor data-slot="popover-anchor" {...props} />;
 }
 
+const PopoverClose = Popover.Close;
+
 export {
 	PopoverRoot as Root,
 	PopoverContent as Content,
 	PopoverTrigger as Trigger,
 	PopoverAnchor as Anchor,
+	PopoverClose as Close,
 };

@@ -9,7 +9,7 @@ import { IconBox } from "@/components/common/IconBox";
 import { Logo } from "@/components/common/Logo";
 import { NavLink, type MainAppRoutes } from "@/components/common/NavLink";
 import { HamburgerCloseIcon, HamburgerOpenIcon } from "@/components/icons/Hamburger";
-import { Popover } from "@/components/ui";
+import { Popover, ScrollArea } from "@/components/ui";
 import { Button } from "@/components/ui/button";
 import { cnJoin, cnMerge } from "@/lib/utils/cn";
 
@@ -25,10 +25,8 @@ function NavBar() {
 		<header
 			ref={observedElementRef}
 			className={cnJoin(
-				`fixed top-0 isolate z-10 flex w-full scrollbar-thin items-center justify-between gap-10 px-4
-				py-3 transition-shadow duration-300 ease-[ease] lg:overflow-x-auto lg:px-[50px] lg:py-5`,
-				isExcludedFromTransition ? "sticky" : "fixed",
-				!isExcludedFromTransition && !isScrolled && "text-cedar-white",
+				"top-0 isolate z-10 w-full transition-shadow duration-300 ease-in",
+				!isExcludedFromTransition ? "fixed" : "sticky",
 				isScrolled && "shadow-[0_2px_4px_theme(--color-cedar-black/0.05)]"
 			)}
 		>
@@ -40,29 +38,41 @@ function NavBar() {
 				)}
 			/>
 
-			<Logo variant={!isExcludedFromTransition && !isScrolled ? "yellow" : "regular"} classNames={{}} />
+			<ScrollArea.Root
+				orientation="horizontal"
+				classNames={{ base: "w-full", thumb: !isScrolled ? "bg-cedar-yellow" : "bg-cedar-red" }}
+			>
+				<article
+					className={cnJoin(
+						"flex h-[76px] w-full items-center justify-between gap-10 px-4 lg:h-[100px] lg:px-[50px]",
+						!isExcludedFromTransition && !isScrolled && "text-cedar-white"
+					)}
+				>
+					<Logo variant={!isExcludedFromTransition && !isScrolled ? "yellow" : "regular"} />
 
-			<DesktopNavigation className="max-lg:hidden" />
+					<DesktopNavigation className="max-lg:hidden" />
 
-			<MobileNavigation className="lg:hidden">
-				{(ctx) => (
-					<Button
-						unstyled={true}
-						className={cnJoin(
-							"z-10 size-5",
-							!isExcludedFromTransition && !isScrolled && !ctx.isNavShow ?
-								"text-cedar-white"
-							:	"text-cedar-black",
-							ctx.className
+					<MobileNavigation className="lg:hidden">
+						{(ctx) => (
+							<Button
+								unstyled={true}
+								className={cnJoin(
+									"z-10 size-5",
+									!isExcludedFromTransition && !isScrolled && !ctx.isNavShow ?
+										"text-cedar-white"
+									:	"text-cedar-black",
+									ctx.className
+								)}
+								onClick={ctx.toggleNavShow}
+							>
+								{ctx.isNavShow ?
+									<HamburgerCloseIcon className="size-full" />
+								:	<HamburgerOpenIcon className="size-full" />}
+							</Button>
 						)}
-						onClick={ctx.toggleNavShow}
-					>
-						{ctx.isNavShow ?
-							<HamburgerCloseIcon className="size-full" />
-						:	<HamburgerOpenIcon className="size-full" />}
-					</Button>
-				)}
-			</MobileNavigation>
+					</MobileNavigation>
+				</article>
+			</ScrollArea.Root>
 		</header>
 	);
 }
@@ -120,7 +130,7 @@ function DesktopNavigation(props: { className?: string }) {
 						)}
 
 						{item.children && (
-							<Popover.Root modal={false}>
+							<Popover.Root>
 								<Popover.Trigger
 									data-active={item.children.some((childItem) => childItem.link === pathname)}
 									className="group inline-flex h-[56px] shrink-0 items-center justify-center
@@ -147,18 +157,19 @@ function DesktopNavigation(props: { className?: string }) {
 									<For
 										each={item.children}
 										renderItem={(childItem) => (
-											<NavLink
-												href={childItem.link}
-												key={childItem.label}
-												className="group flex h-[56px] items-center justify-between gap-4
-													rounded-[18px] px-4 text-[14px] transition-colors
-													hover:not-data-active:bg-[hsl(0,0%,84%)]
-													hover:not-data-active:text-cedar-red data-active:bg-cedar-black
-													data-active:text-cedar-white"
-											>
-												<p>{childItem.label}</p>
-												<LinkIndicator />
-											</NavLink>
+											<Popover.Close key={childItem.label} asChild={true}>
+												<NavLink
+													href={childItem.link}
+													className="group flex h-[56px] items-center justify-between gap-4
+														rounded-[18px] px-4 text-[14px] transition-colors
+														hover:not-data-active:bg-[hsl(0,0%,84%)]
+														hover:not-data-active:text-cedar-red data-active:bg-cedar-black
+														data-active:text-cedar-white"
+												>
+													<p>{childItem.label}</p>
+													<LinkIndicator />
+												</NavLink>
+											</Popover.Close>
 										)}
 									/>
 								</Popover.Content>

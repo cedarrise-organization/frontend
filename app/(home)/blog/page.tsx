@@ -2,8 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { heroImg as blogHeroImg } from "@/assets/images/blog";
-import { heroImg as blogCardImg } from "@/assets/images/capacity-building";
+import { blogCardImg, heroImg } from "@/assets/images/blog";
 import { ForWithWrapper } from "@/components/common/for";
 import { Switch } from "@/components/common/switch";
 import { Button } from "@/components/ui/button";
@@ -40,7 +39,7 @@ function BlogIntroSection() {
 				>
 					<div className="absolute inset-0 isolate -z-1 rounded-[inherit]">
 						<Image
-							src={blogHeroImg}
+							src={heroImg}
 							alt="Blog"
 							priority={true}
 							className="absolute inset-0 size-full rounded-[inherit] object-cover"

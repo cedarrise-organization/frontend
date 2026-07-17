@@ -62,8 +62,8 @@ const socialLinks = [
 function Footer() {
 	return (
 		<footer
-			className="flex w-full flex-col items-center gap-10 bg-cedar-white px-4 py-8 max-lg:max-w-[412px]
-				lg:gap-20 lg:px-[100px] lg:py-[60px]"
+			className="flex w-full max-w-[412px] flex-col items-center gap-10 bg-cedar-white px-4 py-8
+				lg:max-w-[1400px] lg:gap-20 lg:px-[50px] lg:py-[60px]"
 		>
 			<section className="flex w-full flex-col gap-12 lg:flex-row lg:justify-between">
 				<article className="flex w-full flex-col gap-6">

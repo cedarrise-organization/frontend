@@ -38,7 +38,7 @@ export function TestimonialCarouselShared(props: {
 								index === array.length - 1 && "pr-5"
 							)}
 						>
-							<article className="flex size-full flex-col rounded-[24px] bg-cedar-grey p-6">
+							<article className="flex size-full flex-col gap-5 rounded-[24px] bg-cedar-grey p-6">
 								<span
 									className="grid h-11 w-[55px] shrink-0 place-content-center rounded-[20px]
 										bg-cedar-yellow text-[64px] text-cedar-red"
@@ -57,9 +57,9 @@ export function TestimonialCarouselShared(props: {
 									</svg>
 								</span>
 
-								<p className="mt-5 grow text-[12px]/5 lg:text-base/7">"{testimonial.quote}"</p>
+								<p className="grow text-[12px]/5 lg:text-base/7">"{testimonial.quote}"</p>
 
-								<h4 className="mt-2 leading-[1.2] text-cedar-red lg:text-[20px]">
+								<h4 className="leading-[1.2] text-cedar-red lg:text-[20px]">
 									{testimonial.title}
 								</h4>
 							</article>

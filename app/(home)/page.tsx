@@ -25,10 +25,10 @@ import { Main } from "./-components/Main";
 
 function HomePage() {
 	return (
-		<Main layout="full" className="gap-12 lg:gap-[80px]">
+		<Main layout="fill" className="gap-12 lg:gap-[80px]">
 			{(props) => (
 				<>
-					<div>
+					<div className="w-full">
 						<HeroSection />
 						<WhatWeDoSection />
 					</div>
@@ -113,12 +113,15 @@ const offers: Array<{ description: string; icon: string; title: string }> = [
 
 function WhatWeDoSection() {
 	return (
-		<section className="w-full bg-cedar-black px-5 pt-7.5 pb-10 lg:px-[80px] lg:pt-[80px] lg:pb-[148px]">
+		<section
+			className="flex w-full flex-col gap-9.5 bg-cedar-black px-5 pt-7.5 pb-10 lg:gap-[52px]
+				lg:px-[80px] lg:pt-[80px] lg:pb-[148px]"
+		>
 			<h2 className="text-center text-[24px]/[1.2] text-cedar-yellow lg:text-[36px]">What we do</h2>
 
 			<ForWithWrapper
-				className="mt-9.5 grid grid-cols-2 gap-2 lg:mt-[52px]
-					lg:grid-cols-[repeat(4,min(100%/4,245px))] lg:justify-center lg:gap-5"
+				className="grid grid-cols-2 gap-2 lg:grid-cols-[repeat(4,min(100%/4,245px))] lg:justify-center
+					lg:gap-5"
 				each={offers}
 				renderItem={(offer, index) => {
 					const offerCount = index + 1;

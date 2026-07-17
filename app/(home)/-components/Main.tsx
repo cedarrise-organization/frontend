@@ -6,13 +6,13 @@ import { cnJoin, cnMerge } from "@/lib/utils/cn";
 function Main(
 	props: Omit<InferProps<"main">, "children"> & {
 		children: React.ReactNode | ((props: { constrainedClassName: string }) => React.ReactNode);
-		layout?: "constrained" | "full";
+		layout?: "constrained" | "fill";
 	}
 ) {
 	const { children, className, layout = "constrained", ...restOfProps } = props;
 
 	const constrainedClassName = cnJoin(
-		tw`flex w-full max-w-[412px] grow flex-col px-4 lg:max-w-[1300px] lg:px-[50px] lg:pt-8 lg:pb-[80px]`,
+		tw`flex w-full max-w-[412px] grow flex-col px-4 lg:max-w-[1400px] lg:px-[50px] lg:pt-8 lg:pb-[80px]`,
 		className
 	);
 
@@ -22,7 +22,7 @@ function Main(
 		<main
 			className={cnMerge(
 				"flex grow flex-col items-center",
-				layout === "full" && "w-full",
+				layout === "fill" && "w-full",
 				layout === "constrained" && constrainedClassName,
 				className
 			)}

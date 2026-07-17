@@ -49,7 +49,7 @@ const slideImages = [homeCarousel1, homeCarousel2, homeCarousel3, homeCarousel4,
 export function HomeHeroCarousel() {
 	return (
 		<Carousel.Root
-			className="absolute inset-0 isolate -z-1 size-full touch-none"
+			className="absolute inset-0 isolate -z-1 touch-none"
 			options={{ loop: false }}
 			plugins={[
 				autoplay({

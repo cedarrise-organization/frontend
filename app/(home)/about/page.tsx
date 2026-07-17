@@ -16,7 +16,7 @@ import { Main } from "../-components/Main";
 
 function AboutPage() {
 	return (
-		<Main layout="full" className="gap-10 lg:gap-16">
+		<Main layout="fill" className="gap-10 lg:gap-16">
 			{(ctx) => (
 				<>
 					<HeroSection />
