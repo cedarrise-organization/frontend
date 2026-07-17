@@ -3,12 +3,12 @@ import {
 	aboutCoreValueDesktopImg,
 	aboutCoreValueMobileImg,
 	aboutHeroImg,
-	teamMemberOneImg,
-	teamMemberTwoImg,
-	teamMemberThreeImg,
-	teamMemberFourImg,
 	teamMemberFiveImg,
-	teamMemberSixImg
+	teamMemberFourImg,
+	teamMemberOneImg,
+	teamMemberSixImg,
+	teamMemberThreeImg,
+	teamMemberTwoImg,
 } from "@/assets/images/about";
 import { For } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";

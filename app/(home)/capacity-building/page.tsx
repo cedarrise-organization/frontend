@@ -90,9 +90,9 @@ function IntroSection() {
 	return (
 		<section className="flex flex-col gap-10">
 			<p className="text-[10px]/4 lg:text-base/7">
-				We deliver transformative learning experiences designed to meet real-world needs. Our
-				capacity building programs support individuals, institutions, and organizations seeking
-				practical skills, fresh perspectives, and measurable impact. Through partnerships with schools,
+				We deliver transformative learning experiences designed to meet real-world needs. Our capacity
+				building programs support individuals, institutions, and organizations seeking practical
+				skills, fresh perspectives, and measurable impact. Through partnerships with schools,
 				professionals, and organizations, we create learning environments that are engaging, practical,
 				and results-driven.
 			</p>
