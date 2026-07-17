@@ -8,7 +8,7 @@ import { HomeFeedbackForm } from "./HomeFeedbackForm";
 
 const quickLinks = [
 	{ href: "/", label: "Home" },
-	{ href: "/about", label: "About" },
+	{ href: "/about", label: "About Us" },
 	{ href: "/capacity-building", label: "Capacity Building" },
 	{ href: "#", label: "Sustainability Initiatives" },
 ] satisfies Array<{ href: MainAppRoutes; label: string }>;

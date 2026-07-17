@@ -100,7 +100,7 @@ const offers: Array<{ description: string; icon: string; title: string }> = [
 		title: "Mentorship",
 	},
 	{
-		description: "Reaching deserved communities with impactful initiatives",
+		description: "Reaching underserved communities with impactful initiatives",
 		icon: communityOutReachIcon,
 		title: "Community Outreach",
 	},

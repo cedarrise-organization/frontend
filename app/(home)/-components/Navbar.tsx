@@ -83,7 +83,7 @@ type RouteRecord = { label: string; link: MainAppRoutes };
 
 const navLinkItems = [
 	{ label: "Home", link: "/" },
-	{ label: "About", link: "/about" },
+	{ label: "About Us", link: "/about" },
 	{ label: "Capacity Building", link: "/capacity-building" },
 	{
 		children: [

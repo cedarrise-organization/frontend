@@ -3,10 +3,12 @@ import {
 	aboutCoreValueDesktopImg,
 	aboutCoreValueMobileImg,
 	aboutHeroImg,
-	teamMemberFourImg,
 	teamMemberOneImg,
-	teamMemberThreeImg,
 	teamMemberTwoImg,
+	teamMemberThreeImg,
+	teamMemberFourImg,
+	teamMemberFiveImg,
+	teamMemberSixImg
 } from "@/assets/images/about";
 import { For } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
@@ -139,10 +141,12 @@ function CoreValuesSection() {
 }
 
 const teamMembers = [
-	{ image: teamMemberOneImg, name: "Emmanuella Aguenu" },
-	{ image: teamMemberTwoImg, name: "Ogechukwu Igwe" },
-	{ image: teamMemberThreeImg, name: "Uchechukwu Onyechi" },
-	{ image: teamMemberFourImg, name: "Ylenor Abang" },
+	{ image: teamMemberOneImg, name: "Philipa Onochie" },
+	{ image: teamMemberTwoImg, name: "Ylenor Abang" },
+	{ image: teamMemberThreeImg, name: "Emmanuella Aguenu" },
+	{ image: teamMemberFourImg, name: "Chiazom Ezigbo" },
+	{ image: teamMemberFiveImg, name: "Ogechukwu Igwe" },
+	{ image: teamMemberSixImg, name: "Uchechukwu Onyechi" },
 ];
 
 function TeamSection() {
@@ -158,7 +162,7 @@ function TeamSection() {
 				</p>
 			</header>
 
-			<ul className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-5">
+			<ul className="grid grid-cols-2 gap-4 lg:grid-cols-3 lg:gap-5">
 				<For
 					each={teamMembers}
 					renderItem={(member) => (
@@ -179,7 +183,7 @@ function TeamSection() {
 					)}
 				/>
 
-				<For
+				{/* <For
 					each={6}
 					renderItem={(index) => (
 						<li
@@ -188,7 +192,7 @@ function TeamSection() {
 								lg:rounded-[24px]"
 						/>
 					)}
-				/>
+				/> */}
 			</ul>
 		</section>
 	);

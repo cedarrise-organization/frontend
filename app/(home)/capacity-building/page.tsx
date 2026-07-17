@@ -91,7 +91,7 @@ function IntroSection() {
 		<section className="flex flex-col gap-10">
 			<p className="text-[10px]/4 lg:text-base/7">
 				We deliver transformative learning experiences designed to meet real-world needs. Our
-				capacity-building programs support individuals, institutions, and organizations seeking
+				capacity building programs support individuals, institutions, and organizations seeking
 				practical skills, fresh perspectives, and measurable impact. Through partnerships with schools,
 				professionals, and organizations, we create learning environments that are engaging, practical,
 				and results-driven.
@@ -135,7 +135,7 @@ const featuredPrograms: Array<{ description: string; title: string }> = [
 	},
 	{
 		description:
-			"Capacity-building sessions designed to support educators with improved teaching strategies, classroom engagement techniques, and professional development.",
+			"Capacity building sessions designed to support educators with improved teaching strategies, classroom engagement techniques, and professional development.",
 		title: "Teacher Training Workshops",
 	},
 	{
@@ -153,7 +153,7 @@ function FeaturedCapacityProgramsSection() {
 		>
 			<article className="flex flex-col gap-5 lg:max-w-[1080px] lg:gap-11">
 				<h2 className="text-center text-[24px]/[1.2] lg:text-[40px]">
-					Featured Capacity-Building Programs
+					Featured Capacity Building Programs
 				</h2>
 
 				<ForWithWrapper
