@@ -1,7 +1,7 @@
 import Image from "next/image";
+import { TestimonialCarouselShared } from "@/app/(home)/-components/CarouselsShared";
 import { homeCarousel3 } from "@/assets/images/landing";
 import { aboutOutreachImg } from "@/assets/images/social-initiatives/outreaches";
-import { TestimonialCarouselShared } from "@/app/(home)/-components/CarouselsShared";
 import { ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
 import { NavLink, NavLinkEphemeral } from "@/components/common/NavLink";
