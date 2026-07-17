@@ -12,60 +12,52 @@ import { Main } from "../-components/Main";
 
 function BlogPage() {
 	return (
-		<Main className="gap-10 lg:gap-[64px]">
-			<BlogIntroSection />
-			<FeaturedPostsSection />
-			<FinalCTASection />
+		<Main layout="fill" className="gap-10 lg:gap-[64px]">
+			{(ctx) => (
+				<>
+					<BlogHeroSection />
+
+					<div className={ctx.constrainedClassName}>
+						<FeaturedPostsSection />
+					</div>
+
+					<FinalCTASection
+						title="Stay Connected"
+						description="Follow our journey and be part of the impact we’re creating"
+						actions={[
+							{ href: "/donate", label: "Donate" },
+							{ href: "/get-involved/partner", kind: "icon-link", label: "Get Involved" },
+						]}
+					/>
+				</>
+			)}
 		</Main>
 	);
 }
 
 export default BlogPage;
 
-function BlogIntroSection() {
+function BlogHeroSection() {
 	return (
-		<section className="flex flex-col gap-5 lg:gap-10">
-			<header className="flex flex-col gap-3">
-				<h1 className="text-[24px]/[1.2] lg:text-[40px]">Stories, Updates & Insights</h1>
-				<p className="text-[10px]/4 text-pretty max-lg:max-w-[282px] lg:text-base/7">
+		<section
+			className="relative isolate flex h-[402px] w-full items-center justify-center px-6 text-center
+				text-cedar-white lg:h-[610px] lg:px-[50px]"
+		>
+			<header className="flex flex-col items-center gap-4 lg:gap-8">
+				<h1 className="text-[40px]/[1.1] lg:text-[80px]/[1.1]">Blog(Stories, Updates & Insights)</h1>
+
+				<p className="text-[10px]/4 text-pretty max-lg:max-w-[284px] lg:text-base/7">
 					Stay informed with the latest news, program updates, and impact stories from CedarRise.
 				</p>
 			</header>
 
-			<div className="flex flex-col gap-4 lg:flex-row lg:gap-5">
-				<article
-					className="relative isolate flex min-h-[249px] w-full items-end rounded-[24px] pb-9
-						pl-[52px] lg:min-h-[344px] lg:rounded-[32px] lg:pb-8 lg:pl-[54px]"
-				>
-					<div className="absolute inset-0 isolate -z-1 rounded-[inherit]">
-						<Image
-							src={heroImg}
-							alt="Blog"
-							priority={true}
-							className="absolute inset-0 size-full rounded-[inherit] object-cover"
-						/>
+			<div className="absolute inset-0 isolate -z-1">
+				<Image src={heroImg} alt="Blog" priority={true} className="size-full object-cover" />
 
-						<span
-							className="absolute inset-x-0 bottom-0 h-3/4 rounded-b-[inherit]
-								bg-[linear-gradient(180deg,theme(--color-cedar-black/0)_0%,theme(--color-cedar-black)_100%)]"
-						/>
-					</div>
-
-					<h2 className="text-[48px] text-cedar-yellow lg:bottom-9 lg:left-10 lg:text-[80px]">
-						Blog
-					</h2>
-				</article>
-
-				<article
-					className="flex w-full flex-col gap-4 rounded-[24px] bg-cedar-red p-8 text-cedar-white
-						lg:max-w-[386px] lg:gap-11 lg:rounded-[32px]"
-				>
-					<h2 className="text-[24px]/[1.2] lg:text-[40px]/[1.25]">From Our Community</h2>
-					<p className="text-[10px]/4 text-pretty lg:text-base/7">
-						Explore stories, announcements, and reports that highlight our work, impact, and ongoing
-						initiatives across communities.
-					</p>
-				</article>
+				<span
+					className="absolute inset-0
+						bg-linear-[270deg,theme(--color-cedar-black/0.56)_0%,theme(--color-cedar-black/0.56)_100%]"
+				/>
 			</div>
 		</section>
 	);
@@ -76,7 +68,7 @@ function FeaturedPostsSection() {
 	const records = blogsQueryResult.data?.data;
 
 	return (
-		<section className="flex flex-col gap-4 lg:gap-8">
+		<section className="flex flex-col gap-5 lg:gap-10">
 			<h2 className="text-center text-[24px]/[1.2] lg:text-[40px]">Featured</h2>
 
 			<Switch.Root>

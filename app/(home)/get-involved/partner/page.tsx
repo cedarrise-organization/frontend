@@ -1,95 +1,56 @@
 import Image from "next/image";
 import { heroImg } from "@/assets/images/get-involved/partner";
-import { ForWithWrapper } from "@/components/common/for";
-import { IconBox } from "@/components/common/IconBox";
-import { NavLink, NavLinkEphemeral } from "@/components/common/NavLink";
+import { NavLinkEphemeral } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
 import { Main } from "../../-components/Main";
 
 function PartnerPage() {
 	return (
-		<Main className="gap-10 lg:gap-[80px]">
+		<Main layout="fill">
 			<PartnerHeroSection />
-			<PartnerFormLinkSection />
 		</Main>
 	);
 }
 
 export default PartnerPage;
 
-const waysToPartner = ["Co-host programs", "Provide resources", "Sponsor initiatives", "Offer expertise"];
-
 function PartnerHeroSection() {
 	return (
-		<section className="flex flex-col gap-10 lg:flex-row lg:gap-6">
-			<header className="flex w-full flex-col gap-4 lg:max-w-[282px]">
-				<h1 className="text-[40px]/[1.2] text-cedar-red lg:text-[64px]">Partner with us</h1>
-
-				<p className="text-[12px]/4 text-pretty lg:text-base/7">
-					We collaborate with schools, NGOs, businesses, professional associations, and government
-					agencies to expand impact.
-				</p>
-			</header>
-
+		<section
+			className="relative isolate flex h-[425px] w-full items-center justify-center px-6 lg:h-[610px]
+				lg:px-[50px]"
+		>
 			<article
-				className="flex w-full flex-col gap-4 rounded-[24px] bg-cedar-red p-9 text-cedar-white
-					lg:min-h-[420px] lg:max-w-[424px] lg:gap-8 lg:rounded-[32px] lg:p-12"
+				className="mt-[100px] flex w-full flex-col items-center gap-8 text-center text-cedar-white
+					lg:gap-10"
 			>
-				<h2 className="text-[24px]/[1.2] lg:text-[40px]">Ways to Partner:</h2>
+				<header className="flex flex-col items-center gap-4">
+					<h1 className="text-[40px]/none lg:text-[64px]">Partner with us</h1>
 
-				<ForWithWrapper
-					className="flex flex-col gap-3 lg:gap-5"
-					each={waysToPartner}
-					renderItem={(way) => (
-						<li key={way} className="flex items-start gap-3 lg:gap-5">
-							<span
-								className="mt-1.5 size-3 shrink-0 rounded-full bg-cedar-yellow lg:mt-2 lg:size-4"
-							/>
-							<h3 className="leading-6 lg:text-[24px]/8">{way}</h3>
-						</li>
-					)}
-				/>
+					<p className="max-w-[258px] text-[12px]/5 lg:max-w-[490px] lg:text-base/7">
+						We collaborate with schools, NGOs, businesses, professional associations, and government
+						agencies to expand impact.
+					</p>
+				</header>
+
+				<NavLinkEphemeral href="#">
+					<Button className="shrink-0 max-lg:w-full max-lg:max-w-[282px]">Partner with us</Button>
+				</NavLinkEphemeral>
 			</article>
 
-			<Image
-				src={heroImg}
-				alt="CedarRise partners"
-				priority={true}
-				className="min-h-[334px] w-full min-w-0 rounded-[24px] object-cover lg:min-h-[420px]
-					lg:rounded-[32px]"
-			/>
-		</section>
-	);
-}
+			<div className="absolute inset-0 isolate -z-1">
+				<Image
+					src={heroImg}
+					alt="CedarRise partners"
+					priority={true}
+					className="size-full object-cover"
+				/>
 
-function PartnerFormLinkSection() {
-	return (
-		<section
-			className="flex items-center justify-between gap-5 rounded-[16px] bg-cedar-black py-2 pr-2 pl-6
-				text-cedar-white lg:gap-12 lg:rounded-[20px] lg:py-5.5 lg:pr-5.5 lg:pl-12"
-		>
-			<NavLink href="#" className="text-[14px]/[1.2] underline underline-offset-5 lg:hidden">
-				Sign Up to be a Partner
-			</NavLink>
-
-			<div className="contents max-lg:hidden">
-				<NavLink
-					href="/get-involved/volunteer/register"
-					className="text-[24px]/[1.2] underline underline-offset-5"
-				>
-					Partner Registration Form
-				</NavLink>
-
-				<p className="max-w-[456px] text-cedar-white/80 lg:text-base/6">
-					Click and complete this form so we can match you with suitable Partnership opportunities.
-				</p>
+				<span
+					className="absolute inset-0
+						bg-linear-[270deg,theme(--color-cedar-black/0.64)_0%,theme(--color-cedar-black/0.64)_100%]"
+				/>
 			</div>
-
-			<NavLinkEphemeral href="/get-involved/volunteer/register">
-				<Button size="icon" className="shrink-0 self-end lg:self-auto">
-					<IconBox icon="solar:arrow-right-up-outline" />
-				</Button>
-			</NavLinkEphemeral>
 		</section>
 	);
 }

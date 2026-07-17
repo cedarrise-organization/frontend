@@ -1,7 +1,10 @@
 import Image from "next/image";
-import { heroImg, impactSectionImg } from "@/assets/images/social-initiatives/outreaches";
+import { homeCarousel3 } from "@/assets/images/landing";
+import { aboutOutreachImg } from "@/assets/images/social-initiatives/outreaches";
+import { TestimonialCarouselShared } from "@/app/(home)/-components/CarouselsShared";
 import { ForWithWrapper } from "@/components/common/for";
-import { NavLinkEphemeral } from "@/components/common/NavLink";
+import { IconBox } from "@/components/common/IconBox";
+import { NavLink, NavLinkEphemeral } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
 import { FinalCTASection } from "../../-components/FinalCTASectionShared";
 import { Main } from "../../-components/Main";
@@ -9,12 +12,30 @@ import { OutreachesMomentsCarousel } from "./-components/OutreachesCarousels";
 
 function OutreachesPage() {
 	return (
-		<Main className="gap-10 lg:gap-[80px]">
-			<OutreachHeroSection />
-			<OutreachOverviewSection />
-			<StoriesImpactSection />
-			<MomentsSection />
-			<FinalCTASection />
+		<Main layout="fill" className="gap-10 lg:gap-[64px]">
+			{(ctx) => (
+				<>
+					<div className="w-full">
+						<OutreachHeroSection />
+						<OutreachConnectSection />
+					</div>
+
+					<div className={ctx.constrainedClassName}>
+						<OutreachAboutSection />
+						<StoriesSection />
+						<MomentsSection />
+					</div>
+
+					<FinalCTASection
+						title="Be Part of the Impact"
+						description="Join us as we bring support, opportunity, and hope to communities in need"
+						actions={[
+							{ href: "/get-involved/volunteer", label: "Volunteer" },
+							{ href: "/get-involved/partner", kind: "icon-link", label: "Partner with us" },
+						]}
+					/>
+				</>
+			)}
 		</Main>
 	);
 }
@@ -23,19 +44,94 @@ export default OutreachesPage;
 
 function OutreachHeroSection() {
 	return (
-		<section className="flex flex-col lg:items-center lg:text-center">
-			<h1 className="text-[40px]/[1.2] lg:max-w-[702px] lg:text-[48px]">
-				Connecting Needs with Opportunities at <span className="text-cedar-red">Outreaches</span>
-			</h1>
+		<section
+			className="relative isolate flex h-[402px] w-full items-center justify-center px-8 text-center
+				lg:h-[670px]"
+		>
+			<h1 className="text-[32px]/[1.1] text-cedar-white lg:text-[64px]/[1.1]">Cedar Reaches</h1>
 
-			<p className="mt-4 text-[10px]/4 text-pretty lg:mt-8 lg:max-w-[521px] lg:text-base/6">
-				Bridging meaningful support directly to underserved communities through education, mentorship,
-				and sustainable impact initiatives.
-			</p>
+			<div className="absolute inset-0 isolate -z-1">
+				<Image
+					src={homeCarousel3}
+					alt="CedarRise outreach medical support"
+					priority={true}
+					className="size-full object-cover"
+				/>
 
-			<NavLinkEphemeral href="/get-involved/volunteer/register">
-				<Button className="mt-9 h-[64px] lg:mt-12 lg:text-base">Volunteer for an Outreach</Button>
-			</NavLinkEphemeral>
+				<span
+					className="absolute inset-0
+						bg-linear-[270deg,theme(--color-cedar-black/0.48)_0%,theme(--color-cedar-black/0.48)_100%]"
+				/>
+			</div>
+		</section>
+	);
+}
+
+const impactStats = [
+	{ label: "Outreach events conducted", value: "3" },
+	{ label: "Volunteers", value: "12" },
+	{ label: "Beneficiaries reached", value: "190+" },
+	{ label: "Partners", value: "2" },
+	{ label: "Communities Engaged", value: "4+" },
+];
+
+function OutreachConnectSection() {
+	return (
+		<section className="flex w-full justify-center bg-cedar-black px-6 py-10 lg:px-[50px] lg:py-[52px]">
+			<div
+				className="flex w-full flex-col items-center gap-10 lg:max-w-[1300px] lg:flex-row-reverse
+					lg:justify-between"
+			>
+				<ForWithWrapper
+					className="grid w-full max-w-[362px] grid-cols-[repeat(2,min(100%/2,144px))] gap-4.5
+						rounded-[20px] bg-[hsl(240,4%,5%)] p-7 lg:max-w-[612px]
+						lg:grid-cols-[repeat(3,min(100%/3,136px))] lg:gap-[54px] lg:p-[56px]"
+					each={impactStats}
+					renderItem={(stat) => (
+						<li
+							key={stat.label}
+							className="flex min-h-[92px] flex-col justify-center gap-2 rounded-[16px]
+								bg-cedar-white/7 px-7 lg:min-h-[112px] lg:rounded-[20px]"
+						>
+							<h3 className="text-[24px]/none text-cedar-white lg:text-[32px]/none">
+								{stat.value}
+							</h3>
+							<p className="max-w-min text-[10px]/[1.2] text-cedar-white/80 lg:text-[12px]">
+								{stat.label}
+							</p>
+						</li>
+					)}
+				/>
+
+				<article className="flex flex-col gap-10 text-cedar-white lg:gap-[64px]">
+					<header className="flex flex-col gap-4 max-lg:items-center max-lg:text-center lg:gap-6">
+						<h2 className="max-w-[288px] text-[24px]/[1.1] lg:max-w-[456px] lg:text-[40px]">
+							Connecting Needs with Opportunities at Outreaches
+						</h2>
+						<p
+							className="max-w-[285px] text-[10px]/4 text-cedar-white/80 lg:max-w-[456px]
+								lg:text-base/7"
+						>
+							Bridging meaningful support directly to underserved communities through education,
+							mentorship, and sustainable impact initiatives.
+						</p>
+					</header>
+
+					<div className="flex flex-col items-center gap-6 lg:flex-row lg:gap-8.5">
+						<NavLinkEphemeral href="/get-involved/volunteer">
+							<Button className="shrink-0 max-lg:w-full">Volunteer</Button>
+						</NavLinkEphemeral>
+
+						<NavLink href="/get-involved/partner" className="flex items-center gap-4">
+							<p className="text-[14px] font-medium lg:text-[20px]">Partner with us</p>
+
+							<Button theme="secondary" size="icon" className="shrink-0">
+								<IconBox icon="solar:arrow-right-up-outline" />
+							</Button>
+						</NavLink>
+					</div>
+				</article>
+			</div>
 		</section>
 	);
 }
@@ -59,16 +155,16 @@ const outreachFocus = [
 	},
 ];
 
-function OutreachOverviewSection() {
+function OutreachAboutSection() {
 	return (
 		<section className="flex flex-col gap-4 lg:flex-row lg:gap-5">
 			<article
-				className="flex w-full flex-col gap-4 rounded-[24px] bg-cedar-red px-4 pt-4 pb-5
-					text-cedar-white lg:gap-7.5 lg:rounded-[32px] lg:px-5 lg:pt-5 lg:pb-8"
+				className="flex w-full flex-col gap-4 rounded-[16px] bg-cedar-red px-4 pt-4 pb-5
+					text-cedar-white lg:gap-7.5 lg:rounded-[24px] lg:px-5 lg:pt-5 lg:pb-8"
 			>
-				<div className="relative h-[284px] rounded-[20px] lg:h-[370px]">
+				<div className="relative h-[248px] rounded-[16px] lg:h-[370px] lg:rounded-[20px]">
 					<Image
-						src={heroImg}
+						src={aboutOutreachImg}
 						alt="CedarRise outreach group"
 						priority={true}
 						className="absolute inset-0 size-full rounded-[inherit] object-cover"
@@ -97,8 +193,8 @@ function OutreachOverviewSection() {
 			</article>
 
 			<article
-				className="flex w-full flex-col gap-4 rounded-[24px] bg-cedar-black px-4 py-6 text-cedar-white
-					lg:gap-6 lg:rounded-[32px] lg:px-11 lg:py-10"
+				className="flex w-full flex-col gap-4 rounded-[16px] bg-cedar-black px-4 py-6 text-cedar-white
+					lg:gap-6 lg:rounded-[24px] lg:px-11 lg:py-10"
 			>
 				<h2 className="text-center text-[24px]/[1.2] lg:text-[32px]">Our Outreach Activities</h2>
 
@@ -128,7 +224,7 @@ function OutreachOverviewSection() {
 
 const stories = [
 	{
-		quote: "I am very grateful for the help we received; our child is safer.",
+		quote: "I am very grateful for the free medications and lab tests",
 		title: "Medical Outreach Beneficiary",
 	},
 	{
@@ -141,85 +237,12 @@ const stories = [
 	},
 ];
 
-const impactStats = [
-	{ label: "Communities engaged", value: "4+" },
-	{ label: "Outreach events conducted", value: "3" },
-	{ label: "Volunteers", value: "12" },
-	{ label: "Beneficiaries reached", value: "190+" },
-	{ label: "Partner", value: "1" },
-];
-
-function StoriesImpactSection() {
+function StoriesSection() {
 	return (
-		<section className="flex flex-col gap-5 lg:flex-row">
-			<article className="flex w-full flex-col gap-5 max-lg:hidden">
-				<h3 className="text-[40px]/[1.2]">Stories from the Field</h3>
+		<section className="flex flex-col gap-8 lg:gap-10">
+			<h2 className="text-center text-[24px]/[1.2] lg:text-[40px]">Stories from the Field</h2>
 
-				<ForWithWrapper
-					className="flex flex-col gap-5"
-					each={stories}
-					renderItem={(story) => (
-						<li
-							key={story.title}
-							className="flex min-h-[164px] flex-col gap-6 rounded-[16px] bg-cedar-grey p-5"
-						>
-							<div className="flex items-center gap-5">
-								<span
-									className="grid h-11 w-[55px] shrink-0 place-content-center rounded-[20px]
-										bg-cedar-yellow text-[64px] text-cedar-red"
-								>
-									<svg
-										width="22"
-										height="19"
-										viewBox="0 0 22 19"
-										fill="none"
-										xmlns="http://www.w3.org/2000/svg"
-									>
-										<path
-											d="M-0.000238419 0.000179291V3.20018C3.26376 4.03218 4.86376 5.95218 4.92776 9.98418H-0.000238419V18.6242H8.83176V12.0962C8.83176 4.86418 6.65576 1.40818 -0.000238419 0.000179291ZM12.3518 0.000179291V3.20018C15.6158 4.03218 17.2158 5.95218 17.2798 9.98418H12.3518V18.6242H21.1838V12.0962C21.1838 4.86418 19.0078 1.40818 12.3518 0.000179291Z"
-											fill="currentColor"
-										/>
-									</svg>
-								</span>
-
-								<h3 className="text-[20px]/[1.2] text-cedar-red">{story.title}</h3>
-							</div>
-
-							<p className="leading-7 text-pretty">"{story.quote}"</p>
-						</li>
-					)}
-				/>
-			</article>
-
-			<article className="flex w-full flex-col gap-6 rounded-[24px] bg-cedar-grey p-5 lg:rounded-[32px]">
-				<h3
-					className="w-fit rounded-[12px] bg-cedar-black px-7 py-3 text-cedar-yellow lg:rounded-[20px]
-						lg:text-[24px]"
-				>
-					Our Impact
-				</h3>
-
-				<ForWithWrapper
-					className="grid grid-cols-[repeat(3,auto)] gap-x-1 gap-y-5 lg:grid-cols-[repeat(2,auto)]
-						lg:gap-y-3.5"
-					each={impactStats}
-					renderItem={(stat) => (
-						<li
-							key={stat.label}
-							className="flex flex-col gap-1 lg:flex-row lg:items-center lg:gap-3"
-						>
-							<h3 className="text-[32px]/[1.2] text-cedar-red lg:text-[40px]">{stat.value}</h3>
-							<p className="text-[10px]/4 text-pretty lg:text-[16px]/5">{stat.label}</p>
-						</li>
-					)}
-				/>
-
-				<Image
-					src={impactSectionImg}
-					alt="CedarRise outreach impact"
-					className="h-[251px] rounded-[16px] object-cover lg:h-[279px] lg:rounded-[20px]"
-				/>
-			</article>
+			<TestimonialCarouselShared testimonials={stories} />
 		</section>
 	);
 }

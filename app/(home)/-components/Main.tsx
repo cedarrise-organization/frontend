@@ -12,7 +12,7 @@ function Main(
 	const { children, className, layout = "constrained", ...restOfProps } = props;
 
 	const constrainedClassName = cnJoin(
-		tw`flex w-full max-w-[412px] grow flex-col px-4 lg:max-w-[1400px] lg:px-[50px] lg:pt-8 lg:pb-[80px]`,
+		tw`flex w-full max-w-[412px] grow flex-col px-4 lg:max-w-[1400px] lg:px-[50px]`,
 		className
 	);
 
@@ -21,7 +21,7 @@ function Main(
 	return (
 		<main
 			className={cnMerge(
-				"flex grow flex-col items-center",
+				"flex grow flex-col items-center lg:pb-[80px]",
 				layout === "fill" && "w-full",
 				layout === "constrained" && constrainedClassName,
 				className
