@@ -1,15 +1,16 @@
 /* eslint-disable unicorn/filename-case -- File does not follow expected naming convention. */
 "use client";
 
+import type { InferProps } from "@zayne-labs/toolkit-react/utils";
 import { ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
-import { NavLink, NavLinkEphemeral, type MainAppRoutes } from "@/components/common/NavLink";
+import { NavLink, NavLinkEphemeral } from "@/components/common/NavLink";
 import { Show } from "@/components/common/show";
 import { Button } from "@/components/ui/button";
 import { cnJoin } from "@/lib/utils/cn";
 
 type FinalCTAAction = {
-	href: MainAppRoutes;
+	href: InferProps<typeof NavLink>["href"];
 	icon?: string;
 	kind?: "button" | "icon-link" | "outline-button";
 	label: string;
@@ -68,9 +69,7 @@ function FinalCTASection(props: {
 					actionLayout === "stack-mobile" && "flex-col gap-5 lg:flex-row lg:gap-8.5"
 				)}
 				each={actions}
-				renderItem={(action) => (
-					<FinalCTAActionItem key={`${action.href}-${action.label}`} action={action} />
-				)}
+				renderItem={(action, index) => <FinalCTAActionItem key={index} action={action} />}
 			/>
 		</section>
 	);

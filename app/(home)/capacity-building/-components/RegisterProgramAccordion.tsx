@@ -1,31 +1,34 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { CollapsibleAnimated } from "@/components/animated/ui";
 import { For } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
-import { NavLink, NavLinkEphemeral, type MainAppRoutes } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
-
-const registrationLinks = [
-	{
-		href: "#",
-		label: "Are you a secondary school student?",
-	},
-	{
-		href: "#",
-		label: "Are you an undergraduate?",
-	},
-	{
-		href: "#",
-		label: "Are you a professional?",
-	},
-	{
-		href: "#",
-		label: "Are you attending a specific program?",
-	},
-] satisfies Array<{ href: MainAppRoutes; label: string }>;
+import { generalGoogleFormQuery } from "@/lib/react-query/queryOptions";
 
 function RegisterProgramAccordion() {
+	const generalGoogleFormQueryResult = useQuery(generalGoogleFormQuery());
+
+	const registrationLinks = [
+		{
+			href: "#",
+			label: "Are you a secondary school student?",
+		},
+		{
+			href: "#",
+			label: "Are you an undergraduate?",
+		},
+		{
+			href: "#",
+			label: "Are you a professional?",
+		},
+		{
+			href: generalGoogleFormQueryResult.data?.data.src ?? "#",
+			label: "Are you attending a specific program?",
+		},
+	] satisfies Array<{ href: string; label: string }>;
+
 	return (
 		<CollapsibleAnimated.Root className="flex flex-col gap-4 lg:gap-5">
 			<CollapsibleAnimated.Trigger
@@ -44,29 +47,25 @@ function RegisterProgramAccordion() {
 				<For
 					each={registrationLinks}
 					renderItem={(registrationLink) => (
-						<li
+						<a
 							key={registrationLink.label}
+							rel="noopener noreferrer"
+							target="_blank"
+							href={registrationLink.href}
 							className="flex min-h-12 items-center justify-between gap-5 rounded-[12px]
 								bg-cedar-black py-3 pr-3 pl-5 text-cedar-white lg:min-h-[116px] lg:rounded-[24px]
 								lg:py-5 lg:pr-5 lg:pl-10"
 						>
-							<NavLink
-								href={registrationLink.href}
-								className="leading-[1.2] underline underline-offset-4 lg:text-[24px]"
-							>
-								{registrationLink.label}
-							</NavLink>
+							<p className="leading-[1.2] lg:text-[24px]">{registrationLink.label}</p>
 
-							<NavLinkEphemeral href={registrationLink.href}>
-								<Button
-									size="icon"
-									className="size-14 shrink-0 rounded-[20px] text-[24px] lg:size-[76px]
-										lg:rounded-[24px] lg:text-[32px]"
-								>
-									<IconBox icon="solar:arrow-right-up-outline" />
-								</Button>
-							</NavLinkEphemeral>
-						</li>
+							<Button
+								size="icon"
+								className="size-14 shrink-0 rounded-[20px] text-[24px] lg:size-[76px]
+									lg:rounded-[24px] lg:text-[32px]"
+							>
+								<IconBox icon="solar:arrow-right-up-outline" />
+							</Button>
+						</a>
 					)}
 				/>
 			</CollapsibleAnimated.Content>

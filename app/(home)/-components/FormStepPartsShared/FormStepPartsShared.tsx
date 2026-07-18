@@ -170,8 +170,8 @@ export function FormStepComponentSectionHeader(props: { note?: string; title: st
 	);
 }
 
-export function FormPageHeader(props: { href: MainAppRoutes; title: string }) {
-	const { href, title } = props;
+export function FormPageHeader(props: { href: MainAppRoutes; replace?: boolean; title: string }) {
+	const { href, replace, title } = props;
 
 	return (
 		<header
@@ -179,7 +179,7 @@ export function FormPageHeader(props: { href: MainAppRoutes; title: string }) {
 				text-cedar-white lg:h-[115px] lg:rounded-[20px] lg:p-5"
 		>
 			<Button asChild={true} theme="secondary" size="icon" className="absolute">
-				<NavLink href={href}>
+				<NavLink href={href} replace={replace}>
 					<IconBox icon="ph:arrow-left" />
 				</NavLink>
 			</Button>

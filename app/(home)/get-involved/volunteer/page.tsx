@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { heroImg } from "@/assets/images/get-involved/volunteer";
 import { IconBox } from "@/components/common/IconBox";
@@ -37,11 +39,22 @@ function VolunteerHeroSection() {
 				</header>
 
 				<div className="flex w-full flex-col items-center gap-6 lg:flex-row lg:gap-8.5">
-					<NavLinkEphemeral href="/get-involved/volunteer/register">
+					<NavLinkEphemeral
+						href={(ctx) => ({
+							pathname: "/get-form-link",
+							query: { from: ctx.pathname, program: "Volunteer", type: "Registration" },
+						})}
+					>
 						<Button className="shrink-0 max-lg:w-full max-lg:max-w-[282px]">Volunteer Now</Button>
 					</NavLinkEphemeral>
 
-					<NavLink href="/get-involved/volunteer/feedback" className="flex items-center gap-4">
+					<NavLink
+						href={(ctx) => ({
+							pathname: "/get-form-link",
+							query: { from: ctx.pathname, program: "Volunteer", type: "Feedback" },
+						})}
+						className="flex items-center gap-4"
+					>
 						<p className="text-[14px] font-medium lg:text-[20px]">Feedback</p>
 
 						<Button theme="secondary" size="icon" className="shrink-0">

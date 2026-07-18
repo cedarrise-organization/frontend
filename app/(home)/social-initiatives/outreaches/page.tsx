@@ -118,11 +118,22 @@ function OutreachConnectSection() {
 					</header>
 
 					<div className="flex flex-col items-center gap-6 lg:flex-row lg:gap-8.5">
-						<NavLinkEphemeral href="/get-involved/volunteer">
+						<NavLinkEphemeral
+							href={(ctx) => ({
+								pathname: "/get-form-link",
+								query: { from: ctx.pathname, program: "Volunteer", type: "Registration" },
+							})}
+						>
 							<Button className="shrink-0 max-lg:w-full">Volunteer</Button>
 						</NavLinkEphemeral>
 
-						<NavLink href="/get-involved/partner" className="flex items-center gap-4">
+						<NavLink
+							href={(ctx) => ({
+								pathname: "/get-form-link",
+								query: { from: ctx.pathname, program: "Partner", type: "Registration" },
+							})}
+							className="flex items-center gap-4"
+						>
 							<p className="text-[14px] font-medium lg:text-[20px]">Partner with us</p>
 
 							<Button theme="secondary" size="icon" className="shrink-0">

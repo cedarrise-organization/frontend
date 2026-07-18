@@ -333,6 +333,15 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
   type __Unused = __Check
 }
 
+// Validate ../../../app/get-form-link/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/get-form-link">> = Specific
+  const handler = {} as typeof import("../../../app/get-form-link/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 
 
 

@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { homeCarousel1 } from "@/assets/images/landing";
 import { ForWithWrapper } from "@/components/common/for";
@@ -104,11 +106,22 @@ function AshAfterBellSection() {
 					</header>
 
 					<div className="flex flex-col items-center gap-6 lg:flex-row lg:gap-8.5">
-						<NavLinkEphemeral href="/social-initiatives/ash/register">
+						<NavLinkEphemeral
+							href={(ctx) => ({
+								pathname: "/get-form-link",
+								query: { from: ctx.pathname, program: "ASH", type: "Registration" },
+							})}
+						>
 							<Button className="shrink-0 max-lg:w-full">Register Now</Button>
 						</NavLinkEphemeral>
 
-						<NavLink href="/social-initiatives/ash/feedback" className="flex items-center gap-4">
+						<NavLink
+							href={(ctx) => ({
+								pathname: "/get-form-link",
+								query: { from: ctx.pathname, program: "ASH", type: "Feedback" },
+							})}
+							className="flex items-center gap-4"
+						>
 							<p className="text-[14px] font-medium lg:text-[20px]">Feedback</p>
 
 							<Button theme="secondary" size="icon" className="shrink-0">

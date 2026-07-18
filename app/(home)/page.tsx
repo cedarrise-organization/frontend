@@ -296,7 +296,12 @@ const sustainableImpactInitatives: Array<{
 	{
 		bgImage: sustainableImpact1,
 		ctaButton: (
-			<NavLinkEphemeral href="/social-initiatives/ash/register">
+			<NavLinkEphemeral
+				href={(ctx) => ({
+					pathname: "/get-form-link",
+					query: { from: ctx.pathname, program: "ASH", type: "Registration" },
+				})}
+			>
 				<Button>Enroll now</Button>
 			</NavLinkEphemeral>
 		),

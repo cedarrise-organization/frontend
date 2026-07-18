@@ -12,24 +12,32 @@ import { cnMerge } from "@/lib/utils/cn";
 
 export type MainAppRoutes<TRouteType extends string = AppRoutes> = "#" | Route<TRouteType>;
 
+type HrefObjectType<TRouteType extends string> = Omit<UrlObject, "pathname"> & {
+	pathname: MainAppRoutes<TRouteType>;
+};
+
 export function NavLink<TRouteType extends string = AppRoutes>(
 	props: Omit<InferProps<typeof Link> & LinkProps<TRouteType>, "children" | "href"> & {
 		children: React.ReactNode | ((ctx: { isActive: boolean }) => React.ReactNode);
 		href:
-			| (Omit<UrlObject, "pathname"> & { pathname: MainAppRoutes<TRouteType> })
-			| MainAppRoutes<TRouteType>;
+			| HrefObjectType<TRouteType>
+			| MainAppRoutes<TRouteType>
+			| ((ctx: Pick<HrefObjectType<string>, "pathname">) => HrefObjectType<TRouteType>);
 	}
 ) {
 	const { children, href, ...restOfProps } = props;
 
 	const pathname = usePathname();
 
-	const isActive = isString(href) ? pathname === href : pathname === href.pathname;
+	const resolvedHref = typeof href === "function" ? href({ pathname: pathname as never }) : href;
+
+	const isActive =
+		isString(resolvedHref) ? pathname === resolvedHref : pathname === resolvedHref.pathname;
 
 	const resolvedChildren = isFunction(children) ? children({ isActive }) : children;
 
 	return (
-		<Link href={href} data-active={isActive} {...restOfProps}>
+		<Link href={resolvedHref} data-active={isActive} {...restOfProps}>
 			{resolvedChildren}
 		</Link>
 	);

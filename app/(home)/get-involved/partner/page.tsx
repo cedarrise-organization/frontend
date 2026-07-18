@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { heroImg } from "@/assets/images/get-involved/partner";
 import { NavLinkEphemeral } from "@/components/common/NavLink";
@@ -33,7 +35,12 @@ function PartnerHeroSection() {
 					</p>
 				</header>
 
-				<NavLinkEphemeral href="#">
+				<NavLinkEphemeral
+					href={(ctx) => ({
+						pathname: "/get-form-link",
+						query: { from: ctx.pathname, program: "Partner", type: "Registration" },
+					})}
+				>
 					<Button className="shrink-0 max-lg:w-full max-lg:max-w-[282px]">Partner with us</Button>
 				</NavLinkEphemeral>
 			</article>
