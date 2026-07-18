@@ -9,8 +9,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { callBackendApiForQuery } from "@/lib/api/callBackendApi";
-import { backendApiSchemaRoutes } from "@/lib/api/callBackendApi/apiSchema";
-import { TextAreaField, TextField } from "../../-components/FormPartsShared";
+import { backendApiSchemaRoutes, DonateSupportAreaOptions } from "@/lib/api/callBackendApi/apiSchema";
+import { CheckboxQuestionField, TextAreaField, TextField } from "../../-components/FormPartsShared";
 
 const DonateFormSchema = backendApiSchemaRoutes["@post/donate"].body;
 
@@ -78,6 +78,16 @@ function DonateFormImpl() {
 			<TextField control={form.control} name="name" placeholder="Full Name" />
 
 			<TextField control={form.control} name="email" placeholder="E-mail" type="email" />
+
+			<CheckboxQuestionField
+				control={form.control}
+				name="supportAreas"
+				question="Support areas"
+				options={DonateSupportAreaOptions.map((option) => ({
+					label: option.replaceAll("_", " "),
+					value: option,
+				}))}
+			/>
 
 			<TextAreaField control={form.control} name="comment" label="Note / Comment" />
 

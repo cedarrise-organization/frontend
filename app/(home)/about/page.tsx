@@ -54,29 +54,26 @@ function HeroSection() {
 
 function WhoWeAreSection() {
 	return (
-		<section className="flex w-full overflow-hidden bg-cedar-black lg:flex-row">
-			<article
-				className="flex w-full flex-col justify-center gap-6 py-6 pl-[54px] lg:py-8 lg:pl-[120px]"
-			>
-				<h2 className="text-[28px]/[1.2] text-cedar-white lg:text-[40px]/[1.2]">Who We Are</h2>
+		<section className="flex w-full flex-col lg:flex-row">
+			<article className="flex w-full flex-col items-center justify-center bg-cedar-black p-6 lg:p-8">
+				<div className="flex max-w-[320px] flex-col gap-6 lg:max-w-[554px]">
+					<h2 className="text-[28px]/none text-cedar-white lg:text-[40px]">Who We Are</h2>
 
-				<div
-					className="max-w-[320px] text-[12px]/[1.6] text-cedar-white/80 lg:max-w-[554px]
-						lg:text-base/7"
-				>
-					<p>
-						CedarRise Initiative for Human Development is a non-profit organization dedicated to
-						strengthening individuals and communities through education, professional development,
-						skills training, and social impact programs.
-					</p>
-					<p>
-						Inspired by the resilience of the cedar tree, we equip people with the knowledge, skills,
-						and opportunities they need to grow and thrive.
-					</p>
-					<p>
-						Our work supports diverse groups—including students, educators, professionals, and
-						underserved communities—with a strong focus on children and women.
-					</p>
+					<div className="text-[12px]/5 text-cedar-white/80 lg:text-base/7">
+						<p>
+							CedarRise Initiative for Human Development is a non-profit organization dedicated to
+							strengthening individuals and communities through education, professional development,
+							skills training, and social impact programs.
+						</p>
+						<p>
+							Inspired by the resilience of the cedar tree, we equip people with the knowledge,
+							skills, and opportunities they need to grow and thrive.
+						</p>
+						<p>
+							Our work supports diverse groups—including students, educators, professionals, and
+							underserved communities—with a strong focus on children and women.
+						</p>
+					</div>
 				</div>
 			</article>
 

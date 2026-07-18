@@ -9,6 +9,7 @@ import {
 	AdminReviewStatusOptions,
 	AdminRoleActionOptions,
 	AdminRoleNameOptions,
+	DonateSupportAreaOptions,
 	AshAreasOfImprovementOptions,
 	AshAttendanceFrequencyOptions,
 	AshChildBenefitedOptions,
@@ -862,6 +863,7 @@ const clientSideRoutes = defineSchemaRoutes({
 			comment: z.string().optional(),
 			email: z.email("Enter a valid email address."),
 			name: z.string().min(3, "Enter at least 3 characters."),
+			supportAreas: getOptionalEnumArraySchema(DonateSupportAreaOptions),
 		}),
 		data: withBaseSuccessResponse({
 			data: z.object({

@@ -19,6 +19,16 @@ export const PartnerInterestOptions = defineEnum([
 	"OTHER",
 ]);
 
+export const DonateSupportAreaOptions = defineEnum([
+	"SPONSOR_ASH_BENEFICIARY",
+	"SPONSOR_TACOTS_BENEFICIARY",
+	"FUND_BOOTCAMP",
+	"FUND_TEACHER_REFRESHER_COURSE",
+	"FUND_YOUTH_INITIATIVE",
+	"DONATE_OUTREACH_EVENTS_AND_MATERIALS",
+	"OTHER",
+]);
+
 export const AshProgramTypeOptions = defineEnum(["ONLINE", "OFFLINE"]);
 
 export const AdminRoleActionOptions = defineEnum(["assign", "revoke"]);
