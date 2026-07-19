@@ -14,10 +14,21 @@ import { Button } from "@/components/ui/button";
 import { cnJoin, cnMerge } from "@/lib/utils/cn";
 
 const excludedRoutesFromNavTransition = ["/about"] satisfies MainAppRoutes[];
+const excludedRoutesFromNavbar = [
+	"/get-involved/volunteer/register",
+	"/get-involved/volunteer/feedback",
+	"/social-initiatives/ash/feedback",
+	"/social-initiatives/ash/register",
+	"/social-initiatives/tacots/recommendation",
+	"/social-initiatives/tacots/feedback",
+] satisfies MainAppRoutes[];
 
 function NavBar() {
 	const { isScrolled, observedElementRef } = useScrollObserver({ rootMargin: "0px" });
+
 	const pathname = usePathname();
+
+	if (excludedRoutesFromNavbar.includes(pathname)) return;
 
 	const isExcludedFromTransition = excludedRoutesFromNavTransition.includes(pathname);
 
