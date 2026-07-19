@@ -51,7 +51,7 @@ function VolunteerHeroSection() {
 					<NavLink
 						href={(ctx) => ({
 							pathname: "/get-form-link",
-							query: { from: ctx.pathname, program: "Volunteer", type: "FEEDBACK" },
+							query: { from: ctx.pathname, program: "VOLUNTEER", type: "FEEDBACK" },
 						})}
 						className="flex items-center gap-4"
 					>
