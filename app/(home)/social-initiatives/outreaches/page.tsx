@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { TestimonialCarouselShared } from "@/app/(home)/-components/CarouselsShared";
 import { homeCarousel3 } from "@/assets/images/landing";

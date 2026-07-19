@@ -1,3 +1,5 @@
+"use client";
+
 import { tw } from "@zayne-labs/toolkit-core";
 import Image from "next/image";
 import { approachSectionImg, heroImg } from "@/assets/images/social-initiatives/tacots";
