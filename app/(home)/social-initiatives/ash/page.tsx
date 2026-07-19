@@ -109,7 +109,7 @@ function AshAfterBellSection() {
 						<NavLinkEphemeral
 							href={(ctx) => ({
 								pathname: "/get-form-link",
-								query: { from: ctx.pathname, program: "ASH", type: "Registration" },
+								query: { from: ctx.pathname, program: "ASH", type: "REGISTRATION" },
 							})}
 						>
 							<Button className="shrink-0 max-lg:w-full">Register Now</Button>
@@ -118,7 +118,7 @@ function AshAfterBellSection() {
 						<NavLink
 							href={(ctx) => ({
 								pathname: "/get-form-link",
-								query: { from: ctx.pathname, program: "ASH", type: "Feedback" },
+								query: { from: ctx.pathname, program: "ASH", type: "FEEDBACK" },
 							})}
 							className="flex items-center gap-4"
 						>
@@ -165,7 +165,7 @@ function AshOverviewSection() {
 
 				<p className="text-[10px]/4 text-pretty lg:text-base/7">
 					ASH supports students ages 8-18 from underserved communities, particularly those attending
-					public or low-cost private schools with limited access to academic support.
+					g{" "}
 				</p>
 			</article>
 		</section>

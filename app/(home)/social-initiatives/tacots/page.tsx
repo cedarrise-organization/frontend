@@ -47,7 +47,7 @@ function TacotsPage() {
 							{
 								href: (innerCtx) => ({
 									pathname: "/get-form-link",
-									query: { from: innerCtx.pathname, program: "TACOTS", type: "Feedback" },
+									query: { from: innerCtx.pathname, program: "TACOTS", type: "FEEDBACK" },
 								}),
 								kind: "icon-link",
 								label: "Feedback",
@@ -142,7 +142,7 @@ function TacotsSuccessSection() {
 						<NavLinkEphemeral
 							href={(ctx) => ({
 								pathname: "/get-form-link",
-								query: { from: ctx.pathname, program: "TACOTS", type: "Registration" },
+								query: { from: ctx.pathname, program: "TACOTS", type: "REGISTRATION" },
 							})}
 						>
 							<Button className="shrink-0 max-lg:w-full">Refer a Child</Button>
@@ -151,7 +151,7 @@ function TacotsSuccessSection() {
 						<NavLink
 							href={(ctx) => ({
 								pathname: "/get-form-link",
-								query: { from: ctx.pathname, program: "TACOTS", type: "Feedback" },
+								query: { from: ctx.pathname, program: "TACOTS", type: "FEEDBACK" },
 							})}
 							className="flex items-center gap-4"
 						>

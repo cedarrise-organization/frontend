@@ -301,7 +301,7 @@ const sustainableImpactInitatives: Array<{
 			<NavLinkEphemeral
 				href={(ctx) => ({
 					pathname: "/get-form-link",
-					query: { from: ctx.pathname, program: "ASH", type: "Registration" },
+					query: { from: ctx.pathname, program: "ASH", type: "REGISTRATION" },
 				})}
 			>
 				<Button>Enroll now</Button>
