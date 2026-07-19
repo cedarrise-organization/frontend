@@ -42,7 +42,7 @@ function VolunteerHeroSection() {
 					<NavLinkEphemeral
 						href={(ctx) => ({
 							pathname: "/get-form-link",
-							query: { from: ctx.pathname, program: "Volunteer", type: "REGISTRATION" },
+							query: { from: ctx.pathname, program: "VOLUNTEER", type: "REGISTRATION" },
 						})}
 					>
 						<Button className="shrink-0 max-lg:w-full max-lg:max-w-[282px]">Volunteer Now</Button>
