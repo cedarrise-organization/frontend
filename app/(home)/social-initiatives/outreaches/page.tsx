@@ -32,7 +32,7 @@ function OutreachesPage() {
 						title="Be Part of the Impact"
 						description="Join us as we bring support, opportunity, and hope to communities in need"
 						actions={[
-							{ href: "/get-involved/volunteer", label: "Volunteer" },
+							{ href: "/get-involved/volunteer", label: "VOLUNTEER" },
 							{ href: "/get-involved/partner", kind: "icon-link", label: "Partner with us" },
 						]}
 					/>
