@@ -123,7 +123,7 @@ function OutreachConnectSection() {
 						<NavLinkEphemeral
 							href={(ctx) => ({
 								pathname: "/get-form-link",
-								query: { from: ctx.pathname, program: "Volunteer", type: "REGISTRATION" },
+								query: { from: ctx.pathname, program: "VOLUNTEER", type: "REGISTRATION" },
 							})}
 						>
 							<Button className="shrink-0 max-lg:w-full">Volunteer</Button>
