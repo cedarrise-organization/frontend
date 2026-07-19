@@ -2,7 +2,7 @@
 
 import { useRouter } from "@bprogress/next";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
+import { parseAsString, parseAsStringLiteral, useQueryState, useQueryStates } from "nuqs";
 import { Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { CheckboxQuestionField, TextField } from "@/app/(home)/-components/FormPartsShared";
@@ -22,10 +22,11 @@ const SendLinksInitiativeSchema = backendApiSchemaRoutes["@post/send-links/initi
 const SendLinksPartnerSchema = backendApiSchemaRoutes["@post/send-links/partners"].body;
 
 function GetFormLinkPageImpl() {
-	const [queryState] = useQueryStates({
-		from: parseAsString.withDefault("/"),
-		program: parseAsStringLiteral([...ProgramLinkProgramOptions, "Partner"]),
-		type: parseAsStringLiteral(ProgramLinkTypeOptions),
+	const [fromQueryState] = useQueryState("from", parseAsString.withDefault("/"));
+
+	const [programQueryState] = useQueryStates({
+		program: parseAsStringLiteral([...ProgramLinkProgramOptions, "Partner"]).withDefault("Partner"),
+		type: parseAsStringLiteral(ProgramLinkTypeOptions).withDefault("REGISTRATION"),
 	});
 
 	const router = useRouter();
@@ -36,7 +37,7 @@ function GetFormLinkPageImpl() {
 			name: "",
 		},
 		resolver: zodResolver(
-			(queryState.program === "Partner" ?
+			(programQueryState.program === "Partner" ?
 				SendLinksPartnerSchema
 			:	SendLinksInitiativeSchema) as typeof SendLinksInitiativeSchema & typeof SendLinksPartnerSchema
 		),
@@ -44,34 +45,37 @@ function GetFormLinkPageImpl() {
 
 	const onSubmit = form.handleSubmit(async (data) => {
 		await callBackendApiForQuery(
-			queryState.program === "Partner" ? "@post/send-links/partners" : "@post/send-links/initiatives",
+			programQueryState.program === "Partner" ?
+				"@post/send-links/partners"
+			:	"@post/send-links/initiatives",
 			{
 				body: data,
 				meta: { toast: { success: true } },
 				onSuccess: () => {
-					router.replace(queryState.from);
+					router.replace(fromQueryState);
 				},
+				query: programQueryState,
 			}
 		);
 	});
 
 	const namePlaceholder = (() => {
-		if (queryState.program === "ASH") return "Student's name";
+		if (programQueryState.program === "ASH") return "Student's name";
 
-		if (queryState.program === "TACOTS") return "Child's name";
+		if (programQueryState.program === "TACOTS") return "Child's name";
 
 		return "Name";
 	})();
 
-	const formType = queryState.type === "REGISTRATION" ? "Registration" : "Feedback";
+	const formType = programQueryState.type === "REGISTRATION" ? "Registration" : "Feedback";
 
 	return (
 		<div className="flex min-h-svh w-full flex-col items-center bg-cedar-grey">
 			<Main className="max-w-[1300px] items-center gap-6 pt-5 lg:gap-10">
 				<FormPageHeader
-					href={queryState.from as never}
+					href={fromQueryState as never}
 					replace={true}
-					title={`Fill this form to get the ${queryState.program} ${formType} link`}
+					title={`Fill this form to get the ${programQueryState.program} ${formType} link`}
 				/>
 
 				<Form.Root
@@ -84,7 +88,7 @@ function GetFormLinkPageImpl() {
 
 					<TextField control={form.control} name="email" placeholder="Email" type="email" />
 
-					{queryState.program === "Partner" && (
+					{programQueryState.program === "Partner" && (
 						<CheckboxQuestionField
 							control={form.control}
 							name="option"
@@ -98,7 +102,7 @@ function GetFormLinkPageImpl() {
 							<Button
 								isLoading={formState.isSubmitting}
 								isDisabled={formState.isSubmitting}
-								className="mt-5 self-end"
+								className="mt-5 shrink-0 self-end"
 							>
 								Get the {formType} link
 							</Button>
