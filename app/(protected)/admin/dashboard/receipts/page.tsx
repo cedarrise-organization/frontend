@@ -135,7 +135,7 @@ function ReceiptsPage() {
 						className="h-9 rounded-[10px] border border-cedar-black/12 px-4 text-[13px]
 							text-cedar-black/72 lg:h-9 lg:px-4 lg:text-[13px]"
 					>
-						View Receipt Image
+						View
 					</Button>
 				),
 				enableHiding: false,

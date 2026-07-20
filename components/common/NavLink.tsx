@@ -10,7 +10,7 @@ import type React from "react";
 import type { AppRoutes } from "@/.next/dev/types/routes";
 import { cnMerge } from "@/lib/utils/cn";
 
-export type MainAppRoutes<TRouteType extends string = AppRoutes> = "#" | Route<TRouteType>;
+export type MainAppRoutes<TRouteType extends string = AppRoutes> = "#" | `/#${string}` | Route<TRouteType>;
 
 type HrefObjectType<TRouteType extends string> = Omit<UrlObject, "pathname"> & {
 	pathname: MainAppRoutes<TRouteType>;

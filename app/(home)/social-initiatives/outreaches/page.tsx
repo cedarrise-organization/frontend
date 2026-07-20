@@ -237,16 +237,24 @@ function OutreachAboutSection() {
 
 const stories = [
 	{
-		quote: "I am very grateful for the free medications and lab tests",
-		title: "Medical Outreach Beneficiary",
+		quote: "Thank God for them , they came well prepared, I saw team spirit amongst them as they taught the pupils. I saw more enlightenment from the teachers who were trained.",
+		title: "Catherine Chukwu, Headmistress Daniel Frouscher Nursery and Primary school",
+	},
+	{
+		quote: "I am happy about this program you've brought to us, I'm also happy that a lot of you came to do it and are doing it well. No one is paying for anything even the drugs administered.",
+		title: "Medical outreach beneficiary",
+	},
+	{
+		quote: "It was fun, it was educating, it was eye-opening, interesting and inspiring. I think this has been the happiest I've been in a very long time.",
+		title: "Grace Obi, Volunteer",
 	},
 	{
 		quote: "This outreach renewed the community's hope in the power of education and human connection.",
 		title: "Community Leader, Awka",
 	},
 	{
-		quote: "We were shown simple acts of care that made a lasting difference. We are grateful for the support, and attention given to us.",
-		title: "Community Member",
+		quote: "I am very grateful for the free medications and lab tests.",
+		title: "Medical Outreach Beneficiary",
 	},
 ];
 

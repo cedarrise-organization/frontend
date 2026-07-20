@@ -361,7 +361,7 @@ const sustainableImpactInitatives: Array<{
 
 function SustainableImpactSection() {
 	return (
-		<section className="flex flex-col gap-6 lg:gap-10">
+		<section id="sustainable-impact" className="flex flex-col gap-6 lg:gap-10">
 			<header className="flex flex-col items-center gap-2.5 text-center lg:gap-4">
 				<h2 className="text-[24px] lg:text-[40px]">Sustainable Impact Initiatives</h2>
 

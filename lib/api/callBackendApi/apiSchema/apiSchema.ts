@@ -1283,7 +1283,7 @@ export const AshTermlyTrackingFrontendSchema = z.object({
 
 export const GeneralGalleryFrontendSchema = z.object({
 	folder: z.enum(GalleryFolderOptions),
-	photos: z.array(z.file()).min(1).max(3),
+	photos: z.array(z.file()).min(1).max(10),
 });
 
 export const GeneralProjectFrontendSchema = z.object({

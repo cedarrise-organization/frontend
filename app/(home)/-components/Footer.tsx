@@ -10,7 +10,7 @@ const quickLinks = [
 	{ href: "/", label: "Home" },
 	{ href: "/about", label: "About Us" },
 	{ href: "/capacity-building", label: "Capacity Building" },
-	{ href: "#", label: "Sustainability Initiatives" },
+	{ href: "/#sustainable-impact", label: "Sustainability Initiatives" },
 ] satisfies Array<{ href: MainAppRoutes; label: string }>;
 
 const socialInitiatives = [
