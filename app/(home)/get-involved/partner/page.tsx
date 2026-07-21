@@ -38,7 +38,7 @@ function PartnerHeroSection() {
 				<NavLinkEphemeral
 					href={(ctx) => ({
 						pathname: "/get-form-link",
-						query: { from: ctx.pathname, program: "Partner", type: "REGISTRATION" },
+						query: { from: ctx.pathname, program: "PARTNER", type: "REGISTRATION" },
 					})}
 				>
 					<Button className="shrink-0 max-lg:w-full max-lg:max-w-[282px]">Partner with us</Button>

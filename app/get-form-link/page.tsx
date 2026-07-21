@@ -25,7 +25,7 @@ function GetFormLinkPageImpl() {
 	const [fromQueryState] = useQueryState("from", parseAsString.withDefault("/"));
 
 	const [programQueryState] = useQueryStates({
-		program: parseAsStringLiteral([...ProgramLinkProgramOptions, "Partner"]).withDefault("Partner"),
+		program: parseAsStringLiteral([...ProgramLinkProgramOptions, "PARTNER"]).withDefault("PARTNER"),
 		type: parseAsStringLiteral(ProgramLinkTypeOptions).withDefault("REGISTRATION"),
 	});
 
@@ -37,7 +37,7 @@ function GetFormLinkPageImpl() {
 			name: "",
 		},
 		resolver: zodResolver(
-			(programQueryState.program === "Partner" ?
+			(programQueryState.program === "PARTNER" ?
 				SendLinksPartnerSchema
 			:	SendLinksInitiativeSchema) as typeof SendLinksInitiativeSchema & typeof SendLinksPartnerSchema
 		),
@@ -45,12 +45,17 @@ function GetFormLinkPageImpl() {
 
 	const onSubmit = form.handleSubmit(async (data) => {
 		await callBackendApiForQuery(
-			programQueryState.program === "Partner" ?
+			programQueryState.program === "PARTNER" ?
 				"@post/send-links/partners"
 			:	"@post/send-links/initiatives",
 			{
 				body: data,
-				meta: { toast: { success: true } },
+				meta: {
+					toast: {
+						customSuccessMessage: "Request received successfully! We will contact you soon",
+						success: true,
+					},
+				},
 				onSuccess: () => {
 					router.replace(fromQueryState);
 				},
@@ -75,7 +80,11 @@ function GetFormLinkPageImpl() {
 				<FormPageHeader
 					href={fromQueryState as never}
 					replace={true}
-					title={`Fill this form to get the ${programQueryState.program} ${formType} link`}
+					title={
+						programQueryState.program === "PARTNER" ?
+							`Fill this form to Partner with us`
+						:	`Fill this form to get the ${programQueryState.program} ${formType} link`
+					}
 				/>
 
 				<Form.Root
@@ -88,7 +97,7 @@ function GetFormLinkPageImpl() {
 
 					<TextField control={form.control} name="email" placeholder="Email" type="email" />
 
-					{programQueryState.program === "Partner" && (
+					{programQueryState.program === "PARTNER" && (
 						<CheckboxQuestionField
 							control={form.control}
 							name="option"
@@ -104,7 +113,9 @@ function GetFormLinkPageImpl() {
 								isDisabled={formState.isSubmitting}
 								className="mt-5 shrink-0 self-end"
 							>
-								Get the {formType} link
+								{programQueryState.program === "PARTNER" ?
+									"Partner with us"
+								:	`Get the ${formType} link`}
 							</Button>
 						)}
 					</Form.Submit>

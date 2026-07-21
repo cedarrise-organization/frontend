@@ -132,7 +132,7 @@ function OutreachConnectSection() {
 						<NavLink
 							href={(ctx) => ({
 								pathname: "/get-form-link",
-								query: { from: ctx.pathname, program: "Partner", type: "REGISTRATION" },
+								query: { from: ctx.pathname, program: "PARTNER", type: "REGISTRATION" },
 							})}
 							className="flex items-center gap-4"
 						>

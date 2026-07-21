@@ -40,7 +40,10 @@ function TacotsPage() {
 						actions={[
 							{ href: "/donate", label: "Become a Benefactor" },
 							{
-								href: "/social-initiatives/tacots/recommendation",
+								href: (innerCtx) => ({
+									pathname: "/get-form-link",
+									query: { from: innerCtx.pathname, program: "TACOTS", type: "REGISTRATION" },
+								}),
 								kind: "outline-button",
 								label: "Refer a Child",
 							},
