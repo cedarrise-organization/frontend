@@ -48,7 +48,7 @@ const chartScopesByTitle = {
 	"Attendance Trend - Monthly Sessions": "ASH",
 	"Average Mentorship Hours": "TACOTS",
 	"Average Spend per Student": "TACOTS",
-	"Class/Age Distribution": "ASH",
+	"Class Distribution": "ASH",
 	"Dropout Trend - Monthly": "ASH",
 	"Gender Diversity": "ASH + TACOTS",
 	"Geographic Distribution - Top States": "ASH",
@@ -246,7 +246,7 @@ function DashboardPage() {
 
 				<article className="flex w-full min-w-0 flex-col gap-3 lg:flex-row">
 					<DashboardChartCard
-						title="Class/Age Distribution"
+						title="Class Distribution"
 						description="Student spread by education band"
 						dataset={enrollment?.c_classDistribution}
 					/>
@@ -523,7 +523,7 @@ const chartColorsByTitle = {
 	"Attendance Trend - Monthly Sessions": chartColorGroups.red,
 	"Average Mentorship Hours": chartColorGroups.red,
 	"Average Spend per Student": chartColorGroups.blackRedYellow,
-	"Class/Age Distribution": chartColorGroups.yellow,
+	"Class Distribution": chartColorGroups.yellow,
 	"Dropout Trend - Monthly": ["color-mix(in hsl, var(--color-cedar-red) 64%, transparent)"],
 	"Gender Diversity": chartColorGroups.redBlack,
 	"Graduation Rate Trend": chartColorGroups.yellowRed,
