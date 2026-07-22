@@ -21,7 +21,7 @@ export function AshMomentsCarousel() {
 	return (
 		<ForWithWrapper
 			as="article"
-			className="flex flex-col gap-3 overflow-hidden lg:gap-5"
+			className="flex min-h-[700px] flex-col gap-3 overflow-hidden lg:gap-5"
 			each={galleryRows}
 			renderItem={(galleryRow, galleryRowIndex) => (
 				<MomentsCarouselShared
