@@ -330,6 +330,7 @@ function ProjectUploadCard(props: { onUploaded: () => void }) {
 						render={({ field }) => (
 							<>
 								<DropZoneInput.Root
+									className="w-full"
 									allowedFileTypes={["image/png", "image/jpg", "image/jpeg", "image/webp"]}
 									maxFileCount={1}
 									multiple={false}
@@ -363,7 +364,7 @@ function ProjectUploadCard(props: { onUploaded: () => void }) {
 						)}
 					/>
 
-					<div className="flex flex-col justify-center gap-3">
+					<div className="flex w-full flex-col justify-center gap-3">
 						<TextField control={form.control} name="title" placeholder="Project Name/Title..." />
 
 						<TextField
