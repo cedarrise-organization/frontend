@@ -105,7 +105,7 @@ function GeneralUploadsPage() {
 
 			<StatsGrid stats={stats} />
 
-			<section className="grid gap-4 lg:grid-cols-2 lg:gap-6">
+			<section className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-6">
 				<PhotoUploadCard
 					onUploaded={() => {
 						invalidateGeneralData();
@@ -774,8 +774,8 @@ function DeleteUserForm(props: {
 							size="medium"
 							isLoading={formState.isSubmitting}
 							isDisabled={formState.isSubmitting}
-							className="h-10 rounded-[8px] px-5 text-[12px] lg:h-10 lg:rounded-[8px] lg:px-9
-								lg:text-[12px]"
+							className="h-10 shrink-0 rounded-[8px] px-5 text-[12px] lg:h-10 lg:rounded-[8px]
+								lg:px-9 lg:text-[12px]"
 						>
 							Delete User
 						</Button>
@@ -813,76 +813,78 @@ function GoogleFormCard(props: {
 	});
 
 	return (
-		<div className="lg:col-span-2">
-			<UploadCard
-				color="yellow"
-				description="Embed forms dynamically on the capacity building client page"
-				title="Google Form Integration"
-			>
-				<Form.Root form={form} onSubmit={(event) => void onSubmit(event)} className="gap-5">
-					<div className="grid gap-4 md:grid-cols-2">
-						<TextField
-							control={form.control}
-							name="url"
-							label="Google Form URL"
-							placeholder="https://forms.google.com/..."
-							type="url"
-						/>
+		<UploadCard
+			color="yellow"
+			description="Embed forms dynamically on the capacity building client page"
+			title="Google Form Integration"
+			className="lg:col-span-2"
+		>
+			<Form.Root form={form} onSubmit={(event) => void onSubmit(event)} className="gap-5">
+				<div className="grid gap-4 md:grid-cols-2">
+					<TextField
+						control={form.control}
+						name="url"
+						label="Google Form URL"
+						placeholder="https://forms.google.com/..."
+						type="url"
+					/>
 
-						<TextField
-							control={form.control}
-							name="title"
-							label="Form title"
-							placeholder="Form title"
-						/>
+					<TextField
+						control={form.control}
+						name="title"
+						label="Form title"
+						placeholder="Form title"
+					/>
 
-						<DateField
-							control={form.control}
-							name="deadline"
-							label="Duration / Deadline"
-							placeholder="Duration / Deadline"
-						/>
+					<DateField
+						control={form.control}
+						name="deadline"
+						label="Duration / Deadline"
+						placeholder="Duration / Deadline"
+					/>
 
-						<TextField
-							control={form.control}
-							name="description"
-							placeholder="Description"
-							label="Description"
-						/>
-					</div>
+					<TextField
+						control={form.control}
+						name="description"
+						placeholder="Description"
+						label="Description"
+					/>
+				</div>
 
-					<Form.Submit asChild={true}>
-						{(formState) => (
-							<Button
-								theme="secondary"
-								size="medium"
-								isLoading={formState.isSubmitting}
-								isDisabled={formState.isSubmitting}
-								className="mt-auto ml-auto h-10 rounded-[8px] px-5 text-[12px] lg:h-10
-									lg:rounded-[8px] lg:px-9 lg:text-[12px]"
-							>
-								Embed Form
-							</Button>
-						)}
-					</Form.Submit>
-				</Form.Root>
-			</UploadCard>
-		</div>
+				<Form.Submit asChild={true}>
+					{(formState) => (
+						<Button
+							theme="secondary"
+							size="medium"
+							isLoading={formState.isSubmitting}
+							isDisabled={formState.isSubmitting}
+							className="mt-auto ml-auto h-10 rounded-[8px] px-5 text-[12px] lg:h-10
+								lg:rounded-[8px] lg:px-9 lg:text-[12px]"
+						>
+							Embed Form
+						</Button>
+					)}
+				</Form.Submit>
+			</Form.Root>
+		</UploadCard>
 	);
 }
 
 function UploadCard(props: {
 	children: React.ReactNode;
+	className?: string;
 	color: "red" | "yellow";
 	description: string;
 	title: string;
 }) {
-	const { children, color, description, title } = props;
+	const { children, className, color, description, title } = props;
 
 	return (
 		<Card.Root
-			className="flex flex-col gap-5 rounded-[24px] bg-cedar-white p-5 lg:rounded-[20px] lg:px-6
-				lg:py-5.5"
+			className={cnMerge(
+				"flex flex-col gap-5 rounded-[24px] bg-cedar-white p-5 lg:rounded-[20px] lg:px-6 lg:py-5.5",
+				className
+			)}
 		>
 			<Card.Header className="flex flex-row items-start gap-4">
 				<span
