@@ -122,7 +122,7 @@ function DashboardNotificationsPopover() {
 				align="end"
 				collisionPadding={16}
 				sideOffset={12}
-				className="flex w-[min(calc(100vw-32px),420px)] flex-col gap-5 rounded-[26px] border
+				className="z-500 flex w-[min(calc(100vw-32px),420px)] flex-col gap-5 rounded-[26px] border
 					border-cedar-black/12 bg-cedar-white p-4 shadow-[0_22px_60px_hsl(0,0%,0%,0.18)]"
 			>
 				<header
