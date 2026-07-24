@@ -164,7 +164,8 @@ function AshOverviewSection() {
 				<h2 className="text-[24px]/[1.2] lg:text-[40px]">Who We Serve</h2>
 
 				<p className="text-[10px]/4 text-pretty lg:text-base/7">
-					ASH supports students ages 8-18 from underserved communities, particularly those attending public or low-cost private schools with limited access to academic support.
+					ASH supports students ages 8-18 from underserved communities, particularly those attending
+					public or low-cost private schools with limited access to academic support.
 				</p>
 			</article>
 		</section>
