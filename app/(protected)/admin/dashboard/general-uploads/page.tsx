@@ -688,8 +688,8 @@ function UpdateRoleForm(props: {
 				control={form.control}
 				name="roleName"
 				options={ADMIN_ROLE_SELECT_OPTIONS}
-				placeholder="New Role"
-				label="New Role"
+				placeholder="Select Role"
+				label="Select Role"
 			/>
 
 			<div className="mt-auto flex justify-end gap-3">
