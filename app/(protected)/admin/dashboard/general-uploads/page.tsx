@@ -6,6 +6,7 @@ import { toFormData } from "@zayne-labs/callapi/utils";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 import {
 	DateField,
 	FormErrorMessageShared,
@@ -562,7 +563,7 @@ function AddUserForm(props: { onCreated: () => void }) {
 
 	const form = useForm({
 		defaultValues: {
-			department: undefined,
+			department: null as never,
 			email: "",
 			name: "",
 			password: "",
@@ -645,15 +646,15 @@ function UpdateRoleForm(props: {
 
 	const form = useForm({
 		defaultValues: {
-			roleName: undefined,
+			roleName: null as never,
 			userId: "",
 		},
-		resolver: zodResolver(AdminUserRoleFrontendSchema),
+		resolver: zodResolver(
+			AdminUserRoleFrontendSchema.extend({ action: z.literal(["assign", "revoke"]) })
+		),
 	});
 
-	const handleRoleAction = async (action: "assign" | "revoke") => {
-		const values = form.getValues();
-
+	const onSubmit = form.handleSubmit(async (data) => {
 		await callBackendApiForQuery("@patch/admin/roles/:userId/action", {
 			meta: { toast: { success: true } },
 			onSuccess: () => {
@@ -661,17 +662,13 @@ function UpdateRoleForm(props: {
 				onUpdated();
 			},
 			params: {
-				userId: values.userId,
+				userId: data.userId,
 			},
 			query: {
-				action,
-				rolename: values.roleName,
+				action: data.action,
+				rolename: data.roleName,
 			},
 		});
-	};
-
-	const onSubmit = form.handleSubmit(async () => {
-		await handleRoleAction("assign");
 	});
 
 	return (
@@ -693,7 +690,7 @@ function UpdateRoleForm(props: {
 			/>
 
 			<div className="mt-auto flex justify-end gap-3">
-				<Form.StateSubscribe>
+				<Form.Submit asChild={true}>
 					{(formState) => (
 						<Button
 							theme="secondary-outline"
@@ -701,12 +698,12 @@ function UpdateRoleForm(props: {
 							isDisabled={formState.isSubmitting}
 							className="h-10 rounded-[8px] px-5 text-[12px] lg:h-10 lg:rounded-[8px] lg:px-9
 								lg:text-[12px]"
-							onClick={() => void handleRoleAction("revoke")}
+							onClick={() => form.setValue("action", "revoke")}
 						>
 							Revoke Access
 						</Button>
 					)}
-				</Form.StateSubscribe>
+				</Form.Submit>
 
 				<Form.Submit asChild={true}>
 					{(formState) => (
@@ -716,6 +713,7 @@ function UpdateRoleForm(props: {
 							isDisabled={formState.isSubmitting}
 							className="h-10 rounded-[8px] px-5 text-[12px] lg:h-10 lg:rounded-[8px] lg:px-9
 								lg:text-[12px]"
+							onClick={() => form.setValue("action", "assign")}
 						>
 							Update role
 						</Button>

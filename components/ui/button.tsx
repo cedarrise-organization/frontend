@@ -59,7 +59,6 @@ export const buttonVariants = tv({
 	],
 
 	defaultVariants: {
-		loadingStyle: "replace-content",
 		rounded: "regular",
 		size: "medium",
 		theme: "primary",
@@ -126,7 +125,7 @@ function Button<TElement extends React.ElementType>(props: PolymorphicPropsStric
 		isDisabled = false,
 		disabled = isDisabled,
 		isLoading = false,
-		loadingStyle,
+		loadingStyle = "replace-content",
 		rounded = defaultVariantValue,
 		size = defaultVariantValue,
 		theme = defaultVariantValue,

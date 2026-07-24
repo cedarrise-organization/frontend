@@ -269,25 +269,6 @@ const LoginSchema = z.object({
 	password: z.string().min(8, "Password must be at least 8 characters."),
 });
 
-const RoleSchema = z.object({
-	createdAt: z.string(),
-	deletedAt: z.string().nullable().optional(),
-	description: z.string().nullable().optional(),
-	id: z.uuid(),
-	isDefault: z.boolean(),
-	name: z.string(),
-	updatedAt: z.string().nullable().optional(),
-});
-
-const UserRoleSchema = z.object({
-	createdAt: z.string().optional(),
-	deletedAt: z.string().nullable().optional(),
-	id: z.uuid(),
-	roleId: z.uuid().optional(),
-	updatedAt: z.string().nullable().optional(),
-	userId: z.uuid().optional(),
-});
-
 const ProjectSchema = z.object({
 	createdAt: z.string().optional(),
 	description: z.string().nullable().optional(),
@@ -736,6 +717,16 @@ const authRoutes = defineSchemaRoutes({
 	},
 });
 
+const RoleSchema = z.object({
+	createdAt: z.string(),
+	deletedAt: z.string().nullable(),
+	description: z.string().nullable(),
+	id: z.uuid(),
+	isDefault: z.boolean(),
+	name: z.enum(["volunteer", "admin", "superadmin"]),
+	updatedAt: z.string().nullable(),
+});
+
 const adminRoutes = defineSchemaRoutes({
 	"@delete/admin/users/:userId": {
 		data: withBaseSuccessResponse({ data: z.null() }),
@@ -764,11 +755,11 @@ const adminRoutes = defineSchemaRoutes({
 	"@get/admin/roles/:userId": {
 		data: withBaseSuccessResponse({
 			data: z.array(
-				z.object({
-					description: z.string().nullable(),
-					id: z.uuid(),
-					isDefault: z.boolean(),
-					name: z.enum(["volunteer", "admin", "superadmin"]),
+				RoleSchema.pick({
+					description: true,
+					id: true,
+					isDefault: true,
+					name: true,
 				})
 			),
 		}),
@@ -789,7 +780,7 @@ const adminRoutes = defineSchemaRoutes({
 	},
 
 	"@patch/admin/roles/:userId/action": {
-		data: withBaseSuccessResponse({ data: z.array(UserRoleSchema).nullable() }),
+		data: withBaseSuccessResponse({ data: z.null() }),
 		params: UserIdParamsSchema,
 		query: z.object({
 			action: getRequiredEnumSchema(AdminRoleActionOptions),
