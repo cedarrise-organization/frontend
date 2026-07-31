@@ -310,9 +310,9 @@ const sustainableImpactInitatives: Array<{
 		),
 		description: (
 			<p>
-				Personalized online tutoring that helps students build confidence, improve academic performance, 
-				and thrive beyond the classroom. Every enrollment also supports the broader ASH initiative, 
-				expanding access to after-school learning opportunities for underserved children.
+				Personalized online tutoring that helps students build confidence, improve academic
+				performance, and thrive beyond the classroom. Every enrollment also supports the broader ASH
+				initiative, expanding access to after-school learning opportunities for underserved children.
 			</p>
 		),
 		subTitle: "Learning support that empowers students and communities",
@@ -335,10 +335,10 @@ const sustainableImpactInitatives: Array<{
 		),
 		description: (
 			<p>
-				Gifts and Events by CedarRise creates premium gift packages and event gifting solutions 
-				for celebrations, corporate events, milestones, and special occasions. Every purchase 
-				supports TACOTS (Take A Child Off The Street), helping provide underprivileged children 
-				with access to education and mentorship. <br />
+				Gifts and Events by CedarRise creates premium gift packages and event gifting solutions for
+				celebrations, corporate events, milestones, and special occasions. Every purchase supports
+				TACOTS (Take A Child Off The Street), helping provide underprivileged children with access to
+				education and mentorship. <br />
 				Celebrate life's special moments while creating opportunities that change lives.
 			</p>
 		),

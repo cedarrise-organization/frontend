@@ -26,13 +26,13 @@ const socialLinks = [
 		href: siteConfig.contact.email.href,
 		icon: "solar:letter-linear",
 		label: "Email",
-		title: "Email"
+		title: "Email",
 	},
 	{
 		href: siteConfig.social.instagram,
 		icon: "ph:instagram-logo-bold",
 		label: "Instagram",
-		title: "Instagram"
+		title: "Instagram",
 	},
 	{
 		href: siteConfig.social.linkedIn,
@@ -56,15 +56,15 @@ const socialLinks = [
 		href: siteConfig.social.youTube,
 		icon: "ph:youtube-logo-fill",
 		label: "YouTube",
-		title: "YouTube"
+		title: "YouTube",
 	},
 	{
 		href: siteConfig.social.tikTok,
 		icon: "ic:baseline-tiktok",
 		label: "TikTok",
-		title: "TikTok"
+		title: "TikTok",
 	},
-] satisfies Array<{ href: string; icon: string; label: string, title: string }>;
+] satisfies Array<{ href: string; icon: string; label: string; title: string }>;
 
 function Footer() {
 	return (

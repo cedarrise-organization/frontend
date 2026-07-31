@@ -136,7 +136,8 @@ function TacotsSuccessSection() {
 							className="max-w-[285px] text-[10px]/4 text-cedar-white/80 lg:max-w-[456px]
 								lg:text-base/7"
 						>
-							Providing underprivileged children with access to quality education, mentorship, and the support they need to build a brighter future.
+							Providing underprivileged children with access to quality education, mentorship, and
+							the support they need to build a brighter future.
 						</p>
 					</header>
 

@@ -98,18 +98,18 @@ function GetFormLinkPageImpl() {
 					<TextField control={form.control} name="email" placeholder="Email" type="email" />
 
 					{programQueryState.program === "PARTNER" && (
-					<CheckboxQuestionField
-						control={form.control}
-						name="option"
-						question="How would you like to partner with us?"
-						options={PartnerInterestOptions.map((option) => ({
-							label: option
-								.replaceAll("_", " ")
-								.toLowerCase()
-								.replaceAll(/\b\w/g, (char) => char.toUpperCase()),
-							value: option,
-						}))}
-					/>
+						<CheckboxQuestionField
+							control={form.control}
+							name="option"
+							question="How would you like to partner with us?"
+							options={PartnerInterestOptions.map((option) => ({
+								label: option
+									.replaceAll("_", " ")
+									.toLowerCase()
+									.replaceAll(/\b\w/g, (char) => char.toUpperCase()),
+								value: option,
+							}))}
+						/>
 					)}
 
 					<Form.Submit asChild={true}>

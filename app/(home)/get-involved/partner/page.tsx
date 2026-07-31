@@ -31,9 +31,9 @@ function PartnerHeroSection() {
 
 					<p className="text-[12px]/5 lg:text-base/7">
 						We collaborate with schools, NGOs, businesses, professional associations, and government
-						agencies to expand impact. Whether you're interested in co-hosting programs, providing 
-						resources, sponsoring initiatives, or offering your expertise, your partnership helps us deliver 
-						lasting opportunities and greater impact where it matters most.
+						agencies to expand impact. Whether you're interested in co-hosting programs, providing
+						resources, sponsoring initiatives, or offering your expertise, your partnership helps us
+						deliver lasting opportunities and greater impact where it matters most.
 					</p>
 				</header>
 
