@@ -194,13 +194,11 @@ function OutreachAboutSection() {
 					<h2 className="text-[24px]/[1.2] lg:text-[40px]">About Our Outreaches</h2>
 
 					<p className="text-[10px]/4 text-pretty text-cedar-white/80 lg:text-[14px]/6">
-						CedarRise outreaches are designed to respond to real community needs through health
-						support, education, mentorship, and practical empowerment.
+						CedarReaches transforms compassion into action by serving underserved communities through health interventions, education, mentorship, and practical empowerment.
 					</p>
 
 					<p className="text-[10px]/4 text-pretty text-cedar-white/80 lg:text-[14px]/6">
-						These initiatives take our mission beyond classrooms and programmes, reaching people
-						where support can make an immediate difference.
+						Together, we're restoring hope, strengthening lives, and creating lasting change.
 					</p>
 				</div>
 			</article>

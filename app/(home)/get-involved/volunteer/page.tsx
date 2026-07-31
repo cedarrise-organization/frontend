@@ -33,7 +33,7 @@ function VolunteerHeroSection() {
 					<p className="text-[12px]/5 lg:text-base/7">
 						At CedarRise, volunteers are the heartbeat of our mission. Whether you're supporting
 						workshops, mentoring students, teaching literacy or ICT, assisting in our outreaches or
-						helping with media or logistics, your time and passion can transform lives. If you care,
+						helping with media or logistics, your time and passion can transform lives. <br /> If you care,
 						you qualify.
 					</p>
 				</header>

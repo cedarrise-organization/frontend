@@ -23,15 +23,17 @@ function PartnerHeroSection() {
 				lg:px-[50px]"
 		>
 			<article
-				className="mt-[100px] flex w-full flex-col items-center gap-8 text-center text-cedar-white
-					lg:gap-10"
+				className="mt-[100px] flex w-full max-w-[345px] flex-col items-center gap-8 text-center
+					text-cedar-white lg:max-w-[640px] lg:gap-10"
 			>
 				<header className="flex flex-col items-center gap-4">
 					<h1 className="text-[40px]/none lg:text-[64px]">Partner with us</h1>
 
-					<p className="max-w-[258px] text-[12px]/5 lg:max-w-[490px] lg:text-base/7">
+					<p className="text-[12px]/5 lg:text-base/7">
 						We collaborate with schools, NGOs, businesses, professional associations, and government
-						agencies to expand impact.
+						agencies to expand impact. Whether you're interested in co-hosting programs, providing 
+						resources, sponsoring initiatives, or offering your expertise, your partnership helps us deliver 
+						lasting opportunities and greater impact where it matters most.
 					</p>
 				</header>
 

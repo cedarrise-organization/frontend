@@ -39,8 +39,13 @@ function DonateHeroSection() {
 
 				<span
 					className="absolute inset-0
-						bg-linear-[270deg,theme(--color-cedar-yellow/0.4)_0%,theme(--color-cedar-yellow/0.4)_100%]"
+						bg-linear-[270deg,theme(--color-cedar-black/0.64)_0%,theme(--color-cedar-black/0.64)_100%]"
 				/>
+
+				{/* <span
+					className="absolute inset-0
+						bg-linear-[270deg,theme(--color-cedar-yellow/0.4)_0%,theme(--color-cedar-yellow/0.4)_100%]"
+				/> */}
 			</div>
 		</section>
 	);

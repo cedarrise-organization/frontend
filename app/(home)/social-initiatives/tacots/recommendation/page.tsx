@@ -450,7 +450,7 @@ function EducationalInformationStepTwo() {
 			<FileUploadField
 				control={form.control}
 				name="lastResult"
-				label="Upload a Picture of Last Result"
+				label="Upload a Copy of Your Last Result"
 				required={true}
 			/>
 		</>

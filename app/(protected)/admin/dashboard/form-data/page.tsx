@@ -138,6 +138,7 @@ const FORM_DATA_TABSANIMATED = [
 const ASH_SORT_OPTIONS = [
 	{ label: "First Name", value: "firstName" },
 	{ label: "Surname", value: "surname" },
+	{ label: "Program Type", value: "programType" },
 	{ label: "Gender", value: "gender" },
 	{ label: "School State", value: "schoolState" },
 	{ label: "Current Class", value: "currentClass" },
@@ -264,7 +265,7 @@ function FormDataPage() {
 								<TabsAnimated.Trigger
 									key={tab.value}
 									value={tab.value}
-									className="px-5 text-cedar-black/70 data-[state=active]:text-cedar-white"
+									className="px-5 text-cedar-black/85 data-[state=active]:text-cedar-white"
 								>
 									{tab.label}
 								</TabsAnimated.Trigger>
@@ -301,6 +302,7 @@ function AshFormDataTab(props: { onViewMore: (record: SelectedRecord) => void })
 			getTextColumn("firstName", "FIRST NAME", (row) => row.firstName),
 			getTextColumn("surname", "SURNAME", (row) => row.surname),
 			getTextColumn("gender", "GENDER", (row) => row.gender, false),
+			getTextColumn("programType", "PROGRAM TYPE", (row) => row.programType, false),
 			getTextColumn("schoolState", "SCHOOL STATE", (row) => row.schoolState, false),
 			getTextColumn("currentClass", "CURRENT CLASS", (row) => row.currentClass, false),
 			{
@@ -772,7 +774,7 @@ const getTextColumn = <TRecord extends FormRecord>(
 	return {
 		accessorFn,
 		cell: ({ row }) => (
-			<p className="text-[13px] text-cedar-black/72">{formatDashboardDetailValue(row.getValue(id))}</p>
+			<p className="text-[13px] text-cedar-black/87">{formatDashboardDetailValue(row.getValue(id))}</p>
 		),
 		enableColumnFilter,
 		header: ({ column }) => <DataTableColumnHeader column={column} label={label} />,
@@ -978,7 +980,7 @@ function RowActions(props: { onViewMore: () => void; record: FormRecord; target:
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger
 				className="rounded-[10px] border border-cedar-black/16 px-4 py-2 text-[13px]
-					text-cedar-black/72 transition-colors hover:bg-cedar-grey"
+					text-cedar-black/87 transition-colors hover:bg-cedar-grey"
 			>
 				Actions
 			</DropdownMenu.Trigger>
@@ -1228,7 +1230,7 @@ function FormDataDetailsDialog(props: {
 									{selectedRecord.title}
 								</DialogAnimated.Title>
 								<DialogAnimated.Description
-									className="text-[15px] text-cedar-black/56 lg:text-[16px]"
+									className="text-[15px] text-cedar-black/72 lg:text-[16px]"
 								>
 									{detailDescription} - {submittedDate}
 								</DialogAnimated.Description>
@@ -1246,12 +1248,12 @@ function FormDataDetailsDialog(props: {
 										border-b border-cedar-black/8 bg-cedar-white px-5 py-4 text-[14px]
 										first:rounded-t-[18px] last:rounded-b-[18px] last:border-b-0 lg:text-[16px]"
 								>
-									<span className="min-w-0 wrap-break-word text-cedar-black/72 capitalize">
+									<span className="min-w-0 wrap-break-word text-cedar-black/87 capitalize">
 										{row.label}
 									</span>
 									<span
 										className="min-w-0 text-right font-semibold wrap-break-word
-											text-cedar-black/72"
+											text-cedar-black/87"
 									>
 										{row.url ?
 											<a
@@ -1324,7 +1326,7 @@ function StatusPill({ status }: { status: string }) {
 					|| normalizedStatus.includes("delete")
 					|| normalizedStatus.includes("not selected"))
 					&& "bg-cedar-red/16 text-cedar-red",
-				normalizedStatus.includes("review") && "bg-cedar-grey text-cedar-black/70"
+				normalizedStatus.includes("review") && "bg-cedar-grey text-cedar-black/85"
 			)}
 		>
 			{status}

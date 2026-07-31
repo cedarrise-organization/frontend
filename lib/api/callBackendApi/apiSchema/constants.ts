@@ -175,6 +175,7 @@ export const TacotsServiceDurationOptions = defineEnum([
 export const AshTrackingSortByOptions = defineEnum([
 	"firstName",
 	"surname",
+	"programType",
 	"createdAt",
 	"schoolState",
 	"assignedMentor",

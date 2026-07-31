@@ -23,7 +23,7 @@ export const FormStepList = dynamic(
 			const { items } = props;
 
 			return (
-				<Steps.List className="flex justify-center px-[60px]">
+				<Steps.List className="sticky top-0 z-10 flex justify-center px-[60px] py-4">
 					<For
 						each={items}
 						renderItem={(stepItem, index) => (
@@ -175,8 +175,8 @@ export function FormPageHeader(props: { href: MainAppRoutes; replace?: boolean; 
 
 	return (
 		<header
-			className="relative flex h-[60px] w-full items-center gap-5 rounded-[12px] bg-cedar-black p-3
-				text-cedar-white lg:h-[115px] lg:rounded-[20px] lg:p-5"
+			className="relative mt-6 flex h-[60px] w-full items-center gap-5 rounded-[12px] bg-cedar-black p-3
+				text-cedar-white lg:mt-10 lg:h-[115px] lg:rounded-[20px] lg:p-5"
 		>
 			<Button asChild={true} theme="secondary" size="icon" className="shrink-0">
 				<NavLink href={href} replace={replace}>

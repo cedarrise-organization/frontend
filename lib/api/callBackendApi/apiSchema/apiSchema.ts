@@ -179,7 +179,7 @@ const RequiredPhoneNumberSchema = z.union([
 	z.string().regex(/^0\d{10}$/, "Enter a valid phone number."),
 ]);
 
-const OptionalPhoneNumberSchema = RequiredPhoneNumberSchema.optional();
+const OptionalPhoneNumberSchema = RequiredPhoneNumberSchema.or(z.literal("")).optional();
 
 const RequiredFileSchema = z.file("Upload a file.");
 

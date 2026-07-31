@@ -61,12 +61,12 @@ function HeroSection() {
 			className="relative isolate w-full px-4 pt-[148px] pb-12 text-cedar-white lg:px-[50px]
 				lg:pt-[198px] lg:pb-[54px]"
 		>
-			<h1 className="max-w-[380px] text-[40px]/12 lg:max-w-[640px] lg:text-[64px]/[72px]">
+			<h1 className="max-w-[380px] text-[32px]/12 lg:max-w-[640px] lg:text-[56px]/[64px]">
 				Nurturing Minds, Transforming Communities
 			</h1>
 
 			<p
-				className="mt-4 max-w-[302px] text-[10px]/[1.2] text-inherit/80 lg:mt-5 lg:max-w-[632px]
+				className="mt-4 max-w-[400px] text-[14px]/[1.2] text-inherit/80 lg:mt-5 lg:max-w-[632px]
 					lg:text-base"
 			>
 				CedarRise Initiative for Human Development is a transformative organization dedicated to
@@ -79,8 +79,8 @@ function HeroSection() {
 				each={impactStats}
 				renderItem={(stat) => (
 					<li key={stat.label} className="flex flex-col gap-1">
-						<h4 className="text-[32px]/none">{stat.count}</h4>
-						<p className="max-w-[90px] text-[10px]/[1.3] lg:text-[12px]">{stat.label}</p>
+						<h4 className="text-[36px]/none">{stat.count}</h4>
+						<p className="max-w-[90px] text-[12px]/[1.3] lg:text-[14px]">{stat.label}</p>
 					</li>
 				)}
 			/>
@@ -117,9 +117,9 @@ function WhatWeDoSection() {
 	return (
 		<section
 			className="flex w-full flex-col gap-9.5 bg-cedar-black px-5 pt-7.5 pb-10 lg:gap-[52px]
-				lg:px-[80px] lg:pt-[80px] lg:pb-[148px]"
+				lg:px-[80px] lg:pt-[72px] lg:pb-[128px]"
 		>
-			<h2 className="text-center text-[24px]/[1.2] text-cedar-yellow lg:text-[36px]">What we do</h2>
+			<h2 className="text-center text-[32px]/[1.2] text-cedar-yellow lg:text-[40px]">What we do</h2>
 
 			<ForWithWrapper
 				className="grid grid-cols-2 gap-2 lg:grid-cols-[repeat(4,min(100%/4,245px))] lg:justify-center
@@ -183,7 +183,7 @@ function WhatWeDoSection() {
 									/>
 								</span>
 								<h4 className="leading-[1.2] text-cedar-white lg:text-[24px]">{offer.title}</h4>
-								<p className="text-[10px]/[1.4] text-pretty text-cedar-white/80 lg:text-[14px]">
+								<p className="text-[12px]/[1.4] text-pretty text-cedar-white/80 lg:text-[14px]">
 									{offer.description}
 								</p>
 							</div>
@@ -226,8 +226,8 @@ function OurProgrammesSection() {
 	return (
 		<section className="flex flex-col gap-6 lg:gap-12">
 			<header className="flex flex-col gap-3 lg:flex-row lg:justify-between lg:gap-9.5">
-				<h2 className="shrink-0 text-[24px]/[1.2] lg:text-[48px]/none">Our Programmes</h2>
-				<p className="max-w-[825px] text-[12px]/5 text-black lg:text-base/7">
+				<h2 className="shrink-0 text-[28px]/[1.2] lg:text-[48px]/none">Our Programmes</h2>
+				<p className="max-w-[825px] text-[13px]/5 text-black lg:text-base/7">
 					At CedarRise, our social initiatives focus on expanding opportunity for underserved
 					communities, particularly children and young people who face barriers to education,
 					mentorship, and personal development. Through targeted programs and community outreach, we
@@ -266,8 +266,8 @@ function OurProgrammesSection() {
 						</NavLinkEphemeral>
 
 						<div className="flex flex-col gap-2 px-10 text-cedar-white lg:gap-2.5">
-							<h3 className="text-[24px] lg:text-[36px]">{initiative.title}</h3>
-							<p className="max-w-[237px] text-[10px] text-pretty lg:max-w-[330px] lg:text-[14px]">
+							<h3 className="text-[28px] lg:text-[36px]">{initiative.title}</h3>
+							<p className="max-w-[237px] text-[12.5px] text-pretty lg:max-w-[330px] lg:text-[14px]">
 								{initiative.description}
 							</p>
 						</div>
@@ -293,6 +293,7 @@ const sustainableImpactInitatives: Array<{
 	bgImage: string;
 	ctaButton: React.ReactNode;
 	description: React.ReactNode;
+	subTitle: string;
 	title: string;
 }> = [
 	{
@@ -304,25 +305,17 @@ const sustainableImpactInitatives: Array<{
 					query: { from: ctx.pathname, program: "ASH", type: "REGISTRATION" },
 				})}
 			>
-				<Button>Enroll now</Button>
+				<Button>Enroll Now</Button>
 			</NavLinkEphemeral>
 		),
 		description: (
-			<>
-				<p>
-					Learning support that empowers students and communities. ASH Online Tutorials provides
-					structured academic support for students who need additional guidance outside the classroom.
-					Through experienced tutors and personalized sessions, we help learners strengthen their
-					understanding, confidence, and academic performance.
-				</p>
-				<p>
-					The program also supports the broader ASH initiative, enabling CedarRise to extend
-					after-school academic support and holistic learning opportunities to underserved youth. By
-					enrolling in ASH Online Tutorials, families receive quality learning support while helping
-					expand access to education for children in need.
-				</p>
-			</>
+			<p>
+				Personalized online tutoring that helps students build confidence, improve academic performance, 
+				and thrive beyond the classroom. Every enrollment also supports the broader ASH initiative, 
+				expanding access to after-school learning opportunities for underserved children.
+			</p>
 		),
+		subTitle: "Learning support that empowers students and communities",
 		title: "ASH Online Tutorials",
 	},
 	{
@@ -341,21 +334,16 @@ const sustainableImpactInitatives: Array<{
 			</a>
 		),
 		description: (
-			<>
-				<p>
-					Gifts by CedarRise curates beautiful and thoughtful gift packages for celebrations,
-					corporate events, milestones, and special occasions. Each gift is carefully assembled to
-					create memorable experiences while supporting a greater cause. Every purchase contributes
-					directly to TACOTS (Take A Child Off The Street), helping provide educational support and
-					mentorship to vulnerable children.
-				</p>
-				<p>
-					By choosing Gifts by CedarRise, you are not only celebrating life’s special moments, you are
-					also helping a child access education and opportunity
-				</p>
-			</>
+			<p>
+				Gifts and Events by CedarRise creates premium gift packages and event gifting solutions 
+				for celebrations, corporate events, milestones, and special occasions. Every purchase 
+				supports TACOTS (Take A Child Off The Street), helping provide underprivileged children 
+				with access to education and mentorship. <br />
+				Celebrate life's special moments while creating opportunities that change lives.
+			</p>
 		),
-		title: "Gifts by CedarRises",
+		subTitle: "Thoughtfully curated gifts. Purposefully delivered",
+		title: "Gifts and Events by CedarRise",
 	},
 ];
 
@@ -363,9 +351,9 @@ function SustainableImpactSection() {
 	return (
 		<section id="sustainable-impact" className="flex flex-col gap-6 lg:gap-10">
 			<header className="flex flex-col items-center gap-2.5 text-center lg:gap-4">
-				<h2 className="text-[24px] lg:text-[40px]">Sustainable Impact Initiatives</h2>
+				<h2 className="text-[26px] lg:text-[40px]">Sustainable Impact Initiatives</h2>
 
-				<p className="max-w-[340px] text-[10px] text-pretty lg:max-w-[770px] lg:text-[14px]">
+				<p className="max-w-[390px] text-[12.5px] text-pretty lg:max-w-[770px] lg:text-[14px]">
 					To sustain our programs and expand our impact, CedarRise operates a number of
 					mission-aligned initiatives that generate income while supporting our social work. Proceeds
 					from these activities are reinvested directly into our programs, particularly TACOTS and
@@ -383,7 +371,8 @@ function SustainableImpactSection() {
 							pt-[114px] pb-8 lg:min-h-[560px] lg:gap-4 lg:px-11.5 lg:pt-[152px] lg:pb-11.5"
 					>
 						<h3 className="text-[24px] text-cedar-white lg:text-[32px]">{initiative.title}</h3>
-						<div className="max-w-[458px] grow text-[10px]/[1.4] text-cedar-white/80 lg:text-[14px]">
+						<h5 className="text-[14px] text-cedar-white lg:text-[20px]">{initiative.subTitle}</h5>
+						<div className="max-w-[458px] grow text-[12px]/[1.4] text-cedar-white/80 lg:text-[14px]">
 							{initiative.description}
 						</div>
 

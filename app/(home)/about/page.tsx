@@ -141,7 +141,7 @@ function CoreValuesSection() {
 
 const teamMembers = [
 	{ image: teamMemberOneImg, name: "Philipa Onochie" },
-	{ image: teamMemberTwoImg, name: "Ylenor Abang" },
+	{ image: teamMemberTwoImg, name: "Yienor Abang" },
 	{ image: teamMemberThreeImg, name: "Emmanuella Aguenu" },
 	{ image: teamMemberFourImg, name: "Chiazom Ezigbo" },
 	{ image: teamMemberFiveImg, name: "Ogechukwu Igwe" },

@@ -279,7 +279,7 @@ function TrackerDataPage() {
 								<TabsAnimated.Trigger
 									key={tab.value}
 									value={tab.value}
-									className="px-5 text-cedar-black/70 data-[state=active]:text-cedar-white"
+									className="px-5 text-cedar-black/85 data-[state=active]:text-cedar-white"
 								>
 									{tab.label}
 								</TabsAnimated.Trigger>
@@ -989,7 +989,7 @@ const getTextColumn = <TRecord extends TrackerRecord>(
 		cell: ({ row }) => (
 			<span
 				className={cnMerge(
-					"text-[13px] text-cedar-black/72",
+					"text-[13px] text-cedar-black/87",
 					options?.truncate && "block max-w-[220px] truncate"
 				)}
 			>
@@ -1167,7 +1167,7 @@ function TrackerRowActions<TRecord extends TrackerRecord>(props: {
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger
 				className="rounded-[10px] border border-cedar-black/16 px-4 py-2 text-[13px]
-					text-cedar-black/72 transition-colors hover:bg-cedar-grey"
+					text-cedar-black/87 transition-colors hover:bg-cedar-grey"
 			>
 				Actions
 			</DropdownMenu.Trigger>
@@ -1309,7 +1309,7 @@ function TrackerDataDetailsDialog(props: {
 								<DialogAnimated.Title className="text-[22px] text-cedar-black">
 									{selectedRecord.title}
 								</DialogAnimated.Title>
-								<DialogAnimated.Description className="mt-1 text-[16px] text-cedar-black/64">
+								<DialogAnimated.Description className="mt-1 text-[16px] text-cedar-black/79">
 									Submitted - {submittedDate}
 								</DialogAnimated.Description>
 							</div>
@@ -1325,12 +1325,12 @@ function TrackerDataDetailsDialog(props: {
 										border-b border-cedar-black/10 py-3 text-[15px] last:border-b-0
 										lg:text-[17px]"
 								>
-									<span className="min-w-0 wrap-break-word text-cedar-black/72 capitalize">
+									<span className="min-w-0 wrap-break-word text-cedar-black/87 capitalize">
 										{row.label}
 									</span>
 									<span
 										className="min-w-0 text-right font-medium wrap-break-word
-											text-cedar-black/72"
+											text-cedar-black/87"
 									>
 										{row.url ?
 											<a

@@ -21,43 +21,50 @@ const socialInitiatives = [
 ] satisfies Array<{ href: MainAppRoutes; label: string }>;
 
 const socialLinks = [
-	{ href: siteConfig.contact.phone.href, icon: "ph:phone-fill", label: "Phone" },
+	{ href: siteConfig.contact.phone.href, icon: "ph:phone-fill", label: "Phone", title: "Phone" },
 	{
 		href: siteConfig.contact.email.href,
 		icon: "solar:letter-linear",
 		label: "Email",
+		title: "Email"
 	},
 	{
 		href: siteConfig.social.instagram,
 		icon: "ph:instagram-logo-bold",
 		label: "Instagram",
+		title: "Instagram"
 	},
 	{
 		href: siteConfig.social.linkedIn,
 		icon: "ri:linkedin-fill",
 		label: "LinkedIn",
+		title: "LinkedIn",
 	},
 	{
 		href: siteConfig.contact.phone.whatsAppUrl,
 		icon: "ic:baseline-whatsapp",
 		label: "WhatsApp",
+		title: "WhatsApp",
 	},
-	{
-		href: siteConfig.websiteUrl,
-		icon: "lucide:globe",
-		label: "Website",
-	},
+	// {
+	// 	href: siteConfig.websiteUrl,
+	// 	icon: "lucide:globe",
+	// 	label: "Website",
+	// 	title: "Website",
+	// },
 	{
 		href: siteConfig.social.youTube,
 		icon: "ph:youtube-logo-fill",
 		label: "YouTube",
+		title: "YouTube"
 	},
 	{
 		href: siteConfig.social.tikTok,
 		icon: "ic:baseline-tiktok",
 		label: "TikTok",
+		title: "TikTok"
 	},
-] satisfies Array<{ href: string; icon: string; label: string }>;
+] satisfies Array<{ href: string; icon: string; label: string, title: string }>;
 
 function Footer() {
 	return (
@@ -67,7 +74,7 @@ function Footer() {
 		>
 			<section className="flex w-full flex-col gap-12 lg:flex-row lg:justify-between">
 				<article className="flex w-full flex-col gap-6">
-					<h2 className="text-[24px]/none lg:text-[32px]">We’d Love Your Feedback</h2>
+					<h2 className="text-[24px]/none lg:text-[32px]">We'd Love Your Feedback</h2>
 					<HomeFeedbackForm />
 				</article>
 
@@ -121,6 +128,7 @@ function Footer() {
 							<a
 								key={link.label}
 								href={link.href}
+								title={link.title}
 								aria-label={link.label}
 								target={link.href.startsWith("http") ? "_blank" : undefined}
 								rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
