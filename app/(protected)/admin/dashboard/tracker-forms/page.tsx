@@ -40,8 +40,7 @@ const TRACKER_FORM_SECTIONS = {
 	"capacity-building": [
 		{
 			color: "yellow",
-			description:
-				"Evaluate the outcome and overall effectiveness of a capacity building program.",
+			description: "Evaluate the outcome and overall effectiveness of a capacity building program.",
 			href: "/admin/dashboard/tracker-forms/capacity-building/program-evaluation",
 			title: "Capacity Building Program Evaluation",
 		},

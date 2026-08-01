@@ -281,7 +281,9 @@ function OurProgrammesSection() {
 function TestimonialsSection() {
 	return (
 		<section className="flex flex-col gap-3">
-			<h2 className="text-center text-[18px] leading-[1.2] text-cedar-yellow lg:text-[24px]">Testimonials</h2>
+			<h2 className="text-center text-[18px] leading-[1.2] text-cedar-yellow lg:text-[24px]">
+				Testimonials
+			</h2>
 			<h3 className="text-center text-[26px]/[1.2] lg:text-[40px]">Our Impact So Far</h3>
 
 			<HomeTestimonialCarousel />

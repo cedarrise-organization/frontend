@@ -304,12 +304,7 @@ function ParticipationOutcomesStep() {
 				type="number"
 				required={true}
 			/>
-			<TextField
-				control={form.control}
-				name="targetAudience"
-				label="Target Audience"
-				required={true}
-			/>
+			<TextField control={form.control} name="targetAudience" label="Target Audience" required={true} />
 			<TextField
 				control={form.control}
 				name="numberOfFacilitators"

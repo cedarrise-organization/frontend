@@ -38,7 +38,8 @@ function Main(
 					width={280}
 					height={304}
 					aria-hidden="true"
-					className="pointer-events-none fixed top-1/2 left-1/2 z-0 -translate-1/2 opacity-[0.04] select-none"
+					className="pointer-events-none fixed top-1/2 left-1/2 z-0 -translate-1/2 opacity-[0.04]
+						select-none"
 				/>
 			)}
 
