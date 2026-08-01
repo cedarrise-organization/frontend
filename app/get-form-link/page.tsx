@@ -76,7 +76,7 @@ function GetFormLinkPageImpl() {
 
 	return (
 		<div className="flex min-h-svh w-full flex-col items-center bg-cedar-grey">
-			<Main className="max-w-[1300px] items-center gap-6 pt-5 lg:gap-10">
+			<Main showWatermark={true} className="max-w-[1300px] items-center gap-6 pt-5 lg:gap-10">
 				<FormPageHeader
 					href={fromQueryState as never}
 					replace={true}

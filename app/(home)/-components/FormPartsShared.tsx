@@ -47,7 +47,7 @@ export function FormErrorMessageShared(
 
 export function OptionQuestionField<TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
 	props: SharedFieldProps<TFieldValues, TTransformedValues> & {
-		options: readonly string[];
+		options: readonly SharedOption[];
 		question: string;
 	}
 ) {
@@ -72,22 +72,26 @@ export function OptionQuestionField<TFieldValues extends FieldValues, TTransform
 					>
 						<For
 							each={options}
-							renderItem={(option) => (
-								<div key={option} className="flex w-fit items-center gap-3">
-									<RadioGroupAnimated.Item
-										id={`${fieldContext.formItemId}-${option}`}
-										value={option}
-										className="grid size-4 place-content-center rounded-full border-[1.5px]
-											border-cedar-black/40"
-									>
-										<RadioGroupAnimated.Indicator className="size-2 rounded-full bg-cedar-red" />
-									</RadioGroupAnimated.Item>
+							renderItem={(option) => {
+								const optionData = getSharedOptionData(option);
 
-									<Form.Label htmlFor={`${fieldContext.formItemId}-${option}`}>
-										{option}
-									</Form.Label>
-								</div>
-							)}
+								return (
+									<div key={optionData.value} className="flex w-fit items-center gap-3">
+										<RadioGroupAnimated.Item
+											id={`${fieldContext.formItemId}-${optionData.value}`}
+											value={optionData.value}
+											className="grid size-4 place-content-center rounded-full border-[1.5px]
+												border-cedar-black/40"
+										>
+											<RadioGroupAnimated.Indicator className="size-2 rounded-full bg-cedar-red" />
+										</RadioGroupAnimated.Item>
+
+										<Form.Label htmlFor={`${fieldContext.formItemId}-${optionData.value}`}>
+											{optionData.label}
+										</Form.Label>
+									</div>
+								);
+							}}
 						/>
 					</RadioGroupAnimated.Root>
 				)}

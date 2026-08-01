@@ -60,7 +60,7 @@ const TacotsRecommendationSchema = TacotsRecommendationFrontendSchema;
 
 function RecommendationFormPage() {
 	return (
-		<Main className="items-center gap-10 lg:gap-[64px]">
+		<Main showWatermark={true} className="items-center gap-10 lg:gap-[64px]">
 			<FormPageHeader title="TACOTS Recommendation Form" href="/social-initiatives/tacots" />
 			<TacotsRecommendationForm />
 		</Main>

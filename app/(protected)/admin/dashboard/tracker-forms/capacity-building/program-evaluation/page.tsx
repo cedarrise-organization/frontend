@@ -26,7 +26,6 @@ import { Form, useFormContext } from "@/components/ui/form";
 import { callBackendApiForQuery } from "@/lib/api/callBackendApi";
 import {
 	backendApiSchemaRoutes,
-	CapacityEngagementLevelOptions,
 	CapacityObjectiveAchievementOptions,
 	CapacityOverallSuccessOptions,
 	CapacityPartnershipLevelOptions,
@@ -299,7 +298,7 @@ function ParticipationOutcomesStep() {
 			<TextField
 				control={form.control}
 				name="numberOfParticipants"
-				placeholder="Total Number of Participants"
+				label="Total Number of Participants"
 				min={0}
 				step={1}
 				type="number"
@@ -308,13 +307,13 @@ function ParticipationOutcomesStep() {
 			<TextField
 				control={form.control}
 				name="targetAudience"
-				placeholder="Target Audience"
+				label="Target Audience"
 				required={true}
 			/>
 			<TextField
 				control={form.control}
 				name="numberOfFacilitators"
-				placeholder="Number of Facilitators/Trainers"
+				label="Number of Facilitators/Trainers"
 				min={0}
 				step={1}
 				type="number"
@@ -323,7 +322,7 @@ function ParticipationOutcomesStep() {
 			<TextField
 				control={form.control}
 				name="numberOfVolunteers"
-				placeholder="Number of Volunteers/Support Staff"
+				label="Number of Volunteers/Support Staff"
 				min={0}
 				step={1}
 				type="number"
@@ -334,7 +333,11 @@ function ParticipationOutcomesStep() {
 				control={form.control}
 				name="participantEngagementLevel"
 				question="Participant Engagement Level"
-				options={CapacityEngagementLevelOptions}
+				options={[
+					{ label: "Low", value: "low" },
+					{ label: "Moderate", value: "moderate" },
+					{ label: "High", value: "high" },
+				]}
 				required={true}
 			/>
 
@@ -384,40 +387,40 @@ function ParticipationOutcomesStep() {
 				control={form.control}
 				name="venueSuitability"
 				question="Venue suitability"
-				leftLabel="1"
-				rightLabel="5"
+				leftLabel=" "
+				rightLabel=" "
 				required={true}
 			/>
 			<RatingQuestionField
 				control={form.control}
 				name="timeManagement"
 				question="Time management"
-				leftLabel="1"
-				rightLabel="5"
+				leftLabel=" "
+				rightLabel=" "
 				required={true}
 			/>
 			<RatingQuestionField
 				control={form.control}
 				name="resourceAvailability"
 				question="Availability of materials/resources"
-				leftLabel="1"
-				rightLabel="5"
+				leftLabel=" "
+				rightLabel=" "
 				required={true}
 			/>
 			<RatingQuestionField
 				control={form.control}
 				name="communicationAndCoordination"
 				question="Communication & coordination"
-				leftLabel="1"
-				rightLabel="5"
+				leftLabel=" "
+				rightLabel=" "
 				required={true}
 			/>
 			<RatingQuestionField
 				control={form.control}
 				name="teamworkAmongOrganizers"
 				question="Teamwork among organizers"
-				leftLabel="1"
-				rightLabel="5"
+				leftLabel=" "
+				rightLabel=" "
 				required={true}
 			/>
 		</>
@@ -446,8 +449,8 @@ function EvaluationSubmissionStep() {
 
 			<FormStepComponentSectionHeader title="Budget and Resources" />
 
-			<TextField control={form.control} name="budgetAllocated" placeholder="Budget allocated" />
-			<TextField control={form.control} name="budgetUtilized" placeholder="Budget utilized" />
+			<TextField control={form.control} name="budgetAllocated" label="Budget allocated" />
+			<TextField control={form.control} name="budgetUtilized" label="Budget utilized" />
 
 			<OptionQuestionField
 				control={form.control}

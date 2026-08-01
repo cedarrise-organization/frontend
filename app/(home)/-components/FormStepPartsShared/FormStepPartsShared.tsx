@@ -164,8 +164,8 @@ export function FormStepComponentSectionHeader(props: { note?: string; title: st
 
 	return (
 		<header className="flex items-center justify-between gap-6">
-			<h2 className="shrink-0 leading-[1.2] lg:text-[24px]">{title}</h2>
-			<p className="text-[8px]/3 text-cedar-black/64 max-lg:max-w-[132px] lg:text-[12px]/4">{note}</p>
+			<h2 className="shrink-0 text-[20px] leading-[1.2] lg:text-[24px]">{title}</h2>
+			<p className="text-[11px]/3 text-cedar-black/64 max-lg:max-w-[132px] lg:text-[12px]/4">{note}</p>
 		</header>
 	);
 }

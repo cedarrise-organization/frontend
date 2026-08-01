@@ -42,7 +42,7 @@ const AshFeedbackSchema = backendApiSchemaRoutes["@post/forms/ash/feedback"].bod
 
 function FeedbackFormPage() {
 	return (
-		<Main className="items-center gap-10 lg:gap-[64px]">
+		<Main showWatermark={true} className="items-center gap-10 lg:gap-[64px]">
 			<FormPageHeader title="ASH Program Feedback Form" href="/social-initiatives/ash" />
 			<AshFeedbackForm />
 		</Main>

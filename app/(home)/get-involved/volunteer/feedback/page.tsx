@@ -42,7 +42,7 @@ const VolunteerFeedbackSchema = backendApiSchemaRoutes["@post/volunteer/feedback
 
 function VolunteerFeedbackPage() {
 	return (
-		<Main className="items-center gap-10 lg:gap-[64px]">
+		<Main showWatermark={true} className="items-center gap-10 lg:gap-[64px]">
 			<FormPageHeader title="Volunteer Feedback Form" href="/get-involved/volunteer" />
 			<VolunteerFeedbackForm />
 		</Main>

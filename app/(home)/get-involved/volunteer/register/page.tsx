@@ -49,7 +49,7 @@ const VolunteerRegisterSchema = backendApiSchemaRoutes["@post/volunteer/register
 
 function VolunteerRegisterPage() {
 	return (
-		<Main className="items-center gap-10 lg:gap-[64px]">
+		<Main showWatermark={true} className="items-center gap-10 lg:gap-[64px]">
 			<FormPageHeader title="Volunteer Form" href="/get-involved/volunteer" />
 			<VolunteerRegisterForm />
 		</Main>

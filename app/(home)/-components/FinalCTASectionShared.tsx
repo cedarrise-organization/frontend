@@ -46,7 +46,7 @@ function FinalCTASection(props: {
 		>
 			<h2
 				className={cnJoin(
-					"text-[24px]/[1.2] lg:text-[48px]",
+					"text-[32px]/[1.2] lg:text-[48px]",
 					tone === "dark" && "text-cedar-yellow",
 					tone === "light" && "text-cedar-black"
 				)}
@@ -56,7 +56,7 @@ function FinalCTASection(props: {
 
 			<p
 				className={cnJoin(
-					"mt-2 text-[10px] max-lg:max-w-[284px] lg:mt-4 lg:text-base",
+					"mt-2 text-[14px]/[1.2] max-lg:max-w-[284px] lg:mt-4 lg:text-base",
 					tone === "dark" && "text-cedar-white/80"
 				)}
 			>

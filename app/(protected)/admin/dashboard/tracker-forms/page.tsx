@@ -41,7 +41,7 @@ const TRACKER_FORM_SECTIONS = {
 		{
 			color: "yellow",
 			description:
-				"Evaluate skills acquired, trainer performance, participant progress, and overall program effectiveness at cohort close",
+				"Evaluate the outcome and overall effectiveness of a capacity building program.",
 			href: "/admin/dashboard/tracker-forms/capacity-building/program-evaluation",
 			title: "Capacity Building Program Evaluation",
 		},

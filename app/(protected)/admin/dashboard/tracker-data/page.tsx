@@ -989,7 +989,7 @@ const getTextColumn = <TRecord extends TrackerRecord>(
 		cell: ({ row }) => (
 			<span
 				className={cnMerge(
-					"text-[13px] text-cedar-black/87",
+					"text-[14px] text-cedar-black/87",
 					options?.truncate && "block max-w-[220px] truncate"
 				)}
 			>
@@ -1001,7 +1001,7 @@ const getTextColumn = <TRecord extends TrackerRecord>(
 		id,
 		meta: {
 			label,
-			placeholder: "search this section",
+			placeholder: "Search this section",
 			variant: "text",
 		},
 	};
@@ -1166,7 +1166,7 @@ function TrackerRowActions<TRecord extends TrackerRecord>(props: {
 	return (
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger
-				className="rounded-[10px] border border-cedar-black/16 px-4 py-2 text-[13px]
+				className="rounded-[10px] border border-cedar-black/16 px-4 py-2 text-[14px]
 					text-cedar-black/87 transition-colors hover:bg-cedar-grey"
 			>
 				Actions

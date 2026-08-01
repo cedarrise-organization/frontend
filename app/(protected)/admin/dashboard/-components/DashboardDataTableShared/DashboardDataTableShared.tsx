@@ -109,7 +109,7 @@ export function DashboardDataTable<TRecord>(props: {
 					classNames?.tableContainer
 				),
 				tableHead: cnMerge(
-					"px-5 text-[12px] font-semibold text-cedar-black/80",
+					"px-5 text-[13px] font-semibold text-cedar-black/80",
 					classNames?.tableHead
 				),
 				tableHeader: classNames?.tableHeader,
@@ -158,8 +158,8 @@ function DashboardDataTableToolbar(props: {
 					theme="secondary-outline"
 					size="medium"
 					type="button"
-					className="h-10 border-cedar-black/10 px-4 text-[12px] text-cedar-black/64 lg:h-10 lg:px-4
-						lg:text-[12px]"
+					className="h-10 border-cedar-black/10 px-4 text-[14px] text-cedar-black/64 lg:h-10 lg:px-4
+						lg:text-[14px]"
 					onClick={onReset}
 				>
 					Reset Filters
@@ -462,7 +462,7 @@ function DashboardToolbarSearch(props: {
 	onValueChange: (value: string) => void;
 	placeholder?: string;
 }) {
-	const { className, onValueChange, placeholder = "search this section" } = props;
+	const { className, onValueChange, placeholder = "Search this section" } = props;
 
 	const handleChangeDebounced = useDebouncedFn(onValueChange, 300);
 
@@ -502,7 +502,7 @@ function DashboardToolbarSelect(props: {
 			<Select.Trigger
 				classNames={{
 					base: cnMerge(
-						`h-10 w-fit rounded-[12px] border border-cedar-black/10 bg-cedar-white px-4 text-[12px]
+						`h-10 w-fit rounded-[12px] border border-cedar-black/10 bg-cedar-white px-4 text-[14px]
 						text-cedar-black/64 shadow-none`,
 						className
 					),
