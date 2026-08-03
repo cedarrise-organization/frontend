@@ -209,28 +209,119 @@ function StudentAcademicProgressStep() {
 
 			<FormStepComponentSectionHeader title="Academic Progress" note="School Result" />
 
-			<TextField control={form.control} name="schoolNumeracyScore" placeholder="Numeracy Score" min={0} step={1} type="number"/>
-			<TextField control={form.control} name="schoolLiteracyScore" placeholder="Literacy Score" min={0} step={1} type="number"/>
-			<TextField control={form.control} name="schoolAverage" placeholder="Student Average" min={0} step={1} type="number"/>
-			<TextField control={form.control} name="schoolPosition" placeholder="Student Position" min={0} step={1} type="number"/>
+			<TextField
+				control={form.control}
+				name="schoolNumeracyScore"
+				placeholder="Numeracy Score"
+				min={0}
+				step={1}
+				type="number"
+			/>
+			<TextField
+				control={form.control}
+				name="schoolLiteracyScore"
+				placeholder="Literacy Score"
+				min={0}
+				step={1}
+				type="number"
+			/>
+			<TextField
+				control={form.control}
+				name="schoolAverage"
+				placeholder="Student Average"
+				min={0}
+				step={1}
+				type="number"
+			/>
+			<TextField
+				control={form.control}
+				name="schoolPosition"
+				placeholder="Student Position"
+				min={0}
+				step={1}
+				type="number"
+			/>
 
 			<FormStepComponentSectionHeader title="ASH Pre-test" note="ASH Result" />
 
-			<TextField control={form.control} name="pretestNumeracyScore" placeholder="Numeracy Score" min={0} step={1} type="number"/>
-			<TextField control={form.control} name="pretestLiteracyScore" placeholder="Literacy Score" min={0} step={1} type="number"/>
-			<TextField control={form.control} name="pretestAverage" placeholder="Average score" min={0} step={1} type="number"/>
+			<TextField
+				control={form.control}
+				name="pretestNumeracyScore"
+				placeholder="Numeracy Score"
+				min={0}
+				step={1}
+				type="number"
+			/>
+			<TextField
+				control={form.control}
+				name="pretestLiteracyScore"
+				placeholder="Literacy Score"
+				min={0}
+				step={1}
+				type="number"
+			/>
+			<TextField
+				control={form.control}
+				name="pretestAverage"
+				placeholder="Average score"
+				min={0}
+				step={1}
+				type="number"
+			/>
 
 			<FormStepComponentSectionHeader title="ASH Mid-test" note="ASH Result" />
 
-			<TextField control={form.control} name="midtestNumeracyScore" placeholder="Numeracy Score" min={0} step={1} type="number"/>
-			<TextField control={form.control} name="midtestLiteracyScore" placeholder="Literacy Score" min={0} step={1} type="number"/>
-			<TextField control={form.control} name="midtestAverage" placeholder="Average score" min={0} step={1} type="number"/>
+			<TextField
+				control={form.control}
+				name="midtestNumeracyScore"
+				placeholder="Numeracy Score"
+				min={0}
+				step={1}
+				type="number"
+			/>
+			<TextField
+				control={form.control}
+				name="midtestLiteracyScore"
+				placeholder="Literacy Score"
+				min={0}
+				step={1}
+				type="number"
+			/>
+			<TextField
+				control={form.control}
+				name="midtestAverage"
+				placeholder="Average score"
+				min={0}
+				step={1}
+				type="number"
+			/>
 
 			<FormStepComponentSectionHeader title="ASH Post-test" note="ASH Result" />
 
-			<TextField control={form.control} name="posttestNumeracyScore" placeholder="Numeracy Score" min={0} step={1} type="number"/>
-			<TextField control={form.control} name="posttestLiteracyScore" placeholder="Literacy Score" min={0} step={1} type="number"/>
-			<TextField control={form.control} name="posttestAverage" placeholder="Average score" min={0} step={1} type="number"/>
+			<TextField
+				control={form.control}
+				name="posttestNumeracyScore"
+				placeholder="Numeracy Score"
+				min={0}
+				step={1}
+				type="number"
+			/>
+			<TextField
+				control={form.control}
+				name="posttestLiteracyScore"
+				placeholder="Literacy Score"
+				min={0}
+				step={1}
+				type="number"
+			/>
+			<TextField
+				control={form.control}
+				name="posttestAverage"
+				placeholder="Average score"
+				min={0}
+				step={1}
+				type="number"
+			/>
 
 			<FileUploadField control={form.control} name="file" label="Upload School result for the term" />
 		</>
