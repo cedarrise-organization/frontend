@@ -43,11 +43,11 @@ export const dashboardNavSections = [
 				label: "Blog Uploads",
 				link: "/admin/dashboard/blog-uploads",
 			},
-			{
-				icon: "hugeicons:share-03",
-				label: "General Uploads",
-				link: "/admin/dashboard/general-uploads",
-			},
+			// {
+			// 	icon: "hugeicons:share-03",
+			// 	label: "General Uploads",
+			// 	link: "/admin/dashboard/general-uploads",
+			// },
 		],
 		label: "Content Management",
 	},
