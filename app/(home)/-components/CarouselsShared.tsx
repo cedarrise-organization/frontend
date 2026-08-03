@@ -57,7 +57,7 @@ export function TestimonialCarouselShared(props: {
 									</svg>
 								</span>
 
-								<p className="grow text-[12px]/5 lg:text-base/7">"{testimonial.quote}"</p>
+								<p className="grow text-[14px]/5 lg:text-base/7">"{testimonial.quote}"</p>
 
 								<h4 className="leading-[1.2] text-cedar-red lg:text-[20px]">
 									{testimonial.title}

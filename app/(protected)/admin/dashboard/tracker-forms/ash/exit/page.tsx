@@ -138,8 +138,8 @@ function AshExitForm() {
 				control={form.control}
 				name="academicImpactRating"
 				question="Rate the impact of the program on the child's academic performance"
-				leftLabel="1"
-				rightLabel="10"
+				leftLabel=""
+				rightLabel=""
 				maxRating={10}
 				required={true}
 			/>
@@ -163,8 +163,8 @@ function AshExitForm() {
 				control={form.control}
 				name="mentorshipImpactRating"
 				question="Rate the impact of mentoring on the student"
-				leftLabel="1"
-				rightLabel="10"
+				leftLabel=""
+				rightLabel=""
 				maxRating={10}
 			/>
 

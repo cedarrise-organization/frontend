@@ -107,7 +107,7 @@ function AshWeeklyActivityAttendanceForm() {
 			<TextField
 				control={form.control}
 				name="volunteersInAttendance"
-				placeholder="Volunteers in Attendance"
+				placeholder="Volunteers in Attendance (e.g. name, name, name...)"
 				required={true}
 			/>
 

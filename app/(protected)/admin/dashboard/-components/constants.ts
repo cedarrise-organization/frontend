@@ -43,11 +43,11 @@ export const dashboardNavSections = [
 				label: "Blog Uploads",
 				link: "/admin/dashboard/blog-uploads",
 			},
-			// {
-			// 	icon: "hugeicons:share-03",
-			// 	label: "General Uploads",
-			// 	link: "/admin/dashboard/general-uploads",
-			// },
+			{
+				icon: "hugeicons:share-03",
+				label: "General Uploads",
+				link: "/admin/dashboard/general-uploads",
+			},
 		],
 		label: "Content Management",
 	},
@@ -58,13 +58,13 @@ export const dashboardNavSections = [
 				label: "Receipts",
 				link: "/admin/dashboard/receipts",
 			},
-			{
-				icon: "mynaui:layers-two",
-				label: "General Information",
-				link: placeholderHref,
-			},
+			// {
+			// 	icon: "mynaui:layers-two",
+			// 	label: "General Information",
+			// 	link: placeholderHref,
+			// },
 		],
-		label: "Document and Records",
+		label: "Documents and Records",
 	},
 	{
 		children: [
