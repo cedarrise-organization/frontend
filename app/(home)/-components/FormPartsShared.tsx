@@ -45,6 +45,12 @@ export function FormErrorMessageShared(
 	return <Form.ErrorMessage scrollToErrorOffset={150} {...props} classNames={{ container: "-mt-2" }} />;
 }
 
+type SharedOption = string | { label: string; value: string };
+
+const getSharedOptionData = (option: SharedOption) => {
+	return isString(option) ? { label: option, value: option } : option;
+};
+
 export function OptionQuestionField<TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
 	props: SharedFieldProps<TFieldValues, TTransformedValues> & {
 		options: readonly SharedOption[];
@@ -160,12 +166,6 @@ export function RatingQuestionField<TFieldValues extends FieldValues, TTransform
 		</Form.Field>
 	);
 }
-
-type SharedOption = string | { label: string; value: string };
-
-const getSharedOptionData = (option: SharedOption) => {
-	return isString(option) ? { label: option, value: option } : option;
-};
 
 export function CheckboxQuestionField<TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
 	props: SharedFieldProps<TFieldValues, TTransformedValues> & {
