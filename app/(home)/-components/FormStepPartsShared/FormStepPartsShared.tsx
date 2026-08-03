@@ -1,12 +1,13 @@
 "use client";
 
 import { Steps } from "@ark-ui/react/steps";
+import { useRouter } from "@bprogress/next";
 import { tw } from "@zayne-labs/toolkit-core";
 import dynamic from "next/dynamic";
 import type { UseFormStateReturn } from "react-hook-form";
 import { For } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
-import { NavLink, type MainAppRoutes } from "@/components/common/NavLink";
+import type { MainAppRoutes } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { cnJoin } from "@/lib/utils/cn";
@@ -178,13 +179,37 @@ export function FormPageHeader(props: { href: MainAppRoutes; replace?: boolean; 
 			className="relative mt-6 flex h-[60px] w-full items-center gap-5 rounded-[12px] bg-cedar-black p-3
 				text-cedar-white lg:mt-10 lg:h-[115px] lg:rounded-[20px] lg:p-5"
 		>
-			<Button asChild={true} theme="secondary" size="icon" className="shrink-0">
-				<NavLink href={href} replace={replace}>
-					<IconBox icon="ph:arrow-left" />
-				</NavLink>
-			</Button>
+			<FormPageBackButton href={href} replace={replace} />
 
 			<h1 className="w-full text-center text-[20px]/[1.2] lg:text-[32px]">{title}</h1>
 		</header>
+	);
+}
+
+function FormPageBackButton(props: { href: MainAppRoutes; replace: boolean | undefined }) {
+	const { href, replace } = props;
+	const router = useRouter();
+
+	return (
+		<Button
+			theme="secondary"
+			size="icon"
+			className="shrink-0"
+			onClick={() => {
+				if (window.history.length > 1) {
+					router.back();
+					return;
+				}
+
+				if (replace) {
+					router.replace(href);
+					return;
+				}
+
+				router.push(href);
+			}}
+		>
+			<IconBox icon="ph:arrow-left" />
+		</Button>
 	);
 }

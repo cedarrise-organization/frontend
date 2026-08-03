@@ -20,7 +20,7 @@ const socialInitiatives = [
 	{ href: "/blog", label: "Blogs" },
 ] satisfies Array<{ href: MainAppRoutes; label: string }>;
 
-const socialLinks = [
+const contactLinks = [
 	{ href: siteConfig.contact.phone.href, icon: "ph:phone-fill", label: "Phone", title: "Phone" },
 	{
 		href: siteConfig.contact.email.href,
@@ -40,21 +40,18 @@ const socialLinks = [
 		label: "LinkedIn",
 		title: "LinkedIn",
 	},
+] satisfies Array<{ href: string; icon: string; label: string; title: string }>;
+
+const followLinks = [
 	{
 		href: siteConfig.contact.phone.whatsAppUrl,
 		icon: "ic:baseline-whatsapp",
 		label: "WhatsApp",
 		title: "WhatsApp",
 	},
-	// {
-	// 	href: siteConfig.websiteUrl,
-	// 	icon: "lucide:globe",
-	// 	label: "Website",
-	// 	title: "Website",
-	// },
 	{
 		href: siteConfig.social.youTube,
-		icon: "ph:youtube-logo-fill",
+		icon: "mdi:youtube",
 		label: "YouTube",
 		title: "YouTube",
 	},
@@ -120,25 +117,10 @@ function Footer() {
 						</div>
 					</div>
 
-					<ForWithWrapper
-						as="nav"
-						className="flex flex-wrap gap-4 lg:gap-6"
-						each={socialLinks}
-						renderItem={(link) => (
-							<a
-								key={link.label}
-								href={link.href}
-								title={link.title}
-								aria-label={link.label}
-								target={link.href.startsWith("http") ? "_blank" : undefined}
-								rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-								className="grid size-8 place-content-center rounded-full bg-cedar-yellow
-									text-cedar-white transition-transform hover:scale-105 lg:size-12"
-							>
-								<IconBox icon={link.icon} className="size-5 lg:size-6" />
-							</a>
-						)}
-					/>
+					<div className="grid grid-cols-[auto_auto] justify-between gap-4 lg:flex lg:items-end lg:justify-between">
+						<FooterSocialGroup label="Contact us" links={contactLinks} />
+						<FooterSocialGroup label="Follow us on" links={followLinks} />
+					</div>
 				</article>
 			</section>
 
@@ -169,6 +151,39 @@ function Footer() {
 				© {siteConfig.copyrightYear} {siteConfig.organizationName}. All rights reserved.
 			</p>
 		</footer>
+	);
+}
+
+function FooterSocialGroup(props: {
+	label: string;
+	links: Array<{ href: string; icon: string; label: string; title: string }>;
+}) {
+	const { label, links } = props;
+
+	return (
+		<div className="flex flex-col gap-2.5 lg:gap-3.5">
+			<h3 className="text-[16px] font-medium lg:text-[20px]">{label}</h3>
+
+			<ForWithWrapper
+				as="nav"
+				className="flex gap-3 lg:gap-6"
+				each={links}
+				renderItem={(link) => (
+					<a
+						key={link.label}
+						href={link.href}
+						title={link.title}
+						aria-label={link.label}
+						target={link.href.startsWith("http") ? "_blank" : undefined}
+						rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+						className="grid size-8 place-content-center rounded-full bg-cedar-yellow text-cedar-white
+							transition-transform hover:scale-105 lg:size-12"
+					>
+						<IconBox icon={link.icon} className="size-5 lg:size-6" />
+					</a>
+				)}
+			/>
+		</div>
 	);
 }
 

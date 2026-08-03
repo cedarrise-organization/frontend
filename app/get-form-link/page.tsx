@@ -80,11 +80,17 @@ function GetFormLinkPageImpl() {
 				<FormPageHeader
 					href={fromQueryState as never}
 					replace={true}
-					title={
-						programQueryState.program === "PARTNER" ?
-							`Fill this form to Partner with us`
-						:	`Fill this form to get the ${programQueryState.program} ${formType} link`
-					}
+					title={(() => {
+						if (programQueryState.program === "PARTNER") {
+							return "Fill this form to Partner with us";
+						}
+
+						if (fromQueryState === "/#sustainable-impact") {
+							return "Interested in online tutorial for your ward, Let's get back to you";
+						}
+
+						return `Fill this form to get the ${programQueryState.program} ${formType} link`;
+					})()}
 				/>
 
 				<Form.Root

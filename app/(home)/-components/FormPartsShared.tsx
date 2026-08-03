@@ -30,12 +30,21 @@ function FormRequiredIndicator(props: { required: boolean | undefined }) {
 
 	return (
 		required && (
-			<Form.Description
-				className="mt-2 -mb-1 ml-0.5 text-[14px] tracking-tight text-red-500 lg:text-[13px]"
-			>
+			<span className="text-[14px] leading-none text-red-500 lg:text-[13px]" aria-hidden={true}>
 				*
-			</Form.Description>
+			</span>
 		)
+	);
+}
+
+function FormQuestionHeader(props: { question: string; required: boolean | undefined }) {
+	const { question, required } = props;
+
+	return (
+		<div className="flex items-baseline gap-1 text-[14px] text-cedar-black/86 lg:text-[14px]">
+			<p>{question}</p>
+			<FormRequiredIndicator required={required} />
+		</div>
 	);
 }
 
@@ -63,11 +72,9 @@ export function OptionQuestionField<TFieldValues extends FieldValues, TTransform
 		<Form.Field
 			control={control}
 			name={name}
-			className="gap-3 text-[12px] text-cedar-black/64 lg:text-[14px]"
+			className="gap-3 text-[14px] text-cedar-black/86 lg:text-[14px]"
 		>
-			<FormRequiredIndicator required={required} />
-
-			<p>{question}</p>
+			<FormQuestionHeader question={question} required={required} />
 
 			<Form.FieldBoundController
 				render={({ field, fieldContext }) => (
@@ -121,10 +128,8 @@ export function RatingQuestionField<TFieldValues extends FieldValues, TTransform
 	const ratingValues = [...Array(maxRating).keys()].map((index) => String(index + 1));
 
 	return (
-		<Form.Field control={control} name={name} className="text-[12px] text-cedar-black/64 lg:text-[14px]">
-			<FormRequiredIndicator required={required} />
-
-			<p>{question}</p>
+		<Form.Field control={control} name={name} className="text-[14px] text-cedar-black/86 lg:text-[14px]">
+			<FormQuestionHeader question={question} required={required} />
 
 			<Form.FieldBoundController
 				render={({ field, fieldContext }) => (
@@ -176,10 +181,8 @@ export function CheckboxQuestionField<TFieldValues extends FieldValues, TTransfo
 	const { control, name, options, question, required } = props;
 
 	return (
-		<div className="flex flex-col gap-3 text-[12px] text-cedar-black/64 lg:text-[14px]">
-			<FormRequiredIndicator required={required} />
-
-			<p>{question}</p>
+		<div className="flex flex-col gap-3 text-[14px] text-cedar-black/86 lg:text-[14px]">
+			<FormQuestionHeader question={question} required={required} />
 
 			<ForWithWrapper
 				className="flex flex-col gap-3"
@@ -240,15 +243,13 @@ export function AgreementField<TFieldValues extends FieldValues, TTransformedVal
 	return (
 		<>
 			{title && <h2 className="leading-[1.2] lg:text-[24px]">{title}</h2>}
-			{description && <p className="text-[12px] text-cedar-black/64 lg:text-[14px]">{description}</p>}
+			{description && <p className="text-[14px] text-cedar-black/86 lg:text-[14px]">{description}</p>}
 
 			<Form.Field
 				control={control}
 				name={name}
-				className="w-full text-[12px] text-cedar-black/64 lg:text-[14px]"
+				className="w-full text-[14px] text-cedar-black/86 lg:text-[14px]"
 			>
-				<FormRequiredIndicator required={required} />
-
 				<div className="flex items-start gap-3">
 					<Form.FieldBoundController
 						render={({ field, fieldContext }) => (
@@ -264,7 +265,10 @@ export function AgreementField<TFieldValues extends FieldValues, TTransformedVal
 							/>
 						)}
 					/>
-					<Form.Label>{label}</Form.Label>
+					<Form.Label className="flex items-baseline gap-1">
+						{label}
+						<FormRequiredIndicator required={required} />
+					</Form.Label>
 				</div>
 
 				<FormErrorMessageShared />
@@ -273,13 +277,19 @@ export function AgreementField<TFieldValues extends FieldValues, TTransformedVal
 	);
 }
 
-function FormLabelShared(props: { className?: string; label: string | undefined }) {
-	const { className, label } = props;
+function FormLabelShared(props: { className?: string; label: string | undefined; required?: boolean }) {
+	const { className, label, required } = props;
 
 	return (
 		label && (
-			<Form.Label className={cnMerge("text-[12px] text-cedar-black/64 lg:text-[14px]", className)}>
+			<Form.Label
+				className={cnMerge(
+					"flex items-baseline gap-1 text-[14px] text-cedar-black/86 lg:text-[14px]",
+					className
+				)}
+			>
 				{label}
+				<FormRequiredIndicator required={required} />
 			</Form.Label>
 		)
 	);
@@ -314,14 +324,13 @@ export function TextField<TFieldValues extends FieldValues, TTransformedValues =
 		type = "text",
 	} = props;
 
-	const inputClassName = tw`h-[54px] rounded-[12px] bg-cedar-grey px-6 text-[12px] text-cedar-black
-	placeholder:text-cedar-black/40 lg:h-[64px] lg:px-9 lg:text-[14px]`;
+	const inputClassName = tw`h-[54px] rounded-[12px] bg-cedar-grey px-6 text-[14px] text-cedar-black
+	placeholder:text-cedar-black/56 lg:h-[64px] lg:px-9 lg:text-[14px]`;
+	const fieldLabel = label ?? placeholder;
 
 	return (
 		<Form.Field control={control} name={name} className={classNames?.base}>
-			<FormRequiredIndicator required={required} />
-
-			<FormLabelShared label={label} className={classNames?.label} />
+			<FormLabelShared label={fieldLabel} required={required} className={classNames?.label} />
 
 			<Form.Input
 				inputMode={inputMode}
@@ -329,7 +338,7 @@ export function TextField<TFieldValues extends FieldValues, TTransformedValues =
 				min={min}
 				step={step}
 				type={type}
-				placeholder={placeholder}
+				placeholder={label ? placeholder : undefined}
 				classNames={{
 					input: cnMerge(
 						type === "password" ? "placeholder:text-cedar-black/40" : inputClassName,
@@ -358,15 +367,13 @@ export function TextAreaField<TFieldValues extends FieldValues, TTransformedValu
 
 	return (
 		<Form.Field control={control} name={name} className={classNames?.base}>
-			<FormRequiredIndicator required={required} />
-
-			<FormLabelShared label={label} className={classNames?.label} />
+			<FormLabelShared label={label} required={required} className={classNames?.label} />
 
 			<Form.TextArea
 				placeholder={placeholder}
 				className={cnMerge(
-					`min-h-[132px] rounded-[12px] bg-cedar-grey px-6 py-4 text-[12px] text-cedar-black
-					placeholder:text-cedar-black/40 lg:px-9 lg:text-[14px]`,
+					`min-h-[132px] rounded-[12px] bg-cedar-grey px-6 py-4 text-[14px] text-cedar-black
+					placeholder:text-cedar-black/56 lg:px-9 lg:text-[14px]`,
 					classNames?.textArea
 				)}
 			/>
@@ -384,12 +391,11 @@ export function SelectField<TFieldValues extends FieldValues, TTransformedValues
 	}
 ) {
 	const { classNames, control, label, name, options, placeholder, required } = props;
+	const fieldLabel = label ?? placeholder;
 
 	return (
 		<Form.Field control={control} name={name} className={classNames?.base}>
-			<FormRequiredIndicator required={required} />
-
-			<FormLabelShared label={label} />
+			<FormLabelShared label={fieldLabel} required={required} />
 
 			<Form.FieldBoundController
 				render={({ field }) => (
@@ -397,12 +403,12 @@ export function SelectField<TFieldValues extends FieldValues, TTransformedValues
 						<Select.Trigger
 							className={cnMerge(
 								`h-[54px] justify-start gap-3 rounded-[12px] border-0 bg-cedar-grey px-9
-								text-[12px] text-cedar-black shadow-none data-placeholder:text-cedar-black/40
+								text-[14px] text-cedar-black shadow-none data-placeholder:text-cedar-black/56
 								lg:h-[64px] lg:text-[14px]`,
 								classNames?.trigger
 							)}
 						>
-							<Select.Value placeholder={placeholder} />
+							<Select.Value placeholder={label ? placeholder : undefined} />
 						</Select.Trigger>
 
 						<Select.Content className="border-0">
@@ -437,19 +443,21 @@ export function SelectField<TFieldValues extends FieldValues, TTransformedValues
 export function ComboboxField<TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
 	props: SharedFieldProps<TFieldValues, TTransformedValues> & {
 		disabled?: boolean;
+		label?: string;
 		onValueChange?: (value: string) => void;
 		options: readonly string[];
 		placeholder: string;
 	}
 ) {
-	const { control, disabled, name, onValueChange, options, placeholder, required } = props;
+	const { control, disabled, label, name, onValueChange, options, placeholder, required } = props;
 
 	const data = options.map((option) => ({ label: option, value: option }));
+	const fieldLabel = label ?? placeholder;
 	const type = placeholder.toLowerCase();
 
 	return (
 		<Form.Field control={control} name={name} className="w-full max-w-[285px] min-w-0">
-			<FormRequiredIndicator required={required} />
+			<FormLabelShared label={fieldLabel} required={required} />
 
 			<Form.FieldBoundController
 				render={({ field }) => {
@@ -464,13 +472,13 @@ export function ComboboxField<TFieldValues extends FieldValues, TTransformedValu
 							}}
 						>
 							<Combobox.Trigger
-								placeholder={placeholder}
+								placeholder={label ? placeholder : undefined}
 								disabled={disabled}
 								classNames={{
 									base: `h-[54px] w-full shrink justify-start gap-3 rounded-[12px] border-0
-									bg-cedar-grey px-4 text-[12px] text-cedar-black/70 shadow-none
+									bg-cedar-grey px-4 text-[14px] text-cedar-black/86 shadow-none
 									disabled:pointer-events-none disabled:opacity-60
-									data-placeholder:text-cedar-black/40 lg:h-[64px] lg:px-9 lg:text-[14px]`,
+									data-placeholder:text-cedar-black/56 lg:h-[64px] lg:px-9 lg:text-[14px]`,
 									icon: "size-4 shrink-0 text-cedar-black/40",
 								}}
 							/>
@@ -515,26 +523,25 @@ export function DateField<TFieldValues extends FieldValues, TTransformedValues =
 	}
 ) {
 	const { classNames, control, label, name, placeholder, required } = props;
+	const fieldLabel = label ?? placeholder;
 
 	return (
 		<Form.Field control={control} name={name} className={classNames?.base}>
-			<FormRequiredIndicator required={required} />
-
-			<FormLabelShared label={label} className={classNames?.label} />
+			<FormLabelShared label={fieldLabel} required={required} className={classNames?.label} />
 
 			<Form.FieldBoundController
 				render={({ field }) => (
 					<DateTimePicker
 						dateString={field.value}
 						onDateStringChange={field.onChange}
-						placeholder={placeholder}
+						placeholder={label ? placeholder : undefined}
 						dateFormats={{
 							onChangeDate: "yyyy-MM-dd",
 							visibleDate: "PPP",
 						}}
 						className={cnMerge(
-							`h-[54px] justify-between rounded-[12px] bg-cedar-grey px-9 text-[12px] font-normal
-							text-cedar-black/70 placeholder:text-cedar-black/40 lg:h-[64px] lg:px-9
+							`h-[54px] justify-between rounded-[12px] bg-cedar-grey px-9 text-[14px] font-normal
+							text-cedar-black/86 placeholder:text-cedar-black/56 lg:h-[64px] lg:px-9
 							lg:text-[14px]`,
 							classNames?.dateTimePicker
 						)}
@@ -559,10 +566,8 @@ export function FileUploadField<TFieldValues extends FieldValues, TTransformedVa
 
 	return (
 		<Form.Field control={control} name={name}>
-			<FormRequiredIndicator required={required} />
-
 			<div className="flex items-center justify-between gap-4">
-				<FormLabelShared label={label} />
+				<FormLabelShared label={label} required={required} />
 
 				<Form.FieldBoundController
 					render={({ field }) => (

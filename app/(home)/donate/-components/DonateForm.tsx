@@ -58,12 +58,14 @@ function DonateFormImpl() {
 	return (
 		<Form.Root form={form} onSubmit={(event) => void onSubmit(event)} className="gap-5">
 			<Form.Field control={form.control} name="amount">
+				<Form.Label className="text-[14px] text-cedar-black/86 lg:text-[14px]">
+					Donation amount
+				</Form.Label>
 				<Form.InputGroup className="gap-4">
 					<Form.Input
 						type="number"
-						className="h-[54px] rounded-[12px] bg-cedar-grey px-9 text-[12px]
-							placeholder:text-cedar-black/40 lg:h-[64px] lg:text-[14px]"
-						placeholder="Input Amount you wish to donate"
+						className="h-[54px] rounded-[12px] bg-cedar-grey px-9 text-[14px]
+							placeholder:text-cedar-black/56 lg:h-[64px] lg:text-[14px]"
 					/>
 
 					<Form.InputGroupAddon
