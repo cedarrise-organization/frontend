@@ -117,7 +117,10 @@ function Footer() {
 						</div>
 					</div>
 
-					<div className="grid grid-cols-[auto_auto] justify-between gap-4 lg:flex lg:items-end lg:justify-between">
+					<div
+						className="grid grid-cols-[auto_auto] justify-between gap-4 lg:flex lg:items-end
+							lg:justify-between"
+					>
 						<FooterSocialGroup label="Contact us" links={contactLinks} />
 						<FooterSocialGroup label="Follow us on" links={followLinks} />
 					</div>
