@@ -977,11 +977,11 @@ const StudentPerformanceMetricsSchema = z.object({
 });
 
 const EnrollmentMetricsSchema = z.object({
-	c_acceptanceRate: DashboardLineDataSchema,
 	c_applicationNumbers: DashboardChartDatasetSchema,
 	c_classDistribution: DashboardChartDatasetSchema,
 	c_genderDiversity: DashboardChartDatasetSchema,
 	c_geographicalDistribution: DashboardLineDataSchema,
+	c_graduationTrends: DashboardLineDataSchema,
 });
 
 const InstitutionalEffectivenessMetricsSchema = z.object({

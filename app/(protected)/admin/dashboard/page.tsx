@@ -42,17 +42,17 @@ import { EMPTY_VALUE_PLACEHOLDER } from "./-components/constants";
 import { Main } from "./-components/Main";
 
 const chartScopesByTitle = {
-	"Acceptance Rate - by Programme": "ASH + TACOTS",
 	"Application Numbers Over Time": "ASH + TACOTS",
 	"At-risk vs Low-risk Students": "ASH",
 	"Attendance Trend - Monthly Sessions": "ASH",
 	"Average Mentorship Hours": "TACOTS",
 	"Average Spend per Student": "TACOTS",
-	"Class Distribution": "ASH",
+	"Class Distribution": "ASH + TACOTS",
 	"Dropout Trend - Monthly": "ASH",
 	"Gender Diversity": "ASH + TACOTS",
-	"Geographic Distribution - Top States": "ASH",
+	"Geographic Distribution - Top States": "ASH + TACOTS",
 	"Graduation Rate Trend": "ASH",
+	"Graduation Trends - By Programme": "ASH + TACOTS",
 	"Pre/Mid/Post-test Scores by Term": "ASH",
 	"Students Meeting Benchmark": "TACOTS",
 	"TACOTS Mid-term & End-of-term Scores": "TACOTS",
@@ -232,9 +232,9 @@ function DashboardPage() {
 
 				<article className="flex w-full min-w-0 flex-col gap-3 lg:flex-row">
 					<LineDataCard
-						title="Acceptance Rate - by Programme"
-						description="Current application conversion"
-						items={enrollment?.c_acceptanceRate}
+						title="Graduation Trends - By Programme"
+						description="ASH and TACOTS graduation trend"
+						items={enrollment?.c_graduationTrends}
 						variant="programmes"
 					/>
 					<DashboardChartCard
@@ -987,7 +987,7 @@ function LineDataCard(props: {
 							/>
 							<p className="text-right text-[11px] font-medium">
 								{formatNumber(item.amount)}
-								{title === "Acceptance Rate - by Programme" && "%"}
+								{title === "Graduation Trends - By Programme" && "%"}
 								{title === "Total Accumulated Mentorship Hours" && " hr"}
 							</p>
 						</li>
