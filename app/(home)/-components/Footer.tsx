@@ -28,7 +28,7 @@ const contactLinks = [
 		label: "Email",
 		title: "Email",
 	},
-		{
+	{
 		href: siteConfig.contact.phone.whatsAppUrl,
 		icon: "ic:baseline-whatsapp",
 		label: "WhatsApp",
@@ -124,8 +124,6 @@ function Footer() {
 							<FooterSocialGroup label="Follow us on" links={followLinks} />
 						</div>
 					</div>
-
-
 				</article>
 			</section>
 
