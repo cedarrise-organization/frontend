@@ -28,6 +28,15 @@ const contactLinks = [
 		label: "Email",
 		title: "Email",
 	},
+		{
+		href: siteConfig.contact.phone.whatsAppUrl,
+		icon: "ic:baseline-whatsapp",
+		label: "WhatsApp",
+		title: "WhatsApp",
+	},
+] satisfies Array<{ href: string; icon: string; label: string; title: string }>;
+
+const followLinks = [
 	{
 		href: siteConfig.social.instagram,
 		icon: "ph:instagram-logo-bold",
@@ -35,31 +44,22 @@ const contactLinks = [
 		title: "Instagram",
 	},
 	{
+		href: siteConfig.social.tikTok,
+		icon: "ic:baseline-tiktok",
+		label: "TikTok",
+		title: "TikTok",
+	},
+	{
 		href: siteConfig.social.linkedIn,
 		icon: "ri:linkedin-fill",
 		label: "LinkedIn",
 		title: "LinkedIn",
-	},
-] satisfies Array<{ href: string; icon: string; label: string; title: string }>;
-
-const followLinks = [
-	{
-		href: siteConfig.contact.phone.whatsAppUrl,
-		icon: "ic:baseline-whatsapp",
-		label: "WhatsApp",
-		title: "WhatsApp",
 	},
 	{
 		href: siteConfig.social.youTube,
 		icon: "mdi:youtube",
 		label: "YouTube",
 		title: "YouTube",
-	},
-	{
-		href: siteConfig.social.tikTok,
-		icon: "ic:baseline-tiktok",
-		label: "TikTok",
-		title: "TikTok",
 	},
 ] satisfies Array<{ href: string; icon: string; label: string; title: string }>;
 
@@ -77,53 +77,55 @@ function Footer() {
 
 				<article className="flex w-full flex-col gap-5 lg:gap-10">
 					<div className="flex flex-wrap gap-12 lg:justify-between lg:gap-[90px]">
-						<div className="flex flex-col gap-2 lg:gap-3.5">
-							<h3 className="text-[12px] font-medium lg:text-[20px]">Quick Links</h3>
+						<div className="flex flex-col justify-between gap-12 lg:gap-10">
+							<div className="flex flex-col gap-2 lg:gap-3.5">
+								<h3 className="text-[16px] font-medium lg:text-[20px]">Quick Links</h3>
 
-							<ForWithWrapper
-								className="flex flex-col gap-4 text-[12px] font-light text-cedar-black/72
-									lg:text-[16px]"
-								each={quickLinks}
-								renderItem={(link) => (
-									<NavLink
-										key={link.label}
-										href={link.href}
-										className="transition-colors hover:text-cedar-red"
-									>
-										{link.label}
-									</NavLink>
-								)}
-							/>
+								<ForWithWrapper
+									className="flex flex-col gap-4 text-[13px] font-light text-cedar-black/72
+										lg:text-[16px]"
+									each={quickLinks}
+									renderItem={(link) => (
+										<NavLink
+											key={link.label}
+											href={link.href}
+											className="transition-colors hover:text-cedar-red"
+										>
+											{link.label}
+										</NavLink>
+									)}
+								/>
+							</div>
+
+							<FooterSocialGroup label="Contact us" links={contactLinks} />
 						</div>
 
-						<div className="flex flex-col gap-2 lg:gap-3.5">
-							<h3 className="text-[12px] font-medium lg:text-[20px]">Social Initiatives</h3>
+						<div className="flex flex-col justify-between gap-12 lg:gap-10">
+							<div className="flex flex-col gap-2 lg:gap-3.5">
+								<h3 className="text-[16px] font-medium lg:text-[20px]">Social Initiatives</h3>
 
-							<ForWithWrapper
-								as="nav"
-								className="flex flex-col gap-4 text-[12px] font-light text-cedar-black/72
-									lg:text-[16px]"
-								each={socialInitiatives}
-								renderItem={(link) => (
-									<NavLink
-										key={link.label}
-										href={link.href}
-										className="transition-colors hover:text-cedar-red"
-									>
-										{link.label}
-									</NavLink>
-								)}
-							/>
+								<ForWithWrapper
+									as="nav"
+									className="flex flex-col gap-4 text-[13px] font-light text-cedar-black/72
+										lg:text-[16px]"
+									each={socialInitiatives}
+									renderItem={(link) => (
+										<NavLink
+											key={link.label}
+											href={link.href}
+											className="transition-colors hover:text-cedar-red"
+										>
+											{link.label}
+										</NavLink>
+									)}
+								/>
+							</div>
+
+							<FooterSocialGroup label="Follow us on" links={followLinks} />
 						</div>
 					</div>
 
-					<div
-						className="grid grid-cols-[auto_auto] justify-between gap-4 lg:flex lg:items-end
-							lg:justify-between"
-					>
-						<FooterSocialGroup label="Contact us" links={contactLinks} />
-						<FooterSocialGroup label="Follow us on" links={followLinks} />
-					</div>
+
 				</article>
 			</section>
 

@@ -86,7 +86,7 @@ function GetFormLinkPageImpl() {
 						}
 
 						if (fromQueryState === "/#sustainable-impact") {
-							return "Interested in online tutorial for your ward, Let's get back to you";
+							return "Interested in online tutorials for your ward? Let's get back to you";
 						}
 
 						return `Fill this form to get the ${programQueryState.program} ${formType} link`;
