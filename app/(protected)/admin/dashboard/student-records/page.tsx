@@ -98,7 +98,8 @@ function StudentRecordsTable(props: { program: Program }) {
 		...(search && { search }),
 	} satisfies StudentProfilesListQuery;
 
-	const queryOptions = program === "ash" ? ashStudentProfilesQuery(query) : tacotsStudentProfilesQuery(query);
+	const queryOptions =
+		program === "ash" ? ashStudentProfilesQuery(query) : tacotsStudentProfilesQuery(query);
 	const queryResult = useQuery(queryOptions);
 	const records = queryResult.data?.data ?? [];
 	const pagination = queryResult.data?.meta.pagination;
@@ -108,7 +109,8 @@ function StudentRecordsTable(props: { program: Program }) {
 			{
 				accessorFn: (row) => row.name,
 				cell: ({ row }) => (
-					<NavLink href={`/admin/dashboard/student-records/${program}/${row.original.id}`}
+					<NavLink
+						href={`/admin/dashboard/student-records/${program}/${row.original.id}`}
 						className="font-semibold text-cedar-black transition-colors hover:text-cedar-red"
 					>
 						{row.original.name}
@@ -120,7 +122,8 @@ function StudentRecordsTable(props: { program: Program }) {
 			},
 			{
 				cell: ({ row }) => (
-					<NavLink href={`/admin/dashboard/student-records/${program}/${row.original.id}`}
+					<NavLink
+						href={`/admin/dashboard/student-records/${program}/${row.original.id}`}
 						className="text-[13px] font-medium text-cedar-red hover:underline"
 					>
 						View profile

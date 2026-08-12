@@ -322,7 +322,7 @@ function ChartLegendContent(
 				"flex items-center justify-center gap-4",
 				typeof position === "string" && (position === "top" || position.includes("Top")) ?
 					"pb-3"
-				: 	"pt-3",
+				:	"pt-3",
 				className,
 				classNames?.base
 			)}
