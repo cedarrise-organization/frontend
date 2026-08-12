@@ -19,11 +19,6 @@ export const dashboardNavSections = [
 	{
 		children: [
 			{
-				icon: "lucide:graduation-cap",
-				label: "Student Records",
-				link: "/admin/dashboard/student-records",
-			},
-			{
 				icon: "streamline-ultimate:layers-stacked",
 				label: "Form Data",
 				link: "/admin/dashboard/form-data",
@@ -58,6 +53,11 @@ export const dashboardNavSections = [
 	},
 	{
 		children: [
+			{
+				icon: "lucide:graduation-cap",
+				label: "Student Records",
+				link: "/admin/dashboard/student-records",
+			},
 			{
 				icon: "hugeicons:money-bag-02",
 				label: "Donations",

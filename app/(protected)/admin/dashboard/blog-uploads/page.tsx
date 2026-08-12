@@ -186,7 +186,7 @@ function BlogUploadsPage() {
 
 			<DashboardDataTable isLoading={blogsQueryResult.isPending} table={table.table}>
 				<DashboardDataTableQueryToolbar
-					searchPlaceholder="search posts"
+					searchPlaceholder="Search Posts"
 					sortOptions={[]}
 					table={table.table}
 				/>

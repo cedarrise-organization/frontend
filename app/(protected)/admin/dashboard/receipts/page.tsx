@@ -181,7 +181,7 @@ function ReceiptsPage() {
 							Export as cvs
 						</Button>
 					}
-					searchPlaceholder="search Receipts"
+					searchPlaceholder="Search Receipts"
 					showOrderBy={false}
 					sortOptions={RECEIPT_SORT_OPTIONS}
 					table={table.table}
