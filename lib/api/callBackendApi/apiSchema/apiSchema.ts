@@ -38,6 +38,7 @@ import {
 	CapacityYesNoOptions,
 	ClassOptions,
 	DonateSupportAreaOptions,
+	DonationSortByOptions,
 	GalleryFolderOptions,
 	GenderOptions,
 	LearningConditionStatusOptions,
@@ -291,6 +292,17 @@ const ReceiptSchema = z.object({
 	name: z.string(),
 	updatedAt: z.string().nullable().optional(),
 	uploadedBy: z.string(),
+});
+
+const DonationRecordSchema = z.object({
+	amount: z.number(),
+	comment: z.string().nullable().optional(),
+	createdAt: z.string(),
+	email: z.email(),
+	id: z.uuid(),
+	metaData: z.string().nullable().optional(),
+	name: z.string(),
+	supportAreas: z.array(z.string()).nullable().optional(),
 });
 
 const GoogleFormSchema = z.object({
@@ -637,6 +649,13 @@ const PaginatedMetaSchema = z.object({
 	pagination: PaginationMetaSchema,
 });
 
+const StudentProfileListItemSchema = z.object({
+	id: z.uuid(),
+	name: z.string(),
+});
+
+const StudentProfileSectionSchema = z.record(z.string(), z.unknown());
+
 const ProjectListMetaSchema = z.object({
 	ongoingProjectCount: z.number(),
 });
@@ -826,6 +845,11 @@ const blogRoutes = defineSchemaRoutes({
 });
 
 const clientSideRoutes = defineSchemaRoutes({
+	"@delete/donate/:id": {
+		data: withBaseSuccessResponse({ data: z.null() }),
+		params: IdParamsSchema,
+	},
+
 	"@get/carousels/ash": {
 		data: withBaseSuccessResponse({ data: z.array(GalleryPhotoSchema) }),
 		query: PaginatedQuerySchema.pick({ limit: true }).optional(),
@@ -844,6 +868,18 @@ const clientSideRoutes = defineSchemaRoutes({
 	"@get/carousels/tacots": {
 		data: withBaseSuccessResponse({ data: z.array(GalleryPhotoSchema) }),
 		query: PaginatedQuerySchema.pick({ limit: true }).optional(),
+	},
+
+	"@get/donate/download": {},
+
+	"@get/donate/records": {
+		data: withBaseSuccessResponseAndMeta({
+			data: z.array(DonationRecordSchema),
+			meta: PaginatedMetaSchema,
+		}),
+		query: PaginatedQuerySchema.extend({
+			sortBy: getOptionalEnumSchema(DonationSortByOptions),
+		}).optional(),
 	},
 
 	"@post/donate": {
@@ -1164,6 +1200,14 @@ const lookupRoutes = defineSchemaRoutes({
 		}),
 	},
 
+	"@get/lookup/ash-students-profile": {
+		data: withBaseSuccessResponseAndMeta({
+			data: z.array(StudentProfileListItemSchema),
+			meta: PaginatedMetaSchema,
+		}),
+		query: PaginatedQuerySchema.optional(),
+	},
+
 	"@get/lookup/tacots-onboarded": {
 		data: withBaseSuccessResponse({
 			data: z.array(
@@ -1188,6 +1232,14 @@ const lookupRoutes = defineSchemaRoutes({
 		}),
 	},
 
+	"@get/lookup/tacots-students-profile": {
+		data: withBaseSuccessResponseAndMeta({
+			data: z.array(StudentProfileListItemSchema),
+			meta: PaginatedMetaSchema,
+		}),
+		query: PaginatedQuerySchema.optional(),
+	},
+
 	"@get/lookup/volunteers": {
 		data: withBaseSuccessResponse({
 			data: z.array(
@@ -1198,6 +1250,48 @@ const lookupRoutes = defineSchemaRoutes({
 				})
 			),
 		}),
+	},
+});
+
+const studentProfileRoutes = defineSchemaRoutes({
+	"@get/student-profile/ash/:id": {
+		data: withBaseSuccessResponse({
+			data: z.object({
+				academicPerformance: StudentProfileSectionSchema,
+				attendance: StudentProfileSectionSchema,
+				background: StudentProfileSectionSchema,
+				compliance: StudentProfileSectionSchema,
+				documents: StudentProfileSectionSchema,
+				exit: StudentProfileSectionSchema,
+				family: StudentProfileSectionSchema,
+				profile: StudentProfileSectionSchema,
+				school: StudentProfileSectionSchema,
+				summary: StudentProfileSectionSchema,
+			}),
+		}),
+		params: IdParamsSchema,
+	},
+
+	"@get/student-profile/tacots/:id": {
+		data: withBaseSuccessResponse({
+			data: z.object({
+				academicProgress: StudentProfileSectionSchema,
+				commitments: StudentProfileSectionSchema,
+				documents: StudentProfileSectionSchema,
+				education: StudentProfileSectionSchema,
+				exit: StudentProfileSectionSchema,
+				family: StudentProfileSectionSchema,
+				financialSupport: StudentProfileSectionSchema,
+				mentorship: StudentProfileSectionSchema,
+				onboarding: StudentProfileSectionSchema,
+				profile: StudentProfileSectionSchema,
+				recommendation: StudentProfileSectionSchema,
+				religiousBackground: StudentProfileSectionSchema,
+				serviceEngagement: StudentProfileSectionSchema,
+				summary: StudentProfileSectionSchema,
+			}),
+		}),
+		params: IdParamsSchema,
 	},
 });
 
@@ -2294,7 +2388,12 @@ const protectedFormRoutes = defineSchemaRoutes({
 	"@post/forms/ash/exit": {
 		body: z.object({
 			academicImpactRating: getRatingSchema(10),
-			ageAtExit: stringWithNumberValidation(z.int().min(6).max(18)),
+			ageAtExit: stringWithNumberValidation(
+				z
+					.int("Enter a valid age.")
+					.min(6, "Age at exit must be at least 6.")
+					.max(18, "Age at exit must not exceed 18.")
+			),
 			areasOfImprovement: getOptionalEnumArraySchema(AshAreasOfImprovementOptions),
 			classAtExit: getRequiredEnumSchema(ClassOptions),
 			courseOfStudy: z.string().optional(),
@@ -2435,6 +2534,7 @@ export const backendApiSchema = defineSchema(
 		...lookupRoutes,
 		...publicFormRoutes,
 		...protectedFormRoutes,
+		...studentProfileRoutes,
 	},
 	{ strict: true }
 );

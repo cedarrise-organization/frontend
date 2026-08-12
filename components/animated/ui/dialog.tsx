@@ -21,7 +21,7 @@ function DialogOverlay(props: React.ComponentProps<typeof DialogPrimitive.Overla
 
 	return (
 		<DialogPrimitive.Overlay
-			className={cnMerge("fixed inset-0 z-50 bg-black/50", className)}
+			className={cnMerge("fixed inset-0 z-50 bg-black/50 max-lg:z-80", className)}
 			{...restOfProps}
 		/>
 	);
@@ -44,7 +44,7 @@ function DialogContent(
 			<DialogPrimitive.Content
 				className={cnMerge(
 					`fixed top-1/2 left-1/2 z-50 grid w-full max-w-lg -translate-1/2 gap-4 rounded-lg border
-					bg-shadcn-background p-6 shadow-lg`,
+					bg-shadcn-background p-6 shadow-lg max-lg:z-80`,
 					className,
 					classNames?.base
 				)}

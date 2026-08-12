@@ -729,7 +729,7 @@ function renderChart(props: { dataset: DashboardChartDataset | undefined; title:
 						width={42}
 					/>
 					<Chart.Tooltip content={DEFAULT_CHART_TOOLTIP_CONTENT} />
-					<Chart.Legend content={DEFAULT_CHART_LEGEND_CONTENT} verticalAlign="top" align="right" />
+					<Chart.Legend content={DEFAULT_CHART_LEGEND_CONTENT} position="insideTopRight" />
 					<Bar
 						yAxisId="hours"
 						dataKey={barKey}
@@ -797,7 +797,7 @@ function renderChart(props: { dataset: DashboardChartDataset | undefined; title:
 						width={36}
 					/>
 					<Chart.Tooltip content={DEFAULT_CHART_TOOLTIP_CONTENT} />
-					<Chart.Legend content={DEFAULT_CHART_LEGEND_CONTENT} verticalAlign="top" align="right" />
+					<Chart.Legend content={DEFAULT_CHART_LEGEND_CONTENT} position="insideTopRight" />
 					<For
 						each={dataset.datasets}
 						renderItem={(dataItem, index) => (
@@ -867,8 +867,7 @@ function renderChart(props: { dataset: DashboardChartDataset | undefined; title:
 					{dataset.datasets.length > 1 && (
 						<Chart.Legend
 							content={DEFAULT_CHART_LEGEND_CONTENT}
-							verticalAlign="top"
-							align="right"
+							position="insideTopRight"
 							iconType="square"
 						/>
 					)}
@@ -897,8 +896,7 @@ function renderChart(props: { dataset: DashboardChartDataset | undefined; title:
 					{dataset.datasets.length > 1 && (
 						<Chart.Legend
 							content={DEFAULT_CHART_LEGEND_CONTENT}
-							verticalAlign="top"
-							align="right"
+							position="insideTopRight"
 							iconType="plainline"
 						/>
 					)}

@@ -14,7 +14,7 @@ function LoadingScreen(props: { text?: string }) {
 				<span
 					aria-hidden="true"
 					className="absolute inset-0 animate-spin rounded-full border border-cedar-black/8
-						border-t-cedar-red border-r-cedar-yellow motion-reduce:animate-none"
+						border-t-cedar-red border-r-cedar-yellow"
 				/>
 				<Image
 					src={logo}
@@ -33,9 +33,9 @@ function LoadingScreen(props: { text?: string }) {
 			</div>
 
 			<span className="flex h-1 w-[144px] overflow-hidden rounded-full bg-cedar-black/8">
-				<span className="w-full animate-pulse bg-cedar-red motion-reduce:animate-none" />
-				<span className="w-full animate-pulse bg-cedar-yellow delay-150 motion-reduce:animate-none" />
-				<span className="w-full animate-pulse bg-cedar-black delay-300 motion-reduce:animate-none" />
+				<span className="w-full animate-pulse bg-cedar-red" />
+				<span className="w-full animate-pulse bg-cedar-yellow delay-150" />
+				<span className="w-full animate-pulse bg-cedar-black delay-300" />
 			</span>
 		</section>
 	);

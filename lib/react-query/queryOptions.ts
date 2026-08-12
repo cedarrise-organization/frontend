@@ -22,6 +22,46 @@ export const ashRegistrationFormDataQuery = (query?: AshRegistrationFormDataList
 	});
 };
 
+export const donationRecordsQuery = (query?: DonationRecordsListQuery) => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/donate/records", { query }),
+		queryKey: ["donations", query],
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
+export const ashStudentProfilesQuery = (query?: StudentProfilesListQuery) => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/lookup/ash-students-profile", { query }),
+		queryKey: ["student-records", "ash", query],
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
+export const tacotsStudentProfilesQuery = (query?: StudentProfilesListQuery) => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/lookup/tacots-students-profile", { query }),
+		queryKey: ["student-records", "tacots", query],
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
+export const ashStudentProfileQuery = (id: string) => {
+	return queryOptions({
+		enabled: Boolean(id),
+		queryFn: () => callBackendApiForQuery("@get/student-profile/ash/:id", { params: { id } }),
+		queryKey: ["student-records", "ash", id],
+	});
+};
+
+export const tacotsStudentProfileQuery = (id: string) => {
+	return queryOptions({
+		enabled: Boolean(id),
+		queryFn: () => callBackendApiForQuery("@get/student-profile/tacots/:id", { params: { id } }),
+		queryKey: ["student-records", "tacots", id],
+	});
+};
+
 export const ashFeedbackFormDataQuery = (query?: AshFeedbackFormDataListQuery) => {
 	return queryOptions({
 		queryFn: () => callBackendApiForQuery("@get/forms/ash/feedback", { query }),
@@ -47,19 +87,19 @@ export const ashFeedbackFormDetailQuery = (id: string) => {
 };
 
 export type AshRegistrationFormDataQueryResult = Awaited<
-	ReturnType<NonNullable<ReturnType<typeof ashRegistrationFormDataQuery>["queryFn"]>>
+	ReturnType<NonNullable<ReturnType<typeof ashRegistrationFormDataQuery>["select"]>>
 >;
 
 export type AshFeedbackFormDataQueryResult = Awaited<
-	ReturnType<NonNullable<ReturnType<typeof ashFeedbackFormDataQuery>["queryFn"]>>
+	ReturnType<NonNullable<ReturnType<typeof ashFeedbackFormDataQuery>["select"]>>
 >;
 
 export type AshRegistrationFormDetailQueryResult = Awaited<
-	ReturnType<NonNullable<ReturnType<typeof ashRegistrationFormDetailQuery>["queryFn"]>>
+	ReturnType<NonNullable<ReturnType<typeof ashRegistrationFormDetailQuery>["select"]>>
 >;
 
 export type AshFeedbackFormDetailQueryResult = Awaited<
-	ReturnType<NonNullable<ReturnType<typeof ashFeedbackFormDetailQuery>["queryFn"]>>
+	ReturnType<NonNullable<ReturnType<typeof ashFeedbackFormDetailQuery>["select"]>>
 >;
 
 export const tacotsRecommendationFormDataQuery = (query?: TacotsRecommendationFormDataListQuery) => {
@@ -95,11 +135,11 @@ export const tacotsFeedbackFormDetailQuery = (id: string) => {
 };
 
 export type TacotsRecommendationFormDataQueryResult = Awaited<
-	ReturnType<NonNullable<ReturnType<typeof tacotsRecommendationFormDataQuery>["queryFn"]>>
+	ReturnType<NonNullable<ReturnType<typeof tacotsRecommendationFormDataQuery>["select"]>>
 >;
 
 export type TacotsFeedbackFormDataQueryResult = Awaited<
-	ReturnType<NonNullable<ReturnType<typeof tacotsFeedbackFormDataQuery>["queryFn"]>>
+	ReturnType<NonNullable<ReturnType<typeof tacotsFeedbackFormDataQuery>["select"]>>
 >;
 
 export const volunteerRegistrationFormDataQuery = (query?: VolunteerRegistrationFormDataListQuery) => {
@@ -135,11 +175,11 @@ export const volunteerFeedbackFormDetailQuery = (id: string) => {
 };
 
 export type VolunteerRegistrationFormDataQueryResult = Awaited<
-	ReturnType<NonNullable<ReturnType<typeof volunteerRegistrationFormDataQuery>["queryFn"]>>
+	ReturnType<NonNullable<ReturnType<typeof volunteerRegistrationFormDataQuery>["select"]>>
 >;
 
 export type VolunteerFeedbackFormDataQueryResult = Awaited<
-	ReturnType<NonNullable<ReturnType<typeof volunteerFeedbackFormDataQuery>["queryFn"]>>
+	ReturnType<NonNullable<ReturnType<typeof volunteerFeedbackFormDataQuery>["select"]>>
 >;
 
 export const ashAttendanceTrackerDataQuery = (query?: AshAttendanceTrackerDataListQuery) => {
@@ -271,35 +311,35 @@ export const tacotsTrackingTrackerDataDetailQuery = (id: string) => {
 };
 
 export type AshAttendanceTrackerDataQueryResult = Awaited<
-	ReturnType<NonNullable<ReturnType<typeof ashAttendanceTrackerDataQuery>["queryFn"]>>
+	ReturnType<NonNullable<ReturnType<typeof ashAttendanceTrackerDataQuery>["select"]>>
 >;
 
 export type AshExitTrackerDataQueryResult = Awaited<
-	ReturnType<NonNullable<ReturnType<typeof ashExitTrackerDataQuery>["queryFn"]>>
+	ReturnType<NonNullable<ReturnType<typeof ashExitTrackerDataQuery>["select"]>>
 >;
 
 export type AshTrackingTrackerDataQueryResult = Awaited<
-	ReturnType<NonNullable<ReturnType<typeof ashTrackingTrackerDataQuery>["queryFn"]>>
+	ReturnType<NonNullable<ReturnType<typeof ashTrackingTrackerDataQuery>["select"]>>
 >;
 
 export type CapacityBuildingTrackerDataQueryResult = Awaited<
-	ReturnType<NonNullable<ReturnType<typeof capacityBuildingTrackerDataQuery>["queryFn"]>>
+	ReturnType<NonNullable<ReturnType<typeof capacityBuildingTrackerDataQuery>["select"]>>
 >;
 
 export type OutreachTrackerDataQueryResult = Awaited<
-	ReturnType<NonNullable<ReturnType<typeof outreachTrackerDataQuery>["queryFn"]>>
+	ReturnType<NonNullable<ReturnType<typeof outreachTrackerDataQuery>["select"]>>
 >;
 
 export type TacotsExitTrackerDataQueryResult = Awaited<
-	ReturnType<NonNullable<ReturnType<typeof tacotsExitTrackerDataQuery>["queryFn"]>>
+	ReturnType<NonNullable<ReturnType<typeof tacotsExitTrackerDataQuery>["select"]>>
 >;
 
 export type TacotsOnboardingTrackerDataQueryResult = Awaited<
-	ReturnType<NonNullable<ReturnType<typeof tacotsOnboardingTrackerDataQuery>["queryFn"]>>
+	ReturnType<NonNullable<ReturnType<typeof tacotsOnboardingTrackerDataQuery>["select"]>>
 >;
 
 export type TacotsTrackingTrackerDataQueryResult = Awaited<
-	ReturnType<NonNullable<ReturnType<typeof tacotsTrackingTrackerDataQuery>["queryFn"]>>
+	ReturnType<NonNullable<ReturnType<typeof tacotsTrackingTrackerDataQuery>["select"]>>
 >;
 
 export const dashboardCardsQuery = () => {
@@ -340,7 +380,7 @@ export const blogsQuery = (query?: BlogsListQuery) => {
 	});
 };
 
-export type BlogsQueryResult = Awaited<ReturnType<NonNullable<ReturnType<typeof blogsQuery>["queryFn"]>>>;
+export type BlogsQueryResult = Awaited<ReturnType<NonNullable<ReturnType<typeof blogsQuery>["select"]>>>;
 
 export const generalProjectsQuery = () => {
 	return queryOptions({
@@ -562,6 +602,14 @@ export type TacotsTrackingTrackerDataListQuery = z.infer<
 
 export type GeneralReceiptsListQuery = z.infer<
 	(typeof backendApiSchemaRoutes)["@get/general/receipts"]["query"]
+>;
+
+export type DonationRecordsListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/donate/records"]["query"]
+>;
+
+export type StudentProfilesListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/lookup/ash-students-profile"]["query"]
 >;
 
 export type AdminListUsersQuery = z.infer<

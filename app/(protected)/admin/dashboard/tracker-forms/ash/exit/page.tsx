@@ -101,8 +101,6 @@ function AshExitForm() {
 				control={form.control}
 				name="ageAtExit"
 				placeholder="Age at Exit"
-				min={6}
-				max={18}
 				step={1}
 				type="number"
 				required={true}

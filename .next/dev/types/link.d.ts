@@ -32,41 +32,45 @@ declare namespace __next_route_internal_types__ {
     S extends `${string}${SearchOrHash}` ? never : S
 
   type StaticRoutes = 
-    | `/`
-    | `/about`
-    | `/admin/dashboard`
-    | `/admin/dashboard/blog-uploads`
-    | `/admin/dashboard/form-data`
-    | `/admin/dashboard/general-uploads`
-    | `/admin/dashboard/receipts`
-    | `/admin/dashboard/tracker-data`
-    | `/admin/dashboard/tracker-forms`
-    | `/admin/dashboard/tracker-forms/ash/exit`
-    | `/admin/dashboard/tracker-forms/ash/termly-tracking`
-    | `/admin/dashboard/tracker-forms/ash/weekly-activity-attendance`
-    | `/admin/dashboard/tracker-forms/capacity-building/program-evaluation`
-    | `/admin/dashboard/tracker-forms/outreaches/tracker`
-    | `/admin/dashboard/tracker-forms/tacots/beneficiary-onboarding`
-    | `/admin/dashboard/tracker-forms/tacots/exit-completion`
-    | `/admin/dashboard/tracker-forms/tacots/student-tracking`
-    | `/admin/dashboard/users`
-    | `/auth/admin/signin`
-    | `/blog`
-    | `/capacity-building`
-    | `/donate`
-    | `/get-form-link`
-    | `/get-involved/partner`
-    | `/get-involved/volunteer`
-    | `/get-involved/volunteer/feedback`
-    | `/get-involved/volunteer/register`
-    | `/social-initiatives/ash`
-    | `/social-initiatives/ash/feedback`
-    | `/social-initiatives/ash/register`
-    | `/social-initiatives/outreaches`
-    | `/social-initiatives/tacots`
-    | `/social-initiatives/tacots/feedback`
-    | `/social-initiatives/tacots/recommendation`
-  type DynamicRoutes<T extends string = string> = never
+    | `/` // ../../../app/(home)/page.tsx
+    | `/about` // ../../../app/(home)/about/page.tsx
+    | `/admin/dashboard` // ../../../app/(protected)/admin/dashboard/page.tsx
+    | `/admin/dashboard/blog-uploads` // ../../../app/(protected)/admin/dashboard/blog-uploads/page.tsx
+    | `/admin/dashboard/donations` // ../../../app/(protected)/admin/dashboard/donations/page.tsx
+    | `/admin/dashboard/form-data` // ../../../app/(protected)/admin/dashboard/form-data/page.tsx
+    | `/admin/dashboard/general-uploads` // ../../../app/(protected)/admin/dashboard/general-uploads/page.tsx
+    | `/admin/dashboard/receipts` // ../../../app/(protected)/admin/dashboard/receipts/page.tsx
+    | `/admin/dashboard/student-records` // ../../../app/(protected)/admin/dashboard/student-records/page.tsx
+    | `/admin/dashboard/tracker-data` // ../../../app/(protected)/admin/dashboard/tracker-data/page.tsx
+    | `/admin/dashboard/tracker-forms` // ../../../app/(protected)/admin/dashboard/tracker-forms/page.tsx
+    | `/admin/dashboard/tracker-forms/ash/exit` // ../../../app/(protected)/admin/dashboard/tracker-forms/ash/exit/page.tsx
+    | `/admin/dashboard/tracker-forms/ash/termly-tracking` // ../../../app/(protected)/admin/dashboard/tracker-forms/ash/termly-tracking/page.tsx
+    | `/admin/dashboard/tracker-forms/ash/weekly-activity-attendance` // ../../../app/(protected)/admin/dashboard/tracker-forms/ash/weekly-activity-attendance/page.tsx
+    | `/admin/dashboard/tracker-forms/capacity-building/program-evaluation` // ../../../app/(protected)/admin/dashboard/tracker-forms/capacity-building/program-evaluation/page.tsx
+    | `/admin/dashboard/tracker-forms/outreaches/tracker` // ../../../app/(protected)/admin/dashboard/tracker-forms/outreaches/tracker/page.tsx
+    | `/admin/dashboard/tracker-forms/tacots/beneficiary-onboarding` // ../../../app/(protected)/admin/dashboard/tracker-forms/tacots/beneficiary-onboarding/page.tsx
+    | `/admin/dashboard/tracker-forms/tacots/exit-completion` // ../../../app/(protected)/admin/dashboard/tracker-forms/tacots/exit-completion/page.tsx
+    | `/admin/dashboard/tracker-forms/tacots/student-tracking` // ../../../app/(protected)/admin/dashboard/tracker-forms/tacots/student-tracking/page.tsx
+    | `/admin/dashboard/users` // ../../../app/(protected)/admin/dashboard/users/page.tsx
+    | `/auth/admin/signin` // ../../../app/auth/admin/signin/page.tsx
+    | `/blog` // ../../../app/(home)/blog/page.tsx
+    | `/capacity-building` // ../../../app/(home)/capacity-building/page.tsx
+    | `/donate` // ../../../app/(home)/donate/page.tsx
+    | `/get-form-link` // ../../../app/get-form-link/page.tsx
+    | `/get-involved/partner` // ../../../app/(home)/get-involved/partner/page.tsx
+    | `/get-involved/volunteer` // ../../../app/(home)/get-involved/volunteer/page.tsx
+    | `/get-involved/volunteer/feedback` // ../../../app/(home)/get-involved/volunteer/feedback/page.tsx
+    | `/get-involved/volunteer/register` // ../../../app/(home)/get-involved/volunteer/register/page.tsx
+    | `/social-initiatives/ash` // ../../../app/(home)/social-initiatives/ash/page.tsx
+    | `/social-initiatives/ash/feedback` // ../../../app/(home)/social-initiatives/ash/feedback/page.tsx
+    | `/social-initiatives/ash/register` // ../../../app/(home)/social-initiatives/ash/register/page.tsx
+    | `/social-initiatives/outreaches` // ../../../app/(home)/social-initiatives/outreaches/page.tsx
+    | `/social-initiatives/tacots` // ../../../app/(home)/social-initiatives/tacots/page.tsx
+    | `/social-initiatives/tacots/feedback` // ../../../app/(home)/social-initiatives/tacots/feedback/page.tsx
+    | `/social-initiatives/tacots/recommendation` // ../../../app/(home)/social-initiatives/tacots/recommendation/page.tsx
+  type DynamicRoutes<T extends string = string> = 
+    | `/admin/dashboard/student-records/ash/${SafeSlug<T>}` // ../../../app/(protected)/admin/dashboard/student-records/ash/[id]/page.tsx
+    | `/admin/dashboard/student-records/tacots/${SafeSlug<T>}` // ../../../app/(protected)/admin/dashboard/student-records/tacots/[id]/page.tsx
 
   type RouteImpl<T> = 
     | StaticRoutes
@@ -147,7 +151,8 @@ declare module 'next/navigation' {
    * [Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations).
    *
    * - In a Server Component, this will insert a meta tag to redirect the user to the target page.
-   * - In a Route Handler or Server Action, it will serve a 307/303 to the caller.
+   * - In a Route Handler, it will serve a 307 to the caller.
+   * - In a Server Action, it will perform a client-side navigation when JavaScript is available or serve a 303 for a progressive enhancement form submission.
    * - In a Server Action, type defaults to 'push' and 'replace' elsewhere.
    *
    * Read more: [Next.js Docs: redirect](https://nextjs.org/docs/app/api-reference/functions/redirect)
@@ -165,7 +170,8 @@ declare module 'next/navigation' {
    * [Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations).
    *
    * - In a Server Component, this will insert a meta tag to redirect the user to the target page.
-   * - In a Route Handler or Server Action, it will serve a 308/303 to the caller.
+   * - In a Route Handler, it will serve a 308 to the caller.
+   * - In a Server Action, it will perform a client-side navigation when JavaScript is available or serve a 303 for a progressive enhancement form submission.
    *
    * Read more: [Next.js Docs: redirect](https://nextjs.org/docs/app/api-reference/functions/redirect)
    */

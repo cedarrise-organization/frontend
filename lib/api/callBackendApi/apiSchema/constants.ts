@@ -59,6 +59,8 @@ export const ReceiptSortByOptions = defineEnum([
 	"createdAt",
 ]);
 
+export const DonationSortByOptions = defineEnum(["name", "amount", "email", "createdAt"]);
+
 export const GalleryFolderOptions = defineEnum(["ASH", "OUTREACHES", "CAPACITY_BUILDING"]);
 
 export const OutreachTypeOptions = defineEnum([

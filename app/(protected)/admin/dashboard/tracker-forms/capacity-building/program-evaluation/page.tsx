@@ -2,6 +2,7 @@
 
 import { Steps } from "@ark-ui/react/steps";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { createUseStorageState } from "@zayne-labs/toolkit-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -33,6 +34,7 @@ import {
 	CapacitySponsorshipTypeOptions,
 	CapacityYesNoOptions,
 } from "@/lib/api/callBackendApi/apiSchema";
+import { capacityBuildingTrackerDataQuery } from "@/lib/react-query/queryOptions";
 import type { WithUndefined } from "@/lib/utils/type-helpers";
 
 const CapacityBuildingEvaluationSchema = backendApiSchemaRoutes["@post/forms/capacity-building"].body;
@@ -169,6 +171,7 @@ export default CapacityBuildingProgramEvaluationPage;
 
 function CapacityBuildingProgramEvaluationForm() {
 	const [storeValues, storeActions] = useCapacityBuildingEvaluationStorageState();
+	const queryClient = useQueryClient();
 
 	const form = useForm({
 		resolver: zodResolver(
@@ -191,6 +194,9 @@ function CapacityBuildingProgramEvaluationForm() {
 			onSuccess: () => {
 				form.reset();
 				storeActions.removeState();
+				void queryClient.invalidateQueries({
+					queryKey: capacityBuildingTrackerDataQuery().queryKey.slice(0, -1),
+				});
 			},
 		});
 	});

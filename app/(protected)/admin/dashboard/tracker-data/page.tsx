@@ -266,11 +266,11 @@ function TrackerDataPage() {
 			</header>
 
 			<TabsAnimated.Root defaultValue="ash" className="gap-6">
-				<div className="rounded-[20px] bg-cedar-white p-4 lg:p-5">
+				<div className="overflow-x-auto rounded-[20px] bg-cedar-white p-4 lg:p-5">
 					<TabsAnimated.List
 						classNames={{
 							highlight: "rounded-[12px] bg-cedar-red",
-							list: "h-12 rounded-[12px] bg-cedar-grey p-2",
+							list: "h-12 min-w-[650px] rounded-[12px] bg-cedar-grey p-2",
 						}}
 					>
 						<For

@@ -319,6 +319,28 @@ export const generalReceiptsDownloadMutation = () => {
 	});
 };
 
+export const donationRecordsDownloadMutation = () => {
+	return mutationOptions({
+		mutationFn: () => {
+			return callBackendApiForQuery("@get/donate/download", {
+				onSuccess: (ctx) => forceDownload(ctx.data, "donations"),
+				responseType: "blob",
+			});
+		},
+	});
+};
+
+export const donationRecordDeleteMutation = (id: string) => {
+	return mutationOptions({
+		mutationFn: () => {
+			return callBackendApiForQuery("@delete/donate/:id", {
+				meta: { toast: { success: true } },
+				params: { id },
+			});
+		},
+	});
+};
+
 export const volunteerFormDataDownloadMutation = (kind: VolunteerFormKind) => {
 	const filename = kind === "registration" ? "volunteer_registration" : "volunteer_feedback";
 

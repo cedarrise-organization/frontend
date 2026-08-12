@@ -291,6 +291,7 @@ function ChartLegendContent(
 				legendItemLabel?: string;
 			};
 			nameKey?: string;
+			position?: React.ComponentProps<typeof RechartsPrimitive.Legend>["position"];
 			renderItem?: (context: {
 				configItem: ReturnType<typeof getConfigItemFromPayload>;
 				index: number;
@@ -304,8 +305,8 @@ function ChartLegendContent(
 		classNames,
 		nameKey,
 		payload,
+		position = "bottom",
 		renderItem,
-		verticalAlign = "bottom",
 		withIcon = true,
 	} = props;
 
@@ -319,7 +320,9 @@ function ChartLegendContent(
 		<div
 			className={cnMerge(
 				"flex items-center justify-center gap-4",
-				verticalAlign === "top" ? "pb-3" : "pt-3",
+				typeof position === "string" && (position === "top" || position.includes("Top")) ?
+					"pb-3"
+				: 	"pt-3",
 				className,
 				classNames?.base
 			)}

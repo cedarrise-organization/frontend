@@ -189,6 +189,15 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
   type __Unused = __Check
 }
 
+// Validate ../../../app/(protected)/admin/dashboard/donations/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/admin/dashboard/donations">> = Specific
+  const handler = {} as typeof import("../../../app/(protected)/admin/dashboard/donations/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../../app/(protected)/admin/dashboard/form-data/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/admin/dashboard/form-data">> = Specific
@@ -220,6 +229,33 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
 {
   type __IsExpected<Specific extends AppPageConfig<"/admin/dashboard/receipts">> = Specific
   const handler = {} as typeof import("../../../app/(protected)/admin/dashboard/receipts/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/(protected)/admin/dashboard/student-records/ash/[id]/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/admin/dashboard/student-records/ash/[id]">> = Specific
+  const handler = {} as typeof import("../../../app/(protected)/admin/dashboard/student-records/ash/[id]/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/(protected)/admin/dashboard/student-records/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/admin/dashboard/student-records">> = Specific
+  const handler = {} as typeof import("../../../app/(protected)/admin/dashboard/student-records/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/(protected)/admin/dashboard/student-records/tacots/[id]/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/admin/dashboard/student-records/tacots/[id]">> = Specific
+  const handler = {} as typeof import("../../../app/(protected)/admin/dashboard/student-records/tacots/[id]/page.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check
