@@ -512,7 +512,7 @@ const TacotsTrackingRecordSchema = z.object({
 	paymentEvidencePublicId: z.string().nullable().optional(),
 	paymentEvidenceUrl: z.string().nullable().optional(),
 	region: z.string(),
-	resourcesSpent: z.number(),
+	resourcesSpent: z.string(),
 	responsibilityRating: z.number(),
 	schoolId: z.uuid().optional(),
 	schoolName: z.string().optional(),
@@ -527,12 +527,12 @@ const TacotsTrackingRecordSchema = z.object({
 	studentId: z.uuid().optional(),
 	studentPositionInClass: z.string(),
 	submissionDate: z.string(),
-	sundriesSpent: z.number(),
+	sundriesSpent: z.string(),
 	surname: z.string(),
 	termResultPublicId: z.string(),
 	termResultUrl: z.string(),
-	totalAmountSpent: z.number(),
-	tuitionFeePaid: z.number(),
+	totalAmountSpent: z.string(),
+	tuitionFeePaid: z.string(),
 });
 
 const TacotsExitTrackerRecordSchema = FormRecordSchema.extend({
