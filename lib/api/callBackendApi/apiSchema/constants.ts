@@ -194,7 +194,7 @@ export const TacotsRecommendationSortByOptions = defineEnum([
 	"lastClass",
 ]);
 
-export const AshExitSortByOptions = defineEnum([          
+export const AshExitSortByOptions = defineEnum([
 	"ageAtExit",
 	"schoolName",
 	"classAtExit",
@@ -260,7 +260,7 @@ export const TacotsTrackingRecordSortByOptions = defineEnum([
 
 export const VolunteerSortByOptions = defineEnum([
 	"firstName",
-    "surname",
+	"surname",
 	"gender",
 	"state",
 	"emailAddress",

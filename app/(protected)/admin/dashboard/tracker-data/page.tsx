@@ -214,7 +214,7 @@ const TACOTS_EXIT_SORT_OPTIONS = [
 const OUTREACH_SORT_OPTIONS = [
 	{ label: "Start Date", value: "outreachStartDate" },
 	{ label: "End Date", value: "outreachEndDate" },
-	{ label: "State", value: "outreachState" },   
+	{ label: "State", value: "outreachState" },
 	{ label: "Number of Beneficiaries", value: "numBeneficiaries" },
 	{ label: "Number of Volunteers", value: "numVolunteers" },
 	{ label: "Outreach Type", value: "outreachType" },

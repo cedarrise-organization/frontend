@@ -102,7 +102,8 @@ function GeneralUploadsPage() {
 				</h1>
 
 				<p className="max-w-[640px] text-[15px]/[1.45] text-cedar-black/64 lg:text-[18px]">
-					Control hub for media, project, receipt, user, form uploads and assigning ASH mentors to students
+					Control hub for media, project, receipt, user, form uploads and assigning ASH mentors to
+					students
 				</p>
 			</header>
 
@@ -928,7 +929,9 @@ function AssignAshMentorCard(props: {
 							size="medium"
 							isLoading={formState.isSubmitting}
 							isDisabled={formState.isSubmitting}
-							className="mt-auto ml-auto h-10 rounded-[8px] px-5 text-[12px] lg:h-10 lg:rounded-[8px] lg:px-9 lg:text-[12px]">
+							className="mt-auto ml-auto h-10 rounded-[8px] px-5 text-[12px] lg:h-10
+								lg:rounded-[8px] lg:px-9 lg:text-[12px]"
+						>
 							Assign Mentor
 						</Button>
 					)}
