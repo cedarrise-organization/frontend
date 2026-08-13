@@ -524,7 +524,7 @@ const TacotsTrackingRecordSchema = z.object({
 	serviceSupervisor: z.string(),
 	socialBehaviorRating: z.number(),
 	studentAveragePct: z.number(),
-	studentId: z.uuid(),
+	studentId: z.uuid().optional(),
 	studentPositionInClass: z.string(),
 	submissionDate: z.string(),
 	sundriesSpent: z.number(),

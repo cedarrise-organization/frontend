@@ -36,6 +36,7 @@ import {
 } from "@/lib/api/callBackendApi/apiSchema";
 import {
 	adminUsersQuery,
+	ashStudentsLookupQuery,
 	generalGoogleFormQuery,
 	generalMetadataQuery,
 } from "@/lib/react-query/queryOptions";
@@ -67,6 +68,7 @@ function GeneralUploadsPage() {
 	const metadataQuery = useQuery(generalMetadataQuery());
 	const usersQuery = useQuery(adminUsersQuery());
 	const googleFormQuery = useQuery(generalGoogleFormQuery());
+	const ashStudentsQuery = useQuery(ashStudentsLookupQuery());
 
 	const stats = [
 		{
@@ -94,12 +96,12 @@ function GeneralUploadsPage() {
 
 	return (
 		<Main className="gap-6 lg:gap-8">
-			<header>
+			<header className="flex flex-col gap-2">
 				<h1 className="text-[24px] font-semibold text-cedar-black lg:text-[32px]">
 					Content Management
 				</h1>
 
-				<p className="mt-2 max-w-[640px] text-[15px]/[1.45] text-cedar-black/64 lg:text-[18px]">
+				<p className="max-w-[640px] text-[15px]/[1.45] text-cedar-black/64 lg:text-[18px]">
 					Control hub for media, project, receipt, user, and form uploads
 				</p>
 			</header>
@@ -132,6 +134,13 @@ function GeneralUploadsPage() {
 					onSaved={() => {
 						invalidateGeneralData();
 						void queryClient.invalidateQueries({ queryKey: generalGoogleFormQuery().queryKey });
+					}}
+				/>
+
+				<AssignAshMentorCard
+					students={ashStudentsQuery.data ?? []}
+					onAssigned={() => {
+						void queryClient.invalidateQueries({ queryKey: ashStudentsLookupQuery().queryKey });
 					}}
 				/>
 			</section>
@@ -816,7 +825,6 @@ function GoogleFormCard(props: {
 			color="yellow"
 			description="Embed forms dynamically on the capacity building client page"
 			title="Google Form Integration"
-			className="lg:col-span-2"
 		>
 			<Form.Root form={form} onSubmit={(event) => void onSubmit(event)} className="gap-5">
 				<div className="grid gap-4 md:grid-cols-2">
@@ -861,6 +869,68 @@ function GoogleFormCard(props: {
 								lg:rounded-[8px] lg:px-9 lg:text-[12px]"
 						>
 							Embed Form
+						</Button>
+					)}
+				</Form.Submit>
+			</Form.Root>
+		</UploadCard>
+	);
+}
+
+function AssignAshMentorCard(props: {
+	onAssigned: () => void;
+	students: Array<{ id: string; name: string }>;
+}) {
+	const { onAssigned, students } = props;
+	const form = useForm({
+		defaultValues: { mentor: "", studentId: "" },
+		resolver: zodResolver(z.object({ mentor: z.string().min(3), studentId: z.uuid() })),
+	});
+
+	const onSubmit = form.handleSubmit(async (data) => {
+		await callBackendApiForQuery("@patch/forms/ash/registration/:id/assign-mentor", {
+			body: { mentor: data.mentor },
+			meta: { toast: { success: true } },
+			onSuccess: () => {
+				form.reset();
+				onAssigned();
+			},
+			params: { id: data.studentId },
+		});
+	});
+
+	return (
+		<UploadCard
+			color="red"
+			description="Assign or update an ASH student's mentor"
+			title="ASH Mentor Assignment"
+		>
+			<Form.Root form={form} onSubmit={(event) => void onSubmit(event)} className="h-full gap-5">
+				<SelectField
+					control={form.control}
+					name="studentId"
+					label="ASH Student"
+					placeholder="Select student"
+					options={students.map((student) => ({ label: student.name, value: student.id }))}
+				/>
+
+				<TextField
+					control={form.control}
+					name="mentor"
+					label="Mentor name"
+					placeholder="Enter mentor's full name"
+				/>
+
+				<Form.Submit asChild={true}>
+					{(formState) => (
+						<Button
+							theme="secondary"
+							size="medium"
+							isLoading={formState.isSubmitting}
+							isDisabled={formState.isSubmitting}
+							className="mt-auto ml-auto h-10 rounded-[8px] px-5 text-[12px] lg:h-10 lg:px-9"
+						>
+							Assign Mentor
 						</Button>
 					)}
 				</Form.Submit>
