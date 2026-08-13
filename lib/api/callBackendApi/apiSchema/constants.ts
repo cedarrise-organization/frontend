@@ -194,7 +194,15 @@ export const TacotsRecommendationSortByOptions = defineEnum([
 	"lastClass",
 ]);
 
-export const AshExitSortByOptions = defineEnum(["schoolName", "classAtExit", "exitDate", "createdAt"]);
+export const AshExitSortByOptions = defineEnum([          
+	"ageAtExit",
+	"schoolName",
+	"classAtExit",
+	"durationInProgram",
+	"facilitatorName",
+	"exitDate",
+	"createdAt",
+]);
 
 export const AshTrackingRecordSortByOptions = defineEnum([
 	"academicSession",
@@ -209,6 +217,7 @@ export const CapacityEvaluationSortByOptions = defineEnum([
 	"programType",
 	"programDate",
 	"location",
+	"numberOfParticipants",
 	"programCoordinator",
 	"createdAt",
 ]);
@@ -217,6 +226,8 @@ export const OutreachSortByOptions = defineEnum([
 	"outreachStartDate",
 	"outreachEndDate",
 	"outreachState",
+	"numBeneficiaries",
+	"numVolunteers",
 	"outreachType",
 	"createdAt",
 ]);
@@ -224,6 +235,7 @@ export const OutreachSortByOptions = defineEnum([
 export const TacotsExitSortByOptions = defineEnum([
 	"schoolAttendedDuringProgram",
 	"yearOfExit",
+	"highestEducationAttained",
 	"exitReason",
 	"createdAt",
 ]);
@@ -240,16 +252,19 @@ export const TacotsOnboardingSortByOptions = defineEnum([
 export const TacotsTrackingRecordSortByOptions = defineEnum([
 	"academicSession",
 	"academicTerm",
+	"region",
 	"assessmentPeriod",
+	"studentAveragePct",
 	"createdAt",
 ]);
 
 export const VolunteerSortByOptions = defineEnum([
 	"firstName",
-	"surname",
-	"emailAddress",
-	"phoneNumber",
+    "surname",
+	"gender",
 	"state",
+	"emailAddress",
+	"availability",
 	"volunteerAreas",
 	"createdAt",
 ]);

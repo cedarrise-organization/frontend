@@ -423,10 +423,9 @@ function EducationalInformationStepTwo() {
 			<TextField
 				control={form.control}
 				name="classPositionLastTerm"
-				placeholder="Position in Class at the Last Term"
+				placeholder="Position in Class at the Last Term (e.g. 2nd of 48)"
 				min={1}
 				step={1}
-				type="number"
 				required={true}
 			/>
 

@@ -164,9 +164,10 @@ const TACOTS_RECOMMENDATION_SORT_OPTIONS = [
 const VOLUNTEER_SORT_OPTIONS = [
 	{ label: "First Name", value: "firstName" },
 	{ label: "Surname", value: "surname" },
-	{ label: "Email", value: "emailAddress" },
-	{ label: "Phone Number", value: "phoneNumber" },
+	{ label: "Gender", value: "gender" },
 	{ label: "State", value: "state" },
+	{ label: "Email", value: "emailAddress" },
+	{ label: "Availability", value: "availability" },
 	{ label: "Volunteer Area", value: "volunteerAreas" },
 	{ label: "Created At", value: "createdAt" },
 ] as const satisfies ReadonlyArray<{

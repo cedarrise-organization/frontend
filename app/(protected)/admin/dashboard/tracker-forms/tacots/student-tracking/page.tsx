@@ -273,13 +273,13 @@ function TrackingDetailsStep() {
 			<TextField
 				control={control}
 				name="highestSubjectScore"
-				placeholder="Highest Subject Score"
+				placeholder="Highest Subject Score (e.g Math (90%))"
 				required={true}
 			/>
 			<TextField
 				control={control}
 				name="lowestSubjectScore"
-				placeholder="Lowest Subject Score"
+				placeholder="Lowest Subject Score (e.g English (40%))"
 				required={true}
 			/>
 			<TextField

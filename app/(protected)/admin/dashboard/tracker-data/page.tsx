@@ -167,16 +167,21 @@ const ASH_TRACKING_SORT_OPTIONS = [
 }>;
 
 const ASH_EXIT_SORT_OPTIONS = [
+	{ label: "Age at Exit", value: "ageAtExit" },
 	{ label: "School Name", value: "schoolName" },
 	{ label: "Class at Exit", value: "classAtExit" },
+	{ label: "Duration in Program", value: "durationInProgram" },
+	{ label: "Facilitator Name", value: "facilitatorName" },
 	{ label: "Exit Date", value: "exitDate" },
 	{ label: "Created At", value: "createdAt" },
 ] as const satisfies ReadonlyArray<{ label: string; value: (typeof AshExitSortByOptions)[number] }>;
 
 const TACOTS_TRACKING_SORT_OPTIONS = [
 	{ label: "Academic Session", value: "academicSession" },
-	{ label: "Assessment Period", value: "assessmentPeriod" },
 	{ label: "Term", value: "academicTerm" },
+	{ label: "Region", value: "region" },
+	{ label: "Assessment Period", value: "assessmentPeriod" },
+	{ label: "Student Average", value: "studentAveragePct" },
 	{ label: "Created At", value: "createdAt" },
 ] as const satisfies ReadonlyArray<{
 	label: string;
@@ -198,6 +203,7 @@ const TACOTS_ONBOARDING_SORT_OPTIONS = [
 const TACOTS_EXIT_SORT_OPTIONS = [
 	{ label: "Year of Exit", value: "yearOfExit" },
 	{ label: "School Attended", value: "schoolAttendedDuringProgram" },
+	{ label: "Highest Education Attained", value: "highestEducationAttained" },
 	{ label: "Reason for Exit", value: "exitReason" },
 	{ label: "Created At", value: "createdAt" },
 ] as const satisfies ReadonlyArray<{
@@ -208,7 +214,9 @@ const TACOTS_EXIT_SORT_OPTIONS = [
 const OUTREACH_SORT_OPTIONS = [
 	{ label: "Start Date", value: "outreachStartDate" },
 	{ label: "End Date", value: "outreachEndDate" },
-	{ label: "State", value: "outreachState" },
+	{ label: "State", value: "outreachState" },   
+	{ label: "Number of Beneficiaries", value: "numBeneficiaries" },
+	{ label: "Number of Volunteers", value: "numVolunteers" },
 	{ label: "Outreach Type", value: "outreachType" },
 	{ label: "Created At", value: "createdAt" },
 ] as const satisfies ReadonlyArray<{ label: string; value: (typeof OutreachSortByOptions)[number] }>;
@@ -218,6 +226,7 @@ const CAPACITY_SORT_OPTIONS = [
 	{ label: "Program Type", value: "programType" },
 	{ label: "Program Date", value: "programDate" },
 	{ label: "Location", value: "location" },
+	{ label: "Number of Participants", value: "numberOfParticipants" },
 	{ label: "Program Coordinator", value: "programCoordinator" },
 	{ label: "Created At", value: "createdAt" },
 ] as const satisfies ReadonlyArray<{
@@ -464,7 +473,7 @@ function AshTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecord) 
 			value: metadata?.totalRecords ?? EMPTY_VALUE_PLACEHOLDER,
 		},
 		{
-			label: "High-risk beneficiary",
+			label: "High-risk Students",
 			value: metadata?.highRiskStudents ?? EMPTY_VALUE_PLACEHOLDER,
 		},
 		{
@@ -704,7 +713,7 @@ function TacotsTrackerDataTab(props: { onViewMore: (record: SelectedTrackerRecor
 			value: metadata?.totalRecords ?? EMPTY_VALUE_PLACEHOLDER,
 		},
 		{
-			label: "High-risk beneficiary",
+			label: "High-risk Beneficiaries",
 			value: metadata?.highRiskStudents ?? EMPTY_VALUE_PLACEHOLDER,
 		},
 		{
@@ -935,7 +944,7 @@ function CapacityBuildingTrackerDataTab(props: { onViewMore: (record: SelectedTr
 			value: metadata?.participantsImpacted ?? EMPTY_VALUE_PLACEHOLDER,
 		},
 		{
-			label: "Organizations Partnered with",
+			label: "Organizations Partnered With",
 			value: metadata?.organizationsPartneredWith ?? EMPTY_VALUE_PLACEHOLDER,
 		},
 		{
