@@ -206,7 +206,7 @@ function SidebarRoot(
 			<aside
 				data-slot="sidebar-root"
 				className={cnMerge(
-					`z-50 flex w-(--sidebar-width) grow flex-col bg-shadcn-sidebar
+					`z-50 flex h-full w-(--sidebar-width) flex-col bg-shadcn-sidebar
 					text-shadcn-sidebar-foreground`,
 					className,
 					classNames?.base
@@ -253,7 +253,7 @@ function SidebarRoot(
 	return (
 		<aside
 			className={cnMerge(
-				"group peer z-50 grow text-shadcn-sidebar-foreground data-[side=right]:order-last",
+				"group peer z-50 h-full text-shadcn-sidebar-foreground data-[side=right]:order-last",
 				className,
 				classNames?.base
 			)}

@@ -309,24 +309,18 @@ function TrackingDetailsStep() {
 				control={control}
 				name="socialBehaviorRating"
 				question="Social Behavior"
-				leftLabel=""
-				rightLabel=""
 				required={true}
 			/>
 			<RatingQuestionField
 				control={control}
 				name="schoolRulesRating"
 				question="Adherence to School Rules/Punctuality"
-				leftLabel=""
-				rightLabel=""
 				required={true}
 			/>
 			<RatingQuestionField
 				control={control}
 				name="responsibilityRating"
 				question="Sense of Responsibility"
-				leftLabel=""
-				rightLabel=""
 				required={true}
 			/>
 			<TextAreaField

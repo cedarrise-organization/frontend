@@ -117,10 +117,10 @@ export function OptionQuestionField<TFieldValues extends FieldValues, TTransform
 
 export function RatingQuestionField<TFieldValues extends FieldValues, TTransformedValues = TFieldValues>(
 	props: SharedFieldProps<TFieldValues, TTransformedValues> & {
-		leftLabel: string;
+		leftLabel?: string;
 		maxRating?: number;
 		question: string;
-		rightLabel: string;
+		rightLabel?: string;
 	}
 ) {
 	const { control, leftLabel, maxRating = 5, name, question, required, rightLabel } = props;
@@ -134,7 +134,9 @@ export function RatingQuestionField<TFieldValues extends FieldValues, TTransform
 			<Form.FieldBoundController
 				render={({ field, fieldContext }) => (
 					<Form.InputGroup className="mt-3 items-start justify-start gap-4">
-						<Form.InputGroupAddon className="mt-0.5 shrink-0">{leftLabel}</Form.InputGroupAddon>
+						{leftLabel && (
+							<Form.InputGroupAddon className="mt-0.5 shrink-0">{leftLabel}</Form.InputGroupAddon>
+						)}
 
 						<RadioGroupAnimated.Root
 							value={field.value}
@@ -162,7 +164,9 @@ export function RatingQuestionField<TFieldValues extends FieldValues, TTransform
 							/>
 						</RadioGroupAnimated.Root>
 
-						<Form.InputGroupAddon className="mt-0.5 shrink-0">{rightLabel}</Form.InputGroupAddon>
+						{rightLabel && (
+							<Form.InputGroupAddon className="mt-0.5 shrink-0">{rightLabel}</Form.InputGroupAddon>
+						)}
 					</Form.InputGroup>
 				)}
 			/>
