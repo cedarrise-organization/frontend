@@ -32,8 +32,8 @@ function OutreachesPage() {
 						title="Be Part of the Impact"
 						description="Join us as we bring support, opportunity, and hope to communities in need"
 						actions={[
-							{ href: "/get-involved/volunteer", label: "VOLUNTEER" },
-							{ href: "/get-involved/partner", kind: "icon-link", label: "Partner with us" },
+							{ href: "/get-involved/volunteer", label: "Volunteer" },
+							{ href: "/get-involved/partner", kind: "icon-link", label: "Partner With Us" },
 						]}
 					/>
 				</>
@@ -236,24 +236,28 @@ function OutreachAboutSection() {
 
 const stories = [
 	{
-		quote: "Thank God for them , they came well prepared, I saw team spirit amongst them as they taught the pupils. I saw more enlightenment from the teachers who were trained.",
-		title: "Catherine Chukwu, Headmistress Daniel Frouscher Nursery and Primary school",
+		quote: "I am deeply grateful for the free medical care, medications, and laboratory tests. This outreach brought quality healthcare to people who truly needed it.",
+		title: "Awlaw Medical Outreach Beneficiary",
 	},
 	{
-		quote: "I am happy about this program you've brought to us, I'm also happy that a lot of you came to do it and are doing it well. No one is paying for anything even the drugs administered.",
-		title: "Medical outreach beneficiary",
+		quote: "Volunteering was both fulfilling and beautiful. It reminded me of the impact we can make when we serve together.",
+		title: "Valerie Otaigbe, Volunteer, Awlaw Medical Outreach",
 	},
 	{
-		quote: "It was fun, it was educating, it was eye-opening, interesting and inspiring. I think this has been the happiest I've been in a very long time.",
-		title: "Grace Obi, Volunteer",
+		quote: "Before this programme, I was confused about my future. Now I have clarity, direction, and confidence in the career I want to pursue.",
+		title: "Eze Victoria, SS1 Student, Career Pathway Program",
 	},
 	{
-		quote: "This outreach renewed the community's hope in the power of education and human connection.",
-		title: "Community Leader, Awka",
+		quote: "The programme helped me clearly understand the career I want to pursue. I can now confidently choose my own path instead of being influenced by others.",
+		title: "Okigwe Emmanuella, SS2 Student, Career Pathway Program",
 	},
 	{
-		quote: "I am very grateful for the free medications and lab tests.",
-		title: "Medical Outreach Beneficiary",
+		quote: "Mentoring students reminded me that guidance can change a young person's future. Seeing them gain clarity about their dreams was incredibly fulfilling.",
+		title: "Munachi Otika, Volunteer, Career Pathway Program",
+	},
+		{
+		quote: "Every conversation with the students reminded me why service matters. It was a truly rewarding experience.",
+		title: "Oge, Volunteer, Career Pathway Program",
 	},
 ];
 

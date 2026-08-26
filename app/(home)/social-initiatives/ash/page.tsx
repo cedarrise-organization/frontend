@@ -176,7 +176,7 @@ const studentGains = [
 	"Academic improvement & structured tutoring",
 	"Confidence & leadership development",
 	"Mentorship & guidance",
-	"Creative expression & performance arts",
+	"Skills development & creative expression through performance arts",
 ];
 
 function StudentGainsSection() {

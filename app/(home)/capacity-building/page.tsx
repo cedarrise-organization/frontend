@@ -4,7 +4,7 @@ import { ForWithWrapper } from "@/components/common/for";
 import { cnJoin } from "@/lib/utils/cn";
 import { FinalCTASection } from "../-components/FinalCTASectionShared";
 import { Main } from "../-components/Main";
-import { CapacityBuildingMomentsCarousel } from "./-components/CapacityBuildingCarousels";
+import { CapacityBuildingMomentsCarousel, CapacityBuildingTestimonialCarousel } from "./-components/CapacityBuildingCarousels";
 import { RegisterProgramAccordion } from "./-components/RegisterProgramAccordion";
 
 function CapacityBuildingPage() {
@@ -19,6 +19,11 @@ function CapacityBuildingPage() {
 					</div>
 
 					<FeaturedCapacityProgramsSection />
+
+					<div className={ctx.constrainedClassName}>
+						<CapacityTestimonialsSection />
+					</div>
+
 
 					<div className={ctx.constrainedClassName}>
 						<MomentsSection />
@@ -76,7 +81,7 @@ const trainingFormats: Array<{ description: string; theme: "black" | "red" | "ye
 		description:
 			"Mentorship-driven learning experiences that help young people build confidence, leadership, and future-ready skills.",
 		theme: "yellow",
-		title: "Youth Development Programme",
+		title: "Youth Development Programmes",
 	},
 	{
 		description:
@@ -256,6 +261,16 @@ function RegisterPromptSection() {
 	return (
 		<section className="mt-5 lg:mt-9">
 			<RegisterProgramAccordion />
+		</section>
+	);
+}
+
+
+function CapacityTestimonialsSection() {
+	return (
+		<section className="flex flex-col gap-8 lg:gap-2">
+			<h2 className="text-center text-[24px]/[1.2] lg:text-[40px]">Voices from Our Capacity Building Programs</h2>
+			<CapacityBuildingTestimonialCarousel />
 		</section>
 	);
 }

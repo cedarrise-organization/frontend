@@ -228,7 +228,7 @@ function OurProgrammesSection() {
 			<header className="flex flex-col gap-3 lg:flex-row lg:justify-between lg:gap-9.5">
 				<h2 className="shrink-0 text-[28px]/[1.2] lg:text-[48px]/none">Our Programmes</h2>
 				<p className="max-w-[825px] text-[13px]/5 text-black lg:text-base/7">
-					At CedarRise, our social initiatives focus on expanding opportunity for underserved
+					At CedarRise, our social initiatives focus on expanding opportunities for underserved
 					communities, particularly children and young people who face barriers to education,
 					mentorship, and personal development. Through targeted programs and community outreach, we
 					work to restore access, strengthen support systems, and create pathways for long-term

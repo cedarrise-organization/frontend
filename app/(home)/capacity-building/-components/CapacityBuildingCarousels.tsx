@@ -33,31 +33,31 @@ export function CapacityBuildingMomentsCarousel() {
 
 const capacityBuildingTestimonials = [
 	{
-		quote: "I've always been a pessimist until now, this programme opened my eyes to my abilities and how much people can actually do if they put their miss to things",
-		title: "I. H, Participant",
+		quote: "This was one of the most practical and teacher-friendly workshops I've ever attended. It inspired me to apply what I've learned and make a meaningful difference in my school and community.",
+		title: "Teacher Participant, Teachers' Training ",
 	},
 	{
-		quote: "Learning becomes easy when it is child-centered and made fun using technology",
-		title: "S.C, Member of Management Team",
+		quote: "The training changed my understanding of diabetes in children. I now know how to recognize warning signs and support affected learners with empathy.",
+		title: "A. A., Teacher, Participant, Teachers' Training",
+	},
+		{
+		quote: "CedarPrize equipped me with practical skills in fundraising, proposal writing, teamwork, conflict management, and community outreach. It has empowered me to lead initiatives with confidence.",
+		title: "A. U., Participant,  CedarPrize",
 	},
 	{
-		quote: "I think this opportunity should be sung in the ears of the young girls, but the main problem is if they would listen. And I liked the way we were always reminded to apply the things we learnt in our everyday, it's really helpful",
-		title: "A.A, Participant",
+		quote: "Having dedicated time for team bonding during camp made the experience even more meaningful.",
+		title: "S. I., Participant, CedarEdge",
 	},
 	{
-		quote: "The training was an eye-opener for me. I got to learn that people already suffer from some of the symptoms mentioned today yet they are unaware but being part of this training I believe I can help the society at large",
-		title: "C.C, Teacher, Hillrange Primary School",
+		quote: "The Digital Literacy Bootcamp made technology less intimidating. I especially enjoyed learning Excel functions and now feel much more confident using a computer and preparing for CBT exams.",
+		title: "K. E., Beneficiary, E-Learning for all by Magenta Heart",
 	},
 	{
-		quote: "I was very surprised to hear that diabetes in children is not as rare as I always thought. This training has made me realize that there can be people with this ailment around us even in my class and it's up to me as a teacher to encourage them to get medical advice.",
-		title: "C.S, Teacher, Osisatech Boys’ Secondary School",
-	},
-	{
-		quote: "I have become more participative in group activities and have even started personally planning events and projects",
-		title: "L. I, Participant",
+		quote: "The training was practical, engaging, and easy to understand. I gained valuable digital skills and would gladly recommend it to other students.",
+		title: "M. O., Beneficiary, E-Learning for all by Magenta Heart",
 	},
 ];
 
 export function CapacityBuildingTestimonialCarousel() {
-	return <TestimonialCarouselShared className="lg:mt-12" testimonials={capacityBuildingTestimonials} />;
+	return <TestimonialCarouselShared className="lg:mt-8" testimonials={capacityBuildingTestimonials} />;
 }

@@ -37,24 +37,24 @@ export function AshMomentsCarousel() {
 
 const stories = [
 	{
-		quote: "I was amazed at the consistency and love for the girls had taken educating these girls. I encourage the girls to learn as much as they can from their teachers. I also encourage my fellow parents to follow up their children",
-		title: "(A beneficiary's mother)",
+		quote: "Knowing this project is by undergraduates makes it even more inspiring. I can only imagine the dedication it took to make it a reality. I'm grateful that my sisters have mentors who are genuinely invested in their growth and future. Thank you for making such a meaningful difference.",
+		title: "P. E., ASH Beneficiary's Guardian",
 	},
 	{
-		quote: "Education is one of the important things a growing child should be exposed to. That's why I am really grateful for your hard work and dedication to providing for these young girls",
-		title: "(A beneficiary's father)",
+		quote: "I was truly impressed by the consistency and commitment of the volunteers in educating these girls. My encouragement to the girls is to make the most of every opportunity to learn, and I also urge fellow parents to stay actively involved in their children's educational journey.",
+		title: "ASH Beneficiary's Mother",
 	},
 	{
-		quote: "Seeing that this project was pioneered by undergraduates, I would like to commend them because I know it wasn't easy. I’m happy that my sisters have people out there who are also intentional about their growth. I'm extremely thankful",
-		title: "P.E. (A beneficiary's guardian)",
+		quote: "Education is one of the greatest gifts we can give a child. I deeply appreciate your hard work and dedication to ensuring these young girls have access to learning and opportunities that will shape their future.",
+		title: "ASH Beneficiary's Father",
 	},
 	{
-		quote: "This experience has shaped me more as a person, I've learnt to be more patient, time management and self control. I see things from a different view now from what I've known all my life. For the girls, I hope they become the best version of themselves",
-		title: "K. O, Volunteer",
+		quote: "Volunteering with this initiative has helped me become more confident in public speaking. It's been incredibly fulfilling to contribute to the growth and development of younger girls while growing personally through the experience.",
+		title: "R. E., Volunteer, ASH",
 	},
 	{
-		quote: "In the course of volunteering, I've become more confident in speaking in public, and I’m happy I could be of help to the development of girls younger than me",
-		title: "R. E, Volunteer",
+		quote: "This experience has transformed me in so many ways. I've developed greater patience, improved my time management, and learned the importance of self-discipline. It has changed my perspective on life, and my hope is that every girl we serve grows into the very best version of herself.",
+		title: "K. O., Volunteer, ASH",
 	},
 ];
 

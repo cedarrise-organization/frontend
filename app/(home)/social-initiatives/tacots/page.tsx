@@ -274,8 +274,8 @@ function TacotsApproachSection() {
 								</h4>
 
 								<div className="flex flex-col gap-2">
-									<h3 className="text-[16px]/[1.2] lg:text-[20px]">{step.title}</h3>
-									<p className="text-[10px]/4 text-pretty text-cedar-white/80 lg:text-[12px]/5">
+									<h3 className="text-[16px]/[1.2] lg:text-[24px]">{step.title}</h3>
+									<p className="text-[10px]/4 text-pretty text-cedar-white/80 lg:text-[16px]/5">
 										{step.description}
 									</p>
 								</div>

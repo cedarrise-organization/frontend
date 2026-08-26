@@ -12,15 +12,15 @@ function RegisterProgramAccordion() {
 
 	const registrationLinks = [
 		{
-			href: "#",
+			href: "https://docs.google.com/forms/d/e/1FAIpQLSdcP06c3YsCwTo0RPPRKz_lA1_JnESDj7phZGutnoJ8YdsOBg/viewform?usp=publish-editor",
 			label: "Are you a secondary school student?",
 		},
 		{
-			href: "#",
+			href: "https://docs.google.com/forms/d/e/1FAIpQLSe19vkUw_T1aVrwWQuYBLqKcMlZTeFJIKRQyFloQOkNvLXFhQ/viewform?usp=publish-editor",
 			label: "Are you an undergraduate?",
 		},
 		{
-			href: "#",
+			href: "https://docs.google.com/forms/d/e/1FAIpQLSfv6peEUtuOOca1PUZjPoo34j6lRnzf7iEaywZGb4A5FI-EMA/viewform?usp=publish-editor",
 			label: "Are you a professional?",
 		},
 		{

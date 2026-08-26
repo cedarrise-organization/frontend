@@ -15,29 +15,37 @@ import { TestimonialCarouselShared } from "./CarouselsShared";
 
 const testimonials: Array<{ quote: string; title: string }> = [
 	{
-		quote: "I was amazed at the consistency and how far the girls had taken educating these girls. I encourage the girls to learn as much as they can from their teachers. I also encourage my fellow parents to follow up their children.",
-		title: "A beneficiary’s mother",
+		quote: "Education is one of the greatest gifts we can give a child. I deeply appreciate your hard work and dedication to ensuring these young girls have access to learning and opportunities that will shape their future.",
+		title: "ASH Beneficiary's Father",
 	},
 	{
-		quote: "Education is one of the important things a growing child should be exposed to. That's why I am really grateful for your hard work and dedication to providing for these young girls.",
-		title: "A beneficiary’s father",
+		quote: "Volunteering with this initiative has helped me become more confident in public speaking. It's been incredibly fulfilling to contribute to the growth and development of younger girls while growing personally through the experience.",
+		title: "R. E., Volunteer, ASH",
 	},
 	{
-		quote: "I met new people, made friends that became sisters. Built my confidence and determination to complete a task despite any set backs.",
-		title: "B. A, Participant",
+		quote: "Beyond paying my school fees, this sponsorship has given me extra academic support that has helped me become a better student. Thank you for changing my life.",
+		title: "J. M., JSS2 Student, Beneficiary, TACOTS",
 	},
 	{
-		quote: "I really enjoyed the Digital Literacy & CBT Readiness Bootcamp, especially the Excel session where I learned how to use functions like SUM. The training increased my confidence in using a computer and made me more interested in pursuing tech-related skills",
-		title: " K.E, Beneficiary, E-Learning for all by Magenta Heart",
+		quote: "Since receiving this scholarship, my daughter's attitude has changed remarkably. She is more respectful, responsible, and committed to her studies. I am grateful for the positive impact this has had on our family.",
+		title: "U. I., Mother of a Beneficiary, TACOTS",
 	},
 	{
-		quote: "Without this sponsorship, I would not be able to attend Rosary High School. I am grateful to my sponsors for supporting me and others, and I pray for their long life and prosperity.",
-		title: "F. A (Student, Holy Rosary High School, JSS2)",
+		quote: "I'm grateful for this programme. Everything was well organized, and no one had to pay for consultations or medications. It was truly a blessing to our community.",
+		title: "Awlaw Medical Outreach Beneficiary ",
 	},
 	{
-		quote: "Since my son began this scholarship, I have seen remarkable changes in him—he has grown, is eager to learn, and even asked to join a holiday learning program. I am grateful to God and the sponsors, and I pray they are blessed with good health and more opportunities to do good.",
-		title: "N.C (Father of Beneficiary)",
+		quote: "Volunteering was both fulfilling and beautiful. It reminded me of the impact we can make when we serve together.",
+		title: "Valerie Otaigbe, Volunteer, Awlaw Outreach",
 	},
+	{
+		quote: "The Digital Literacy Bootcamp made technology less intimidating. I especially enjoyed learning Excel functions and now feel much more confident using a computer and preparing for CBT exams.", 
+		title: " K. E., Beneficiary, E-Learning for all by Magenta Heart"
+	},
+	{
+		quote: "This was one of the most practical and teacher-friendly workshops I've ever attended. It inspired me to apply what I've learned and make a meaningful difference in my school and community.",
+		title: "Teacher Participant, Teachers' Training "
+	}
 ];
 
 export function HomeTestimonialCarousel() {

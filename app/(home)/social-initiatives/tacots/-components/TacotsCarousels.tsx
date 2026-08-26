@@ -4,28 +4,28 @@ import { TestimonialCarouselShared } from "@/app/(home)/-components/CarouselsSha
 
 const stories = [
 	{
-		quote: "This scholarship has helped my family in countless ways I cannot fully express. I am overjoyed and grateful, and I pray that the sponsors are blessed in all they do, with abundant rewards and protection from the Lord.",
-		title: "E.O (Mother of Beneficiary)",
+		quote: "This opportunity transformed my daughter's life. She has become more disciplined, focused, and enthusiastic about learning. We truly believe this support was a blessing sent at the right time.",
+		title: "E. O., Mother of a Beneficiary, TACOTS",
 	},
 	{
-		quote: "Since my son began this scholarship, I have seen remarkable changes in him—he has grown, is eager to learn, and even asked to join a holiday learning program. I am grateful to God and the sponsors, and I pray they are blessed with good health and more opportunities to do good",
-		title: "N.C (Father of Beneficiary)",
-	},
-	// {
-	// 	quote: "After losing my husband, I could not imagine how to train my daughter, but this scholarship came as God’s answer to my prayers. My daughter has changed positively—she is calmer, listens to corrections, and reads more, though still playful as a child. I am deeply thankful to the sponsors for remembering families like mine and pray that God strengthens and blesses them for all they have done.",
-	// 	title: "A.I (Mother of Beneficiary)",
-	// },
-	{
-		quote: "This sponsorship has helped my parents by paying my school fees, and I am happy to be in JSS2. I thank my sponsors for supporting me, and I always keep them in my prayers.",
-		title: "C. E (Student, St. Vincent de Paul Seminary, JSS2)",
+		quote: "Since joining the program, my son has become more eager to learn and continues to seek opportunities to improve himself. Thank you for believing in his potential.",
+		title: "N. C., Father of a Beneficiary, TACOTS",
 	},
 	{
-		quote: "The sponsorship has lifted a financial burden from my family and has given me a better academic environment to grow in. I thank the sponsors sincerely and pray God blesses them with long life and endless favor.",
-		title: "P.A (Student, Holy Rosary High School, JSS2)",
+		quote: "This sponsorship has lifted the burden of my school fees and made it possible for me to continue my education. I am deeply grateful to my sponsors for believing in me, and I keep them in my prayers.",
+		title: "C. E., JSS2 Student, Beneficiary, TACOTS",
 	},
 	{
-		quote: "This scholarship has lifted the heavy financial load from my mother, leaving her only with minor costs. I am very happy and thankful, and I pray that the good Lord blesses the sponsors for all they’ve done.",
-		title: "A.P  (Student, St. Vincent de Paul Seminary, JSS2)",
+		quote: "The scholarship has eased my family's financial burden and given me a better environment to learn and grow. I sincerely appreciate everyone who made this possible.",
+		title: "P. A., JSS2 Student, Beneficiary, TACOTS ",
+	},
+	{
+		quote: "This scholarship lifted a heavy burden from my mother's shoulders and gave me the opportunity to continue my education. I am sincerely thankful for your support.",
+		title: "A. P., JSS2 Student, Beneficiary, TACOTS",
+	},
+	{
+		quote: "Words cannot fully express how much this scholarship has helped my family. It has brought us hope, relief, and joy. May God richly bless everyone who made it possible.",
+		title: "S. I., Mother of a Beneficiary, TACOTS",
 	},
 ];
 
