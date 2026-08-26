@@ -255,7 +255,7 @@ const stories = [
 		quote: "Mentoring students reminded me that guidance can change a young person's future. Seeing them gain clarity about their dreams was incredibly fulfilling.",
 		title: "Munachi Otika, Volunteer, Career Pathway Program",
 	},
-		{
+	{
 		quote: "Every conversation with the students reminded me why service matters. It was a truly rewarding experience.",
 		title: "Oge, Volunteer, Career Pathway Program",
 	},

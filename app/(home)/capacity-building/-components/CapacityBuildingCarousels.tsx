@@ -40,7 +40,7 @@ const capacityBuildingTestimonials = [
 		quote: "The training changed my understanding of diabetes in children. I now know how to recognize warning signs and support affected learners with empathy.",
 		title: "A. A., Teacher, Participant, Teachers' Training",
 	},
-		{
+	{
 		quote: "CedarPrize equipped me with practical skills in fundraising, proposal writing, teamwork, conflict management, and community outreach. It has empowered me to lead initiatives with confidence.",
 		title: "A. U., Participant,  CedarPrize",
 	},

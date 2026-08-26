@@ -4,7 +4,10 @@ import { ForWithWrapper } from "@/components/common/for";
 import { cnJoin } from "@/lib/utils/cn";
 import { FinalCTASection } from "../-components/FinalCTASectionShared";
 import { Main } from "../-components/Main";
-import { CapacityBuildingMomentsCarousel, CapacityBuildingTestimonialCarousel } from "./-components/CapacityBuildingCarousels";
+import {
+	CapacityBuildingMomentsCarousel,
+	CapacityBuildingTestimonialCarousel,
+} from "./-components/CapacityBuildingCarousels";
 import { RegisterProgramAccordion } from "./-components/RegisterProgramAccordion";
 
 function CapacityBuildingPage() {
@@ -23,7 +26,6 @@ function CapacityBuildingPage() {
 					<div className={ctx.constrainedClassName}>
 						<CapacityTestimonialsSection />
 					</div>
-
 
 					<div className={ctx.constrainedClassName}>
 						<MomentsSection />
@@ -265,11 +267,12 @@ function RegisterPromptSection() {
 	);
 }
 
-
 function CapacityTestimonialsSection() {
 	return (
 		<section className="flex flex-col gap-8 lg:gap-2">
-			<h2 className="text-center text-[24px]/[1.2] lg:text-[40px]">Voices from Our Capacity Building Programs</h2>
+			<h2 className="text-center text-[24px]/[1.2] lg:text-[40px]">
+				Voices from Our Capacity Building Programs
+			</h2>
 			<CapacityBuildingTestimonialCarousel />
 		</section>
 	);

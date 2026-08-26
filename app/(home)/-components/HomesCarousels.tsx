@@ -39,13 +39,13 @@ const testimonials: Array<{ quote: string; title: string }> = [
 		title: "Valerie Otaigbe, Volunteer, Awlaw Outreach",
 	},
 	{
-		quote: "The Digital Literacy Bootcamp made technology less intimidating. I especially enjoyed learning Excel functions and now feel much more confident using a computer and preparing for CBT exams.", 
-		title: " K. E., Beneficiary, E-Learning for all by Magenta Heart"
+		quote: "The Digital Literacy Bootcamp made technology less intimidating. I especially enjoyed learning Excel functions and now feel much more confident using a computer and preparing for CBT exams.",
+		title: " K. E., Beneficiary, E-Learning for all by Magenta Heart",
 	},
 	{
 		quote: "This was one of the most practical and teacher-friendly workshops I've ever attended. It inspired me to apply what I've learned and make a meaningful difference in my school and community.",
-		title: "Teacher Participant, Teachers' Training "
-	}
+		title: "Teacher Participant, Teachers' Training ",
+	},
 ];
 
 export function HomeTestimonialCarousel() {
