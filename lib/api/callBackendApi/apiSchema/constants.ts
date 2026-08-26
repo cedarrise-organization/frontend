@@ -29,8 +29,6 @@ export const DonateSupportAreaOptions = defineEnum([
 	"OTHER",
 ]);
 
-export const AshProgramTypeOptions = defineEnum(["ONLINE", "OFFLINE"]);
-
 export const AdminRoleActionOptions = defineEnum(["assign", "revoke"]);
 
 export const AdminRoleNameOptions = defineEnum(["admin", "superadmin"]);
@@ -177,7 +175,6 @@ export const TacotsServiceDurationOptions = defineEnum([
 export const AshTrackingSortByOptions = defineEnum([
 	"firstName",
 	"surname",
-	"programType",
 	"createdAt",
 	"schoolState",
 	"assignedMentor",

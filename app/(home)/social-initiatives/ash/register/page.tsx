@@ -34,7 +34,6 @@ import {
 	AshGuardianRelationshipOptions,
 	AshHouseholdIncomeRangeOptions,
 	AshLearningConditionOptions,
-	AshProgramTypeOptions,
 	AshRegisterFrontendSchema,
 	ClassOptions,
 	GenderOptions,
@@ -72,7 +71,6 @@ const stepItems = defineFormStepItems([
 			middleName: true,
 			passportPhoto: true,
 			primaryLanguage: true,
-			programType: true,
 			studentPhone: true,
 			surname: true,
 		}),
@@ -162,7 +160,6 @@ const useAshRegisterStorageState = createUseStorageState<GetFormStepStoreType<Fo
 			pretestScore: "",
 			prevAfterschoolProgram: undefined,
 			primaryLanguage: undefined,
-			programType: undefined,
 			reasonForJoining: "",
 			schoolLga: "",
 			schoolName: "",
@@ -232,14 +229,6 @@ function StudentPersonalInformationStepOne() {
 			<TextField control={form.control} name="firstName" placeholder="First Name" required={true} />
 			<TextField control={form.control} name="middleName" placeholder="Middle Name" />
 			<TextField control={form.control} name="surname" placeholder="Surname" required={true} />
-
-			<OptionQuestionField
-				control={form.control}
-				name="programType"
-				question="Program Type"
-				options={AshProgramTypeOptions}
-				required={true}
-			/>
 
 			<SelectField
 				control={form.control}
