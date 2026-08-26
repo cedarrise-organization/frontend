@@ -190,8 +190,6 @@ function TacotsExitCompletionForm() {
 				control={form.control}
 				name="programImpactRating"
 				question="Rate the impact of the programme on the student"
-				leftLabel=""
-				rightLabel=""
 				maxRating={10}
 			/>
 
