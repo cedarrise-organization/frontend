@@ -138,7 +138,6 @@ const FORM_DATA_TABSANIMATED = [
 const ASH_SORT_OPTIONS = [
 	{ label: "First Name", value: "firstName" },
 	{ label: "Surname", value: "surname" },
-	{ label: "Program Type", value: "programType" },
 	{ label: "Gender", value: "gender" },
 	{ label: "School State", value: "schoolState" },
 	{ label: "Current Class", value: "currentClass" },
@@ -303,7 +302,6 @@ function AshFormDataTab(props: { onViewMore: (record: SelectedRecord) => void })
 			getTextColumn("firstName", "FIRST NAME", (row) => row.firstName),
 			getTextColumn("surname", "SURNAME", (row) => row.surname),
 			getTextColumn("gender", "GENDER", (row) => row.gender, false),
-			getTextColumn("programType", "PROGRAM TYPE", (row) => row.programType, false),
 			getTextColumn("schoolState", "SCHOOL STATE", (row) => row.schoolState, false),
 			getTextColumn("currentClass", "CURRENT CLASS", (row) => row.currentClass, false),
 			{
