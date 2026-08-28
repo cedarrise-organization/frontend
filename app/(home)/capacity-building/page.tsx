@@ -113,12 +113,15 @@ function CapacitySubHeroSection() {
 
 				<article className="flex flex-col gap-10 text-cedar-white lg:gap-[64px]">
 					<header className="flex flex-col gap-4 lg:gap-6">
-						<h2 className="text-[24px]/[1.1] lg:text-[40px]">Skills for Growth, Opportunities for Impact</h2>
+						<h2 className="text-[24px]/[1.1] lg:text-[40px]">
+							Skills for Growth, Opportunities for Impact
+						</h2>
 						<p
 							className="max-w-[282px] text-[12px]/5 text-cedar-white/80 lg:max-w-[614px]
 								lg:text-base/7"
 						>
-							Transformative learning experiences that equip individuals and organizations with practical skills, fresh perspectives, and measurable impact.
+							Transformative learning experiences that equip individuals and organizations with
+							practical skills, fresh perspectives, and measurable impact.
 						</p>
 					</header>
 
