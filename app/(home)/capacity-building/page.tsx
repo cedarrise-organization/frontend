@@ -1,6 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import { homeCarousel2 } from "@/assets/images/landing";
 import { ForWithWrapper } from "@/components/common/for";
+import { Button } from "@/components/ui/button";
 import { cnJoin } from "@/lib/utils/cn";
 import { FinalCTASection } from "../-components/FinalCTASectionShared";
 import { Main } from "../-components/Main";
@@ -15,7 +18,10 @@ function CapacityBuildingPage() {
 		<Main layout="fill" className="gap-10 lg:gap-[64px]">
 			{(ctx) => (
 				<>
-					<HeroSection />
+					<div className="w-full">
+						<HeroSection />
+						<CapacitySubHeroSection />
+					</div>
 					<div className={ctx.constrainedClassName}>
 						<IntroSection />
 						<HowItWorksSection />
@@ -67,6 +73,61 @@ function HeroSection() {
 						bg-linear-[270deg,theme(--color-cedar-black/0.4)_0%,theme(--color-cedar-black/0.8)_100%]
 						mix-blend-multiply"
 				/>
+			</div>
+		</section>
+	);
+}
+
+const capacityImpactStata = [
+	{ label: "Participants Impacted", value: "132+" },
+	{ label: "Workshops Conducted", value: "6+" },
+	{ label: "Volunteers Engaged", value: "15+" },
+	{ label: "Organizations Partnered With", value: "5+" },
+];
+
+function CapacitySubHeroSection() {
+	return (
+		<section className="flex w-full justify-center bg-cedar-black px-6 py-10 lg:px-[50px] lg:py-[52px]">
+			<div
+				className="flex w-full flex-col items-center gap-10 lg:max-w-[1300px] lg:flex-row-reverse
+					lg:justify-between"
+			>
+				<ForWithWrapper
+					className="grid w-full max-w-[362px] grid-cols-[repeat(2,min(100%/2,144px))] gap-4.5
+						rounded-[20px] bg-[hsl(240,5%,5%)] p-7 lg:max-w-[488px]
+						lg:grid-cols-[repeat(2,min(100%/2,160px))] lg:gap-[54px] lg:p-[56px]"
+					each={capacityImpactStata}
+					renderItem={(stat) => (
+						<li
+							key={stat.label}
+							className="flex min-h-[92px] flex-col justify-center gap-2 rounded-[16px]
+								bg-cedar-white/7 px-7 lg:min-h-[120px] lg:rounded-[20px]"
+						>
+							<h3 className="text-[24px]/none text-cedar-white lg:text-[36px]">{stat.value}</h3>
+							<p className="max-w-min text-[10px]/[1.2] text-cedar-white/80 lg:text-[12px]">
+								{stat.label}
+							</p>
+						</li>
+					)}
+				/>
+
+				<article className="flex flex-col gap-10 text-cedar-white lg:gap-[64px]">
+					<header className="flex flex-col gap-4 lg:gap-6">
+						<h2 className="text-[24px]/[1.1] lg:text-[40px]">Skills for Growth, Opportunities for Impact</h2>
+						<p
+							className="max-w-[282px] text-[12px]/5 text-cedar-white/80 lg:max-w-[614px]
+								lg:text-base/7"
+						>
+							Transformative learning experiences that equip individuals and organizations with practical skills, fresh perspectives, and measurable impact.
+						</p>
+					</header>
+
+					<div className="flex flex-col items-center gap-6 lg:flex-row lg:gap-8.5">
+						<a href="#register-program">
+							<Button className="shrink-0 max-lg:w-full">Register for a Program</Button>
+						</a>
+					</div>
+				</article>
 			</div>
 		</section>
 	);
@@ -261,7 +322,7 @@ function MomentsSection() {
 
 function RegisterPromptSection() {
 	return (
-		<section className="mt-5 lg:mt-9">
+		<section id="register-program" className="mt-5 scroll-mt-24 lg:mt-9">
 			<RegisterProgramAccordion />
 		</section>
 	);
