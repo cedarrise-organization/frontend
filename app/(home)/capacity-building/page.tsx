@@ -1,9 +1,12 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
+import { useState } from "react";
 import { homeCarousel2 } from "@/assets/images/landing";
 import { ForWithWrapper } from "@/components/common/for";
 import { Button } from "@/components/ui/button";
+import { clientSideImpactQuery } from "@/lib/react-query/queryOptions";
 import { cnJoin } from "@/lib/utils/cn";
 import { FinalCTASection } from "../-components/FinalCTASectionShared";
 import { Main } from "../-components/Main";
@@ -11,16 +14,28 @@ import {
 	CapacityBuildingMomentsCarousel,
 	CapacityBuildingTestimonialCarousel,
 } from "./-components/CapacityBuildingCarousels";
-import { RegisterProgramAccordion } from "./-components/RegisterProgramAccordion";
+import { RegisterProgramCollapsible } from "./-components/RegisterProgramCollapsible";
 
 function CapacityBuildingPage() {
+	const [isRegisterProgramOpen, setIsRegisterProgramOpen] = useState(false);
+
+	const handleRegisterProgram = () => {
+		setIsRegisterProgramOpen(true);
+		setTimeout(() => {
+			document.querySelector("#register-program")?.scrollIntoView({
+				behavior: "smooth",
+				block: "start",
+			});
+		}, 0);
+	};
+
 	return (
 		<Main layout="fill" className="gap-10 lg:gap-[64px]">
 			{(ctx) => (
 				<>
 					<div className="w-full">
 						<HeroSection />
-						<CapacitySubHeroSection />
+						<CapacitySubHeroSection onRegister={handleRegisterProgram} />
 					</div>
 					<div className={ctx.constrainedClassName}>
 						<IntroSection />
@@ -35,7 +50,10 @@ function CapacityBuildingPage() {
 
 					<div className={ctx.constrainedClassName}>
 						<MomentsSection />
-						<RegisterPromptSection />
+						<RegisterPromptSection
+							isOpen={isRegisterProgramOpen}
+							onOpenChange={setIsRegisterProgramOpen}
+						/>
 					</div>
 
 					<FinalCTASection
@@ -78,14 +96,15 @@ function HeroSection() {
 	);
 }
 
-const capacityImpactStata = [
-	{ label: "Participants Impacted", value: "132+" },
-	{ label: "Workshops Conducted", value: "6+" },
-	{ label: "Volunteers Engaged", value: "15+" },
-	{ label: "Organizations Partnered With", value: "5+" },
-];
-
-function CapacitySubHeroSection() {
+function CapacitySubHeroSection(props: { onRegister: () => void }) {
+	const { onRegister } = props;
+	const impact = useQuery(clientSideImpactQuery()).data?.capacityBuilding;
+	const capacityImpactStata = [
+		{ label: "Participants Impacted", value: `${impact?.participantsImpacted ?? 132}+` },
+		{ label: "Workshops Conducted", value: `${impact?.workshopsConducted ?? 6}+` },
+		{ label: "Volunteers Engaged", value: `${impact?.volunteersEngaged ?? 15}+` },
+		{ label: "Organizations Partnered With", value: `${impact?.organizationsPartneredWith ?? 5}+` },
+	];
 	return (
 		<section className="flex w-full justify-center bg-cedar-black px-6 py-10 lg:px-[50px] lg:py-[52px]">
 			<div
@@ -126,9 +145,9 @@ function CapacitySubHeroSection() {
 					</header>
 
 					<div className="flex flex-col items-center gap-6 lg:flex-row lg:gap-8.5">
-						<a href="#register-program">
-							<Button className="shrink-0 max-lg:w-full">Register for a Program</Button>
-						</a>
+						<Button className="shrink-0 max-lg:w-full" onClick={onRegister}>
+							Register for a Program
+						</Button>
 					</div>
 				</article>
 			</div>
@@ -323,10 +342,12 @@ function MomentsSection() {
 	);
 }
 
-function RegisterPromptSection() {
+function RegisterPromptSection(props: { isOpen: boolean; onOpenChange: (isOpen: boolean) => void }) {
+	const { isOpen, onOpenChange } = props;
+
 	return (
 		<section id="register-program" className="mt-5 scroll-mt-24 lg:mt-9">
-			<RegisterProgramAccordion />
+			<RegisterProgramCollapsible isOpen={isOpen} onOpenChange={onOpenChange} />
 		</section>
 	);
 }

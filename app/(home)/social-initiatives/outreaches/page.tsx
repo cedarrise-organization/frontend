@@ -1,5 +1,6 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { TestimonialCarouselShared } from "@/app/(home)/-components/CarouselsShared";
 import { homeCarousel3 } from "@/assets/images/landing";
@@ -8,6 +9,7 @@ import { ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
 import { NavLink, NavLinkEphemeral } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
+import { clientSideImpactQuery } from "@/lib/react-query/queryOptions";
 import { FinalCTASection } from "../../-components/FinalCTASectionShared";
 import { Main } from "../../-components/Main";
 import { OutreachesMomentsCarousel } from "./-components/OutreachesCarousels";
@@ -69,15 +71,15 @@ function OutreachHeroSection() {
 	);
 }
 
-const impactStats = [
-	{ label: "Outreach events conducted", value: "3" },
-	{ label: "Volunteers", value: "12" },
-	{ label: "Beneficiaries reached", value: "190+" },
-	{ label: "Partners", value: "2" },
-	{ label: "Communities Engaged", value: "4+" },
-];
-
 function OutreachConnectSection() {
+	const impact = useQuery(clientSideImpactQuery()).data?.outreaches;
+	const impactStats = [
+		{ label: "Outreach events conducted", value: String(impact?.outreachEvents ?? 3) },
+		{ label: "Volunteers", value: String(impact?.volunteers ?? 12) },
+		{ label: "Beneficiaries reached", value: `${impact?.beneficiariesReached ?? 190}+` },
+		{ label: "Partners", value: String(impact?.partners ?? 2) },
+		{ label: "Communities Engaged", value: `${impact?.communitiesEngaged ?? 4}+` },
+	];
 	return (
 		<section className="flex w-full justify-center bg-cedar-black px-6 py-10 lg:px-[50px] lg:py-[52px]">
 			<div

@@ -117,6 +117,15 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
   type __Unused = __Check
 }
 
+// Validate ../../../app/(home)/social-initiatives/ash-online/register/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/social-initiatives/ash-online/register">> = Specific
+  const handler = {} as typeof import("../../../app/(home)/social-initiatives/ash-online/register/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../../app/(home)/social-initiatives/ash/feedback/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/social-initiatives/ash/feedback">> = Specific

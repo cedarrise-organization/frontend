@@ -98,6 +98,37 @@ export const ashRegistrationDeleteMutation = (id: string) => {
 	});
 };
 
+export const ashOnlineFormDataDownloadMutation = () => {
+	return mutationOptions({
+		mutationFn: () =>
+			callBackendApiForQuery("@get/forms/ash-online/download/ashonlinestudent", {
+				onSuccess: (ctx) => forceDownload(ctx.data, "ash_online_students"),
+				responseType: "blob",
+			}),
+	});
+};
+
+export const ashOnlineRegistrationStatusMutation = (id: string) => {
+	return mutationOptions({
+		mutationFn: (status: ExtractUnion<typeof ReviewStatusOptions>) =>
+			callBackendApiForQuery("@patch/forms/ash-online/registration/:id/status", {
+				meta: { toast: { success: true } },
+				params: { id },
+				query: { status },
+			}),
+	});
+};
+
+export const ashOnlineRegistrationDeleteMutation = (id: string) => {
+	return mutationOptions({
+		mutationFn: () =>
+			callBackendApiForQuery("@delete/forms/ash-online/registration/:id", {
+				meta: { toast: { success: true } },
+				params: { id },
+			}),
+	});
+};
+
 export const ashTrackerDataDownloadMutation = (kind: AshTrackerDataKind) => {
 	const filename = (() => {
 		if (kind === "attendance") return "ash_weekly_attendance";

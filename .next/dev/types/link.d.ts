@@ -62,6 +62,7 @@ declare namespace __next_route_internal_types__ {
     | `/get-involved/volunteer/feedback` // ../../../app/(home)/get-involved/volunteer/feedback/page.tsx
     | `/get-involved/volunteer/register` // ../../../app/(home)/get-involved/volunteer/register/page.tsx
     | `/social-initiatives/ash` // ../../../app/(home)/social-initiatives/ash/page.tsx
+    | `/social-initiatives/ash-online/register` // ../../../app/(home)/social-initiatives/ash-online/register/page.tsx
     | `/social-initiatives/ash/feedback` // ../../../app/(home)/social-initiatives/ash/feedback/page.tsx
     | `/social-initiatives/ash/register` // ../../../app/(home)/social-initiatives/ash/register/page.tsx
     | `/social-initiatives/outreaches` // ../../../app/(home)/social-initiatives/outreaches/page.tsx

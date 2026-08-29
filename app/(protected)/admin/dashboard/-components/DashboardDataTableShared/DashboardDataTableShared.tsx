@@ -259,12 +259,12 @@ export function DashboardDataTableQueryToolbar<TRecord>(props: {
 	);
 }
 
-function useDashboardDataTableQueryToolbar<TRecord>(
+const useDashboardDataTableQueryToolbar = <TRecord,>(
 	table: Table<TRecord>,
 	options?: {
 		onReset?: () => void;
 	}
-) {
+) => {
 	const { onReset } = options ?? {};
 
 	const queryKeys = table.options.meta?.queryKeys;
@@ -317,7 +317,7 @@ function useDashboardDataTableQueryToolbar<TRecord>(
 		setPage,
 		sortBy,
 	};
-}
+};
 
 function DashboardDataTableQueryToolbarBase<TRecord>(props: {
 	actions?: React.ReactNode;

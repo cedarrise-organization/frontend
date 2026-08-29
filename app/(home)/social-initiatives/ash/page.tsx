@@ -1,11 +1,13 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { homeCarousel1 } from "@/assets/images/landing";
 import { ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
 import { NavLink, NavLinkEphemeral } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
+import { clientSideImpactQuery } from "@/lib/react-query/queryOptions";
 import { FinalCTASection } from "../../-components/FinalCTASectionShared";
 import { Main } from "../../-components/Main";
 import { AshMomentsCarousel, AshStoriesCarousel } from "./-components/AshCarousels";
@@ -61,14 +63,14 @@ function AshHeroSection() {
 	);
 }
 
-const afterBellStats = [
-	{ label: "Students Enrolled", value: "50+" },
-	{ label: "Volunteers", value: "14+" },
-	{ label: "Improvement in grades", value: "20%" },
-	{ label: "Communities Engaged", value: "4+" },
-];
-
 function AshAfterBellSection() {
+	const impact = useQuery(clientSideImpactQuery()).data?.ash;
+	const afterBellStats = [
+		{ label: "Students Enrolled", value: `${impact?.studentsEnrolled ?? 50}+` },
+		{ label: "Volunteers", value: `${impact?.volunteers ?? 14}+` },
+		{ label: "Improvement in grades", value: `${impact?.improvedGrades ?? 20}%` },
+		{ label: "Communities Engaged", value: `${impact?.communitiesEngaged ?? 4}+` },
+	];
 	return (
 		<section className="flex w-full justify-center bg-cedar-black px-6 py-10 lg:px-[50px] lg:py-[52px]">
 			<div

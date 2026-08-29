@@ -20,6 +20,7 @@ import {
 
 const SendLinksInitiativeSchema = backendApiSchemaRoutes["@post/send-links/initiatives"].body;
 const SendLinksPartnerSchema = backendApiSchemaRoutes["@post/send-links/partners"].body;
+const SendAshOnlineLinkSchema = backendApiSchemaRoutes["@post/send-links/ashonline"].body;
 
 function GetFormLinkPageImpl() {
 	const [fromQueryState] = useQueryState("from", parseAsString.withDefault("/"));
@@ -31,19 +32,37 @@ function GetFormLinkPageImpl() {
 
 	const router = useRouter();
 
+	const isAshOnlineRequest =
+		programQueryState.program === "ASH" && fromQueryState === "/#sustainable-impact";
+
 	const form = useForm({
 		defaultValues: {
 			email: "",
 			name: "",
 		},
 		resolver: zodResolver(
-			(programQueryState.program === "PARTNER" ?
-				SendLinksPartnerSchema
-			:	SendLinksInitiativeSchema) as typeof SendLinksInitiativeSchema & typeof SendLinksPartnerSchema
+			(() => {
+				if (programQueryState.program === "PARTNER") {
+					return SendLinksPartnerSchema;
+				}
+				if (isAshOnlineRequest) {
+					return SendAshOnlineLinkSchema;
+				}
+				return SendLinksInitiativeSchema;
+			})() as typeof SendLinksPartnerSchema
 		),
 	});
 
 	const onSubmit = form.handleSubmit(async (data) => {
+		if (isAshOnlineRequest) {
+			await callBackendApiForQuery("@post/send-links/ashonline", {
+				body: data,
+				meta: { toast: { success: true } },
+				onSuccess: () => router.replace(fromQueryState),
+			});
+			return;
+		}
+
 		await callBackendApiForQuery(
 			programQueryState.program === "PARTNER" ?
 				"@post/send-links/partners"
@@ -76,7 +95,7 @@ function GetFormLinkPageImpl() {
 
 	return (
 		<div className="flex min-h-svh w-full flex-col items-center bg-cedar-grey">
-			<Main showWatermark={true} className="max-w-[1300px] items-center gap-6 pt-5 lg:gap-10">
+			<Main withWatermark={true} className="max-w-[1300px] items-center gap-6 pt-5 lg:gap-10">
 				<FormPageHeader
 					href={fromQueryState as never}
 					replace={true}
@@ -85,7 +104,7 @@ function GetFormLinkPageImpl() {
 							return "Fill this form to Partner with us";
 						}
 
-						if (fromQueryState === "/#sustainable-impact") {
+						if (isAshOnlineRequest) {
 							return "Interested in online tutorials for your ward? Let's get back to you";
 						}
 

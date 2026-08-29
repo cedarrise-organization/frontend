@@ -28,6 +28,7 @@ import {
 	AdminDepartmentOptions,
 	AdminRoleNameOptions,
 	AdminUserRoleFrontendSchema,
+	backendApiSchemaRoutes,
 	GalleryFolderOptions,
 	GeneralGalleryFrontendSchema,
 	GeneralProjectFrontendSchema,
@@ -37,6 +38,7 @@ import {
 import {
 	adminUsersQuery,
 	ashStudentsLookupQuery,
+	clientSideImpactQuery,
 	generalGoogleFormQuery,
 	generalMetadataQuery,
 } from "@/lib/react-query/queryOptions";
@@ -46,6 +48,10 @@ import { Main } from "../-components/Main";
 
 type GeneralGoogleFormQueryResult = Awaited<
 	ReturnType<NonNullable<ReturnType<typeof generalGoogleFormQuery>["queryFn"]>>
+>;
+
+type ClientImpactQueryResult = Awaited<
+	ReturnType<NonNullable<ReturnType<typeof clientSideImpactQuery>["select"]>>
 >;
 
 const GALLERY_FOLDER_OPTIONS = [
@@ -69,6 +75,7 @@ function GeneralUploadsPage() {
 	const usersQuery = useQuery(adminUsersQuery());
 	const googleFormQuery = useQuery(generalGoogleFormQuery());
 	const ashStudentsQuery = useQuery(ashStudentsLookupQuery());
+	const clientImpactQuery = useQuery(clientSideImpactQuery());
 
 	const stats = [
 		{
@@ -144,8 +151,150 @@ function GeneralUploadsPage() {
 						void queryClient.invalidateQueries({ queryKey: ashStudentsLookupQuery().queryKey });
 					}}
 				/>
+
+				<ImpactMetricsCard
+					impact={clientImpactQuery.data}
+					onSaved={() =>
+						void queryClient.invalidateQueries({ queryKey: clientSideImpactQuery().queryKey })
+					}
+				/>
 			</section>
 		</Main>
+	);
+}
+
+function ImpactMetricsCard(props: { impact: ClientImpactQueryResult | undefined; onSaved: () => void }) {
+	const { impact, onSaved } = props;
+	const form = useForm({
+		resolver: zodResolver(backendApiSchemaRoutes["@patch/dashboard/clientsidedata"].body),
+		values: {
+			ashCommunitiesEngaged: impact?.ash.communitiesEngaged ?? 0,
+			ashImprovedGrades: impact?.ash.improvedGrades ?? 0,
+			ashStudentsEnrolled: impact?.ash.studentsEnrolled ?? 0,
+			ashVolunteers: impact?.ash.volunteers ?? 0,
+			capacityOrganizationsPartneredWith: impact?.capacityBuilding.organizationsPartneredWith ?? 0,
+			capacityParticipantsImpacted: impact?.capacityBuilding.participantsImpacted ?? 0,
+			capacityVolunteersEngaged: impact?.capacityBuilding.volunteersEngaged ?? 0,
+			capacityWorkshopsConducted: impact?.capacityBuilding.workshopsConducted ?? 0,
+			communitiesImpacted: impact?.home.communitiesImpacted ?? 0,
+			outreachesBeneficiariesReached: impact?.outreaches.beneficiariesReached ?? 0,
+			outreachesCommunitiesEngaged: impact?.outreaches.communitiesEngaged ?? 0,
+			outreachesPartners: impact?.outreaches.partners ?? 0,
+			outreachesVolunteers: impact?.outreaches.volunteers ?? 0,
+			outreachEvents: impact?.outreaches.outreachEvents ?? 0,
+			tacotsCurrentlyInSchools: impact?.tacots.currentlyInSchools ?? 0,
+			tacotsEnrolled: impact?.tacots.enrolled ?? 0,
+			tacotsGraduated: impact?.tacots.graduated ?? 0,
+			tacotsPartnerSchools: impact?.tacots.partnerSchools ?? 0,
+			totalBeneficiaries: impact?.home.totalBeneficiaries ?? 0,
+			volunteersEngaged: impact?.home.volunteersEngaged ?? 0,
+			yearsOfImpact: impact?.home.yearsOfImpact ?? 0,
+		},
+	});
+
+	const fields = [
+		[
+			"Home",
+			[
+				["totalBeneficiaries", "Total Beneficiaries"],
+				["communitiesImpacted", "Communities Impacted"],
+				["yearsOfImpact", "Years of Impact"],
+				["volunteersEngaged", "Volunteers Engaged"],
+			],
+		],
+		[
+			"ASH",
+			[
+				["ashStudentsEnrolled", "Students Enrolled"],
+				["ashVolunteers", "Volunteers"],
+				["ashCommunitiesEngaged", "Communities Engaged"],
+				["ashImprovedGrades", "Improved Grades (%)"],
+			],
+		],
+		[
+			"TACOTS",
+			[
+				["tacotsEnrolled", "Students Enrolled"],
+				["tacotsCurrentlyInSchools", "Currently in Schools"],
+				["tacotsPartnerSchools", "Partner Schools"],
+				["tacotsGraduated", "Graduated"],
+			],
+		],
+		[
+			"Outreaches",
+			[
+				["outreachEvents", "Outreach Events"],
+				["outreachesVolunteers", "Volunteers"],
+				["outreachesBeneficiariesReached", "Beneficiaries Reached"],
+				["outreachesPartners", "Partners"],
+				["outreachesCommunitiesEngaged", "Communities Engaged"],
+			],
+		],
+		[
+			"Capacity Building",
+			[
+				["capacityParticipantsImpacted", "Participants Impacted"],
+				["capacityWorkshopsConducted", "Workshops Conducted"],
+				["capacityVolunteersEngaged", "Volunteers Engaged"],
+				["capacityOrganizationsPartneredWith", "Organizations Partnered With"],
+			],
+		],
+	] as const;
+
+	const onSubmit = form.handleSubmit(async (body) => {
+		await callBackendApiForQuery("@patch/dashboard/clientsidedata", {
+			body,
+			meta: { toast: { success: true } },
+			onSuccess: onSaved,
+		});
+	});
+
+	return (
+		<UploadCard
+			className="lg:col-span-2"
+			color="yellow"
+			description="Update the impact numbers displayed across the public website"
+			title="Client Impact Numbers"
+		>
+			<Form.Root form={form} onSubmit={(event) => void onSubmit(event)} className="gap-6">
+				<For
+					each={fields}
+					renderItem={([section, sectionFields]) => (
+						<section key={section} className="rounded-[16px] bg-cedar-grey p-4 lg:p-5">
+							<h3 className="mb-4 text-[15px] font-semibold text-cedar-black">{section}</h3>
+							<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+								<For
+									each={sectionFields}
+									renderItem={([name, label]) => (
+										<TextField
+											key={name}
+											control={form.control}
+											name={name}
+											label={label}
+											placeholder="0"
+											type="number"
+											min={0}
+										/>
+									)}
+								/>
+							</div>
+						</section>
+					)}
+				/>
+				<Form.Submit asChild={true}>
+					{(state) => (
+						<Button
+							theme="secondary"
+							isLoading={state.isSubmitting}
+							isDisabled={state.isSubmitting}
+							className="ml-auto h-10 rounded-[8px] px-6 text-[12px]"
+						>
+							Save Impact Numbers
+						</Button>
+					)}
+				</Form.Submit>
+			</Form.Root>
+		</UploadCard>
 	);
 }
 

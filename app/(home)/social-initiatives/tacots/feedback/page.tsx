@@ -42,7 +42,7 @@ const TacotsFeedbackSchema = backendApiSchemaRoutes["@post/forms/tacots/feedback
 
 function FeedbackFormPage() {
 	return (
-		<Main showWatermark={true} className="items-center gap-10 lg:gap-[64px]">
+		<Main withWatermark={true} className="items-center gap-10 lg:gap-[64px]">
 			<FormPageHeader title="TACOTS Feedback Form" href="/social-initiatives/tacots" />
 			<TacotsFeedbackForm />
 		</Main>

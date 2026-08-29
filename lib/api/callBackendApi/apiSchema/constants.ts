@@ -810,3 +810,63 @@ export const TacotsAgeOptions = [...Array(100 - 6 + 1).keys()].map((index) => (i
 export const VolunteerAgeOptions = [...Array(100 - 18 + 1).keys()].map((index) => (index + 18).toString());
 
 export const AshAgeOptions = [...Array(18 - 6 + 1).keys()].map((index) => (index + 6).toString());
+
+export const AshOnlineAgeOptions = defineEnum([
+	"3",
+	"4",
+	"5",
+	"6",
+	"7",
+	"8",
+	"9",
+	"10",
+	"11",
+	"12",
+	"13",
+	"14",
+	"15",
+	"16",
+	"17",
+]);
+
+export const AshOnlineClassOptions = defineEnum([
+	"KG / NURSERY 1",
+	"KG / NURSERY 2",
+	"KG / NURSERY 3",
+	"PRIMARY 1",
+	"PRIMARY 2",
+	"PRIMARY 3",
+	"PRIMARY 4",
+	"PRIMARY 5",
+	"PRIMARY 6",
+	"JSS1",
+	"JSS2",
+	"JSS3",
+	"SS1",
+	"SS2",
+	"SS3",
+]);
+
+export const AshOnlineTutoringDayOptions = defineEnum([
+	"MONDAY",
+	"TUESDAY",
+	"WEDNESDAY",
+	"THURSDAY",
+	"FRIDAY",
+	"SATURDAY",
+	"SUNDAY",
+]);
+
+export const AshOnlineSubjectOptions = defineEnum([
+	"MATHEMATICS",
+	"ENGLISH",
+	"SCIENCE",
+	"PHYSICS",
+	"CHEMISTRY",
+	"BIOLOGY",
+	"LITERATURE IN ENGLISH",
+	"GOVERNMENT",
+	"FINANCIAL ACCOUNTING",
+	"COMMERCE",
+	"OTHER",
+]);

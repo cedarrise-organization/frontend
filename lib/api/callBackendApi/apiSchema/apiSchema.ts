@@ -22,6 +22,9 @@ import {
 	AshLearningConditionOptions,
 	AshMentorshipReceivedOptions,
 	AshMostValuableAspectsOptions,
+	AshOnlineClassOptions,
+	AshOnlineSubjectOptions,
+	AshOnlineTutoringDayOptions,
 	AshPostExitStatusOptions,
 	AshSessionConductedOptions,
 	AshTermOptions,
@@ -626,6 +629,31 @@ const AshFeedbackRecordSchema = FormRecordSchema.extend({
 	volunteerSupportRating: z.number(),
 });
 
+const AshOnlineRegistrationRecordSchema = FormRecordSchema.extend({
+	academicReportPublicId: z.string().nullable().optional(),
+	academicReportUrl: z.string().nullable().optional(),
+	age: z.number(),
+	childClass: z.string(),
+	childEmail: z.email(),
+	childFirstName: z.string(),
+	childSurname: z.string(),
+	currentCurriculumPublicId: z.string().nullable().optional(),
+	currentCurriculumUrl: z.string().nullable().optional(),
+	dob: z.string(),
+	parentalConsent: z.boolean(),
+	parentEmail: z.email(),
+	parentName: z.string(),
+	parentPhone: z.string(),
+	prevTermClassAverage: z.string(),
+	prevTermClassPosition: z.string(),
+	schoolLocation: z.string(),
+	schoolName: z.string(),
+	status: z.enum(ReviewStatusOptions),
+	subjectsOfInterest: z.array(z.string()),
+	timeAvailability: z.string(),
+	tutoringDays: z.array(z.string()),
+});
+
 const StatusRecordSchema = z.object({
 	id: z.uuid(),
 	status: z.string(),
@@ -914,6 +942,14 @@ const clientSideRoutes = defineSchemaRoutes({
 		data: withBaseSuccessResponse({ data: z.null() }),
 	},
 
+	"@post/send-links/ashonline": {
+		body: z.object({
+			email: z.email("Enter a valid email address."),
+			name: z.string().min(3, "Enter at least 3 characters.").max(256),
+		}),
+		data: withBaseSuccessResponse({ data: z.null() }),
+	},
+
 	"@post/send-links/initiatives": {
 		body: z.object({
 			email: z.email("Enter a valid email address."),
@@ -1033,6 +1069,43 @@ const dashboardRoutes = defineSchemaRoutes({
 	"@get/dashboard/cards": {
 		data: withBaseSuccessResponse({ data: DashboardCardsSchema }),
 	},
+	"@get/dashboard/clientsidedata": {
+		data: withBaseSuccessResponse({
+			data: z.object({
+				ash: z.object({
+					communitiesEngaged: z.number(),
+					improvedGrades: z.coerce.number(),
+					studentsEnrolled: z.number(),
+					volunteers: z.number(),
+				}),
+				capacityBuilding: z.object({
+					organizationsPartneredWith: z.number(),
+					participantsImpacted: z.number(),
+					volunteersEngaged: z.number(),
+					workshopsConducted: z.number(),
+				}),
+				home: z.object({
+					communitiesImpacted: z.number(),
+					totalBeneficiaries: z.number(),
+					volunteersEngaged: z.number(),
+					yearsOfImpact: z.number(),
+				}),
+				outreaches: z.object({
+					beneficiariesReached: z.number(),
+					communitiesEngaged: z.number(),
+					outreachEvents: z.number(),
+					partners: z.number(),
+					volunteers: z.number(),
+				}),
+				tacots: z.object({
+					currentlyInSchools: z.number(),
+					enrolled: z.number(),
+					graduated: z.number(),
+					partnerSchools: z.number(),
+				}),
+			}),
+		}),
+	},
 
 	"@get/dashboard/enrollment": {
 		data: withBaseSuccessResponse({ data: EnrollmentMetricsSchema }),
@@ -1093,6 +1166,33 @@ const dashboardRoutes = defineSchemaRoutes({
 
 	"@get/dashboard/student-performance": {
 		data: withBaseSuccessResponse({ data: StudentPerformanceMetricsSchema }),
+	},
+
+	"@patch/dashboard/clientsidedata": {
+		body: z.object({
+			ashCommunitiesEngaged: z.coerce.number().min(0),
+			ashImprovedGrades: z.coerce.number().min(0),
+			ashStudentsEnrolled: z.coerce.number().min(0),
+			ashVolunteers: z.coerce.number().min(0),
+			capacityOrganizationsPartneredWith: z.coerce.number().min(0),
+			capacityParticipantsImpacted: z.coerce.number().min(0),
+			capacityVolunteersEngaged: z.coerce.number().min(0),
+			capacityWorkshopsConducted: z.coerce.number().min(0),
+			communitiesImpacted: z.coerce.number().min(0),
+			outreachesBeneficiariesReached: z.coerce.number().min(0),
+			outreachesCommunitiesEngaged: z.coerce.number().min(0),
+			outreachesPartners: z.coerce.number().min(0),
+			outreachesVolunteers: z.coerce.number().min(0),
+			outreachEvents: z.coerce.number().min(0),
+			tacotsCurrentlyInSchools: z.coerce.number().min(0),
+			tacotsEnrolled: z.coerce.number().min(0),
+			tacotsGraduated: z.coerce.number().min(0),
+			tacotsPartnerSchools: z.coerce.number().min(0),
+			totalBeneficiaries: z.coerce.number().min(0),
+			volunteersEngaged: z.coerce.number().min(0),
+			yearsOfImpact: z.coerce.number().min(0),
+		}),
+		data: BaseSuccessResponseSchema,
 	},
 
 	"@patch/dashboard/notifications/:id": {
@@ -1335,6 +1435,28 @@ export const AshRegisterFrontendSchema = z.object({
 	surname: RequiredStringSchema,
 });
 
+export const AshOnlineRegisterFrontendSchema = z.object({
+	academicReport: z.file().optional(),
+	age: stringWithNumberValidation(z.int("Enter a valid age.").min(3).max(17)),
+	childClass: getRequiredEnumSchema(AshOnlineClassOptions),
+	childEmail: z.email("Enter a valid email address."),
+	childFirstName: RequiredStringSchema,
+	childSurname: RequiredStringSchema,
+	currentCurriculum: z.file().optional(),
+	dob: DateStringSchema,
+	parentalConsent: z.literal(true, "Parental consent is required."),
+	parentEmail: z.email("Enter a valid email address."),
+	parentName: RequiredStringSchema,
+	parentPhone: RequiredPhoneNumberSchema,
+	prevTermClassAverage: RequiredStringSchema,
+	prevTermClassPosition: RequiredStringSchema,
+	schoolLocation: RequiredStringSchema,
+	schoolName: RequiredStringSchema,
+	subjectsOfInterest: getRequiredEnumArraySchema(AshOnlineSubjectOptions),
+	timeAvailability: RequiredStringSchema,
+	tutoringDays: getRequiredEnumArraySchema(AshOnlineTutoringDayOptions),
+});
+
 export const AshTermlyTrackingFrontendSchema = z.object({
 	academicSession: getRequiredEnumSchema(AcademicSessionOptions),
 	challengesObserved: z.string().optional(),
@@ -1561,6 +1683,10 @@ export const TacotsOnboardingFrontendSchema = z.object({
 });
 
 const publicFormRoutes = defineSchemaRoutes({
+	"@post/forms/ash-online/registration": {
+		body: z.instanceof(FormData),
+		data: withBaseSuccessResponse({ data: AshOnlineRegistrationRecordSchema }),
+	},
 	"@post/forms/ash/feedback": {
 		body: z.object({
 			academicImprovementNoticed: getOptionalEnumSchema(AcademicImprovementNoticedOptions),
@@ -1761,6 +1887,11 @@ const publicFormRoutes = defineSchemaRoutes({
 });
 
 const protectedFormRoutes = defineSchemaRoutes({
+	"@delete/forms/ash-online/registration/:id": {
+		data: withBaseSuccessResponse({ data: z.null() }),
+		params: IdParamsSchema,
+	},
+
 	"@delete/forms/ash/attendance/:id": {
 		data: withBaseSuccessResponse({ data: z.null() }),
 		params: IdParamsSchema,
@@ -1780,7 +1911,6 @@ const protectedFormRoutes = defineSchemaRoutes({
 		data: withBaseSuccessResponse({ data: z.null() }),
 		params: IdParamsSchema,
 	},
-
 	"@delete/forms/capacity-building/:id": {
 		data: withBaseSuccessResponse({ data: z.null() }),
 		params: IdParamsSchema,
@@ -1823,6 +1953,35 @@ const protectedFormRoutes = defineSchemaRoutes({
 
 	"@delete/volunteer/feedback/:id": {
 		data: withBaseSuccessResponse({ data: z.null() }),
+		params: IdParamsSchema,
+	},
+
+	"@get/forms/ash-online/download/ashonlinestudent": {},
+
+	"@get/forms/ash-online/registration": {
+		data: withBaseSuccessResponseAndMeta({
+			data: z.array(AshOnlineRegistrationRecordSchema),
+			meta: FormDataReviewPaginatedMetaSchema,
+		}),
+		query: PaginatedQuerySchema.extend({
+			sortBy: z
+				.enum([
+					"childFirstName",
+					"childSurname",
+					"childClass",
+					"childEmail",
+					"schoolName",
+					"tutoringDays",
+					"timeAvailability",
+					"createdAt",
+				])
+				.optional(),
+			status: getOptionalEnumSchema(ReviewStatusOptions),
+		}).optional(),
+	},
+
+	"@get/forms/ash-online/registration/:id": {
+		data: withBaseSuccessResponse({ data: AshOnlineRegistrationRecordSchema }),
 		params: IdParamsSchema,
 	},
 
@@ -2341,6 +2500,12 @@ const protectedFormRoutes = defineSchemaRoutes({
 			}),
 		}),
 		params: IdParamsSchema,
+	},
+
+	"@patch/forms/ash-online/registration/:id/status": {
+		data: withBaseSuccessResponse({ data: StatusRecordSchema }),
+		params: IdParamsSchema,
+		query: z.object({ status: getRequiredEnumSchema(ReviewStatusOptions) }),
 	},
 
 	"@patch/forms/ash/registration/:id/assign-mentor": {

@@ -1,5 +1,6 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import {
 	programmeFour,
@@ -20,6 +21,7 @@ import {
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/lib/config/site";
+import { clientSideImpactQuery } from "@/lib/react-query/queryOptions";
 import { cnJoin } from "@/lib/utils/cn";
 import { FinalCTASection } from "./-components/FinalCTASectionShared";
 import { HomeHeroCarousel, HomeTestimonialCarousel } from "./-components/HomesCarousels";
@@ -48,14 +50,14 @@ function HomePage() {
 
 export default HomePage;
 
-const impactStats = [
-	{ count: "500+", label: "Total Beneficiaries" },
-	{ count: "10+", label: "Communities Impacted" },
-	{ count: "5+", label: "Years of Impact" },
-	{ count: "120+", label: "Volunteers Engaged" },
-] satisfies Array<{ count: string; label: string }>;
-
 function HeroSection() {
+	const impact = useQuery(clientSideImpactQuery()).data?.home;
+	const impactStats = [
+		{ count: `${impact?.totalBeneficiaries ?? 500}+`, label: "Total Beneficiaries" },
+		{ count: `${impact?.communitiesImpacted ?? 10}+`, label: "Communities Impacted" },
+		{ count: `${impact?.yearsOfImpact ?? 5}+`, label: "Years of Impact" },
+		{ count: `${impact?.volunteersEngaged ?? 120}+`, label: "Volunteers Engaged" },
+	];
 	return (
 		<section
 			className="relative isolate w-full px-4 pt-[148px] pb-12 text-cedar-white lg:px-[50px]

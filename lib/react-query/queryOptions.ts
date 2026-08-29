@@ -456,6 +456,31 @@ export const dashboardEnrollmentQuery = () => {
 	});
 };
 
+export const ashOnlineRegistrationFormDataQuery = (query?: AshOnlineRegistrationFormDataListQuery) => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/forms/ash-online/registration", { query }),
+		queryKey: ["form-data", "ash-online", "registration", query],
+		staleTime: 1000 * 60 * 5,
+	});
+};
+
+export const ashOnlineRegistrationFormDetailQuery = (id: string) => {
+	return queryOptions({
+		enabled: Boolean(id),
+		queryFn: () => callBackendApiForQuery("@get/forms/ash-online/registration/:id", { params: { id } }),
+		queryKey: ["form-data", "ash-online", "registration", id],
+	});
+};
+
+export const clientSideImpactQuery = () => {
+	return queryOptions({
+		queryFn: () => callBackendApiForQuery("@get/dashboard/clientsidedata"),
+		queryKey: ["dashboard", "client-side-impact"],
+		select: (data) => data.data,
+		staleTime: 1000 * 60 * 10,
+	});
+};
+
 export const dashboardInstitutionalEffectivenessQuery = () => {
 	return queryOptions({
 		queryFn: () => callBackendApiForQuery("@get/dashboard/institutional-effectiveness"),
@@ -546,6 +571,14 @@ export type CarouselItemQueryResultType = Awaited<
 
 export type AshRegistrationFormDataListQuery = z.infer<
 	(typeof backendApiSchemaRoutes)["@get/forms/ash/registration"]["query"]
+>;
+
+export type AshOnlineRegistrationFormDataListQuery = z.infer<
+	(typeof backendApiSchemaRoutes)["@get/forms/ash-online/registration"]["query"]
+>;
+
+export type AshOnlineRegistrationFormDataQueryResult = Awaited<
+	ReturnType<NonNullable<ReturnType<typeof ashOnlineRegistrationFormDataQuery>["select"]>>
 >;
 
 export type AshFeedbackFormDataListQuery = z.infer<

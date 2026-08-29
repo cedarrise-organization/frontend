@@ -171,23 +171,32 @@ export function FormStepComponentSectionHeader(props: { note?: string; title: st
 	);
 }
 
-export function FormPageHeader(props: { href: MainAppRoutes; replace?: boolean; title: string }) {
-	const { href, replace, title } = props;
+export function FormPageHeader(props: {
+	href: MainAppRoutes;
+	replace?: boolean;
+	title: string;
+	withHistory?: boolean;
+}) {
+	const { href, replace, title, withHistory } = props;
 
 	return (
 		<header
 			className="relative mt-6 flex h-[60px] w-full items-center gap-5 rounded-[12px] bg-cedar-black p-3
 				text-cedar-white lg:mt-10 lg:h-[115px] lg:rounded-[20px] lg:p-5"
 		>
-			<FormPageBackButton href={href} replace={replace} />
+			<FormPageBackButton href={href} replace={replace} withHistory={withHistory} />
 
 			<h1 className="w-full text-center text-[20px]/[1.2] lg:text-[32px]">{title}</h1>
 		</header>
 	);
 }
 
-function FormPageBackButton(props: { href: MainAppRoutes; replace: boolean | undefined }) {
-	const { href, replace } = props;
+function FormPageBackButton(props: {
+	href: MainAppRoutes;
+	replace: boolean | undefined;
+	withHistory?: boolean;
+}) {
+	const { href, replace, withHistory = true } = props;
 	const router = useRouter();
 
 	return (
@@ -196,7 +205,7 @@ function FormPageBackButton(props: { href: MainAppRoutes; replace: boolean | und
 			size="icon"
 			className="shrink-0"
 			onClick={() => {
-				if (window.history.length > 1) {
+				if (withHistory && window.history.length > 1) {
 					router.back();
 					return;
 				}

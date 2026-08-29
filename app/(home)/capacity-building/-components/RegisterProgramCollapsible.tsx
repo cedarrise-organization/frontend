@@ -7,7 +7,11 @@ import { IconBox } from "@/components/common/IconBox";
 import { Button } from "@/components/ui/button";
 import { generalGoogleFormQuery } from "@/lib/react-query/queryOptions";
 
-function RegisterProgramAccordion() {
+function RegisterProgramCollapsible(props: {
+	isOpen: boolean;
+	onOpenChange: (isOpen: boolean) => void;
+}) {
+	const { isOpen, onOpenChange } = props;
 	const generalGoogleFormQueryResult = useQuery(generalGoogleFormQuery());
 
 	const registrationLinks = [
@@ -30,7 +34,11 @@ function RegisterProgramAccordion() {
 	] satisfies Array<{ href: string; label: string }>;
 
 	return (
-		<CollapsibleAnimated.Root className="flex flex-col gap-4 lg:gap-5">
+		<CollapsibleAnimated.Root
+			open={isOpen}
+			onOpenChange={onOpenChange}
+			className="flex flex-col gap-4 lg:gap-5"
+		>
 			<CollapsibleAnimated.Trigger
 				className="mx-auto flex w-fit items-center justify-center gap-2 lg:gap-7.5"
 			>
@@ -73,4 +81,4 @@ function RegisterProgramAccordion() {
 	);
 }
 
-export { RegisterProgramAccordion };
+export { RegisterProgramCollapsible };

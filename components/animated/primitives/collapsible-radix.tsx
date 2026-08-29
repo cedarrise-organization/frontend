@@ -1,9 +1,10 @@
 /* eslint-disable react/no-unstable-default-props */
-import { createCustomContext, useCallbackRef, useToggle } from "@zayne-labs/toolkit-react";
-import { isFunction } from "@zayne-labs/toolkit-type-helpers";
+"use client";
+
+import { createCustomContext, useCallbackRef, useControllableState } from "@zayne-labs/toolkit-react";
 import { AnimatePresence, motion, type HTMLMotionProps, type Transition } from "motion/react";
 import { Collapsible as CollapsiblePrimitive } from "radix-ui";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { cnMerge } from "@/lib/utils/cn";
 
 type ContextValue = {
@@ -16,29 +17,19 @@ type ContextValue = {
 const [CollapsibleContextProvider, useCollapsibleContext] = createCustomContext<ContextValue>();
 
 function CollapsibleRoot(props: React.ComponentProps<typeof CollapsiblePrimitive.Root>) {
-	// eslint-disable-next-line ts-eslint/unbound-method
-	const { defaultOpen, onOpenChange: setOpenProp, open: openProp, ...restOfProps } = props;
+	const {
+		defaultOpen: defaultOpenProp,
+		// eslint-disable-next-line ts-eslint/unbound-method
+		onOpenChange: onOpenChangeProp,
+		open: openProp,
+		...restOfProps
+	} = props;
 
-	const savedSetOpenProp = useCallbackRef(setOpenProp);
-
-	const [internalOpen, toggleInternalOpen] = useToggle(defaultOpen);
-
-	// == Use the open prop if it is provided
-	// == Otherwise, use the internal open state
-	const isOpen = openProp ?? internalOpen;
-
-	const setOpen = useCallback(
-		(value: boolean | ((value: boolean) => boolean)) => {
-			const resolvedValue = isFunction(value) ? value(isOpen) : value;
-
-			// == Call the onOpenChange prop if the openProp is provided
-			// == Otherwise, toggle the internal open state
-			const selectedOpenChange = openProp ? savedSetOpenProp : toggleInternalOpen;
-
-			selectedOpenChange?.(resolvedValue);
-		},
-		[isOpen, openProp, savedSetOpenProp, toggleInternalOpen]
-	);
+	const [isOpen, setOpen] = useControllableState({
+		defaultProp: defaultOpenProp,
+		onChange: onOpenChangeProp,
+		prop: openProp,
+	});
 
 	const onClose = useCallbackRef(() => setOpen(false));
 	const onOpen = useCallbackRef(() => setOpen(true));

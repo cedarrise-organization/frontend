@@ -19,6 +19,7 @@ const excludedRoutesFromNavbar = [
 	"/get-involved/volunteer/feedback",
 	"/social-initiatives/ash/feedback",
 	"/social-initiatives/ash/register",
+	"/social-initiatives/ash-online/register",
 	"/social-initiatives/tacots/recommendation",
 	"/social-initiatives/tacots/feedback",
 ] satisfies MainAppRoutes[];

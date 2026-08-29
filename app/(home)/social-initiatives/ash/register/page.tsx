@@ -49,7 +49,7 @@ const AshRegisterSchema = AshRegisterFrontendSchema;
 
 function RegisterFormPage() {
 	return (
-		<Main showWatermark={true} className="items-center gap-10 lg:gap-[64px]">
+		<Main withWatermark={true} className="items-center gap-10 lg:gap-[64px]">
 			<FormPageHeader title="ASH Student Registration Form" href="/social-initiatives/ash" />
 			<AshRegisterForm />
 		</Main>

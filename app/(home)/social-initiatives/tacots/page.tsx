@@ -1,5 +1,6 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { tw } from "@zayne-labs/toolkit-core";
 import Image from "next/image";
 import { approachSectionImg, heroImg } from "@/assets/images/social-initiatives/tacots";
@@ -7,6 +8,7 @@ import { ForWithWrapper } from "@/components/common/for";
 import { IconBox } from "@/components/common/IconBox";
 import { NavLink, NavLinkEphemeral } from "@/components/common/NavLink";
 import { Button } from "@/components/ui/button";
+import { clientSideImpactQuery } from "@/lib/react-query/queryOptions";
 import { cnJoin } from "@/lib/utils/cn";
 import { FinalCTASection } from "../../-components/FinalCTASectionShared";
 import { Main } from "../../-components/Main";
@@ -92,14 +94,14 @@ function TacotsHeroSection() {
 	);
 }
 
-const successStats = [
-	{ label: "Students Enrolled", value: "9" },
-	{ label: "Currently in school", value: "5+" },
-	{ label: "Graduated", value: "4" },
-	{ label: "Partner Schools", value: "3" },
-];
-
 function TacotsSuccessSection() {
+	const impact = useQuery(clientSideImpactQuery()).data?.tacots;
+	const successStats = [
+		{ label: "Students Enrolled", value: String(impact?.enrolled ?? 9) },
+		{ label: "Currently in school", value: `${impact?.currentlyInSchools ?? 5}+` },
+		{ label: "Graduated", value: String(impact?.graduated ?? 4) },
+		{ label: "Partner Schools", value: String(impact?.partnerSchools ?? 3) },
+	];
 	return (
 		<section className="flex w-full justify-center bg-cedar-red px-6 py-10 lg:px-[50px] lg:py-[52px]">
 			<div
