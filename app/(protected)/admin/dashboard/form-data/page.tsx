@@ -399,7 +399,7 @@ function AshOnlineFormDataTab() {
 				cell: ({ row }) => (
 					<Button
 						theme="secondary-outline"
-						className="h-9 rounded-[8px] px-4 text-[12px]"
+						className="h-9 rounded-lg px-4 text-[12px]"
 						onClick={() => setSelectedId(row.original.id)}
 					>
 						View More

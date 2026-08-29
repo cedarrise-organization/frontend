@@ -210,6 +210,7 @@ function AshOnlineRegistrationPage() {
 				<AgreementField
 					control={form.control}
 					name="parentalConsent"
+					required={true}
 					title="Parental Consent"
 					label="I consent to my child participating in CedarRise's virtual After School Hours programme and understand that my child may be seen or heard during live sessions."
 				/>

@@ -2,7 +2,8 @@
 
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { blogCardImg, heroImg } from "@/assets/images/blog";
+// import { blogCardImg, heroImg } from "@/assets/images/blog";
+import { heroImg } from "@/assets/images/blog";
 import { ForWithWrapper } from "@/components/common/for";
 import { Switch } from "@/components/common/switch";
 import { Button } from "@/components/ui/button";
@@ -109,9 +110,14 @@ function FeaturedPostsSection() {
 										lg:rounded-[32px]"
 								>
 									<Image
-										src={blogCardImg}
+										src={post.documentUrl.replace(
+											"/upload/",
+											"/upload/pg_1/f_jpg,w_400,h_250,c_fill/"
+										)}
 										alt={post.title}
-										className="h-[226px] rounded-[20px] object-cover"
+										width={400}
+										height={250}
+										className="rounded-[20px] object-cover"
 									/>
 
 									<h3 className="leading-[1.4] lg:text-[24px]">{post.title}</h3>
