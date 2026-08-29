@@ -7,10 +7,7 @@ import { IconBox } from "@/components/common/IconBox";
 import { Button } from "@/components/ui/button";
 import { generalGoogleFormQuery } from "@/lib/react-query/queryOptions";
 
-function RegisterProgramCollapsible(props: {
-	isOpen: boolean;
-	onOpenChange: (isOpen: boolean) => void;
-}) {
+function RegisterProgramCollapsible(props: { isOpen: boolean; onOpenChange: (isOpen: boolean) => void }) {
 	const { isOpen, onOpenChange } = props;
 	const generalGoogleFormQueryResult = useQuery(generalGoogleFormQuery());
 
