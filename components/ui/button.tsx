@@ -93,6 +93,9 @@ export const buttonVariants = tv({
 			medium: "h-12 w-fit px-9 text-[14px] font-medium lg:h-[70px] lg:px-[64px] lg:text-[20px]",
 
 			none: "",
+
+			small: `h-10 w-fit rounded-[8px] px-5 text-[12px] font-medium lg:h-10 lg:rounded-[8px] lg:px-9
+			lg:text-[12px]`,
 		},
 
 		theme: {

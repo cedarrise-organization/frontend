@@ -282,12 +282,13 @@ function ImpactMetricsCard(props: { impact: ClientImpactQueryResult | undefined;
 					)}
 				/>
 				<Form.Submit asChild={true}>
-					{(state) => (
+					{(formState) => (
 						<Button
 							theme="secondary"
-							isLoading={state.isSubmitting}
-							isDisabled={state.isSubmitting}
-							className="ml-auto h-10 rounded-[8px] px-6 text-[12px]"
+							size="small"
+							isLoading={formState.isSubmitting}
+							isDisabled={formState.isSubmitting}
+							className="mt-auto ml-auto"
 						>
 							Save Impact Numbers
 						</Button>
@@ -441,11 +442,10 @@ function PhotoUploadCard(props: { onUploaded: () => void }) {
 					{(formState) => (
 						<Button
 							theme="secondary"
-							size="medium"
+							size="small"
 							isLoading={formState.isSubmitting}
 							isDisabled={formState.isSubmitting}
-							className="mt-auto ml-auto h-10 rounded-[8px] px-5 text-[12px] lg:h-10
-								lg:rounded-[8px] lg:px-9 lg:text-[12px]"
+							className="mt-auto ml-auto"
 						>
 							Upload Photo(s)
 						</Button>
@@ -539,11 +539,10 @@ function ProjectUploadCard(props: { onUploaded: () => void }) {
 					{(formState) => (
 						<Button
 							theme="secondary"
-							size="medium"
+							size="small"
 							isLoading={formState.isSubmitting}
 							isDisabled={formState.isSubmitting}
-							className="mt-auto ml-auto h-10 rounded-[8px] px-5 text-[12px] lg:h-10
-								lg:rounded-[8px] lg:px-9 lg:text-[12px]"
+							className="mt-auto ml-auto"
 						>
 							Add Project
 						</Button>
@@ -653,11 +652,10 @@ function ReceiptUploadCard(props: { onUploaded: () => void }) {
 					{(formState) => (
 						<Button
 							theme="secondary"
-							size="medium"
+							size="small"
 							isLoading={formState.isSubmitting}
 							isDisabled={formState.isSubmitting}
-							className="mt-auto ml-auto h-10 rounded-[8px] px-5 text-[12px] lg:h-10
-								lg:rounded-[8px] lg:px-9 lg:text-[12px]"
+							className="mt-auto ml-auto"
 						>
 							Log Receipt
 						</Button>
@@ -783,11 +781,10 @@ function AddUserForm(props: { onCreated: () => void }) {
 				{(formState) => (
 					<Button
 						theme="secondary"
-						size="medium"
+						size="small"
 						isLoading={formState.isSubmitting}
 						isDisabled={formState.isSubmitting}
-						className="mt-auto ml-auto h-10 rounded-[8px] px-5 text-[12px] lg:h-10 lg:rounded-[8px]
-							lg:px-9 lg:text-[12px]"
+						className="mt-auto ml-auto"
 					>
 						Create user
 					</Button>
@@ -853,10 +850,9 @@ function UpdateRoleForm(props: {
 					{(formState) => (
 						<Button
 							theme="secondary-outline"
+							size="small"
 							isLoading={formState.isSubmitting}
 							isDisabled={formState.isSubmitting}
-							className="h-10 rounded-[8px] px-5 text-[12px] lg:h-10 lg:rounded-[8px] lg:px-9
-								lg:text-[12px]"
 							onClick={() => form.setValue("action", "revoke")}
 						>
 							Revoke Access
@@ -868,10 +864,9 @@ function UpdateRoleForm(props: {
 					{(formState) => (
 						<Button
 							theme="secondary"
+							size="small"
 							isLoading={formState.isSubmitting}
 							isDisabled={formState.isSubmitting}
-							className="h-10 rounded-[8px] px-5 text-[12px] lg:h-10 lg:rounded-[8px] lg:px-9
-								lg:text-[12px]"
 							onClick={() => form.setValue("action", "assign")}
 						>
 							Update role
@@ -929,11 +924,10 @@ function DeleteUserForm(props: {
 					{(formState) => (
 						<Button
 							theme="secondary"
-							size="medium"
+							size="small"
 							isLoading={formState.isSubmitting}
 							isDisabled={formState.isSubmitting}
-							className="h-10 shrink-0 rounded-[8px] px-5 text-[12px] lg:h-10 lg:rounded-[8px]
-								lg:px-9 lg:text-[12px]"
+							className="shrink-0"
 						>
 							Delete User
 						</Button>
@@ -1012,11 +1006,10 @@ function GoogleFormCard(props: {
 					{(formState) => (
 						<Button
 							theme="secondary"
-							size="medium"
+							size="small"
 							isLoading={formState.isSubmitting}
 							isDisabled={formState.isSubmitting}
-							className="mt-auto ml-auto h-10 rounded-[8px] px-5 text-[12px] lg:h-10
-								lg:rounded-[8px] lg:px-9 lg:text-[12px]"
+							className="mt-auto ml-auto"
 						>
 							Embed Form
 						</Button>
@@ -1075,11 +1068,10 @@ function AssignAshMentorCard(props: {
 					{(formState) => (
 						<Button
 							theme="secondary"
-							size="medium"
+							size="small"
 							isLoading={formState.isSubmitting}
 							isDisabled={formState.isSubmitting}
-							className="mt-auto ml-auto h-10 rounded-[8px] px-5 text-[12px] lg:h-10
-								lg:rounded-[8px] lg:px-9 lg:text-[12px]"
+							className="mt-auto ml-auto"
 						>
 							Assign Mentor
 						</Button>
