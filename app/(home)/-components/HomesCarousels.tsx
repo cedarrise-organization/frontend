@@ -36,7 +36,7 @@ const testimonials: Array<{ quote: string; title: string }> = [
 	},
 	{
 		quote: "Volunteering was both fulfilling and beautiful. It reminded me of the impact we can make when we serve together.",
-		title: "Valerie Otaigbe, Volunteer, Awlaw Outreach",
+		title: " V. O., Volunteer, Awlaw Outreach",
 	},
 	{
 		quote: "The Digital Literacy Bootcamp made technology less intimidating. I especially enjoyed learning Excel functions and now feel much more confident using a computer and preparing for CBT exams.",

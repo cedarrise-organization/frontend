@@ -36,7 +36,7 @@ function TacotsPage() {
 					</div>
 
 					<FinalCTASection
-						title="Support a childs learning Journey"
+						title="Support a Child's Learning Journey"
 						description="Your support can help more students access quality education and mentorship"
 						actionLayout="stack-mobile"
 						actions={[

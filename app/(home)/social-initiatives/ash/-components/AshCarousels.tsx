@@ -45,12 +45,12 @@ const stories = [
 		title: "ASH Beneficiary's Mother",
 	},
 	{
-		quote: "Education is one of the greatest gifts we can give a child. I deeply appreciate your hard work and dedication to ensuring these young girls have access to learning and opportunities that will shape their future.",
-		title: "ASH Beneficiary's Father",
+		quote: "I am thankful for the positive learning environment the programme has created for the girls. Having mentors who are approachable, patient, and invested in their development makes a real difference. I sincerely appreciate the team for giving these children an opportunity to learn and grow.",
+		title: "J. E., ASH Beneficiary's Guardian",
 	},
 	{
-		quote: "Volunteering with this initiative has helped me become more confident in public speaking. It's been incredibly fulfilling to contribute to the growth and development of younger girls while growing personally through the experience.",
-		title: "R. E., Volunteer, ASH",
+		quote: "Volunteering with ASH has been such a rewarding experience. It has taught me that sometimes, the smallest investment of your time can make a meaningful difference in a child's life. Watching the girls grow in confidence and become more engaged in learning has made every effort worthwhile.",
+		title: "U. O., ASH Volunteer",
 	},
 	{
 		quote: "This experience has transformed me in so many ways. I've developed greater patience, improved my time management, and learned the importance of self-discipline. It has changed my perspective on life, and my hope is that every girl we serve grows into the very best version of herself.",

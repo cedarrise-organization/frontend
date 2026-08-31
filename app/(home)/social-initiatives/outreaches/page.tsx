@@ -109,14 +109,14 @@ function OutreachConnectSection() {
 
 				<article className="flex flex-col gap-10 text-cedar-white lg:gap-[64px]">
 					<header className="flex flex-col gap-4 max-lg:items-center max-lg:text-center lg:gap-6">
-						<h2 className="max-w-[288px] text-[24px]/[1.1] lg:max-w-[456px] lg:text-[40px]">
-							Connecting Needs with Opportunities at Outreaches
+						<h2 className="max-w-[288px] text-[32px]/[1.1] lg:max-w-[456px] lg:text-[40px]">
+							Connecting Needs with Opportunities
 						</h2>
 						<p
-							className="max-w-[285px] text-[10px]/4 text-cedar-white/80 lg:max-w-[456px]
+							className="max-w-[285px] text-[12px]/4 text-cedar-white/80 lg:max-w-[456px]
 								lg:text-base/7"
 						>
-							Bridging meaningful support directly to underserved communities through education,
+							Bringing meaningful support directly to underserved communities through education,
 							mentorship, and sustainable impact initiatives.
 						</p>
 					</header>
@@ -243,19 +243,19 @@ const stories = [
 	},
 	{
 		quote: "Volunteering was both fulfilling and beautiful. It reminded me of the impact we can make when we serve together.",
-		title: "Valerie Otaigbe, Volunteer, Awlaw Medical Outreach",
+		title: "V. O., Volunteer, Awlaw Medical Outreach",
 	},
 	{
 		quote: "Before this programme, I was confused about my future. Now I have clarity, direction, and confidence in the career I want to pursue.",
-		title: "Eze Victoria, SS1 Student, Career Pathway Program",
+		title: "E. V., SS1 Student, Career Pathway Program",
 	},
 	{
 		quote: "The programme helped me clearly understand the career I want to pursue. I can now confidently choose my own path instead of being influenced by others.",
-		title: "Okigwe Emmanuella, SS2 Student, Career Pathway Program",
+		title: "O. E., SS2 Student, Career Pathway Program",
 	},
 	{
 		quote: "Mentoring students reminded me that guidance can change a young person's future. Seeing them gain clarity about their dreams was incredibly fulfilling.",
-		title: "Munachi Otika, Volunteer, Career Pathway Program",
+		title: "M. O., Volunteer, Career Pathway Program",
 	},
 	{
 		quote: "Every conversation with the students reminded me why service matters. It was a truly rewarding experience.",
