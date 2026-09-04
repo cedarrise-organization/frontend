@@ -511,6 +511,7 @@ function AshOnlineFormDataTab() {
 					<DialogAnimated.Footer className="border-t border-cedar-black/10 px-7 py-5 lg:px-10">
 						<div className="grid grid-cols-3 gap-3">
 							<Button
+								size="small"
 								isDisabled={isPending}
 								onClick={() => statusMutation.mutate("accepted", { onSuccess: invalidate })}
 							>
@@ -518,6 +519,7 @@ function AshOnlineFormDataTab() {
 							</Button>
 							<Button
 								theme="secondary-outline"
+								size="small"
 								isDisabled={isPending}
 								onClick={() => statusMutation.mutate("rejected", { onSuccess: invalidate })}
 							>
@@ -525,6 +527,7 @@ function AshOnlineFormDataTab() {
 							</Button>
 							<Button
 								theme="secondary"
+								size="small"
 								isDisabled={isPending}
 								onClick={() =>
 									deleteMutation.mutate(undefined, {

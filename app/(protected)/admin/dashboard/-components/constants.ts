@@ -38,11 +38,11 @@ export const dashboardNavSections = [
 	},
 	{
 		children: [
-			{
-				icon: "lucide:square-pen",
-				label: "Blog Uploads",
-				link: "/admin/dashboard/blog-uploads",
-			},
+			// {
+			// 	icon: "lucide:square-pen",
+			// 	label: "Blog Uploads",
+			// 	link: "/admin/dashboard/blog-uploads",
+			// },
 			{
 				icon: "hugeicons:share-03",
 				label: "General Uploads",
