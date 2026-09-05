@@ -1,7 +1,9 @@
 const siteConfig = {
 	contact: {
 		email: {
-			href: "cedarriseinitiative@gmail.com",
+			all: ["cedarriseinitiative@gmail.com"],
+			href: "mailto:cedarriseinitiative@gmail.com",
+			primary: "cedarriseinitiative@gmail.com",
 		},
 		phone: {
 			display: "+234 903 937 7669",
@@ -17,8 +19,8 @@ const siteConfig = {
 	social: {
 		instagram: "https://www.instagram.com/cedarriseinitiative",
 		linkedIn: "https://www.linkedin.com/company/cedarrise-initiative",
-		tikTok: "https://www.tiktok.com/@cedarrise.initiat?_r=1&_t=ZS-91xutUBqFZx",
-		youTube: "https://youtube.com/@cedarriseinitiative?si=egOoQo2F-UL02K3N",
+		tikTok: "https://www.tiktok.com/@cedarrise.initiat",
+		youTube: "https://youtube.com/@cedarriseinitiative",
 	},
 	websiteUrl: "https://bit.ly/CedarRiseInitiative",
 } as const;
