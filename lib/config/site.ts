@@ -1,9 +1,7 @@
 const siteConfig = {
 	contact: {
 		email: {
-			all: ["ash.cedarrise@gmail.com", "cedarriseinitiative@gmail.com"],
-			href: "mailto:ash.cedarrise@gmail.com,cedarriseinitiative@gmail.com",
-			primary: "ash.cedarrise@gmail.com",
+			href: "cedarriseinitiative@gmail.com",
 		},
 		phone: {
 			display: "+234 903 937 7669",

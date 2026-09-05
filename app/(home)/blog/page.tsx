@@ -13,7 +13,7 @@ import { Main } from "../-components/Main";
 
 function BlogPage() {
 	return (
-		<Main layout="fill" className="gap-10 lg:gap-[64px]">
+		<Main layout="fill" className="gap-0 lg:gap-0">
 			{() => (
 				<>
 					<BlogHeroSection />
@@ -48,7 +48,7 @@ function BlogHeroSection() {
 				<a
 					target="_blank"
 					rel="noreferrer"
-					href="#"
+					href="https://cedarriseinitiative.blogspot.com"
 					className="text-[40px]/[1.1] lg:text-[80px]/[1.1]"
 				>
 					Latest from CedarRise
