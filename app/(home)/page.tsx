@@ -53,10 +53,10 @@ export default HomePage;
 function HeroSection() {
 	const impact = useQuery(clientSideImpactQuery()).data?.home;
 	const impactStats = [
-		{ count: `${impact?.totalBeneficiaries ?? 500}+`, label: "Total Beneficiaries" },
-		{ count: `${impact?.communitiesImpacted ?? 10}+`, label: "Communities Impacted" },
-		{ count: `${impact?.yearsOfImpact ?? 5}+`, label: "Years of Impact" },
-		{ count: `${impact?.volunteersEngaged ?? 120}+`, label: "Volunteers Engaged" },
+		{ count: `${impact?.totalBeneficiaries ?? 1193}+`, label: "Total Beneficiaries" },
+		{ count: `${impact?.communitiesImpacted ?? 7}+`, label: "Communities Impacted" },
+		{ count: `${impact?.yearsOfImpact ?? 3}+`, label: "Years of Impact" },
+		{ count: `${impact?.volunteersEngaged ?? 95}+`, label: "Volunteers Engaged" },
 	];
 	return (
 		<section

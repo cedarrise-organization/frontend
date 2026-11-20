@@ -67,9 +67,9 @@ function AshAfterBellSection() {
 	const impact = useQuery(clientSideImpactQuery()).data?.ash;
 	const afterBellStats = [
 		{ label: "Students Enrolled", value: `${impact?.studentsEnrolled ?? 50}+` },
-		{ label: "Volunteers", value: `${impact?.volunteers ?? 14}+` },
-		{ label: "Improvement in grades", value: `${impact?.improvedGrades ?? 20}%` },
-		{ label: "Communities Engaged", value: `${impact?.communitiesEngaged ?? 4}+` },
+		{ label: "Volunteers", value: `${impact?.volunteers ?? 10}+` },
+		{ label: "Improvement in grades", value: `${impact?.improvedGrades ?? 45}%` },
+		{ label: "Communities Engaged", value: `${impact?.communitiesEngaged ?? 1}+` },
 	];
 	return (
 		<section className="flex w-full justify-center bg-cedar-black px-6 py-10 lg:px-[50px] lg:py-[52px]">

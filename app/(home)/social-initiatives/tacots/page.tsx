@@ -97,10 +97,10 @@ function TacotsHeroSection() {
 function TacotsSuccessSection() {
 	const impact = useQuery(clientSideImpactQuery()).data?.tacots;
 	const successStats = [
-		{ label: "Students Enrolled", value: String(impact?.enrolled ?? 9) },
-		{ label: "Currently in school", value: `${impact?.currentlyInSchools ?? 5}+` },
-		{ label: "Graduated", value: String(impact?.graduated ?? 4) },
-		{ label: "Partner Schools", value: String(impact?.partnerSchools ?? 3) },
+		{ label: "Students Enrolled", value: String(impact?.enrolled ?? 20) },
+		{ label: "Currently in school", value: `${impact?.currentlyInSchools ?? 19}+` },
+		{ label: "Graduated", value: String(impact?.graduated ?? 0) },
+		{ label: "Partner Schools", value: String(impact?.partnerSchools ?? 6) },
 	];
 	return (
 		<section className="flex w-full justify-center bg-cedar-red px-6 py-10 lg:px-[50px] lg:py-[52px]">

@@ -74,11 +74,11 @@ function OutreachHeroSection() {
 function OutreachConnectSection() {
 	const impact = useQuery(clientSideImpactQuery()).data?.outreaches;
 	const impactStats = [
-		{ label: "Outreach events conducted", value: String(impact?.outreachEvents ?? 3) },
-		{ label: "Volunteers", value: String(impact?.volunteers ?? 12) },
-		{ label: "Beneficiaries reached", value: `${impact?.beneficiariesReached ?? 190}+` },
-		{ label: "Partners", value: String(impact?.partners ?? 2) },
-		{ label: "Communities Engaged", value: `${impact?.communitiesEngaged ?? 4}+` },
+		{ label: "Outreach events conducted", value: String(impact?.outreachEvents ?? 5) },
+		{ label: "Volunteers", value: String(impact?.volunteers ?? 70) },
+		{ label: "Beneficiaries reached", value: `${impact?.beneficiariesReached ?? 991}+` },
+		{ label: "Partners", value: String(impact?.partners ?? 5) },
+		{ label: "Communities Engaged", value: `${impact?.communitiesEngaged ?? 5}+` },
 	];
 	return (
 		<section className="flex w-full justify-center bg-cedar-black px-6 py-10 lg:px-[50px] lg:py-[52px]">
